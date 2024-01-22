@@ -8,6 +8,7 @@ public class Type {
     @Column(name="type_id")
     private int id;
 
+
     private String typeName;
 
     private String typeImgUrl;
