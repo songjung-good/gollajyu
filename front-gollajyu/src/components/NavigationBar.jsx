@@ -3,7 +3,24 @@ import { NavLink } from "react-router-dom";
 
 const NavigationBar = () => {
   const isLoggedIn = true; // 로그인 상태
-//   const isLoggedIn = false; // 로그아웃 상태
+
+  const navigationBarStyle = {
+    background: "#4A4A4A",
+    padding: "10px",
+  };
+
+  const listStyle = {
+    listStyleType: "none",
+    display: "flex",
+  };
+
+  const listItemStyle = {
+    marginRight: "10px",
+  };
+
+  const lastItemStyle = {
+    marginLeft: "auto",
+  };
 
   return (
     <nav style={navigationBarStyle}>
@@ -23,7 +40,7 @@ const NavigationBar = () => {
         <li style={listItemStyle}>
           <NavLink to="/TestPage">소비성향알려쥬</NavLink>
         </li>
-        <li style={{ ...listItemStyle, marginLeft: "auto" }}> {/* 오른쪽 정렬 */}
+        <li style={{ ...listItemStyle, ...lastItemStyle }}>
           {isLoggedIn ? (
             <>
               <NavLink to="/MyPage">내프로필</NavLink>
@@ -41,20 +58,6 @@ const NavigationBar = () => {
       </ul>
     </nav>
   );
-};
-
-const navigationBarStyle = {
-  background: "#4A4A4A",
-  padding: "10px",
-};
-
-const listStyle = {
-  listStyleType: "none",
-  display: "flex",  // 목록을 수평으로 배치
-};
-
-const listItemStyle = {
-  marginRight: "10px",
 };
 
 export default NavigationBar;
