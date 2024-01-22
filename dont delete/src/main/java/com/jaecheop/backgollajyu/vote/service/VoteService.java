@@ -4,6 +4,7 @@ import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import com.jaecheop.backgollajyu.vote.entity.VoteItem;
+import com.jaecheop.backgollajyu.vote.model.ChoiceReqDto;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
@@ -65,5 +66,19 @@ public class VoteService {
         return ServiceResult.success();
 
 
+    }
+
+    public ServiceResult choiceMain(ChoiceReqDto choiceReqDto) {
+        // member 존재 유무
+
+        // 투표 존재 유무
+
+        
+        //투표 아이템 존재 유무
+
+        // 중복 투표 여부
+
+        // 투표결과 저장
+        return ServiceResult.success();
     }
 }
