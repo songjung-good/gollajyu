@@ -29,9 +29,11 @@ public class VoteService {
      * @param voteReqDto
      */
     public ServiceResult addVote(VoteReqDto voteReqDto) {
+
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
-        if(!optionalMember.isPresent()){
+
+        if(optionalMember.isEmpty()){
             return ServiceResult.fail("해당 멤버가 존재하지 않습니다.");
         }
 
