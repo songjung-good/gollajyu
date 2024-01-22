@@ -44,7 +44,7 @@ const NavigationBar = () => {
   };
 
   const commonStyle = {
-    // 공통 스타일
+    // 항목 공통 스타일
     padding: "0 50px",                              // 항목 좌우 padding: 50px
     height: "100px",                                // 항목 높이: 100px
     display: "flex",                                // 링크 수평 정렬
