@@ -70,12 +70,24 @@ public class VoteService {
     }
 
     // 투표한 Dto
-    public List<VoteResDto> getVotesByMemberId(Long memberId) {
-        List<Vote> votes = voteRepository.findByMemberId(memberId);
-        return ByMemberIdVoteResDtoList(votes);
+
+    public List<VoteResDto> findVoteResultsByMemberIdAndCreateVoteResDtoList(Long memberId) {
+        // Retrieve VoteResDto instances based on memberId using VoteItemResult query
+        List<VoteResDto> initialVoteResDtoList = voteItemResultRepository.findVoteResultsByMemberId(memberId);
+
+        // Extract voteId values from initialVoteResDtoList
+        List<Long> voteIds = initialVoteResDtoList.stream()
+                .map(VoteResDto::getVoteId)
+                .collect(Collectors.toList());
+
+        // Fetch Vote entities based on voteIds
+        List<Vote> votes = voteRepository.findAllById(voteIds);
+
+        // Create a new list of VoteResDto using the fetched Vote entities
+        return byMemberIdVoteResDtoList(votes);
     }
 
-    private List<VoteResDto> ByMemberIdVoteResDtoList(List<Vote> votes) {
+    private List<VoteResDto> byMemberIdVoteResDtoList(List<Vote> votes) {
         List<VoteResDto> voteResDtoList = new ArrayList<>();
 
         for (Vote vote : votes) {
@@ -100,30 +112,9 @@ public class VoteService {
     // 투표한 결과 기반 투표 리스트
     public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
 
-        List<VoteResult> voteResults =
+        List<VoteResult> voteResults = VoteRepository.findVoteResultsByMemberId(memberId);
         List<Vote> votes = voteRepository.findByVoteId(voteId);
         return ByResultMemberIdVoteResDtoList(votes);
     }
 
-
-    private List<VoteResDto> ByResultMemberIdVoteResDtoList(List<Vote> votes) {
-        List<VoteResDto> voteResDtoList = new ArrayList<>();
-
-        for (Vote vote : votes) {
-            VoteResDto voteResDto = new VoteResDto();
-            voteResDto.setVoteId(vote.getId());
-            voteResDto.setMemberId(vote.getMember());
-            voteResDto.setTitle(vote.getTitle());
-            voteResDto.setDescription(vote.getDescription());
-            voteResDto.setCreateAt(vote.getCreateAt());
-            voteResDto.setCode(vote.getCode());
-            voteResDto.setCodeType(vote.getCodeType());
-            // You might need to fetch likesId from another source
-//            voteResDto.setLikesId(/* fetch likesId based on vote */);
-
-            voteResDtoList.add(voteResDto);
-        }
-
-        return voteResDtoList;
-    }
 }
