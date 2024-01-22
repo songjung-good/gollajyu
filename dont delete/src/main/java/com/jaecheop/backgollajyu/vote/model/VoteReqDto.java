@@ -7,12 +7,11 @@ import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@RequiredArgsConstructor
+@ToString
 public class VoteReqDto {
 
     // 단일 투표에 대한 기본 정보
-    private int memberEmail;
+    private String memberEmail;
 
     private String title;
 
