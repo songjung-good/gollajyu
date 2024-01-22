@@ -1,6 +1,8 @@
 package com.jaecheop.backgollajyu.vote.service;
 
+import com.jaecheop.backgollajyu.member.controller.MemberController;
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.member.model.VoteResDto;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import com.jaecheop.backgollajyu.vote.entity.VoteItem;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -63,5 +67,63 @@ public class VoteService {
         return ServiceResult.success();
 
 
+    }
+
+    // 투표한 Dto
+    public List<VoteResDto> getVotesByMemberId(Long memberId) {
+        List<Vote> votes = voteRepository.findByMemberId(memberId);
+        return ByMemberIdVoteResDtoList(votes);
+    }
+
+    private List<VoteResDto> ByMemberIdVoteResDtoList(List<Vote> votes) {
+        List<VoteResDto> voteResDtoList = new ArrayList<>();
+
+        for (Vote vote : votes) {
+            VoteResDto voteResDto = new VoteResDto();
+            voteResDto.setVoteId(vote.getId());
+            voteResDto.setMemberId(vote.getMember());
+            voteResDto.setTitle(vote.getTitle());
+            voteResDto.setDescription(vote.getDescription());
+            voteResDto.setCreateAt(vote.getCreateAt());
+            voteResDto.setCode(vote.getCode());
+            voteResDto.setCodeType(vote.getCodeType());
+            // You might need to fetch likesId from another source
+//            voteResDto.setLikesId(/* fetch likesId based on vote */);
+
+            voteResDtoList.add(voteResDto);
+        }
+
+        return voteResDtoList;
+    }
+
+
+    // 투표한 결과 기반 투표 리스트
+    public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
+
+        List<VoteResult> voteResults =
+        List<Vote> votes = voteRepository.findByVoteId(voteId);
+        return ByResultMemberIdVoteResDtoList(votes);
+    }
+
+
+    private List<VoteResDto> ByResultMemberIdVoteResDtoList(List<Vote> votes) {
+        List<VoteResDto> voteResDtoList = new ArrayList<>();
+
+        for (Vote vote : votes) {
+            VoteResDto voteResDto = new VoteResDto();
+            voteResDto.setVoteId(vote.getId());
+            voteResDto.setMemberId(vote.getMember());
+            voteResDto.setTitle(vote.getTitle());
+            voteResDto.setDescription(vote.getDescription());
+            voteResDto.setCreateAt(vote.getCreateAt());
+            voteResDto.setCode(vote.getCode());
+            voteResDto.setCodeType(vote.getCodeType());
+            // You might need to fetch likesId from another source
+//            voteResDto.setLikesId(/* fetch likesId based on vote */);
+
+            voteResDtoList.add(voteResDto);
+        }
+
+        return voteResDtoList;
     }
 }

@@ -31,7 +31,7 @@ public class VoteController {
         ServiceResult result = voteService.addVote(voteReqDto);
         // 받아온 결과에 따라 에러 메세지 출력하거나 return 하거나
         if(!result.isResult()){
-            return ResponseEntity.ok().body();
+            return ResponseEntity.ok().body("hello");
         }
         return ResponseEntity.ok().body(ServiceResult.success());
     }
