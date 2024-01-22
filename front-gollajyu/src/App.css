@@ -1,42 +1,27 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;  /* 요소의 크기를 padding과 border를 포함한 크기로 계산 */
+  font-family: "GmarketSansLight";  /* 기본 폰트 설정 */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+@font-face {
+  /* 얇은 글씨체 */
+  font-family: "GmarketSansLight";
+  src: local("GmarketSansLight"),
+  url("./static/fonts/GmarketSansLight.ttf") format("truetype");
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@font-face {
+  /* 기본 글씨체 */
+  font-family: "GmarketSansMedium";
+  src: local("GmarketSansMedium"),
+  url("./static/fonts/GmarketSansMedium.ttf") format("truetype");
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+@font-face {
+  /* 굵은 글씨체 */
+  font-family: "GmarketSansBold";
+  src: local("GmarketSansBold"),
+  url("./static/fonts/GmarketSansBold.ttf") format("truetype");
 }

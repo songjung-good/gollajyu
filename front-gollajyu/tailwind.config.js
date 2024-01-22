@@ -4,5 +4,13 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  corePlugins: {
+    aspectRatio: false,
+  },
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/forms"),
+    require("@tailwindcss/container-queries"),
+    require("@tailwindcss/aspect-ratio"),
+  ],
 };
