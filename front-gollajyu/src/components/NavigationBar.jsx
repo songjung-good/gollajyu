@@ -15,7 +15,7 @@ const NavigationBar = () => {
   };
 
   const listItemStyle = {
-    marginRight: "10px",
+    margin: "0 10px",
   };
 
   const lastItemStyle = {
