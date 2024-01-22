@@ -7,6 +7,7 @@ import BroadcastPage from "./pages/BroadcastPage";
 import StatisticPage from "./pages/StatisticPage";
 import TestPage from "./pages/TestPage";
 import MyPage from "./pages/MyPage";
+import "./App.css"
 
 const App = () => {
   return (
