@@ -2,10 +2,12 @@ package com.jaecheop.backgollajyu.vote.entity;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
 public class Vote {
 
     @Id

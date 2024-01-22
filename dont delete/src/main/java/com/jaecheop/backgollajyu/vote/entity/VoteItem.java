@@ -1,8 +1,10 @@
 package com.jaecheop.backgollajyu.vote.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
+@Builder
 public class VoteItem {
 
     @Id
