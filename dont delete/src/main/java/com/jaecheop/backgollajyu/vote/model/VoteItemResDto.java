@@ -16,7 +16,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class VoteItemResDto {
     private Long voteItemId;
-    private Vote vote;
     private String voteItemImgUrl;
     private String voteItemDesc;
     private Long price; // tag1 = 30

@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.vote.model;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.vote.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,9 @@ public class VoteResDto {
     private String title;
     private String description;
     private LocalDateTime createAt;
-    private int code;
-    private int codeType;
+    private Category category; // 참조 어케 해야되지?
     private List<VoteItemResDto> voteItems;  // Include List of VoteItemDto
-
+    private Long selectedItemId;
 //    private Long likesId;
 
     // Constructors, getters, setters...

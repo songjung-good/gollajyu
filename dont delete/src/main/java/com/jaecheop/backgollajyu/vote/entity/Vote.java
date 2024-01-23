@@ -36,9 +36,5 @@ public class Vote {
     private int code;
 
     private int codeType;
-    
-    // MappedBy indicates that the relationship is managed from the VoteItem side
-    @OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VoteItem> voteItems;
 
 }

@@ -84,25 +84,34 @@ public class VoteService {
 
 
     // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
-    private List<VoteResDto> makeVoteResDtoList(List<Vote> votes) {
+    private List<VoteResDto> makeVoteResDtoList(List<Vote> votes, Long currentMemberId) {
         List<VoteResDto> voteResDtoList = new ArrayList<>();
 
+
         for (Vote vote : votes) {
-            VoteResDto voteResDto = new VoteResDto();
-            voteResDto.setVoteId(vote.getId());
-            voteResDto.setMemberId(vote.getMember());
-            voteResDto.setTitle(vote.getTitle());
-            voteResDto.setDescription(vote.getDescription());
-            voteResDto.setCreateAt(vote.getCreateAt());
-            voteResDto.setCode(vote.getCode());
-            voteResDto.setCodeType(vote.getCodeType());
-            voteResDto.setVoteItems(mapVoteItemsToDto(getVoteItemsForVote(vote)));  // Set the list of VoteItemDto
-            // You might need to fetch likesId from another source
-//            voteResDto.setLikesId(/* fetch likesId based on vote */);
+            List<VoteItemResDto> voteItemResDtoList = mapVoteItemsToDto(getVoteItemsForVote(vote));
+            Optional<VoteResult> byMemberIdAndVoteId = voteResultRepository.findByMemberIdAndVoteId(currentMemberId, vote.getId());
+            Long selectedItemId;
+            if (byMemberIdAndVoteId.isPresent()) {
+                selectedItemId = byMemberIdAndVoteId.get().getVoteItem().getId();
+            } else {
+                selectedItemId = -1L;
+            }
+
+            VoteResDto voteResDto = VoteResDto.builder()
+                    .voteId(vote.getId())
+                    .memberId(vote.getMember())
+                    .title(vote.getTitle())
+                    .description(vote.getDescription())
+                    .createAt(vote.getCreateAt())
+                    .category()// 카테고리 참조하기
+                    .voteItems(voteItemResDtoList)
+                    .selectedItemId(selectedItemId) // 투표 참여한게 있다면 투표아이템 id를 준다.
+//                    .likesId(/* fetch likesId based on vote */)// 좋아요 전체 참조하기? 수 + 여부참조하가ㅣ
+                    .build();
 
             voteResDtoList.add(voteResDto);
         }
-
         return voteResDtoList;
     }
     // 투표에 아이템을 참조
@@ -119,12 +128,14 @@ public class VoteService {
 
     // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
     private VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
+
+
         return VoteItemResDto.builder()
                 .voteItemId(voteItem.getId())
                 .voteItemImgUrl(voteItem.getVoteItemImgUrl())
                 .voteItemDesc(voteItem.getVoteItemDesc())
                 .price(voteItem.getPrice())
-                .voteResultCountResDtoList(generateStatistics(voteItem)) // 후아아아아
+                .voteResultCountResDtoList(generateStatistics(voteItem)) //
                 .build();
     }
 
@@ -133,7 +144,7 @@ public class VoteService {
         Map<Tag, Long> statistics = new HashMap<>();
 
         // Assuming VoteItem has a method to retrieve associated VoteItemResults
-        List<VoteResult> voteResults = voteResultRepository.findByVoteItem();
+        List<VoteResult> voteResults = voteResultRepository.findByVoteItem(voteItem);
 
         for (VoteResult voteResult : voteResults) {
             // Assuming VoteResult has a method to retrieve associated Tag
@@ -150,30 +161,47 @@ public class VoteService {
     // 투표 작성자 Id로 투표 리스트 생성..
     public List<VoteResDto> getVotesByMemberId(Long memberId) {
         List<Vote> votes = voteRepository.findByMemberId(memberId);
-        return makeVoteResDtoList(votes);
+        return makeVoteResDtoList(votes, memberId);
     }
 
     // 투표한 투표 리스트
     public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
 
         List<Vote> votes = voteRepository.findVoteIdsByResultMemberId(memberId);
-        return makeVoteResDtoList(votes);
+        return makeVoteResDtoList(votes, memberId);
     }
 
     // 좋아요한 투표 리스트
     public List<VoteResDto> getLikedVotesByMemberId(Long memberId) {
         List<Vote> votes = voteRepository.findByLikedMembersMemberId(memberId);
-        return makeVoteResDtoList(votes);
+        return makeVoteResDtoList(votes, memberId);
     }
 
-    // 댓글 작성한 투표 리스트 +@ Dto 만들어야함 VoteResDto + 댓글 설명 + 댓글 생성일자
-//    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
-//        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
-//        return makeVoteResDtoList(votes);
-//    }
+//     댓글 작성한 투표 리스트 +@ Dto 만들어야함 (VoteResDto + 댓글 설명 + 댓글 생성일자) 로 반환할
+    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
+        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
 
+        List<VoteResDto> voteResDtoList = makeVoteResDtoList(votes, memberId);
 
+        List<CommentResDto> commentResDtoList = mapVotesToCommentResDto(voteResDtoList);
 
+        return commentResDtoList;
+    }
+    public List<CommentResDto> mapVotesToCommentResDto(List<VoteResDto> voteResDtoList) {
+        return voteResDtoList.stream()
+                .map(this::buildCommentResDto)
+                .collect(Collectors.toList());
+    }
+
+    private CommentResDto buildCommentResDto(VoteResDto voteResDto) {
+        return CommentResDto.builder()
+                .commentId(/* set commentId based on your requirements */)
+                .commentCreateAt(/* set commentCreateAt based on your requirements */)
+                .commentDescription(/* set commentDescription based on your requirements */)
+                .voteResDto(voteResDto)
+                // Set other properties of CommentResDto based on your requirements
+                .build();
+    }
 
 
 

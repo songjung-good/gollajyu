@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86c1ffc9-0e53-43a7-9c81-e70fd9ac44de" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="e1a32a66-1d64-4070-86ff-694babe4929d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteItemResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteItemResDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteResDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +41,11 @@
     </system>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="MyVoteList" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -55,9 +61,6 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.BackGollajyuApplication.executor": "Run",
-    "Gradle.dont delete [:BackGollajyuApplication.main()].executor": "Run",
-    "Gradle.dont delete.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "MyVoteList",
@@ -67,31 +70,19 @@
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="dont delete" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/dont delete" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list />
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="S10P12E107" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Gradle.dont delete" />
-      </list>
-    </recent_temporary>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="S10P12E107" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>

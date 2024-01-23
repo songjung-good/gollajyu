@@ -20,9 +20,10 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     // 좋아요한 투표 리스트
     List<Vote> findByLikedMembersMemberId(Long memberId);
 
-    // 댓글 작성한 투표 리스트
+    // 댓글 작성한 투표 리스트 이게아닌듯 모든 댓글을 기준으로 해야함.
     @Query("SELECT v FROM Vote v " +
             "JOIN Comment c ON v.voteId = c.voteId " +
             "WHERE c.memberId = :memberId")
     List<Vote> findVotesByCommentMemberId(@Param("memberId") Long memberId);
+
 }
