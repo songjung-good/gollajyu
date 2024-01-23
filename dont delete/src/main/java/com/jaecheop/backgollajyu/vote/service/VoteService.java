@@ -11,7 +11,6 @@ import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.apache.bcel.generic.Tag;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,11 +20,11 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class VoteService {
+    private final VoteResultRepository voteResultRepository;
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final MemberRepository memberRepository;
 
-    private final VoteResultRepository voteResultRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
 
@@ -84,7 +83,7 @@ public class VoteService {
 
 
 
-    // 투표 리스트를 Dto 형태로 변환
+    // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
     private List<VoteResDto> makeVoteResDtoList(List<Vote> votes) {
         List<VoteResDto> voteResDtoList = new ArrayList<>();
 
@@ -106,16 +105,19 @@ public class VoteService {
 
         return voteResDtoList;
     }
+    // 투표에 아이템을 참조
     public List<VoteItem> getVoteItemsForVote(Vote vote) {
         return voteItemRepository.findVoteItemsByVote(vote);
     }
 
+    // 위에서 참조된 아이템을 Dto로 바꾸기
     private List<VoteItemResDto> mapVoteItemsToDto(List<VoteItem> voteItems) {
         return voteItems.stream()
                 .map(this::mapVoteItemToDto)
                 .collect(Collectors.toList());
     }
 
+    // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
     private VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
         return VoteItemResDto.builder()
                 .voteItemId(voteItem.getId())
@@ -126,15 +128,16 @@ public class VoteService {
                 .build();
     }
 
-    public static Map<Tag, Long> generateStatistics(VoteItem voteItem) {
+    // ItemResDto를 만드는 과정에서 태그별 투표수 첨부 해주기
+    public Map<Tag, Long> generateStatistics(VoteItem voteItem) {
         Map<Tag, Long> statistics = new HashMap<>();
 
         // Assuming VoteItem has a method to retrieve associated VoteItemResults
-        List<VoteItemResult> voteItemResults = voteItem.getVoteItemResults();
+        List<VoteResult> voteResults = voteResultRepository.findByVoteItem();
 
-        for (VoteItemResult voteItemResult : voteItemResults) {
+        for (VoteResult voteResult : voteResults) {
             // Assuming VoteResult has a method to retrieve associated Tag
-            Tag tag = voteItemResult.getTag();
+            Tag tag = voteResult.getTag();
 
             // Update count for the tag
             statistics.put(tag, statistics.getOrDefault(tag, 0L) + 1);
@@ -142,16 +145,6 @@ public class VoteService {
 
         return statistics;
     }
-
-
-
-
-
-
-
-
-
-
 
 
     // 투표 작성자 Id로 투표 리스트 생성
@@ -163,7 +156,7 @@ public class VoteService {
     // 투표한 투표 리스트
     public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
 
-        List<Vote> votes = VoteRepository.findVoteIdsByResultMemberId(memberId);
+        List<Vote> votes = voteRepository.findVoteIdsByResultMemberId(memberId);
         return makeVoteResDtoList(votes);
     }
 
@@ -174,41 +167,41 @@ public class VoteService {
     }
 
     // 댓글 작성한 투표 리스트 +@ Dto 만들어야함 VoteResDto + 댓글 설명 + 댓글 생성일자
-    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
-        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
-        return makeVoteResDtoList(votes);
-    }
+//    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
+//        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
+//        return makeVoteResDtoList(votes);
+//    }
 
 
 
 
 
 
-
-    // Dto 만들자아아아아아ㅏ아ㅏ아ㅏ앙아ㅏ아ㅏㅇ아아
-    public List<CategoryInfoResDto> perfectResultsMethod(Integer voteId, Integer memberId, Integer age, char gender, String type) {
-        List<CategoryInfoResDto> result1;
-
-        if (memberId != null) {
-            result1 = voteItemResultRepository.findAllByMemberId(memberId);
-        } else if (voteId != null) {
-            result1 = voteItemResultRepository.findByVoteId(voteId);
-        } else {
-            result1 = voteItemResultRepository.findAllByType(type);
-        }
-
-        if (type != null) {
-            result1 = result1.stream().filter(result -> result.getType().equals(type)).collect(Collectors.toList());
-        }
-        if (age != null) {
-            result1 = result1.stream().filter(result -> result.getAge() == age).collect(Collectors.toList());
-        }
-        if (gender != 0) {
-            result1 = result1.stream().filter(result -> result.getGender() == gender).collect(Collectors.toList());
-        }
-
-        return result1;
-    }
+//
+//    // Dto 만들자아아아아아ㅏ아ㅏ아ㅏ앙아ㅏ아ㅏㅇ아아
+//    public List<CategoryInfoResDto> perfectResultsMethod(Integer voteId, Integer memberId, Integer age, char gender, String type) {
+//        List<CategoryInfoResDto> result1;
+//
+//        if (memberId != null) {
+//            result1 = voteItemResultRepository.findAllByMemberId(memberId);
+//        } else if (voteId != null) {
+//            result1 = voteItemResultRepository.findByVoteId(voteId);
+//        } else {
+//            result1 = voteItemResultRepository.findAllByType(type);
+//        }
+//
+//        if (type != null) {
+//            result1 = result1.stream().filter(result -> result.getType().equals(type)).collect(Collectors.toList());
+//        }
+//        if (age != null) {
+//            result1 = result1.stream().filter(result -> result.getAge() == age).collect(Collectors.toList());
+//        }
+//        if (gender != 0) {
+//            result1 = result1.stream().filter(result -> result.getGender() == gender).collect(Collectors.toList());
+//        }
+//
+//        return result1;
+//    }
 
 
 

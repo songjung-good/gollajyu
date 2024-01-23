@@ -1,12 +1,11 @@
 package com.jaecheop.backgollajyu.vote.model;
 
-import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
+import com.jaecheop.backgollajyu.vote.entity.Tag;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.aspectj.apache.bcel.generic.Tag;
 
 import java.util.List;
 import java.util.Map;
