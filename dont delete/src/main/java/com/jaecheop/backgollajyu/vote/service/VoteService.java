@@ -140,13 +140,13 @@ public class VoteService {
         Tag tag = tagRepository.findById(choiceReqDto.getTagId()).get();
 
 
-        // 중복 투표 여부
+        // 중복 투표 여부.
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(choiceReqDto.getMemberId(), choiceReqDto.getVoteId());
         if(optionalVoteResult.isPresent()){
             return ServiceResult.fail("이미 참여한 투표입니다.");
         }
 
-        // 투표결과 저장
+        // 투표결과 저장.
         VoteResult voteResult = VoteResult.builder()
                 .vote(vote)
                 .voteItem(voteItem)
