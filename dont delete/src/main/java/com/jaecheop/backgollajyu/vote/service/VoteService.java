@@ -147,7 +147,7 @@ public class VoteService {
     }
 
 
-    // 투표 작성자 Id로 투표 리스트 생성
+    // 투표 작성자 Id로 투표 리스트 생성..
     public List<VoteResDto> getVotesByMemberId(Long memberId) {
         List<Vote> votes = voteRepository.findByMemberId(memberId);
         return makeVoteResDtoList(votes);
