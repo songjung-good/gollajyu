@@ -13,6 +13,9 @@ const NavigationBar = () => {
   const [loginButtonHovered, setLoginButtonHovered] = useState(false);
   const [signupButtonHovered, setSignupButtonHovered] = useState(false);
 
+  // const isLoggedIn = true;  // 로그인 상태
+  const isLoggedIn = false;  // 비로그인 상태
+
 
   // --------------------------------- css 시작 ---------------------------------
   const navigationBarStyle = {
@@ -30,13 +33,17 @@ const NavigationBar = () => {
     alignItems: "center",                           // 항목 수직 정렬
   };
 
+  const logoContainerStyle = {
+    // 로고 컨테이너 스타일
+    width: "400px",                                 // 넓이: 400px
+  };
+
   const logoStyle = {
     // 로고 스타일
-    width: "400px",                                 // 넓이: 400px
     fontSize: "48px",                               // 글씨 크기: 48px
     color: "#FFD257",                               // 글씨 색: 노란색
     fontFamily: "GmarketSansBold",                  // 굵은 폰트로 변경
-  };
+  }
 
   const listStyle = {
     // 항목 리스트 스타일
@@ -147,16 +154,15 @@ const NavigationBar = () => {
   };
   // --------------------------------- css 끝 ---------------------------------
 
-
-  // const isLoggedIn = true;  // 로그인 상태
-  const isLoggedIn = false;  // 비로그인 상태
   
   return (
     <nav style={navigationBarStyle}>
       {/* --------------------------------- 로고 --------------------------------- */}
-      <NavLink to="/" style={logoStyle}>
-        골라쥬
-      </NavLink>
+      <div style={logoContainerStyle}>
+        <NavLink to="/" style={logoStyle}>
+          골라쥬
+        </NavLink>
+      </div>
 
       {/* --------------------------------- 네비게이션 항목 --------------------------------- */}
       <ul style={listStyle}>
