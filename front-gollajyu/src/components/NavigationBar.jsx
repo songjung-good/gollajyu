@@ -13,8 +13,8 @@ const NavigationBar = () => {
   const [loginButtonHovered, setLoginButtonHovered] = useState(false);
   const [signupButtonHovered, setSignupButtonHovered] = useState(false);
 
-  // const isLoggedIn = true;  // 로그인 상태
-  const isLoggedIn = false;  // 비로그인 상태
+  const isLoggedIn = true;  // 로그인 상태
+  // const isLoggedIn = false;  // 비로그인 상태
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -110,7 +110,7 @@ const NavigationBar = () => {
   };
 
   // ----------- 활성화 된 메뉴 스타일 -----------
-  const activeItemSStyle = {
+  const activeItemStyle = {
     // 글자
     fontFamily: "GmarketSansMedium",                // 활성화 시 중간 폰트로 변경
     color: "#4A4A4A",                               // 활성화 시 글자 색: 진한 회색
@@ -209,7 +209,7 @@ const NavigationBar = () => {
           <NavLink
             to="/VotePage" 
             style={({ isActive }) =>
-              isActive ? activeItemSStyle : undefined
+              isActive ? activeItemStyle : undefined
             }
           >
             투표모아쥬
@@ -223,7 +223,7 @@ const NavigationBar = () => {
           <NavLink
             to="/BroadcastPage"
             style={ ({ isActive }) =>
-            isActive ? activeItemSStyle : undefined
+            isActive ? activeItemStyle : undefined
             }
           >
             지금골라쥬
@@ -237,7 +237,7 @@ const NavigationBar = () => {
           <NavLink
             to="/StatisticPage"
             style={({ isActive }) =>
-            isActive ? activeItemSStyle : undefined
+            isActive ? activeItemStyle : undefined
             }
           >
             통계보여쥬
@@ -251,7 +251,7 @@ const NavigationBar = () => {
           <NavLink
             to="/TestPage"
             style={({ isActive }) =>
-            isActive ? activeItemSStyle : undefined
+            isActive ? activeItemStyle : undefined
             }
           >
             소비성향알려쥬
