@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const NavigationBar = () => {
-  // 항목 hover
+  // 메뉴 hover
   const [votePageHovered, setVotePageHovered] = useState(false);
   const [broadcastPageHovered, setBroadcastPageHovered] = useState(false);
   const [statisticPageHovered, setStatisticPageHovered] = useState(false);
@@ -18,140 +18,174 @@ const NavigationBar = () => {
 
 
   // --------------------------------- css 시작 ---------------------------------
+  
+  // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
-    // 네비게이션 바 관련
-    position: "fixed",                              // 네비게이션 바 상단에 고정
-    top: "0px",                                     // 네비게이션 바 고정 위치: 0px
-    background: "#FFFFFF",                          // 배경 색상: 흰색
-    height: "100px",                                // 네비게이션 바 높이: 100px
-    width: "100%",                                  // 네비게이션 바 넓이: 100%
-    padding: "0 100px",                             // 네비게이션 좌우 padding: 100px
+    // 위치
+    position: "fixed",                              // 내비게이션 바 상단에 고정
+    top: "0px",                                     // 내비게이션 바 고정 위치: 0px
 
-    // 내부 항목 관련
+    // 디자인
+    width: "100%",                                  // 내비게이션 바 넓이: 100%
+    height: "100px",                                // 내비게이션 바 높이: 100px
+    padding: "0 100px",                             // 내비게이션 좌우 padding: 100px
+    background: "#FFFFFF",                          // 배경 색상: 흰색
+
+    // 컨텐츠 정렬
     display: "flex",                                // 항목 수평 정렬
     justifyContent: "space-between",                // 항목 균일 간격으로 정렬
     alignItems: "center",                           // 항목 수직 정렬
   };
 
+  // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
-    // 로고 컨테이너 스타일
+    // 디자인
     width: "400px",                                 // 넓이: 400px
   };
 
+  // ----------- 로고 스타일 -----------
   const logoStyle = {
-    // 로고 스타일
-    fontSize: "48px",                               // 글씨 크기: 48px
-    color: "#FFD257",                               // 글씨 색: 노란색
+    // 글자
     fontFamily: "GmarketSansBold",                  // 굵은 폰트로 변경
+    fontSize: "48px",                               // 글자 크기: 48px
+    color: "#FFD257",                               // 글자 색: 노란색
   }
 
+  // ----------- 내비게이션 바 메뉴 리스트 스타일 -----------
   const listStyle = {
-    // 항목 리스트 스타일
+    // 글자
+    fontWeight: "bold",                             // 글자 굵기: 두껍게
+    fontSize: "18px",                               // 글자 크기: 18px
+
+    // 컨텐츠 정렬
     display: "flex",                                // 리스트 수평 정렬
     alignItems: "center",                           // 리스트 수직 정렬
-    fontWeight: "bold",                             // 글씨 굵기: 두껍게
-    fontSize: "18px",                               // 글씨 크기: 18px
   };
 
+  // ----------- 내비게이션 바 메뉴 공통 스타일 -----------
   const commonStyle = {
-    // 항목 공통 스타일
+    // 디자인
     padding: "0 50px",                              // 항목 좌우 padding: 50px
     height: "100px",                                // 항목 높이: 100px
+
+    // 컨텐츠 정렬
     display: "flex",                                // 링크 수평 정렬
     alignItems: "center",                           // 링크 수직 정렬
   };
 
+  // ----------- 투표모아쥬 메뉴 스타일 -----------
   const votePageStyle = {
-    // 투표모아쥬 항목 스타일
-    ...commonStyle,                                 // commonStyle 가져오기
+    // 상속
+    ...commonStyle,                                 // 메뉴 공통 스타일 상속
 
-    // 마우스 오버 시 글자 색 변경
-    color: votePageHovered ? "#BEBEBE" : "#4A4A4A",
+    // 글자
+    color: votePageHovered ? "#BEBEBE" : "#4A4A4A",  // 마우스 호버 시 글자 색 변경
   };
   
+  // ----------- 지금골라쥬 메뉴 스타일 -----------
   const broadcastPageStyle = {
-    // 지금골라쥬 항목 스타일
-    ...commonStyle,                                 // commonStyle 가져오기
+    // 상속
+    ...commonStyle,                                 // 메뉴 공통 스타일 상속
 
-    // 마우스 오버 시 글자 색 변경
-    color: broadcastPageHovered ? "#BEBEBE" : "#4A4A4A",
+    // 글자
+    color: broadcastPageHovered ? "#BEBEBE" : "#4A4A4A",  // 마우스 호버 시 글자 색 변경
   };
   
+  // ----------- 통계보여쥬 메뉴 스타일 -----------
   const statisticPageStyle = {
-    // 통계보여쥬 항목 스타일
-    ...commonStyle,                                 // commonStyle 가져오기
+    // 상속
+    ...commonStyle,                                 // 메뉴 공통 스타일 상속
 
-    // 마우스 오버 시 글자 색 변경
-    color: statisticPageHovered ? "#BEBEBE" : "#4A4A4A",
+    // 글자
+    color: statisticPageHovered ? "#BEBEBE" : "#4A4A4A",  // 마우스 호버 시 글자 색 변경
   };
   
+  // ----------- 소비성향알려쥬 메뉴 스타일 -----------
   const testPageStyle = {
-    // 소비성향알려쥬 항목 스타일
-    ...commonStyle,                                 // commonStyle 가져오기
+    // 상속
+    ...commonStyle,                                 // 메뉴 공통 스타일 상속
 
-    // 마우스 오버 시 글자 색 변경
-    color: testPageHovered ? "#BEBEBE" : "#4A4A4A",
+    // 글자
+    color: testPageHovered ? "#BEBEBE" : "#4A4A4A",  // 마우스 호버 시 글자 색 변경
   };
 
+  // ----------- 활성화 된 메뉴 스타일 -----------
   const activeItemSStyle = {
-    // 활성화 된 아이템 스타일
+    // 글자
     fontFamily: "GmarketSansMedium",                // 활성화 시 중간 폰트로 변경
-    color: "#4A4A4A",                               // 활성화 시 글씨 색: 진한 회색
+    color: "#4A4A4A",                               // 활성화 시 글자 색: 진한 회색
   };
 
+  // ----------- 버튼 리스트 스타일 -----------
   const buttonListStyle = {
-    // 버튼 리스트 스타일
-    ...listStyle,                                   // listStyle 가져오기
+    // 상속
+    ...listStyle,                                   // 메뉴 리스트 스타일 상속
+
+    // 디자인
     width: "400px",                                 // 넓이: 400px
+
+    // 컨텐츠 정렬
     justifyContent: "flex-end",                     // 내부 버튼 오른쪽 정렬
   }
 
+  // -----------  내 프로필 페이지 버튼 스타일 -----------
   const myPageStyle = {
-    // 내 프로필 페이지 버튼 스타일
+    // 디자인
     margin: "0 10px",                               // 버튼 좌우 margin: 10px
+
+    // 컨텐츠 정렬
     display: "flex",                                // 버튼 수평 정렬
     alignItems: "center",                           // 버튼 수직 정렬
   }
 
+  // -----------  버튼 공통 스타일 -----------
   const buttonStyle = {
-    // 버튼 공통 스타일
+    // 디자인
     margin: "0 10px",                               // 버튼 좌우 margin: 10px
-    borderRadius: "5px",                            // 둥근 테두리: 5px
     width: "90px",                                  // 버튼 넓이: 90px
     height: "40px",                                 // 버튼 높이: 40px
+    borderRadius: "5px",                            // 둥근 테두리: 5px
     cursor: "pointer",                              // 커서: 손가락
-    color: "#4A4A4A",
+    transition: "background 0.5s ease",             // 마우스 호버 시 색깔 천천히 변경
+
+    // 글자
     fontFamily: "GmarketSansMedium",                // 중간 폰트로 변경
-    fontWeight: "normal",                           // 글씨 굵기: 보통
-    transition: "background 0.5s ease",             // 마우스 오버 시 색깔 천천히 변경
+    fontWeight: "normal",                           // 글자 굵기: 보통
+    color: "#4A4A4A",                               // 글자 색: 회색
   };
 
+  // -----------  로그아웃 버튼 스타일 -----------
   const logoutButtonStyle = {
-    // 로그아웃 버튼 스타일
-    ...buttonStyle,                                 // buttonStyle 가져오기
-    color: "#9C9C9C",                               // 글씨 색: 회색
+    // 상속
+    ...buttonStyle,                                 // 버튼 공통 스타일 상속
+
+    // 디자인
     border: "3px solid",                            // 테두리 스타일        
     borderColor: "#BEBEBE",                         // 테두리 색: 연한 회색
+    background: logoutButtonHovered ? "#D9D9D9" : "transparent",  // 마우스 호버 시 배경 색상 변경
 
-    // 마우스 오버 시 배경 색상 변경
-    background: logoutButtonHovered ? "#D9D9D9" : "transparent",
+    // 글자
+    color: "#9C9C9C",                               // 글자 색: 회색
   };
 
+  // -----------  로그인 버튼 스타일 -----------
   const loginButtonStyle = {
-    // 로그인 버튼 스타일
-    ...buttonStyle,                                 // buttonStyle 가져오기
+    // 상속
+    ...buttonStyle,                                 // 버튼 공통 스타일 상속
 
-    // 마우스 오버 시 배경 색상 변경
-    background: loginButtonHovered ? "#ACD145" : "#CEFA70", 
+    // 디자인
+    background: loginButtonHovered ? "#ACD145" : "#CEFA70",  // 마우스 호버 시 배경 색상 변경
   };
 
+  // -----------  회원가입 버튼 스타일 -----------
   const signupButtonStyle = {
-    // 회원가입 버튼 스타일
-    ...buttonStyle,                                 // buttonStyle 가져오기
+    // 상속
+    ...buttonStyle,                                 // 버튼 공통 스타일 상속
 
-    // 마우스 오버 시 배경 색상 변경
-    background: signupButtonHovered ? "#E6BE3D" : "#FFD257",
+    // 디자인
+    background: signupButtonHovered ? "#E6BE3D" : "#FFD257",  // 마우스 호버 시 배경 색상 변경
   };
+
   // --------------------------------- css 끝 ---------------------------------
 
   
@@ -164,7 +198,7 @@ const NavigationBar = () => {
         </NavLink>
       </div>
 
-      {/* --------------------------------- 네비게이션 항목 --------------------------------- */}
+      {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
       <ul style={listStyle}>
 
         <li
