@@ -13,14 +13,16 @@ const App = () => {
   return (
     <Router>
       <NavigationBar />
-      <Routes>
-	  	<Route path="/" element={<MainPage />} />
-        <Route path="/VotePage" element={<VotePage />} />
-        <Route path="/BroadcastPage" element={<BroadcastPage />} />
-        <Route path="/StatisticPage" element={<StatisticPage />} />
-        <Route path="/TestPage" element={<TestPage />} />
-        <Route path="/MyPage" element={<MyPage />} />
-      </Routes>
+      <div className="body">
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/VotePage" element={<VotePage />} />
+          <Route path="/BroadcastPage" element={<BroadcastPage />} />
+          <Route path="/StatisticPage" element={<StatisticPage />} />
+          <Route path="/TestPage" element={<TestPage />} />
+          <Route path="/MyPage" element={<MyPage />} />
+        </Routes>
+      </div>
     </Router>
   );
 };
