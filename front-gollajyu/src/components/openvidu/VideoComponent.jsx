@@ -7,18 +7,33 @@ import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChattingForm from "./chat/ChattingForm";
 import ChattingList from "./chat/ChattingList";
+import Loading from "./Loading";
+import { Button, Input, Tooltip } from "@mui/material";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
+const broadcastInfo = {
+  backgroundColor: "white",
+  borderRadius: "10px",
+  padding: "10px",
+};
+
+const videoContainer = {
+  borderRadius: "20px",
+  background: "rgba(0, 0, 0, 0.20)",
+  padding: "1.2rem",
+  margin: "3rem auto",
+};
+
 export default function VideoComponent() {
-  const [mySessionId, setMySessionId] = useState("SessionA");
-  const randomNumber = Math.floor(Math.random() * 100);
   const location = useLocation();
+  const [mySessionId, setMySessionId] = useState(location.state.sessionId);
   const isHost = location.state.isHost; // isHost로 분기해서 isHost=true면 화면을 publish하고 아니면 publish는 없이 subscribe만 함
-  const [myUserName, setMyUserName] = useState(isHost ? "방송자" : "시청자");
+  const [myUserName, setMyUserName] = useState(
+    isHost ? "방송자" : location.state.userNickName
+  );
   const [session, setSession] = useState(undefined);
-  const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
@@ -28,28 +43,23 @@ export default function VideoComponent() {
 
   const OV = useRef(new OpenVidu());
 
+  // sessionId가 변경되는 경우 -> MySessionId 상태 변경
   const handleChangeSessionId = useCallback((e) => {
     setMySessionId(e.target.value);
   }, []);
 
+  // userName이 변경되는 경우 -> MyUserName 상태 변경
   const handleChangeUserName = useCallback((e) => {
     setMyUserName(e.target.value);
   }, []);
 
-  const handleMainVideoStream = useCallback(
-    (stream) => {
-      if (mainStreamManager !== stream) {
-        setMainStreamManager(stream);
-      }
-    },
-    [mainStreamManager]
-  );
-
+  // session에 진입하기!
   const joinSession = useCallback(() => {
-    const mySession = OV.current.initSession();
+    const mySession = OV.current.initSession(); // OV 가 useRef로 생성된 객체이므로 .current로 내부에 접근해야함
 
+    // stream이 새로 생성되면(본인 외의 방송 참여자) subscribe하고 subscribers에 추가 => 현재는 방송자만 stream을 생성하므로 방송자 입장에서는 subscribers가 없고, 시청자 입장에서는 방송자의 stream만 subscribers에 담겨있음
     mySession.on("streamCreated", (event) => {
-      const subscriber = mySession.subscribe(event.stream, "ABCD");
+      const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
 
@@ -61,8 +71,8 @@ export default function VideoComponent() {
       console.warn(exception);
     });
 
+    // 채팅 신호 수신하여 메세지 리스트 업데이트
     mySession.on("signal:chat", (event) => {
-      // 채팅 신호 수신하여 메세지 리스트 업데이트
       setMessageList((prevMessageList) => {
         return [...prevMessageList, event.data];
       });
@@ -78,6 +88,7 @@ export default function VideoComponent() {
         try {
           await session.connect(token, { clientData: myUserName });
 
+          // 방송자(isHost=true)일 때만 stream을 publish, 시청자는 session에 connect만 함
           if (isHost) {
             let publisher = await OV.current.initPublisherAsync(undefined, {
               audioSource: undefined,
@@ -87,7 +98,7 @@ export default function VideoComponent() {
               resolution: "640x480",
               frameRate: 30,
               insertMode: "APPEND",
-              mirror: false,
+              mirror: true,
             });
 
             session.publish(publisher);
@@ -104,7 +115,6 @@ export default function VideoComponent() {
               (device) => device.deviceId === currentVideoDeviceId
             );
 
-            setMainStreamManager(publisher);
             setPublisher(publisher);
             setCurrentVideoDevice(currentVideoDevice);
           }
@@ -119,6 +129,7 @@ export default function VideoComponent() {
     }
   }, [session, myUserName]);
 
+  // subscribers 변경이 잘 되는지 확인하기 위한 코드 => 배포 시, 삭제
   useEffect(() => {
     console.log("구독자 변경: ", subscribers);
   }, [subscribers]);
@@ -134,8 +145,7 @@ export default function VideoComponent() {
     setSession(undefined);
     setSubscribers([]);
     setMySessionId("SessionA");
-    setMyUserName("Participant" + Math.floor(Math.random() * 100));
-    setMainStreamManager(undefined);
+    setMyUserName("Anonymous");
     setPublisher(undefined);
   }, [session]);
 
@@ -156,39 +166,40 @@ export default function VideoComponent() {
       });
   };
 
-  const switchCamera = useCallback(async () => {
-    try {
-      const devices = await OV.current.getDevices();
-      const videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+  // 전면, 후면 카메라 변경 함수 => 현재 사용 X, 화면 공유 함수 작성 시 참고할 수 있을 듯
+  // const switchCamera = useCallback(async () => {
+  //   try {
+  //     const devices = await OV.current.getDevices();
+  //     const videoDevices = devices.filter(
+  //       (device) => device.kind === "videoinput"
+  //     );
 
-      if (videoDevices && videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
+  //     if (videoDevices && videoDevices.length > 1) {
+  //       const newVideoDevice = videoDevices.filter(
+  //         (device) => device.deviceId !== currentVideoDevice.deviceId
+  //       );
 
-        if (newVideoDevice.length > 0) {
-          const newPublisher = OV.current.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true,
-          });
+  //       if (newVideoDevice.length > 0) {
+  //         const newPublisher = OV.current.initPublisher(undefined, {
+  //           videoSource: newVideoDevice[0].deviceId,
+  //           publishAudio: true,
+  //           publishVideo: true,
+  //           mirror: true,
+  //         });
 
-          if (session) {
-            await session.unpublish(mainStreamManager);
-            await session.publish(newPublisher);
-            setCurrentVideoDevice(newVideoDevice[0]);
-            setMainStreamManager(newPublisher);
-            setPublisher(newPublisher);
-          }
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [currentVideoDevice, session, mainStreamManager]);
+  //         if (session) {
+  //           await session.unpublish(mainStreamManager);
+  //           await session.publish(newPublisher);
+  //           setCurrentVideoDevice(newVideoDevice[0]);
+  //           setMainStreamManager(newPublisher);
+  //           setPublisher(newPublisher);
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }, [currentVideoDevice, session, mainStreamManager]);
 
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
@@ -213,6 +224,9 @@ export default function VideoComponent() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [leaveSession]);
+
+  // 현재 화면에서 벗어나는 동작(navbar 눌러서 이동)하면 막는 알림 한번 띄워주기
+  // 추가해야되는 기능
 
   /**
    * --------------------------------------------
@@ -256,89 +270,99 @@ export default function VideoComponent() {
     );
     return response.data; // The token
   };
+
+  // 로딩 페이지를 통한 방 입장
+  const enterOnAirRoom = () => {
+    joinSession();
+  };
+
+  const screenShare = () => {};
+
+  const mute = () => {};
   return (
-    <div className="container">
+    // container는 최상위 div
+    <div className="container mx-5" style={videoContainer}>
+      {/* 방송 화면으로 진입하기 전, 한번 막음 */}
       {session === undefined ? (
         <div id="join">
-          <div id="img-div">
-            <img
-              src="resources/images/openvidu_grey_bg_transp_cropped.png"
-              alt="OpenVidu logo"
-            />
-          </div>
-          <div id="join-dialog" className="jumbotron vertical-center">
-            <h1> Join a video session </h1>
-            <form className="form-group" onSubmit={joinSession}>
-              <p>Host? : {isHost}</p>
-              {/* <p>
-								<label>Participant: </label>
-								<input
-									className="form-control"
-									type="text"
-									id="userName"
-									value={myUserName}
-									onChange={handleChangeUserName}
-									required
-								/>
-							</p>
-							<p>
-								<label> Session: </label>
-								<input
-									className="form-control"
-									type="text"
-									id="sessionId"
-									value={mySessionId}
-									onChange={handleChangeSessionId}
-									required
-								/>
-							</p> */}
-              <p className="text-center">
-                <input
-                  className="btn btn-lg btn-success"
-                  name="commit"
-                  type="submit"
-                  value="JOIN"
-                />
-              </p>
-            </form>
-          </div>
+          <h1> Join a video session </h1>
+          <Button variant="contained" color="error" onClick={enterOnAirRoom}>
+            방송 진입
+          </Button>
         </div>
       ) : null}
 
+      {/* 방송 화면으로 진입 후 */}
       {session !== undefined ? (
+        // 방송자의 영상 송출 부분
         <div id="session">
-          <div id="session-header">
-            <h1 id="session-title">{mySessionId}</h1>
-            <input
-              className="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-              value="Leave session"
-            />
-          </div>
-          <p>{myUserName}</p>
-          <div id="video-container" className="container">
-            {isHost && (
-              <div id="main-video" className="columns-2">
-                <UserVideoComponent streamManager={publisher} />
+          {isHost ? (
+            <div id="session-header" className="flex justify-between">
+              <div>
+                <Button onClick={screenShare}>화면 공유</Button>
+                <Button onClick={mute}>마이크 음소거</Button>
               </div>
-            )}
-            {!isHost && (
-              <div id="main-video" className="columns-2">
-                <UserVideoComponent streamManager={subscribers[0]} />
+              <Button
+                className="flex-none"
+                variant="contained"
+                color="error"
+                id="buttonLeaveSession"
+                onClick={leaveSession}
+                value="Leave session"
+              >
+                방송 종료
+              </Button>
+            </div>
+          ) : (
+            <div id="session-header" className="flex justify-end">
+              <Button
+                className="flex-none"
+                variant="contained"
+                color="error"
+                id="buttonLeaveSession"
+                onClick={leaveSession}
+                value="Leave session"
+              >
+                나가기
+              </Button>
+            </div>
+          )}
+          <div
+            id="sub-container"
+            className="flex flex-row justify-between gap-7"
+          >
+            <div id="video+detail" className="basis-2/3 flex flex-col gap-y-5">
+              {isHost && (
+                <div id="main-video" className="basis-3/5">
+                  <UserVideoComponent streamManager={publisher} />
+                </div>
+              )}
+              {!isHost && (
+                <div id="main-video" className="basis-3/5">
+                  <UserVideoComponent streamManager={subscribers[0]} />
+                </div>
+              )}
+              <div className="basis-2/5" style={broadcastInfo}>
+                {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
+                <p>방송자 닉네임: 닉네임</p>
+                <p>방송 제목</p>
               </div>
-            )}
-            {chatDisplay && (
-              <div id="message-container">
-                <ChattingList messageList={messageList}></ChattingList>
-                <ChattingForm
-                  myUserName={myUserName}
-                  onMessage={sendMsg}
-                  currentSession={session}
-                ></ChattingForm>
+            </div>
+            <div id="vote+chatting" className="basis-1/3 flex flex-col gap-y-5">
+              <div id="vote" className="mb-3 basis-1/3">
+                투표창이 여기 생길거에요
               </div>
-            )}
+              {chatDisplay && (
+                <div id="chatting" className="basis-2/3">
+                  <ChattingList messageList={messageList}></ChattingList>
+                  <ChattingForm
+                    myUserName={myUserName}
+                    onMessage={sendMsg}
+                    currentSession={session}
+                  ></ChattingForm>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       ) : null}

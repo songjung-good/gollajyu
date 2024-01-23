@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import _ from "lodash";
+import tmp_profile from "/src/assets/tmp_profile.png";
 
 const StyledChattingList = styled.div`
-  height: 240px;
-  background: rgba(0, 0, 0, 0.2);
+  height: 400px;
+  background: white;
   text-align: left;
   overflow: scroll;
   padding-left: 10px;
@@ -40,7 +41,7 @@ const MessageSenderDiv = styled.div`
 
 const MessageContentDiv = styled.div`
   width: 300px;
-  color: white;
+  color: black;
   font-weight: bold;
   font-size: large;
   margin-left: 5px;
@@ -84,7 +85,7 @@ const ChattingList = (props) => {
           <div key={i}>
             <ChatDiv>
               <ProfileDiv>
-                <ProfileImg src=""></ProfileImg>
+                <ProfileImg src={tmp_profile}></ProfileImg>
               </ProfileDiv>
               <div>
                 <MessageSenderDiv>{msg.split(":")[0]}</MessageSenderDiv>

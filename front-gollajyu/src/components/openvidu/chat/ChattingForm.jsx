@@ -3,10 +3,6 @@ import { Send } from "@mui/icons-material";
 import { Button, Input, Tooltip } from "@mui/material";
 import styled from "styled-components";
 
-const StyledForm = styled.form`
-  display: flex;
-`;
-
 const ChattingForm = (props) => {
   const [message, setMessage] = useState("");
 
@@ -27,15 +23,25 @@ const ChattingForm = (props) => {
     setMessage(event.target.value);
   };
 
+  const checkEnter = (event) => {
+    if (event.key === "Enter") {
+      sendMessage(event);
+    }
+  };
+
   return (
-    <StyledForm onSubmit={sendMessage}>
+    <div onSubmit={sendMessage} className="flex justify-stretch">
+      <div className="flex-none w-20 text-center m-auto">
+        {props.myUserName}
+      </div>
       <Input
+        className="flex-grow"
         placeholder="메세지를 입력하세요"
         id="chat-input"
         value={message}
         onChange={inputChangeHandler}
+        onKeyUp={checkEnter}
         style={{
-          width: "100%",
           background: "rgba(255, 255, 255)",
           border: "1px solid rgba(177, 177, 177)",
           borderRadius: "5px",
@@ -45,6 +51,7 @@ const ChattingForm = (props) => {
       ></Input>
       <Tooltip title="메세지 보내기">
         <Button
+          className="flex-none w-10"
           variant="contained"
           style={{ color: "white", background: "#019267" }}
           onClick={sendMessage}
@@ -52,7 +59,7 @@ const ChattingForm = (props) => {
           <Send></Send>
         </Button>
       </Tooltip>
-    </StyledForm>
+    </div>
   );
 };
 

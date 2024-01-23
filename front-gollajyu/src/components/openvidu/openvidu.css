@@ -167,7 +167,7 @@ a:hover .demo-logo {
   margin-top: 20px;
 }
 
-#video-container video {
+/* #video-container video {
   position: relative;
   float: left;
   cursor: pointer;
@@ -181,7 +181,7 @@ a:hover .demo-logo {
   color: #777777;
   font-weight: bold;
   border-bottom-right-radius: 4px;
-}
+} */
 
 /*video {
 	width: 100%;
