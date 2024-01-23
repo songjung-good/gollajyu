@@ -66,12 +66,12 @@ const VoteButton = () => {
 
   // ----------- 텍스트 스타일 ----------- 
   const textStyle = {
+    // 디자인
+    marginLeft: "30px",                             // 왼쪽 여백: 30px
+
     // 글자
     fontFamily: "GmarketSansMedium",                // 중간 폰트로 설정
     color: "#000000",                               // 글자 색: 검정
-
-    // 디자인
-    marginLeft: "30px",                             // 왼쪽 여백: 30px
   };
 
   // ----------- 포인트 텍스트 스타일 ----------- 
@@ -217,10 +217,10 @@ const VoteButton = () => {
         투표<br />
         생성
 
-        {/* ----------- '지금골라쥬!' 버튼 ----------- */}
+        {/* --------------------------------- '지금골라쥬!' 버튼 --------------------------------- */}
         <div onMouseLeave={nowGollajyuLeave}>
 
-          {/* 설명란 */}
+          {/* ------------- 설명란 ------------- */}
           {nowGollajyuHovered && (
             <div style={boxStyle}>
               <div style={textContainerStyle}>
@@ -233,7 +233,7 @@ const VoteButton = () => {
             </div>
           )}
 
-          {/* 이미지 */}
+          {/* ------------- 이미지 ------------- */}
           <div
             style={nowCircleStyle}
             onMouseEnter={nowGollajyuHover}
@@ -242,10 +242,10 @@ const VoteButton = () => {
           </div>
         </div>
 
-        {/* ----------- '간단골라쥬!' 버튼 ----------- */}
+        {/* --------------------------------- '간단골라쥬!' 버튼 --------------------------------- */}
         <div onMouseLeave={simpleGollajyuLeave}>
 
-          {/* 설명란 */}
+          {/* ------------- 설명란 ------------- */}
           {simpleGollajyuHovered && (
             <div style={{ ...boxStyle, bottom: "150px" }}>
               <div style={textContainerStyle}>
@@ -258,7 +258,7 @@ const VoteButton = () => {
             </div>
           )}
 
-          {/* 이미지 */}
+          {/* ------------- 이미지 ------------- */}
           <div
             style={simpleCircleStyle}
             onMouseEnter={simpleGollajyuHover}
@@ -267,10 +267,10 @@ const VoteButton = () => {
           </div>
         </div>
 
-        {/* ----------- '구매골라쥬!' 버튼 ----------- */}
+        {/* --------------------------------- '구매골라쥬!' 버튼 --------------------------------- */}
         <div onMouseLeave={purchaseGollajyLeave}>
 
-          {/* 설명란 */}
+          {/* ------------- 설명란 ------------- */}
           {purchaseGollajyuHovered && (
             <div style={{ ...boxStyle, bottom: "220px" }}>
               <div style={textContainerStyle}>
@@ -283,7 +283,7 @@ const VoteButton = () => {
             </div>
           )}
 
-          {/* 이미지 */}
+          {/* ------------- 이미지 ------------- */}
           <div
             style={purchaseCircleStyle}
             onMouseEnter={purchaseGollajyHover}
@@ -292,7 +292,7 @@ const VoteButton = () => {
           </div>
         </div>
 
-        {/* ----------- 투표 생성 닫기 버튼 ----------- */}
+        {/* --------------------------------- 투표 생성 닫기 버튼 --------------------------------- */}
         <div style={closeButtonStyle} onClick={buttonCloseClick}>X</div>
       </button>
     </div>
