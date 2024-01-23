@@ -5,6 +5,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./VideoComponent.css";
 import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
+import ChattingForm from "./chat/ChattingForm";
+import ChattingList from "./chat/ChattingList";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -20,6 +22,8 @@ export default function VideoComponent() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
+  const [chatDisplay, setChatDisplay] = useState(true); // 채팅창 보이기(초깃값: true)
   console.log("isHost?:", isHost);
 
   const OV = useRef(new OpenVidu());
@@ -55,6 +59,13 @@ export default function VideoComponent() {
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
+    });
+
+    mySession.on("signal:chat", (event) => {
+      // 채팅 신호 수신하여 메세지 리스트 업데이트
+      setMessageList((prevMessageList) => {
+        return [...prevMessageList, event.data];
+      });
     });
 
     setSession(mySession);
@@ -127,6 +138,23 @@ export default function VideoComponent() {
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
+
+  // 메세지 보내기(Sender of the message (after 'session.connect'))
+  const sendMsg = (msg, currentSession) => {
+    // this.state.session으로는 자식이 인식할 수 없으므로 currentSession을 자식에게 props로 넘겨주고 다시 받음
+    currentSession
+      .signal({
+        data: msg, // .signal의 data는 문자열만 넘겨야한다
+        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        type: "chat", // The type of message (optional)
+      })
+      .then(() => {
+        console.log("Message successfully sent");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const switchCamera = useCallback(async () => {
     try {
@@ -288,50 +316,30 @@ export default function VideoComponent() {
               onClick={leaveSession}
               value="Leave session"
             />
-            <input
-              className="btn btn-large btn-success"
-              type="button"
-              id="buttonSwitchCamera"
-              onClick={switchCamera}
-              value="Switch Camera"
-            />
           </div>
           <p>{myUserName}</p>
-          {isHost && (
-            <div id="main-video" className="col-md-6">
-              <UserVideoComponent streamManager={publisher} />
-            </div>
-          )}
-          {!isHost && (
-            <div id="main-video" className="col-md-6">
-              <UserVideoComponent streamManager={subscribers[0]} />
-            </div>
-          )}
-          {/* {mainStreamManager !== undefined ? (
-						<div id="main-video" className="col-md-6">
-							<UserVideoComponent streamManager={mainStreamManager} />
-						</div>
-					) : null}
-					<div id="video-container" className="col-md-6">
-						{publisher !== undefined ? (
-							<div
-								className="stream-container col-md-6 col-xs-6"
-								onClick={() => handleMainVideoStream(publisher)}
-							>
-								<UserVideoComponent streamManager={publisher} />
-							</div>
-						) : null}
-						{subscribers.map((sub, i) => (
-							<div
-								key={sub.id}
-								className="stream-container col-md-6 col-xs-6"
-								onClick={() => handleMainVideoStream(sub)}
-							>
-								<span>{sub.id}</span>
-								<UserVideoComponent streamManager={sub} />
-							</div>
-						))}
-					</div> */}
+          <div id="video-container" className="container">
+            {isHost && (
+              <div id="main-video" className="columns-2">
+                <UserVideoComponent streamManager={publisher} />
+              </div>
+            )}
+            {!isHost && (
+              <div id="main-video" className="columns-2">
+                <UserVideoComponent streamManager={subscribers[0]} />
+              </div>
+            )}
+            {chatDisplay && (
+              <div id="message-container">
+                <ChattingList messageList={messageList}></ChattingList>
+                <ChattingForm
+                  myUserName={myUserName}
+                  onMessage={sendMsg}
+                  currentSession={session}
+                ></ChattingForm>
+              </div>
+            )}
+          </div>
         </div>
       ) : null}
     </div>
