@@ -1,23 +1,19 @@
 package com.jaecheop.backgollajyu.vote.service;
 
-import com.jaecheop.backgollajyu.member.controller.MemberController;
 import com.jaecheop.backgollajyu.member.entity.Member;
-import com.jaecheop.backgollajyu.member.model.VoteResDto;
+import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import com.jaecheop.backgollajyu.vote.entity.VoteItem;
-import com.jaecheop.backgollajyu.vote.model.ServiceResult;
-import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
-import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.VoteItemRepository;
 import com.jaecheop.backgollajyu.vote.repository.VoteRepository;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.apache.bcel.generic.Tag;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +21,7 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final MemberRepository memberRepository;
+    private Vote vote;
 
 
     /**
@@ -69,25 +66,10 @@ public class VoteService {
 
     }
 
-    // 투표한 Dto
 
-    public List<VoteResDto> findVoteResultsByMemberIdAndCreateVoteResDtoList(Long memberId) {
-        // Retrieve VoteResDto instances based on memberId using VoteItemResult query
-        List<VoteResDto> initialVoteResDtoList = voteItemResultRepository.findVoteResultsByMemberId(memberId);
 
-        // Extract voteId values from initialVoteResDtoList
-        List<Long> voteIds = initialVoteResDtoList.stream()
-                .map(VoteResDto::getVoteId)
-                .collect(Collectors.toList());
-
-        // Fetch Vote entities based on voteIds
-        List<Vote> votes = voteRepository.findAllById(voteIds);
-
-        // Create a new list of VoteResDto using the fetched Vote entities
-        return byMemberIdVoteResDtoList(votes);
-    }
-
-    private List<VoteResDto> byMemberIdVoteResDtoList(List<Vote> votes) {
+    // 투표 리스트를 Dto 형태로 변환
+    private List<VoteResDto> makeVoteResDtoList(List<Vote> votes) {
         List<VoteResDto> voteResDtoList = new ArrayList<>();
 
         for (Vote vote : votes) {
@@ -99,6 +81,7 @@ public class VoteService {
             voteResDto.setCreateAt(vote.getCreateAt());
             voteResDto.setCode(vote.getCode());
             voteResDto.setCodeType(vote.getCodeType());
+            voteResDto.setVoteItems(mapVoteItemsToDto(getVoteItemsForVote(vote)));  // Set the list of VoteItemDto
             // You might need to fetch likesId from another source
 //            voteResDto.setLikesId(/* fetch likesId based on vote */);
 
@@ -107,14 +90,111 @@ public class VoteService {
 
         return voteResDtoList;
     }
+    public List<VoteItem> getVoteItemsForVote(Vote vote) {
+        return voteItemRepository.findVoteItemsByVote(vote);
+    }
+
+    private List<VoteItemResDto> mapVoteItemsToDto(List<VoteItem> voteItems) {
+        return voteItems.stream()
+                .map(this::mapVoteItemToDto)
+                .collect(Collectors.toList());
+    }
+
+    private VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
+        return VoteItemResDto.builder()
+                .voteItemId(voteItem.getId())
+                .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                .voteItemDesc(voteItem.getVoteItemDesc())
+                .price(voteItem.getPrice())
+                .voteResultCountResDtoList(generateStatistics(voteItem)) // 후아아아아
+                .build();
+    }
+
+    public static Map<Tag, Long> generateStatistics(VoteItem voteItem) {
+        Map<Tag, Long> statistics = new HashMap<>();
+
+        // Assuming VoteItem has a method to retrieve associated VoteItemResults
+        List<VoteItemResult> voteItemResults = voteItem.getVoteItemResults();
+
+        for (VoteItemResult voteItemResult : voteItemResults) {
+            // Assuming VoteResult has a method to retrieve associated Tag
+            Tag tag = voteItemResult.getTag();
+
+            // Update count for the tag
+            statistics.put(tag, statistics.getOrDefault(tag, 0L) + 1);
+        }
+
+        return statistics;
+    }
 
 
-    // 투표한 결과 기반 투표 리스트
+
+
+
+
+
+
+
+
+
+
+    // 투표 작성자 Id로 투표 리스트 생성
+    public List<VoteResDto> getVotesByMemberId(Long memberId) {
+        List<Vote> votes = voteRepository.findByMemberId(memberId);
+        return makeVoteResDtoList(votes);
+    }
+
+    // 투표한 투표 리스트
     public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
 
-        List<VoteResult> voteResults = VoteRepository.findVoteResultsByMemberId(memberId);
-        List<Vote> votes = voteRepository.findByVoteId(voteId);
-        return ByResultMemberIdVoteResDtoList(votes);
+        List<Vote> votes = VoteRepository.findVoteIdsByResultMemberId(memberId);
+        return makeVoteResDtoList(votes);
     }
+
+    // 좋아요한 투표 리스트
+    public List<VoteResDto> getLikedVotesByMemberId(Long memberId) {
+        List<Vote> votes = voteRepository.findByLikedMembersMemberId(memberId);
+        return makeVoteResDtoList(votes);
+    }
+
+    // 댓글 작성한 투표 리스트 +@ Dto 만들어야함 VoteResDto + 댓글 설명 + 댓글 생성일자
+    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
+        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
+        return makeVoteResDtoList(votes);
+    }
+
+
+
+
+
+
+
+    // Dto 만들자아아아아아ㅏ아ㅏ아ㅏ앙아ㅏ아ㅏㅇ아아
+    public List<CategoryInfoResDto> perfectResultsMethod(Integer voteId, Integer memberId, Integer age, char gender, String type) {
+        List<CategoryInfoResDto> result1;
+
+        if (memberId != null) {
+            result1 = voteItemResultRepository.findAllByMemberId(memberId);
+        } else if (voteId != null) {
+            result1 = voteItemResultRepository.findByVoteId(voteId);
+        } else {
+            result1 = voteItemResultRepository.findAllByType(type);
+        }
+
+        if (type != null) {
+            result1 = result1.stream().filter(result -> result.getType().equals(type)).collect(Collectors.toList());
+        }
+        if (age != null) {
+            result1 = result1.stream().filter(result -> result.getAge() == age).collect(Collectors.toList());
+        }
+        if (gender != 0) {
+            result1 = result1.stream().filter(result -> result.getGender() == gender).collect(Collectors.toList());
+        }
+
+        return result1;
+    }
+
+
+
 
 }

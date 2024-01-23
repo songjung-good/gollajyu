@@ -1,11 +1,9 @@
 package com.jaecheop.backgollajyu.member.controller;
 
-import com.jaecheop.backgollajyu.member.model.VoteResDto;
-import com.jaecheop.backgollajyu.vote.entity.Vote;
+import com.jaecheop.backgollajyu.vote.model.VoteResDto;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,19 +24,41 @@ public class MemberController {
     public ResponseEntity<List<VoteResDto>> getVotesByMemberId(@PathVariable Long memberId) {
         List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId);
 
-        // Check if the list is not empty and return the appropriate response
-        if (!voteResDtoList.isEmpty()) {
-            return ResponseEntity.ok(voteResDtoList);
+        if (voteResDtoList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            // You can customize the response based on your requirements (e.g., return 404 if no votes found)
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
         }
     }
 
     @GetMapping("/{memberId}/votes/participation")
     public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(@PathVariable Long memberId) {
         List<VoteResDto> voteResDtoList = voteService.getVotesByResultMemberId(memberId);
-        return voteResDtoList;
+        if (voteResDtoList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/{memberId}/votes/likes")
+    public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(@PathVariable Long memberId) {
+        List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId);
+
+        if (voteResDtoList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
+        }
+    }
+    @GetMapping("/{memberId}/comments")
+    public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(@PathVariable Long memberId) {
+        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
+        if (voteResDtoList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
+        }
     }
 
 }
