@@ -17,8 +17,11 @@ const NavigationBar = () => {
   // --------------------------------- css 시작 ---------------------------------
   const navigationBarStyle = {
     // 네비게이션 바 관련
+    position: "fixed",                              // 네비게이션 바 상단에 고정
+    top: "0px",                                     // 네비게이션 바 고정 위치: 0px
     background: "#FFFFFF",                          // 배경 색상: 흰색
     height: "100px",                                // 네비게이션 바 높이: 100px
+    width: "100%",                                  // 네비게이션 바 넓이: 100%
     padding: "0 100px",                             // 네비게이션 좌우 padding: 100px
 
     // 내부 항목 관련
