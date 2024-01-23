@@ -23,27 +23,28 @@ public class VoteController {
 
     /**
      * 투표 생성 - create
+     *
      * @return
      */
     @PostMapping("")
-    public ResponseEntity<?> addVote(@RequestBody VoteReqDto voteReqDto){
+    public ResponseEntity<?> addVote(@RequestBody VoteReqDto voteReqDto) {
 
         // 서비스단으로 넘겨서 로직 처리 -> ServiceResult(result, message, object-data)로 반환
         ServiceResult result = voteService.addVote(voteReqDto);
 
         // 받아온 결과에 따라 에러 메세지 출력하거나 return 하거나
-        if(!result.isResult()){
+        if (!result.isResult()) {
             return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
         }
         return ResponseEntity.ok().body(ResponseMessage.success());
     }
 
     @PostMapping("/choices")
-    public ResponseEntity<?>  choiceMain(@RequestBody ChoiceReqDto choiceReqDto){
+    public ResponseEntity<?> choiceMain(@RequestBody ChoiceReqDto choiceReqDto) {
 
         ServiceResult result = voteService.choiceMain(choiceReqDto);
 
-        if(!result.isResult()){
+        if (!result.isResult()) {
             return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
         }
         return ResponseEntity.ok().body(ResponseMessage.success());

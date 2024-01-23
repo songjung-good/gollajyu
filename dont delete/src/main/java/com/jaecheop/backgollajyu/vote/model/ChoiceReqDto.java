@@ -1,8 +1,13 @@
 package com.jaecheop.backgollajyu.vote.model;
 
-public class ChoiceReqDto {
-    private String memberId;
+import lombok.Getter;
+import lombok.ToString;
 
-    private String voteId;
-    private String VoteItemId;
+@Getter
+@ToString
+public class ChoiceReqDto {
+    private Long memberId;
+
+    private Long voteId;
+    private Long voteItemId;
 }
