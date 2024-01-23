@@ -43,4 +43,9 @@ public class VoteResult {
     private Gender gender;
 
 
+    @OneToOne
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
+
+
 }

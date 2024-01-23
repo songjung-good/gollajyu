@@ -9,5 +9,10 @@ public class ChoiceReqDto {
     private Long memberId;
 
     private Long voteId;
+
     private Long voteItemId;
+
+    private int categoryId;
+
+    private int tagId;
 }
