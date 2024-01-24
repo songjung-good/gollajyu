@@ -1,20 +1,21 @@
 package com.jaecheop.backgollajyu.vote.model;
 
+import com.jaecheop.backgollajyu.vote.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.List;
+
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentResDto {
+public class CategoryDto {
 
-    private Long commentId;
-    private LocalDateTime commentCreateAt;
-    private String commentDescription;
-    private VoteResDto voteResDto;
+    private int categoryId;
+    private String categoryName;
+    private List<Tag> tags;
 }

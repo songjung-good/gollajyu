@@ -24,6 +24,7 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final MemberRepository memberRepository;
+    private final LikeRepository likeRepository;
 
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
@@ -59,8 +60,7 @@ public class VoteService {
                 .title(voteReqDto.getTitle())
                 .description(voteReqDto.getDescription())
                 .createAt(LocalDateTime.now())
-                .code(voteReqDto.getCode())
-                .codeType(voteReqDto.getCodeType())
+                .category(categoryRepository.findById(voteReqDto.getCategoryId()))
                 .build();
 
         voteRepository.save(vote);
@@ -92,11 +92,14 @@ public class VoteService {
             List<VoteItemResDto> voteItemResDtoList = mapVoteItemsToDto(getVoteItemsForVote(vote));
             Optional<VoteResult> byMemberIdAndVoteId = voteResultRepository.findByMemberIdAndVoteId(currentMemberId, vote.getId());
             Long selectedItemId;
+
+            // 투표한 아이템 찾기
             if (byMemberIdAndVoteId.isPresent()) {
                 selectedItemId = byMemberIdAndVoteId.get().getVoteItem().getId();
             } else {
                 selectedItemId = -1L;
             }
+            List<Like> likes = likeRepository.findByVote(vote);
 
             VoteResDto voteResDto = VoteResDto.builder()
                     .voteId(vote.getId())
@@ -104,10 +107,10 @@ public class VoteService {
                     .title(vote.getTitle())
                     .description(vote.getDescription())
                     .createAt(vote.getCreateAt())
-                    .category()// 카테고리 참조하기
+                    .categoryDto(mapCategoryEntityToDto(vote)) // 카테고리 매핑
                     .voteItems(voteItemResDtoList)
                     .selectedItemId(selectedItemId) // 투표 참여한게 있다면 투표아이템 id를 준다.
-//                    .likesId(/* fetch likesId based on vote */)// 좋아요 전체 참조하기? 수 + 여부참조하가ㅣ
+                    .likes(mapLikesToDto(likes)) // 좋아요 리스트 매핑
                     .build();
 
             voteResDtoList.add(voteResDto);
@@ -156,6 +159,42 @@ public class VoteService {
 
         return statistics;
     }
+
+
+    // Like 엔터티를 LikeDto->LikeDtoList 로 변환하는 메서드
+    private List<LikeDto> mapLikesToDto(List<Like> likes) {
+        return likes.stream()
+                .map(this::mapLikeToDto)
+                .collect(Collectors.toList());
+    }
+    private LikeDto mapLikeToDto(Like like) {
+        if (like != null) {
+            // Implement mapping logic from Like entity to LikeDto using builder
+            return LikeDto.builder()
+                    .likeId(like.getId())
+                    .memberId(like.getMember().getId()) // 예시로 Member의 ID를 매핑
+                    // Add other properties based on Like entity structure
+                    .build();
+        } else {
+            return null;
+        }
+    }
+
+    public CategoryDto mapCategoryEntityToDto(Vote vote) {
+        // Assuming vote is an instance of Vote, and it has a category property
+
+        // Retrieve the Category entity associated with the vote
+        Category categoryEntity = categoryRepository.findByVotes(vote);
+
+        // Map the properties to the DTO using the builder pattern
+        return CategoryDto.builder()
+                .categoryId(categoryEntity.getId())
+                .categoryName(categoryEntity.getCategoryName())
+                .tags(tagRepository.findAllByCategoryId(categoryEntity.getId()))
+                .build();
+    }
+
+
 
 
     // 투표 작성자 Id로 투표 리스트 생성..
