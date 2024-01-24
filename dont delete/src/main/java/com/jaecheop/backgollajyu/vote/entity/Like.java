@@ -7,33 +7,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Entity
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vote {
+public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "vote_id")
+    @Column(name = "like_id")
     private Long id;
 
-    // FK
-    @JoinColumn(name="memberId")
+    @JoinColumn(name="member_id")
     @ManyToOne
     private Member member;
 
-    private String title;
-
-    private String description;
-
-    private LocalDateTime createAt;
-
-    @OneToOne // Many votes can belong to one category
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name="vote_id")
+    @ManyToOne
+    private Vote vote;
 }
