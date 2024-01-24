@@ -4,14 +4,15 @@ import com.jaecheop.backgollajyu.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Getter
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Vote {
@@ -32,8 +33,7 @@ public class Vote {
 
     private LocalDateTime createAt;
 
-    private int code;
-
-    private int codeType;
-
+    @OneToOne // Many votes can belong to one category
+    @JoinColumn(name = "category_id")
+    private Category category;
 }
