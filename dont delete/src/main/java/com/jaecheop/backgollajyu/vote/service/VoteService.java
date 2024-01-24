@@ -47,6 +47,13 @@ public class VoteService {
         // 사용자 존재
         Member member = optionalMember.get();
 
+        // 카테고리 존재 유무 확인
+        Optional<Category> optionalCategory = categoryRepository.findById(voteReqDto.getCategoryId());
+        if(optionalCategory.isEmpty()){
+            return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+        }
+        Category category = optionalCategory.get();
+
         // 포인트 차감 - 투표 생성 : 10포인트
         try{
             member.minusPoint(10L);
@@ -60,7 +67,7 @@ public class VoteService {
                 .title(voteReqDto.getTitle())
                 .description(voteReqDto.getDescription())
                 .createAt(LocalDateTime.now())
-                .category(categoryRepository.findById(voteReqDto.getCategoryId()))
+                .category(category)
                 .build();
 
         voteRepository.save(vote);
@@ -99,7 +106,7 @@ public class VoteService {
             } else {
                 selectedItemId = -1L;
             }
-            List<Like> likes = likeRepository.findByVote(vote);
+            List<Likes> likes = likeRepository.findByVote(vote);
 
             VoteResDto voteResDto = VoteResDto.builder()
                     .voteId(vote.getId())
@@ -162,17 +169,17 @@ public class VoteService {
 
 
     // Like 엔터티를 LikeDto->LikeDtoList 로 변환하는 메서드
-    private List<LikeDto> mapLikesToDto(List<Like> likes) {
+    private List<LikeDto> mapLikesToDto(List<Likes> likes) {
         return likes.stream()
                 .map(this::mapLikeToDto)
                 .collect(Collectors.toList());
     }
-    private LikeDto mapLikeToDto(Like like) {
-        if (like != null) {
+    private LikeDto mapLikeToDto(Likes likes) {
+        if (likes != null) {
             // Implement mapping logic from Like entity to LikeDto using builder
             return LikeDto.builder()
-                    .likeId(like.getId())
-                    .memberId(like.getMember().getId()) // 예시로 Member의 ID를 매핑
+                    .likeId(likes.getId())
+                    .memberId(likes.getMember().getId()) // 예시로 Member의 ID를 매핑
                     // Add other properties based on Like entity structure
                     .build();
         } else {
@@ -184,7 +191,12 @@ public class VoteService {
         // Assuming vote is an instance of Vote, and it has a category property
 
         // Retrieve the Category entity associated with the vote
-        Category categoryEntity = categoryRepository.findByVotes(vote);
+        Optional<Category> optionalCategory = categoryRepository.findByVotes(vote);
+        if(optionalCategory.isEmpty()){
+            return null;
+        }
+
+        Category categoryEntity = optionalCategory.get();
 
         // Map the properties to the DTO using the builder pattern
         return CategoryDto.builder()
@@ -212,35 +224,36 @@ public class VoteService {
 
     // 좋아요한 투표 리스트
     public List<VoteResDto> getLikedVotesByMemberId(Long memberId) {
-        List<Vote> votes = voteRepository.findByLikedMembersMemberId(memberId);
+        // 멤버가 좋아요 한 투표찾기
+        List<Vote> votes = voteRepository.findVoteLikesByMemberId(memberId);
         return makeVoteResDtoList(votes, memberId);
     }
 
 //     댓글 작성한 투표 리스트 +@ Dto 만들어야함 (VoteResDto + 댓글 설명 + 댓글 생성일자) 로 반환할
-    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
-        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
+//    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
+//        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
+//
+//        List<VoteResDto> voteResDtoList = makeVoteResDtoList(votes, memberId);
+//
+//        List<CommentResDto> commentResDtoList = mapVotesToCommentResDto(voteResDtoList);
+//
+//        return commentResDtoList;
+//    }
+//    public List<CommentResDto> mapVotesToCommentResDto(List<VoteResDto> voteResDtoList) {
+//        return voteResDtoList.stream()
+//                .map(this::buildCommentResDto)
+//                .collect(Collectors.toList());
+//    }
 
-        List<VoteResDto> voteResDtoList = makeVoteResDtoList(votes, memberId);
-
-        List<CommentResDto> commentResDtoList = mapVotesToCommentResDto(voteResDtoList);
-
-        return commentResDtoList;
-    }
-    public List<CommentResDto> mapVotesToCommentResDto(List<VoteResDto> voteResDtoList) {
-        return voteResDtoList.stream()
-                .map(this::buildCommentResDto)
-                .collect(Collectors.toList());
-    }
-
-    private CommentResDto buildCommentResDto(VoteResDto voteResDto) {
-        return CommentResDto.builder()
-                .commentId(/* set commentId based on your requirements */)
-                .commentCreateAt(/* set commentCreateAt based on your requirements */)
-                .commentDescription(/* set commentDescription based on your requirements */)
-                .voteResDto(voteResDto)
-                // Set other properties of CommentResDto based on your requirements
-                .build();
-    }
+//    private CommentResDto buildCommentResDto(VoteResDto voteResDto) {
+//        return CommentResDto.builder()
+//                .commentId(/* set commentId based on your requirements */)
+//                .commentCreateAt(/* set commentCreateAt based on your requirements */)
+//                .commentDescription(/* set commentDescription based on your requirements */)
+//                .voteResDto(voteResDto)
+//                // Set other properties of CommentResDto based on your requirements
+//                .build();
+//    }
 
 
 

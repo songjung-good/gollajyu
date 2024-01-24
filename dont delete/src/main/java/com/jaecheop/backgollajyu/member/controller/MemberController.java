@@ -2,9 +2,7 @@ package com.jaecheop.backgollajyu.member.controller;
 
 import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
 import com.jaecheop.backgollajyu.member.service.MemberService;
-import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
-import com.jaecheop.backgollajyu.vote.model.ServiceResult;
-import com.jaecheop.backgollajyu.vote.model.VoteResDto;
+import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -78,15 +76,15 @@ public class MemberController {
             return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
         }
     }
-    @GetMapping("/{memberId}/comments")
-    public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(@PathVariable Long memberId) {
-        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
-        if (voteResDtoList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
-        }
-    }
+//    @GetMapping("/{memberId}/comments")
+//    public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(@PathVariable Long memberId) {
+//        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
+//        if (voteResDtoList.isEmpty()) {
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        } else {
+//            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
+//        }
+//    }
 
     @PostMapping("/login")
         public ResponseEntity<ResponseMessage> login(@RequestBody LoginReqDto loginReqDto, HttpSession session){

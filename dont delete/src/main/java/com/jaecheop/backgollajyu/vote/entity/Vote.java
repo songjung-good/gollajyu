@@ -23,7 +23,7 @@ public class Vote {
     private Long id;
 
     // FK
-    @JoinColumn(name="memberId")
+    @JoinColumn(name="member_id")
     @ManyToOne
     private Member member;
 
