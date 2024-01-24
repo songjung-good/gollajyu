@@ -1,0 +1,930 @@
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.member.service;\r\n\r\nimport org.springframework.stereotype.Service;\r\n\r\n@Service\r\npublic class MemberService {\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java	(date 1706075715690)
+@@ -1,8 +1,64 @@
+ package com.jaecheop.backgollajyu.member.service;
+ 
++import com.jaecheop.backgollajyu.member.entity.Member;
++import com.jaecheop.backgollajyu.member.model.Birthday;
++import com.jaecheop.backgollajyu.member.model.LoginReqDto;
++import com.jaecheop.backgollajyu.member.model.LoginResDto;
++import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
++import com.jaecheop.backgollajyu.vote.model.ServiceResult;
++import jakarta.servlet.http.HttpSession;
++import lombok.RequiredArgsConstructor;
++import org.springframework.security.crypto.bcrypt.BCrypt;
++import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+ import org.springframework.stereotype.Service;
+ 
++import java.util.Optional;
++
+ @Service
++@RequiredArgsConstructor
+ public class MemberService {
+ 
++    private final MemberRepository memberRepository;
++
++    private String getEncryptedPassword(String plainPassword) {
++        return new BCryptPasswordEncoder().encode(plainPassword);
++    }
++
++    public ServiceResult login(LoginReqDto loginReqDto, HttpSession session) {
++        // 사용자 존재 여부
++        Optional<Member> optionalMember = memberRepository.findByEmail(loginReqDto.getEmail());
++        if (optionalMember.isEmpty()) {
++            return ServiceResult.fail("존재하지 않는 사용자입니다.");
++        }
++        Member member = optionalMember.get();
++
++        // 비밀번호 암호화 및 일치 여부 - Bcrypt
++        // TODO: 멤버 등록 시 비밀번호 저장할 때에도 BCRYPT를 사용해서 저장하고 여기 부분을 다시 테스트 해보자!
++        if (!BCrypt.checkpw(loginReqDto.getPassword(), member.getPassword())) {
++            return ServiceResult.fail("틀린 비밀번호입니다");
++        }
++
++        // 로그인 완료 - LoginResponseDto
++        LoginResDto loginResDto = LoginResDto.builder()
++                .memberId(member.getId())
++                .email(member.getEmail())
++                .typeName(member.getType().getTypeName())
++                .nickname(member.getNickname())
++                .birthday(
++                        Birthday.builder()
++                                .year(member.getBirthDay().getYear())
++                                .month(member.getBirthDay().getMonth())
++                                .day(member.getBirthDay().getDay())
++                                .build()
++                )
++                .gender(member.getGender().name())
++                .point(member.getPoint())
++                .profileImgUrl(member.getProfileImgUrl())
++                .build();
++
++        // 1. 세션에 값 담아주기
++        session.setAttribute("memberInfo", loginResDto);
++        // 4. loginResDto에 멤버정보와 세션정보를 담아 반환하기
++        return ServiceResult.success(loginResDto);
++    }
+ }
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.member.repostory;\r\n\r\nimport com.jaecheop.backgollajyu.member.entity.Member;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.util.Optional;\r\n\r\n@Repository\r\npublic interface MemberRepository extends JpaRepository<Member, Long> {\r\n\r\n    Optional<Member> findByEmail(String email);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java	(date 1706074028852)
+@@ -11,3 +11,4 @@
+ 
+     Optional<Member> findByEmail(String email);
+ }
++
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.member.controller;\r\n\r\nimport org.springframework.web.bind.annotation.RestController;\r\n\r\n@RestController\r\npublic class MemberController {\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java	(date 1706075715686)
+@@ -1,9 +1,93 @@
+ package com.jaecheop.backgollajyu.member.controller;
+ 
++<<<<<<< HEAD
++import com.jaecheop.backgollajyu.vote.model.VoteResDto;
++import com.jaecheop.backgollajyu.vote.service.VoteService;
++import lombok.RequiredArgsConstructor;
++import org.springframework.http.HttpStatus;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.GetMapping;
++import org.springframework.web.bind.annotation.PathVariable;
++=======
++import com.jaecheop.backgollajyu.member.model.LoginReqDto;
++import com.jaecheop.backgollajyu.member.model.LoginResDto;
++import com.jaecheop.backgollajyu.member.service.MemberService;
++import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
++import com.jaecheop.backgollajyu.vote.model.ServiceResult;
++import jakarta.servlet.http.HttpSession;
++import lombok.RequiredArgsConstructor;
++import org.springframework.http.ResponseEntity;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestBody;
++>>>>>>> 48ccb1bdabf37aa23275b4250bf2074224030839
++import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RestController;
+ 
++import java.util.List;
++
+ @RestController
++<<<<<<< HEAD
++@RequiredArgsConstructor
++@RequestMapping("/members")
+ public class MemberController {
+ 
++    private final VoteService voteService;
++
++    // Controller method to handle GET request for votes by member ID
++    @GetMapping("/{memberId}/votes")
++    public ResponseEntity<List<VoteResDto>> getVotesByMemberId(@PathVariable Long memberId) {
++        List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId);
++
++        if (voteResDtoList.isEmpty()) {
++            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++        } else {
++            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
++        }
++    }
++
++    @GetMapping("/{memberId}/votes/participation")
++    public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(@PathVariable Long memberId) {
++        List<VoteResDto> voteResDtoList = voteService.getVotesByResultMemberId(memberId);
++        if (voteResDtoList.isEmpty()) {
++            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++        } else {
++            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
++        }
++    }
++
++    @GetMapping("/{memberId}/votes/likes")
++    public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(@PathVariable Long memberId) {
++        List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId);
+ 
++        if (voteResDtoList.isEmpty()) {
++            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++        } else {
++            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
++        }
++    }
++    @GetMapping("/{memberId}/comments")
++    public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(@PathVariable Long memberId) {
++        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
++        if (voteResDtoList.isEmpty()) {
++            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
++        } else {
++            return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
++        }
++    }
++=======
++@RequestMapping("/members")
++@RequiredArgsConstructor
++public class MemberController {
++
++    private final MemberService memberService;
++>>>>>>> 48ccb1bdabf37aa23275b4250bf2074224030839
++
++    @PostMapping("/login")
++    public ResponseEntity<ResponseMessage> login(@RequestBody LoginReqDto loginReqDto, HttpSession session){
++        ServiceResult result = memberService.login(loginReqDto, session);
++        if(!result.isResult()){
++            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
++        }
++        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
++    }
+ }
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.service;\r\n\r\nimport com.jaecheop.backgollajyu.exception.NotEnoughPointException;\r\nimport com.jaecheop.backgollajyu.member.entity.Member;\r\nimport com.jaecheop.backgollajyu.member.repostory.MemberRepository;\r\nimport com.jaecheop.backgollajyu.vote.entity.*;\r\nimport com.jaecheop.backgollajyu.vote.model.ChoiceReqDto;\r\nimport com.jaecheop.backgollajyu.vote.model.ServiceResult;\r\nimport com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;\r\nimport com.jaecheop.backgollajyu.vote.model.VoteReqDto;\r\nimport com.jaecheop.backgollajyu.vote.repository.*;\r\nimport lombok.RequiredArgsConstructor;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.time.LocalDateTime;\r\nimport java.util.List;\r\nimport java.util.Objects;\r\nimport java.util.Optional;\r\n\r\n@Service\r\n@RequiredArgsConstructor\r\npublic class VoteService {\r\n    private final VoteRepository voteRepository;\r\n    private final VoteItemRepository voteItemRepository;\r\n    private final MemberRepository memberRepository;\r\n    private final VoteResultRepository voteResultRepository;\r\n    private final CategoryRepository categoryRepository;\r\n    private final TagRepository tagRepository;\r\n\r\n    /**\r\n     * 투표 생성\r\n     * - 사용자 존재 여부\r\n     *\r\n     * @param voteReqDto\r\n     */\r\n    public ServiceResult addVote(VoteReqDto voteReqDto) {\r\n\r\n        // 사용자 존재 유무 확인\r\n        Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());\r\n\r\n        if (optionalMember.isEmpty()) {\r\n            return ServiceResult.fail(\"해당 멤버가 존재하지 않습니다.\");\r\n        }\r\n\r\n        // 사용자 존재\r\n        Member member = optionalMember.get();\r\n\r\n        // 포인트 차감 - 투표 생성 : 10포인트\r\n        try{\r\n            member.minusPoint(10L);\r\n        } catch (NotEnoughPointException e){\r\n            return ServiceResult.fail(e.getMessage());\r\n        }\r\n\r\n        // 단일 투표 기본 정보 디비에 저장\r\n        Vote vote = Vote.builder()\r\n                .member(member)\r\n                .title(voteReqDto.getTitle())\r\n                .description(voteReqDto.getDescription())\r\n                .createAt(LocalDateTime.now())\r\n                .code(voteReqDto.getCode())\r\n                .codeType(voteReqDto.getCodeType())\r\n                .build();\r\n\r\n        voteRepository.save(vote);\r\n\r\n        // 투표 아이템들 디비에 저장\r\n        for (VoteItemReqDto voteItemReqDto : voteReqDto.getVoteItemList()) {\r\n            VoteItem voteItem = VoteItem.builder()\r\n                    .vote(vote)\r\n                    .voteItemImgUrl(voteItemReqDto.getVoteItemImgUrl())\r\n                    .voteItemDesc(voteItemReqDto.getVoteItemDesc())\r\n                    .price(voteItemReqDto.getPrice())\r\n                    .build();\r\n            voteItemRepository.save(voteItem);\r\n        }\r\n\r\n        return ServiceResult.success();\r\n\r\n\r\n    }\r\n\r\n    public ServiceResult choiceMain(ChoiceReqDto choiceReqDto) {\r\n        // member 존재 유무\r\n        Optional<Member> optionalMember = memberRepository.findById(choiceReqDto.getMemberId());\r\n        if (optionalMember.isEmpty()) {\r\n            return ServiceResult.fail(\"존재하지 않는 사용자입니다.\");\r\n        }\r\n\r\n        Member member = optionalMember.get();\r\n\r\n        // 투표 존재 유무\r\n        Optional<Vote> optionalVote = voteRepository.findById(choiceReqDto.getVoteId());\r\n        if (optionalVote.isEmpty()) {\r\n            return ServiceResult.fail(\"존재하지 않는 투표입니다.\");\r\n        }\r\n\r\n        Vote vote = optionalVote.get();\r\n\r\n        // 카테고리 존재 여부\r\n        Optional<Category> optionalCategory = categoryRepository.findById(choiceReqDto.getCategoryId());\r\n        if(optionalCategory.isEmpty()){\r\n            return ServiceResult.fail(\"존재하지 않는 카테고리입니다.\");\r\n        }\r\n\r\n        Category category = optionalCategory.get();\r\n\r\n\r\n        // 투표 내 아이템 존재 유무\r\n        List<VoteItem> voteItemList = voteItemRepository.findAllByVoteId(vote.getId());\r\n        System.out.println(voteItemList);\r\n\r\n        boolean isItemExist = false;\r\n        for(VoteItem voteItem : voteItemList){\r\n            if(Objects.equals(voteItem.getId(), choiceReqDto.getVoteItemId())){\r\n                isItemExist = true;\r\n                break;\r\n            }\r\n        }\r\n        if (!isItemExist) {\r\n            return ServiceResult.fail(\"존재하지 않는 투표 아이템입니다.\");\r\n        }\r\n\r\n        VoteItem voteItem = voteItemRepository.findById(choiceReqDto.getVoteItemId()).get();\r\n\r\n\r\n        // 카테고리와 태그 매칭 여부\r\n        List<Tag> tagList = tagRepository.findAllByCategoryId(category.getId());\r\n        boolean isTagExist = false;\r\n        for(Tag tag : tagList){\r\n            if(tag.getId() == choiceReqDto.getTagId()){\r\n                isTagExist = true;\r\n                break;\r\n            }\r\n        }\r\n        if(!isTagExist){\r\n            return ServiceResult.fail(\"카테고리에 존재하지 않는 태그입니다.\");\r\n        }\r\n\r\n        Tag tag = tagRepository.findById(choiceReqDto.getTagId()).get();\r\n\r\n\r\n        // 중복 투표 여부.\r\n        Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(choiceReqDto.getMemberId(), choiceReqDto.getVoteId());\r\n        if(optionalVoteResult.isPresent()){\r\n            return ServiceResult.fail(\"이미 참여한 투표입니다.\");\r\n        }\r\n\r\n        // 투표결과 저장.\r\n        VoteResult voteResult = VoteResult.builder()\r\n                .vote(vote)\r\n                .voteItem(voteItem)\r\n                .member(member)\r\n                .birthday(member.getBirthDay())\r\n                .type(member.getType())\r\n                .gender(member.getGender())\r\n                .tag(tag)\r\n                .build();\r\n        voteResultRepository.save(voteResult);\r\n\r\n        // 포인트 획득 - 투표 참여: 2포인트\r\n        member.plusPoint(2L);\r\n        memberRepository.save(member);\r\n\r\n        return ServiceResult.success();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java	(date 1706075715691)
+@@ -2,6 +2,7 @@
+ 
+ import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
+ import com.jaecheop.backgollajyu.member.entity.Member;
++import com.jaecheop.backgollajyu.vote.model.*;
+ import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
+ import com.jaecheop.backgollajyu.vote.entity.*;
+ import com.jaecheop.backgollajyu.vote.model.ChoiceReqDto;
+@@ -13,17 +14,18 @@
+ import org.springframework.stereotype.Service;
+ 
+ import java.time.LocalDateTime;
+-import java.util.List;
+-import java.util.Objects;
+-import java.util.Optional;
++import java.util.*;
++import java.util.stream.Collectors;
+ 
+ @Service
+ @RequiredArgsConstructor
+ public class VoteService {
++    private final VoteResultRepository voteResultRepository;
+     private final VoteRepository voteRepository;
+     private final VoteItemRepository voteItemRepository;
+     private final MemberRepository memberRepository;
+-    private final VoteResultRepository voteResultRepository;
++    private final LikeRepository likeRepository;
++
+     private final CategoryRepository categoryRepository;
+     private final TagRepository tagRepository;
+ 
+@@ -39,7 +41,7 @@
+         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
+ 
+         if (optionalMember.isEmpty()) {
+-            return ServiceResult.fail("해당 멤버가 존재하지 않습니다.");
++            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+         }
+ 
+         // 사용자 존재
+@@ -58,8 +60,7 @@
+                 .title(voteReqDto.getTitle())
+                 .description(voteReqDto.getDescription())
+                 .createAt(LocalDateTime.now())
+-                .code(voteReqDto.getCode())
+-                .codeType(voteReqDto.getCodeType())
++                .category(categoryRepository.findById(voteReqDto.getCategoryId()))
+                 .build();
+ 
+         voteRepository.save(vote);
+@@ -80,6 +81,198 @@
+ 
+     }
+ 
++
++
++    // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
++    private List<VoteResDto> makeVoteResDtoList(List<Vote> votes, Long currentMemberId) {
++        List<VoteResDto> voteResDtoList = new ArrayList<>();
++
++
++        for (Vote vote : votes) {
++            List<VoteItemResDto> voteItemResDtoList = mapVoteItemsToDto(getVoteItemsForVote(vote));
++            Optional<VoteResult> byMemberIdAndVoteId = voteResultRepository.findByMemberIdAndVoteId(currentMemberId, vote.getId());
++            Long selectedItemId;
++
++            // 투표한 아이템 찾기
++            if (byMemberIdAndVoteId.isPresent()) {
++                selectedItemId = byMemberIdAndVoteId.get().getVoteItem().getId();
++            } else {
++                selectedItemId = -1L;
++            }
++            List<Like> likes = likeRepository.findByVote(vote);
++
++            VoteResDto voteResDto = VoteResDto.builder()
++                    .voteId(vote.getId())
++                    .memberId(vote.getMember())
++                    .title(vote.getTitle())
++                    .description(vote.getDescription())
++                    .createAt(vote.getCreateAt())
++                    .categoryDto(mapCategoryEntityToDto(vote)) // 카테고리 매핑
++                    .voteItems(voteItemResDtoList)
++                    .selectedItemId(selectedItemId) // 투표 참여한게 있다면 투표아이템 id를 준다.
++                    .likes(mapLikesToDto(likes)) // 좋아요 리스트 매핑
++                    .build();
++
++            voteResDtoList.add(voteResDto);
++        }
++        return voteResDtoList;
++    }
++    // 투표에 아이템을 참조
++    public List<VoteItem> getVoteItemsForVote(Vote vote) {
++        return voteItemRepository.findVoteItemsByVote(vote);
++    }
++
++    // 위에서 참조된 아이템을 Dto로 바꾸기
++    private List<VoteItemResDto> mapVoteItemsToDto(List<VoteItem> voteItems) {
++        return voteItems.stream()
++                .map(this::mapVoteItemToDto)
++                .collect(Collectors.toList());
++    }
++
++    // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
++    private VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
++
++
++        return VoteItemResDto.builder()
++                .voteItemId(voteItem.getId())
++                .voteItemImgUrl(voteItem.getVoteItemImgUrl())
++                .voteItemDesc(voteItem.getVoteItemDesc())
++                .price(voteItem.getPrice())
++                .voteResultCountResDtoList(generateStatistics(voteItem)) //
++                .build();
++    }
++
++    // ItemResDto를 만드는 과정에서 태그별 투표수 첨부 해주기
++    public Map<Tag, Long> generateStatistics(VoteItem voteItem) {
++        Map<Tag, Long> statistics = new HashMap<>();
++
++        // Assuming VoteItem has a method to retrieve associated VoteItemResults
++        List<VoteResult> voteResults = voteResultRepository.findByVoteItem(voteItem);
++
++        for (VoteResult voteResult : voteResults) {
++            // Assuming VoteResult has a method to retrieve associated Tag
++            Tag tag = voteResult.getTag();
++
++            // Update count for the tag
++            statistics.put(tag, statistics.getOrDefault(tag, 0L) + 1);
++        }
++
++        return statistics;
++    }
++
++
++    // Like 엔터티를 LikeDto->LikeDtoList 로 변환하는 메서드
++    private List<LikeDto> mapLikesToDto(List<Like> likes) {
++        return likes.stream()
++                .map(this::mapLikeToDto)
++                .collect(Collectors.toList());
++    }
++    private LikeDto mapLikeToDto(Like like) {
++        if (like != null) {
++            // Implement mapping logic from Like entity to LikeDto using builder
++            return LikeDto.builder()
++                    .likeId(like.getId())
++                    .memberId(like.getMember().getId()) // 예시로 Member의 ID를 매핑
++                    // Add other properties based on Like entity structure
++                    .build();
++        } else {
++            return null;
++        }
++    }
++
++    public CategoryDto mapCategoryEntityToDto(Vote vote) {
++        // Assuming vote is an instance of Vote, and it has a category property
++
++        // Retrieve the Category entity associated with the vote
++        Category categoryEntity = categoryRepository.findByVotes(vote);
++
++        // Map the properties to the DTO using the builder pattern
++        return CategoryDto.builder()
++                .categoryId(categoryEntity.getId())
++                .categoryName(categoryEntity.getCategoryName())
++                .tags(tagRepository.findAllByCategoryId(categoryEntity.getId()))
++                .build();
++    }
++
++
++
++
++    // 투표 작성자 Id로 투표 리스트 생성..
++    public List<VoteResDto> getVotesByMemberId(Long memberId) {
++        List<Vote> votes = voteRepository.findByMemberId(memberId);
++        return makeVoteResDtoList(votes, memberId);
++    }
++
++    // 투표한 투표 리스트
++    public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
++
++        List<Vote> votes = voteRepository.findVoteIdsByResultMemberId(memberId);
++        return makeVoteResDtoList(votes, memberId);
++    }
++
++    // 좋아요한 투표 리스트
++    public List<VoteResDto> getLikedVotesByMemberId(Long memberId) {
++        List<Vote> votes = voteRepository.findByLikedMembersMemberId(memberId);
++        return makeVoteResDtoList(votes, memberId);
++    }
++
++//     댓글 작성한 투표 리스트 +@ Dto 만들어야함 (VoteResDto + 댓글 설명 + 댓글 생성일자) 로 반환할
++    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
++        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
++
++        List<VoteResDto> voteResDtoList = makeVoteResDtoList(votes, memberId);
++
++        List<CommentResDto> commentResDtoList = mapVotesToCommentResDto(voteResDtoList);
++
++        return commentResDtoList;
++    }
++    public List<CommentResDto> mapVotesToCommentResDto(List<VoteResDto> voteResDtoList) {
++        return voteResDtoList.stream()
++                .map(this::buildCommentResDto)
++                .collect(Collectors.toList());
++    }
++
++    private CommentResDto buildCommentResDto(VoteResDto voteResDto) {
++        return CommentResDto.builder()
++                .commentId(/* set commentId based on your requirements */)
++                .commentCreateAt(/* set commentCreateAt based on your requirements */)
++                .commentDescription(/* set commentDescription based on your requirements */)
++                .voteResDto(voteResDto)
++                // Set other properties of CommentResDto based on your requirements
++                .build();
++    }
++
++
++
++//
++//    // Dto 만들자아아아아아ㅏ아ㅏ아ㅏ앙아ㅏ아ㅏㅇ아아
++//    public List<CategoryInfoResDto> perfectResultsMethod(Integer voteId, Integer memberId, Integer age, char gender, String type) {
++//        List<CategoryInfoResDto> result1;
++//
++//        if (memberId != null) {
++//            result1 = voteItemResultRepository.findAllByMemberId(memberId);
++//        } else if (voteId != null) {
++//            result1 = voteItemResultRepository.findByVoteId(voteId);
++//        } else {
++//            result1 = voteItemResultRepository.findAllByType(type);
++//        }
++//
++//        if (type != null) {
++//            result1 = result1.stream().filter(result -> result.getType().equals(type)).collect(Collectors.toList());
++//        }
++//        if (age != null) {
++//            result1 = result1.stream().filter(result -> result.getAge() == age).collect(Collectors.toList());
++//        }
++//        if (gender != 0) {
++//            result1 = result1.stream().filter(result -> result.getGender() == gender).collect(Collectors.toList());
++//        }
++//
++//        return result1;
++//    }
++
++
++
++
+     public ServiceResult choiceMain(ChoiceReqDto choiceReqDto) {
+         // member 존재 유무
+         Optional<Member> optionalMember = memberRepository.findById(choiceReqDto.getMemberId());
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.repository;\r\n\r\nimport com.jaecheop.backgollajyu.vote.entity.Category;\r\nimport jakarta.persistence.Entity;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\n@Repository\r\npublic interface CategoryRepository extends JpaRepository<Category, Integer> {\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java	(date 1706074028858)
+@@ -1,10 +1,14 @@
+ package com.jaecheop.backgollajyu.vote.repository;
+ 
+ import com.jaecheop.backgollajyu.vote.entity.Category;
++import com.jaecheop.backgollajyu.vote.entity.Vote;
+ import jakarta.persistence.Entity;
+ import org.springframework.data.jpa.repository.JpaRepository;
+ import org.springframework.stereotype.Repository;
+ 
+ @Repository
+ public interface CategoryRepository extends JpaRepository<Category, Integer> {
++    Category findByVotes(Vote vote);
++    Category findById(int categoryId);
++
+ }
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.repository;\r\n\r\nimport com.jaecheop.backgollajyu.vote.entity.Vote;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\n@Repository\r\npublic interface VoteRepository extends JpaRepository<Vote, Long> {\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java	(date 1706074028859)
+@@ -2,8 +2,28 @@
+ 
+ import com.jaecheop.backgollajyu.vote.entity.Vote;
+ import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.data.repository.query.Param;
+ import org.springframework.stereotype.Repository;
+ 
++import java.util.List;
++
+ @Repository
+ public interface VoteRepository extends JpaRepository<Vote, Long> {
+-}
++    List<Vote> findByMemberId(Long memberId);
++
++    // 투표한 투표 리스트
++    @Query("SELECT vir.vote FROM VoteItemResult vir " +
++            "WHERE vir.member.id = :memberId")
++    List<Vote> findVoteIdsByResultMemberId(@Param("memberId") Long memberId);
++
++    // 좋아요한 투표 리스트
++    List<Vote> findByLikedMembersMemberId(Long memberId);
++
++    // 댓글 작성한 투표 리스트 이게아닌듯 모든 댓글을 기준으로 해야함.
++    @Query("SELECT v FROM Vote v " +
++            "JOIN Comment c ON v.voteId = c.voteId " +
++            "WHERE c.memberId = :memberId")
++    List<Vote> findVotesByCommentMemberId(@Param("memberId") Long memberId);
++
++}
+\ No newline at end of file
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.repository;\r\n\r\nimport com.jaecheop.backgollajyu.vote.entity.VoteResult;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.util.Optional;\r\n\r\n@Repository\r\npublic interface VoteResultRepository extends JpaRepository<VoteResult, Long> {\r\n\r\n    Optional<VoteResult> findByMemberIdAndVoteId(Long memberId, Long voteId);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java	(date 1706074028860)
+@@ -1,13 +1,20 @@
+ package com.jaecheop.backgollajyu.vote.repository;
+ 
++import com.jaecheop.backgollajyu.vote.entity.VoteItem;
+ import com.jaecheop.backgollajyu.vote.entity.VoteResult;
+ import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
+ import org.springframework.stereotype.Repository;
+ 
++import java.util.List;
+ import java.util.Optional;
+ 
+ @Repository
+ public interface VoteResultRepository extends JpaRepository<VoteResult, Long> {
+ 
+     Optional<VoteResult> findByMemberIdAndVoteId(Long memberId, Long voteId);
++
++    @Query("SELECT vr FROM VoteResult vr" + "WHERE vr.voteItem = :voteItem")
++    List<VoteResult> findByVoteItem(VoteItem voteItem);
++
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"e1a32a66-1d64-4070-86ff-694babe4929d\" name=\"Changes\" comment=\"\" />\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 4\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2bHtTYiFmkkxmmtt4cZV8DnTWgN\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;gollajyu-back&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/Users/SSAFY/Desktop/S10P12E107&quot;,\r\n    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RunManager\">\r\n    <configuration default=\"true\" type=\"JetRunConfigurationType\">\r\n      <module name=\"S10P12E107\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration default=\"true\" type=\"KotlinStandaloneScriptRunConfigurationType\">\r\n      <module name=\"S10P12E107\" />\r\n      <option name=\"filePath\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"jdk-17.0.9-corretto-17.0.9-4caba194b151-107bc6b7\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"e1a32a66-1d64-4070-86ff-694babe4929d\" name=\"Changes\" comment=\"\" />\r\n      <created>1705883839633</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1705883839633</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/.idea/workspace.xml	(date 1706081933917)
+@@ -4,13 +4,67 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="e1a32a66-1d64-4070-86ff-694babe4929d" name="Changes" comment="" />
++    <list default="true" id="86c1ffc9-0e53-43a7-9c81-e70fd9ac44de" name="Changes" comment="">
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/build.gradle" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/repostory/MemberRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+     <option name="LAST_RESOLUTION" value="IGNORE" />
+   </component>
++  <component name="ExternalProjectsData">
++    <projectState path="$PROJECT_DIR$/dont delete">
++      <ProjectState />
++    </projectState>
++  </component>
++  <component name="ExternalProjectsManager">
++    <system id="GRADLE">
++      <state>
++        <task path="$PROJECT_DIR$/dont delete">
++          <activation />
++        </task>
++        <projects_view>
++          <tree_state>
++            <expand>
++              <path>
++                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
++                <item name="back-gollajyu" type="f1a62948:ProjectNode" />
++              </path>
++            </expand>
++            <select />
++          </tree_state>
++        </projects_view>
++      </state>
++    </system>
++  </component>
++  <component name="FileTemplateManagerImpl">
++    <option name="RECENT_TEMPLATES">
++      <list>
++        <option value="Interface" />
++        <option value="Class" />
++      </list>
++    </option>
++  </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="develop" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+@@ -24,47 +78,81 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent">{
+-  &quot;keyToString&quot;: {
+-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+-    &quot;git-widget-placeholder&quot;: &quot;gollajyu-back&quot;,
+-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;C:/Users/SSAFY/Desktop/S10P12E107&quot;,
+-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.general&quot;
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "Application.BackGollajyuApplication.executor": "Run",
++    "Gradle.dont delete [:BackGollajyuApplication.main()].executor": "Run",
++    "Gradle.dont delete.executor": "Run",
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
++    "git-widget-placeholder": "develop",
++    "kotlin-language-version-configured": "true",
++    "last_opened_file_path": "C:/Users/SSAFY/Desktop/S10P12E107",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "settings.editor.selected.configurable": "preferences.general",
++    "vue.rearranger.settings.migration": "true"
+   }
+-}</component>
+-  <component name="RunManager">
+-    <configuration default="true" type="JetRunConfigurationType">
+-      <module name="S10P12E107" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
++}]]></component>
++  <component name="RunManager" selected="Gradle.dont delete">
++    <configuration name="dont delete" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
++      <ExternalSystemSettings>
++        <option name="executionName" />
++        <option name="externalProjectPath" value="$PROJECT_DIR$/dont delete" />
++        <option name="externalSystemIdString" value="GRADLE" />
++        <option name="scriptParameters" />
++        <option name="taskDescriptions">
++          <list />
++        </option>
++        <option name="taskNames">
++          <list />
++        </option>
++        <option name="vmOptions" />
++      </ExternalSystemSettings>
++      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
++      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
++      <DebugAllEnabled>false</DebugAllEnabled>
++      <RunAsTest>false</RunAsTest>
++      <method v="2" />
+     </configuration>
+-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+-      <module name="S10P12E107" />
+-      <option name="filePath" />
++    <configuration name="BackGollajyuApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
++      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
++      <module name="back-gollajyu.main" />
++      <option name="SPRING_BOOT_MAIN_CLASS" value="com.jaecheop.backgollajyu.BackGollajyuApplication" />
+       <method v="2">
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
++    <recent_temporary>
++      <list>
++        <item itemvalue="Gradle.dont delete" />
++      </list>
++    </recent_temporary>
+   </component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+-        <option value="jdk-17.0.9-corretto-17.0.9-4caba194b151-107bc6b7" />
++        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
+       </set>
+     </attachedChunks>
+   </component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+-      <changelist id="e1a32a66-1d64-4070-86ff-694babe4929d" name="Changes" comment="" />
++      <changelist id="86c1ffc9-0e53-43a7-9c81-e70fd9ac44de" name="Changes" comment="" />
+       <created>1705883839633</created>
+       <option name="number" value="Default" />
+       <option name="presentableId" value="Default" />
+       <updated>1705883839633</updated>
++      <workItem from="1706079707567" duration="2208000" />
+     </task>
+     <servers />
+   </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
+ </project>
+\ No newline at end of file
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.repository;\r\n\r\nimport com.jaecheop.backgollajyu.vote.entity.VoteItem;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\n@Repository\r\npublic interface VoteItemRepository extends JpaRepository<VoteItem, Long> {\r\n    @Override\r\n    Optional<VoteItem> findById(Long voteItemId);\r\n\r\n    List<VoteItem> findAllByVoteId(Long voteId);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteItemRepository.java	(date 1706074028859)
+@@ -1,7 +1,10 @@
+ package com.jaecheop.backgollajyu.vote.repository;
+ 
++import com.jaecheop.backgollajyu.vote.entity.Vote;
+ import com.jaecheop.backgollajyu.vote.entity.VoteItem;
+ import org.springframework.data.jpa.repository.JpaRepository;
++import org.springframework.data.jpa.repository.Query;
++import org.springframework.data.repository.query.Param;
+ import org.springframework.stereotype.Repository;
+ 
+ import java.util.List;
+@@ -13,4 +16,6 @@
+     Optional<VoteItem> findById(Long voteItemId);
+ 
+     List<VoteItem> findAllByVoteId(Long voteId);
++
++    List<VoteItem> findVoteItemsByVote(Vote vote);
+ }
+Index: dont delete/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    id 'java'\r\n    id 'org.springframework.boot' version '3.2.2'\r\n    id 'io.spring.dependency-management' version '1.1.4'\r\n}\r\n\r\ngroup = 'com.jaecheop'\r\nversion = '0.0.1-SNAPSHOT'\r\n\r\njava {\r\n    sourceCompatibility = '17'\r\n}\r\n\r\nconfigurations {\r\n    compileOnly {\r\n        extendsFrom annotationProcessor\r\n    }\r\n}\r\n\r\nrepositories {\r\n    mavenCentral()\r\n}\r\n\r\ndependencies {\r\n    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'\r\n    implementation 'org.springframework.boot:spring-boot-starter-web'\r\n    compileOnly 'org.projectlombok:lombok'\r\n    developmentOnly 'org.springframework.boot:spring-boot-devtools'\r\n    runtimeOnly 'com.mysql:mysql-connector-j'\r\n    annotationProcessor 'org.projectlombok:lombok'\r\n    testImplementation 'org.springframework.boot:spring-boot-starter-test'\r\n\r\n    // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui\r\n    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'\r\n\r\n}\r\n\r\ntasks.named('test') {\r\n    useJUnitPlatform()\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/build.gradle b/dont delete/build.gradle
+--- a/dont delete/build.gradle	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/build.gradle	(date 1706075715684)
+@@ -29,7 +29,11 @@
+     runtimeOnly 'com.mysql:mysql-connector-j'
+     annotationProcessor 'org.projectlombok:lombok'
+     testImplementation 'org.springframework.boot:spring-boot-starter-test'
++    
+ 
++    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
++    implementation 'org.springframework.boot:spring-boot-starter-security'
++
+     // https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+ 
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.member.model;\r\n\r\nimport jakarta.persistence.Embeddable;\r\n\r\n@Embeddable\r\npublic class Birthday {\r\n    private int year;\r\n    private int month;\r\n    private int day;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/model/Birthday.java	(date 1706075715687)
+@@ -1,8 +1,16 @@
+ package com.jaecheop.backgollajyu.member.model;
+ 
+ import jakarta.persistence.Embeddable;
++import lombok.AllArgsConstructor;
++import lombok.Builder;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
+ 
+ @Embeddable
++@Builder
++@NoArgsConstructor
++@AllArgsConstructor
++@Getter
+ public class Birthday {
+     private int year;
+     private int month;
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.model;\r\n\r\n\r\nimport lombok.*;\r\n\r\nimport java.util.List;\r\n\r\n@Getter @Setter\r\n@NoArgsConstructor\r\n@ToString\r\npublic class VoteReqDto {\r\n\r\n    // 단일 투표에 대한 기본 정보\r\n    private String memberEmail;\r\n\r\n    private String title;\r\n\r\n    private String description;\r\n\r\n    private int code;\r\n\r\n    private int codeType;\r\n\r\n    // 단일 투표에 들어간 투표 아이템들의 정보\r\n    private List<VoteItemReqDto> voteItemList;\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java	(date 1706074028856)
+@@ -1,12 +1,14 @@
+ package com.jaecheop.backgollajyu.vote.model;
+ 
+ 
++import com.jaecheop.backgollajyu.vote.entity.Category;
+ import lombok.*;
+ 
+ import java.util.List;
+ 
+ @Getter @Setter
+ @NoArgsConstructor
++@AllArgsConstructor
+ @ToString
+ public class VoteReqDto {
+ 
+@@ -17,9 +19,7 @@
+ 
+     private String description;
+ 
+-    private int code;
+-
+-    private int codeType;
++    private int categoryId;
+ 
+     // 단일 투표에 들어간 투표 아이템들의 정보
+     private List<VoteItemReqDto> voteItemList;
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.member.entity;\r\n\r\nimport jakarta.persistence.*;\r\n\r\n@Entity\r\npublic class Type {\r\n    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    @Column(name=\"type_id\")\r\n    private int id;\r\n\r\n\r\n    private String typeName;\r\n\r\n    private String typeImgUrl;\r\n\r\n    private String typeDescription;\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/member/entity/Type.java	(date 1706075715687)
+@@ -1,8 +1,10 @@
+ package com.jaecheop.backgollajyu.member.entity;
+ 
+ import jakarta.persistence.*;
++import lombok.Getter;
+ 
+ @Entity
++@Getter
+ public class Type {
+     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+     @Column(name="type_id")
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.entity;\r\n\r\nimport jakarta.persistence.*;\r\nimport lombok.AllArgsConstructor;\r\nimport lombok.Getter;\r\nimport lombok.NoArgsConstructor;\r\n\r\n@Entity\r\n@Getter\r\n@NoArgsConstructor\r\n@AllArgsConstructor\r\npublic class Tag {\r\n\r\n    @Id\r\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    private int id;\r\n\r\n   private String name;\r\n\r\n   @ManyToOne\r\n   @JoinColumn(name=\"category_id\")\r\n   private Category category;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Tag.java	(date 1706074028853)
+@@ -15,9 +15,9 @@
+     @GeneratedValue(strategy = GenerationType.IDENTITY)
+     private int id;
+ 
+-   private String name;
++    private String name;
+ 
+-   @ManyToOne
+-   @JoinColumn(name="category_id")
+-   private Category category;
++    @ManyToOne
++    @JoinColumn(name="category_id")
++    private Category category;
+ }
+Index: dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.jaecheop.backgollajyu.vote.entity;\r\n\r\nimport com.jaecheop.backgollajyu.member.entity.Member;\r\nimport jakarta.persistence.*;\r\nimport lombok.AllArgsConstructor;\r\nimport lombok.Builder;\r\nimport lombok.Getter;\r\nimport lombok.NoArgsConstructor;\r\n\r\nimport java.time.LocalDateTime;\r\n\r\n@Entity\r\n@Getter\r\n@Builder\r\n@NoArgsConstructor\r\n@AllArgsConstructor\r\npublic class Vote {\r\n\r\n    @Id\r\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    @Column(name = \"vote_id\")\r\n    private Long id;\r\n\r\n    // FK\r\n    @JoinColumn(name=\"memberId\")\r\n    @ManyToOne\r\n    private Member member;\r\n\r\n    private String title;\r\n\r\n    private String description;\r\n\r\n    private LocalDateTime createAt;\r\n\r\n    private int code;\r\n\r\n    private int codeType;\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java
+--- a/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java	(revision 82927f51b082ebf97236e37ff1deb01e2ba3fe82)
++++ b/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java	(date 1706074028854)
+@@ -4,14 +4,15 @@
+ import jakarta.persistence.*;
+ import lombok.AllArgsConstructor;
+ import lombok.Builder;
+-import lombok.Getter;
++import lombok.Data;
+ import lombok.NoArgsConstructor;
+ 
+ import java.time.LocalDateTime;
++import java.util.List;
+ 
+ @Entity
+-@Getter
+ @Builder
++@Data
+ @NoArgsConstructor
+ @AllArgsConstructor
+ public class Vote {
+@@ -32,8 +33,7 @@
+ 
+     private LocalDateTime createAt;
+ 
+-    private int code;
+-
+-    private int codeType;
+-
++    @OneToOne // Many votes can belong to one category
++    @JoinColumn(name = "category_id")
++    private Category category;
+ }
