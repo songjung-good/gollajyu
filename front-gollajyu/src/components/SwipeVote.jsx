@@ -1,22 +1,22 @@
 import React, { useRef, useState } from 'react';
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 // 투표 받아오기
 import VoteCard from "./VoteCard"
-
+// css
+import './SwipeVote.css';
 // import required modules
 import { Pagination, Navigation, HashNavigation } from 'swiper/modules';
 
-export default function App() {
+export default function SwipeVote() {
   return (
     <>
       <Swiper
-        spaceBetween={30}
+        spaceBetween={0}
         hashNavigation={{
           watchState: true,
         }}

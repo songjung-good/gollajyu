@@ -3,23 +3,19 @@ import { Link } from 'react-router-dom';
 
 function VoteCardItem(props) {
   return (
-    <>
-      <li className='cards__item'> 카드 제목
-        <Link className='cards__item__link' to={props.path}> 투표 링크
-          <figure className='cards__item__pic-wrap' data-category={props.label}>
-            ??
-            <img
-              className='cards__item__img'
-              alt='Travel Image'
-              src={props.src}
-            /> 투표 이미지
-          </figure>
-          <div className='cards__item__info'>
-            <h5 className='cards__item__text'>투표설명{props.text}</h5>
-          </div>
-        </Link>
-      </li>
-    </>
+    <div className=' w-200 h-500 flex flex-col '>
+      <Link className='h-1/2 w-full bg-gray-200 p-4' to={props.path}>
+        <img
+          className='h-full w-full object-cover'
+          alt='Vote Image'
+          src={props.src}
+        />
+      </Link>
+      <div className='h-1/2 w-full flex flex-col justify-center items-center'>
+        <h2 className='text-lg font-bold mb-4'>{props.title}</h2>
+        <Link className='text-blue-500' to={props.path}>Go to Details</Link>
+      </div>
+    </div>
   );
 }
 
