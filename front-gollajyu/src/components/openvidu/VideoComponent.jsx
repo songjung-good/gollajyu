@@ -13,16 +13,11 @@ const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 const broadcastInfo = {
-  backgroundColor: "white",
-  borderRadius: "10px",
-  padding: "10px",
+  base: "bg-white rounded-md p-3",
 };
 
 const videoContainer = {
-  borderRadius: "20px",
-  background: "rgba(0, 0, 0, 0.20)",
-  padding: "1.2rem",
-  margin: "3rem auto",
+  base: "container mx-5 rounded-lg bg-opacity-20 bg-black p-6 my-12 mx-auto",
 };
 
 const settingButton = {
@@ -42,6 +37,7 @@ export default function VideoComponent() {
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
   const [chatDisplay, setChatDisplay] = useState(true); // 채팅창 보이기(초깃값: true)
+  const [audioState, setAudioSate] = useState(true);
   console.log("isHost?:", isHost);
 
   const OV = useRef(new OpenVidu());
@@ -96,7 +92,7 @@ export default function VideoComponent() {
             let publisher = await OV.current.initPublisherAsync(undefined, {
               audioSource: undefined,
               videoSource: undefined,
-              publishAudio: true,
+              publishAudio: audioState,
               publishVideo: true,
               resolution: "640x480",
               frameRate: 30,
@@ -118,6 +114,7 @@ export default function VideoComponent() {
               (device) => device.deviceId === currentVideoDeviceId
             );
 
+            console.log("publisher:", publisher);
             setPublisher(publisher);
             setCurrentVideoDevice(currentVideoDevice);
           }
@@ -204,6 +201,48 @@ export default function VideoComponent() {
   //   }
   // }, [currentVideoDevice, session, mainStreamManager]);
 
+  const screenShare = useCallback(async () => {
+    // try {
+    //   const devices = await OV.current.getDevices();
+    //   const videoDevices = devices.filter(
+    //     (device) => device.kind === "videoinput"
+    //   );
+    //   if (videoDevices && videoDevices.length > 1) {
+    //     const newVideoDevice = videoDevices.filter(
+    //       (device) => device.deviceId !== currentVideoDevice.deviceId
+    //     );
+    //     if (newVideoDevice.length > 0) {
+    //       const newPublisher = OV.current.initPublisher(undefined, {
+    //         videoSource: newVideoDevice[0].deviceId,
+    //         publishAudio: true,
+    //         publishVideo: true,
+    //         mirror: true,
+    //       });
+    //       if (session) {
+    //         await session.unpublish(mainStreamManager);
+    //         await session.publish(newPublisher);
+    //         setCurrentVideoDevice(newVideoDevice[0]);
+    //         setMainStreamManager(newPublisher);
+    //         setPublisher(newPublisher);
+    //       }
+    //     }
+    //   }
+    // } catch (e) {
+    //   console.error(e);
+    // }
+  }, [session]);
+
+  const mute = () => {
+    // publishAudio(true) 도 되고 publishVideo(false)도 되는데 publishAudio(false) 하면 openvidu-browser.js 에서 에러나고 멈춤
+    if (audioState) {
+      // publisher.publishAudio(false);
+      setAudioSate(false);
+    } else {
+      // publisher.publishAudio(true);
+      setAudioSate(true);
+    }
+  };
+
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
       const index = prevSubscribers.indexOf(streamManager);
@@ -230,6 +269,7 @@ export default function VideoComponent() {
 
   // 현재 화면에서 벗어나는 동작(navbar 눌러서 이동)하면 막는 알림 한번 띄워주기
   // 추가해야되는 기능
+  // 단순히 useEffect(() => {return leaveSession()}) 을 하면, 방송화면 들어가기 전 화면에서 계속 실행됨(왜...)
 
   /**
    * --------------------------------------------
@@ -279,12 +319,9 @@ export default function VideoComponent() {
     joinSession();
   };
 
-  const screenShare = () => {};
-
-  const mute = () => {};
   return (
     // container는 최상위 div
-    <div className="container mx-5" style={videoContainer}>
+    <div className={videoContainer.base}>
       {/* 방송 화면으로 진입하기 전, 한번 막음 */}
       {session === undefined ? (
         <div id="join">
@@ -306,7 +343,9 @@ export default function VideoComponent() {
                   화면 공유
                 </button>
                 <button className={settingButton.base} onClick={mute}>
-                  마이크 음소거
+                  {audioState
+                    ? "마이크 음소거 (안됨)"
+                    : "마이크 음소거 해제 (안됨)"}
                 </button>
               </div>
               <Button
@@ -349,7 +388,7 @@ export default function VideoComponent() {
                   <UserVideoComponent streamManager={subscribers[0]} />
                 </div>
               )}
-              <div className="basis-2/5" style={broadcastInfo}>
+              <div className={`basis-2/5 ${broadcastInfo.base}`}>
                 {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
                 <p>방송자 닉네임: 닉네임</p>
                 <p>방송 제목</p>
