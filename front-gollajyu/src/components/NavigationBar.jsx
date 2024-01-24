@@ -4,24 +4,24 @@ import { useMediaQuery } from 'react-responsive';
 import DefaultProfileImage from "/@images/default_profile_img.png";
 
 const NavigationBar = () => {
-  // 메뉴 hover
+  // ----------- 메뉴 hover -----------
   const [votePageHovered, setVotePageHovered] = useState(false);
   const [broadcastPageHovered, setBroadcastPageHovered] = useState(false);
   const [statisticPageHovered, setStatisticPageHovered] = useState(false);
   const [testPageHovered, setTestPageHovered] = useState(false);
 
-  // 버튼 hover
+  // ----------- 버튼 hover -----------
   const [logoutButtonHovered, setLogoutButtonHovered] = useState(false);
   const [loginButtonHovered, setLoginButtonHovered] = useState(false);
   const [signupButtonHovered, setSignupButtonHovered] = useState(false);
 
-  // 햄버거 메뉴 상태 관리
+  // ----------- 햄버거 메뉴 상태 관리 -----------
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const isLoggedIn = true;  // 로그인 상태
   // const isLoggedIn = false;  // 비로그인 상태
 
-  // 반응형 웹페이지 구현
+  // ----------- 반응형 웹페이지 구현 -----------
   const isLarge = useMediaQuery({
     query : "(min-width:1024px)"
   });
@@ -31,6 +31,15 @@ const NavigationBar = () => {
   const isSmall = useMediaQuery({
     query : "(max-width:767px)"
   });
+
+  // ----------- 햄버거 버튼 호버/떠남 상태 업데이트 함수 -----------
+  const menuHover = () => {
+    setMenuOpen(true);
+  };
+
+  const menuLeave = () => {
+    setMenuOpen(false);
+  };
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -149,6 +158,7 @@ const NavigationBar = () => {
 
     // 디자인
     width: "240px",                                 // 넓이: 200px
+    hieght: "100px",                                // 높이: 100px
 
     // 컨텐츠 정렬
     justifyContent: "flex-end",                     // 내부 버튼 오른쪽 정렬
@@ -252,7 +262,10 @@ const NavigationBar = () => {
   
   return (
     <div style={navigationBarContainerStyle}>
-      <nav style={navigationBarStyle}>
+      <nav
+        style={navigationBarStyle}
+        onMouseLeave={menuLeave}  // 내비게이션 바를 벗어나면 햄버거 메뉴를 끔
+      >
         {/* --------------------------------- 로고 --------------------------------- */}
         <div style={logoContainerStyle}>
           <NavLink to="/" style={logoStyle}>
@@ -371,13 +384,16 @@ const NavigationBar = () => {
               {!isLarge && (
                 <button
                   style={hamburgerButtonStyle}
-                  onClick={() => setMenuOpen(!isMenuOpen)}
+                  onMouseEnter={menuHover}
                 >
                   &#9776;
                 </button>
               )}
               {!isLarge && (
-                <div style={menuStyle}>
+                <div
+                  style={menuStyle}
+                  onMouseLeave={menuLeave}
+                  >
                   <NavLink
                     to="/VotePage" 
                     style={({ isActive }) =>
