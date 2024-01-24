@@ -1,6 +1,9 @@
 package com.jaecheop.backgollajyu.member.controller;
 
-<<<<<<< dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java
+import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
+import com.jaecheop.backgollajyu.member.service.MemberService;
+import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
+import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import com.jaecheop.backgollajyu.vote.model.VoteResDto;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +31,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
-
+    private final MemberService memberService;
     private final VoteService voteService;
+
+    @PostMapping("")
+    public ResponseEntity<ResponseMessage> signUp(@RequestBody SignUpReqDto signUpReqDto){
+       ServiceResult result =  memberService.signUp(signUpReqDto);
+
+       if(!result.isResult()){
+           return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+       }
+
+       return ResponseEntity.ok().body(ResponseMessage.success());
+    }
+
 
     // Controller method to handle GET request for votes by member ID
     @GetMapping("/{memberId}/votes")
@@ -82,4 +97,3 @@ public class MemberController {
             return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
         }
     }
-}
