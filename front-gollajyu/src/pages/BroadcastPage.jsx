@@ -35,7 +35,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 14:11"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지", "햄스터", "도마뱀"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -44,7 +44,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 15:11"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -53,7 +53,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 16:11"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -62,7 +62,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 14:10"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -71,7 +71,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 14:04"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -80,7 +80,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 10:11"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -89,7 +89,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 12:11"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -98,7 +98,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 14:30"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
     {
       thumbnail: "/src/assets/nowGollajyu.png",
@@ -107,7 +107,7 @@ const BroadcastPage = () => {
       sessionId: "sessionABCD",
       hostNickName: "고라파덕",
       createdDate: new Date("2024-01-24 14:50"),
-      voteItem: { 1: "고양이", 2: "강아지" },
+      voteItem: ["고양이", "강아지"],
     },
   ];
 
@@ -136,7 +136,7 @@ const BroadcastPage = () => {
           시청자로 진입(Guest)
         </button>
       </div>
-      <div className="container mx-auto my-5 w-5/6 h-1/5 flex flex-col space-y-10">
+      <div className="container mx-auto my-5 w-3/4 h-1/5 flex flex-col space-y-10">
         <div id="page-info">
           <p className="text-black-70 text-xl mx-4">
             <span className="font-bold">라이브 방송</span>을 시청하며

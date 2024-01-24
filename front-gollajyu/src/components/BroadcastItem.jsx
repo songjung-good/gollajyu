@@ -16,6 +16,9 @@ const BroadcastItem = ({ index, item }) => {
         isHost: false,
         sessionId: item.sessionId,
         userNickName: localStorage.userNickName,
+        voteItem: item.voteItem,
+        title: item.title,
+        hostNickName: item.hostNickName,
       },
     });
   };
