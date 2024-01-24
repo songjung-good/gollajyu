@@ -4,17 +4,6 @@ import { useMediaQuery } from 'react-responsive';
 import DefaultProfileImage from "/@images/default_profile_img.png";
 
 const NavigationBar = () => {
-  // 반응형 웹페이지 구현
-  const isLarge = useMediaQuery({
-    query : "(min-width:1024px)"
-  });
-  const isMedium = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023px)"
-  });
-  const isSmall = useMediaQuery({
-    query : "(max-width:767px)"
-  });
-
   // 메뉴 hover
   const [votePageHovered, setVotePageHovered] = useState(false);
   const [broadcastPageHovered, setBroadcastPageHovered] = useState(false);
@@ -31,6 +20,17 @@ const NavigationBar = () => {
 
   const isLoggedIn = true;  // 로그인 상태
   // const isLoggedIn = false;  // 비로그인 상태
+
+  // 반응형 웹페이지 구현
+  const isLarge = useMediaQuery({
+    query : "(min-width:1024px)"
+  });
+  const isMedium = useMediaQuery({
+    query : "(min-width:768px) and (max-width:1023px)"
+  });
+  const isSmall = useMediaQuery({
+    query : "(max-width:767px)"
+  });
 
 
   // --------------------------------- css 시작 ---------------------------------

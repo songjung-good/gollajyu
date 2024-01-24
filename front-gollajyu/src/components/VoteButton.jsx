@@ -10,6 +10,42 @@ const VoteButton = () => {
   const [simpleGollajyuHovered, setSimpleGollajyuHovered] = useState(false);
   const [purchaseGollajyuHovered, setPurchaseGollajyuHovered] = useState(false);
 
+  // ----------- 투표 생성 버튼 호버/떠남 상태 업데이트 함수 -----------
+  const buttonHover = () => {
+    setButtonHovered(true);
+  };
+
+  const buttonCloseClick = () => {
+    setButtonHovered(false);  // X 버튼 클릭 시 떠남 상태로 설정
+  };
+  
+  // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
+  const nowGollajyuHover = () => {
+    setNowGollajyuHovered(true);
+  };
+
+  const nowGollajyuLeave = () => {
+    setNowGollajyuHovered(false);
+  };
+
+  // ----------- '간단골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
+  const simpleGollajyuHover = () => {
+    setSimpleGollajyuHovered(true);
+  };
+
+  const simpleGollajyuLeave = () => {
+    setSimpleGollajyuHovered(false);
+  };
+
+  // ----------- '구매골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
+  const purchaseGollajyHover = () => {
+    setPurchaseGollajyuHovered(true);
+  };
+
+  const purchaseGollajyLeave = () => {
+    setPurchaseGollajyuHovered(false);
+  };
+  
 
   // --------------------------------- css 시작 ---------------------------------
   
@@ -171,42 +207,6 @@ const VoteButton = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-
-  // ----------- 투표 생성 버튼 호버/떠남 상태 업데이트 함수 -----------
-  const buttonHover = () => {
-    setButtonHovered(true);
-  };
-
-  const buttonCloseClick = () => {
-    setButtonHovered(false);  // X 버튼 클릭 시 떠남 상태로 설정
-  };
-  
-  // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
-  const nowGollajyuHover = () => {
-    setNowGollajyuHovered(true);
-  };
-
-  const nowGollajyuLeave = () => {
-    setNowGollajyuHovered(false);
-  };
-
-  // ----------- '간단골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
-  const simpleGollajyuHover = () => {
-    setSimpleGollajyuHovered(true);
-  };
-
-  const simpleGollajyuLeave = () => {
-    setSimpleGollajyuHovered(false);
-  };
-
-  // ----------- '구매골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
-  const purchaseGollajyHover = () => {
-    setPurchaseGollajyuHovered(true);
-  };
-
-  const purchaseGollajyLeave = () => {
-    setPurchaseGollajyuHovered(false);
-  };
 
   return (
     <div
