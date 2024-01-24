@@ -39,7 +39,7 @@ public class VoteService {
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
 
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("해당 멤버가 존재하지 않습니다.");
+            return ServiceResult.fail("존재하지 않는 사용자입니다.");
         }
 
         // 사용자 존재
