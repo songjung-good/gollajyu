@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;           /* 요소의 크기를 padding과 border를 포함한 크기로 계산 */
-  font-family: "GmarketSansLight";  /* 기본 폰트 설정 */
+  font-family: "GmarketSansMedium";  /* 기본 폰트 설정 */
 }
 
 .body {
@@ -14,19 +14,26 @@
   /* 얇은 글씨체 */
   font-family: "GmarketSansLight";
   src: local("GmarketSansLight"),
-  url("./static/fonts/GmarketSansLight.ttf") format("truetype");
+  url("./static/fonts/GmarketSansLight.otf") format("truetype");
 }
 
 @font-face {
   /* 기본 글씨체 */
   font-family: "GmarketSansMedium";
   src: local("GmarketSansMedium"),
-  url("./static/fonts/GmarketSansMedium.ttf") format("truetype");
+  url("./static/fonts/GmarketSansMedium.otf") format("truetype");
 }
 
 @font-face {
   /* 굵은 글씨체 */
   font-family: "GmarketSansBold";
   src: local("GmarketSansBold"),
-  url("./static/fonts/GmarketSansBold.ttf") format("truetype");
+  url("./static/fonts/GmarketSansBold.otf") format("truetype");
+}
+
+@font-face {
+  /* 로고 글씨체 */
+  font-family: "HSSantokkiRegular";
+  src: local("HSSantokkiRegular"),
+  url("./static/fonts/HSSantokkiRegular.ttf") format("truetype");
 }
