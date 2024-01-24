@@ -1,5 +1,6 @@
-package com.jaecheop.backgollajyu.vote.model;
+package com.jaecheop.backgollajyu.comment.model;
 
+import com.jaecheop.backgollajyu.vote.model.VoteResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentResDto {
 
-    private Long commentId;
+    private int commentId;
     private LocalDateTime commentCreateAt;
     private String commentDescription;
     private VoteResDto voteResDto;

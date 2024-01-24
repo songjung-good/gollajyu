@@ -1,5 +1,8 @@
 package com.jaecheop.backgollajyu.vote.service;
 
+import com.jaecheop.backgollajyu.comment.entity.Comment;
+import com.jaecheop.backgollajyu.comment.model.CommentResDto;
+import com.jaecheop.backgollajyu.comment.repository.CommentRepository;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.vote.model.*;
@@ -28,6 +31,7 @@ public class VoteService {
 
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * 투표 생성
@@ -230,31 +234,25 @@ public class VoteService {
     }
 
 //     댓글 작성한 투표 리스트 +@ Dto 만들어야함 (VoteResDto + 댓글 설명 + 댓글 생성일자) 로 반환할
-//    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
-//        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
-//
-//        List<VoteResDto> voteResDtoList = makeVoteResDtoList(votes, memberId);
-//
-//        List<CommentResDto> commentResDtoList = mapVotesToCommentResDto(voteResDtoList);
-//
-//        return commentResDtoList;
-//    }
-//    public List<CommentResDto> mapVotesToCommentResDto(List<VoteResDto> voteResDtoList) {
-//        return voteResDtoList.stream()
-//                .map(this::buildCommentResDto)
-//                .collect(Collectors.toList());
-//    }
+    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
+        List<Comment> comments = commentRepository.findByMemberId(memberId);
+        List<CommentResDto> commentResDtoList = new ArrayList<>();
 
-//    private CommentResDto buildCommentResDto(VoteResDto voteResDto) {
-//        return CommentResDto.builder()
-//                .commentId(/* set commentId based on your requirements */)
-//                .commentCreateAt(/* set commentCreateAt based on your requirements */)
-//                .commentDescription(/* set commentDescription based on your requirements */)
-//                .voteResDto(voteResDto)
-//                // Set other properties of CommentResDto based on your requirements
-//                .build();
-//    }
+        for (Comment comment : comments) {
+            List<Vote> votes = voteRepository.findVoteByCommentId(comment.getId());
+            CommentResDto commentResDto = CommentResDto.builder()
+                    .commentId(comment.getId())
+                    .commentCreateAt(comment.getCommentCreateAt().toLocalDateTime())
+                    .commentDescription(comment.getCommentDescription())
+                    .voteResDto(makeVoteResDtoList(votes, memberId).get(0))
+                    .build();
 
+            commentResDtoList.add(commentResDto);
+
+        }
+
+        return commentResDtoList;
+    }
 
 
 //

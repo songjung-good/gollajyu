@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86c1ffc9-0e53-43a7-9c81-e70fd9ac44de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Like.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/CategoryDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/LikeDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/LikeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/repository/CommentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Vote.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/CommentResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/CommentResDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteResDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/CommentResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/model/CommentResDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,8 +47,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -78,11 +74,17 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.BackGollajyuApplication.executor": "Run",
+    "Gradle.Build dont delete.executor": "Run",
     "Gradle.dont delete [:BackGollajyuApplication.main()].executor": "Run",
     "Gradle.dont delete.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.BackGollajyuApplication.executor": "Run",
     "git-widget-placeholder": "comment-get-back",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/SSAFY/Desktop/S10P12E107",
@@ -95,7 +97,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Gradle.dont delete">
+  <component name="RunManager" selected="Spring Boot.BackGollajyuApplication">
     <configuration name="dont delete" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -145,7 +147,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1705883839633</updated>
-      <workItem from="1706079707567" duration="2622000" />
+      <workItem from="1706079707567" duration="10409000" />
     </task>
     <servers />
   </component>
@@ -163,7 +165,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/comment-get-back" />
+                        <option value="comment-get-back" />
                       </list>
                     </value>
                   </entry>
@@ -174,5 +176,16 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java</url>
+          <line>18</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
