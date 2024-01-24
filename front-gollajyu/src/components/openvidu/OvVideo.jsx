@@ -1,5 +1,15 @@
 import React, { useRef, useEffect } from "react";
 
+const video = {
+  position: "relative",
+  zIndex: 999,
+  width: "100%",
+  height: "auto",
+  float: "left",
+  cursor: "pointer",
+  borderRadius: "10px",
+};
+
 export default function OpenViduVideoComponent({ streamManager }) {
   const videoRef = useRef();
 
@@ -9,5 +19,5 @@ export default function OpenViduVideoComponent({ streamManager }) {
     }
   }, [streamManager]);
 
-  return <video autoPlay={true} ref={videoRef} />;
+  return <video style={video} autoPlay={true} ref={videoRef} />;
 }

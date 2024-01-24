@@ -1,6 +1,23 @@
 import React from "react";
 import OpenViduVideoComponent from "./OvVideo.jsx";
-import "./UserVideo.css";
+
+const streamComponent = {
+  position: "relative",
+  background: "#f8f8f8",
+  paddingLeft: "5px",
+  paddingRight: "5px",
+  color: "#777777",
+  fontWeight: "bold",
+  borderBottomRightRadius: "4px",
+};
+
+const nameTag = {
+  position: "absolute",
+  zIndex: 9999,
+  margin: "0",
+  background: "white",
+  borderRadius: "0.2rem",
+};
 
 export default function UserVideoComponent({ streamManager }) {
   const getNicknameTag = () => {
@@ -11,11 +28,10 @@ export default function UserVideoComponent({ streamManager }) {
   return (
     <div>
       {streamManager !== undefined ? (
-        <div className="streamcomponent">
+        <div className="streamcomponent" style={streamComponent}>
           <OpenViduVideoComponent streamManager={streamManager} />
-          <div>
-            <p>{getNicknameTag()}</p>
-          </div>
+          {/* 네임태그는 나중에 지울 것 */}
+          <p style={nameTag}>{getNicknameTag()}</p>
         </div>
       ) : null}
     </div>

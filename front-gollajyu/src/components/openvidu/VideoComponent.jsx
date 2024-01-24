@@ -2,7 +2,6 @@ import { OpenVidu } from "openvidu-browser";
 
 import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import "./VideoComponent.css";
 import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChattingForm from "./chat/ChattingForm";
@@ -24,6 +23,10 @@ const videoContainer = {
   background: "rgba(0, 0, 0, 0.20)",
   padding: "1.2rem",
   margin: "3rem auto",
+};
+
+const settingButton = {
+  base: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-1",
 };
 
 export default function VideoComponent() {
@@ -299,8 +302,12 @@ export default function VideoComponent() {
           {isHost ? (
             <div id="session-header" className="flex justify-between">
               <div>
-                <Button onClick={screenShare}>화면 공유</Button>
-                <Button onClick={mute}>마이크 음소거</Button>
+                <button className={settingButton.base} onClick={screenShare}>
+                  화면 공유
+                </button>
+                <button className={settingButton.base} onClick={mute}>
+                  마이크 음소거
+                </button>
               </div>
               <Button
                 className="flex-none"
