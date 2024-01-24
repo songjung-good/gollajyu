@@ -4,7 +4,7 @@ import SimpleGollajyuImage from "/@images/simple_gollajyu_img.png";
 import PurchaseGollajyuImage from "/@images/purchase_gollajyu_img.png";
 
 const VoteButton = () => {
-  // 버튼 hover
+  // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
   const [nowGollajyuHovered, setNowGollajyuHovered] = useState(false);
   const [simpleGollajyuHovered, setSimpleGollajyuHovered] = useState(false);
