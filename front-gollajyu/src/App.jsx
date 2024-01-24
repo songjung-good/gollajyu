@@ -23,7 +23,7 @@ const App = () => {
           <Route path="/BroadcastPage" element={<BroadcastPage />} />
           <Route path="/StatisticPage" element={<StatisticPage />} />
           <Route path="/TestPage" element={<TestPage />} />
-          <Route path="/MyPage" element={<MyPage />} />
+          <Route path="/MyPage/*" element={<MyPage />} />
           <Route path="/EnterVideoRoom" element={<VideoComponent />} />
         </Routes>
       </div>

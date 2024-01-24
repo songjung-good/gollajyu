@@ -21,7 +21,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "^5.0.1",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "react-responsive": "^9.0.2"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
