@@ -20,22 +20,22 @@ const NavigationBar = () => {
   // --------------------------------- css 시작 ---------------------------------
   
   // ----------- 내비게이션 바 스타일 -----------
-  const navigationBarStyle = {
-    // 위치
-    position: "fixed",                              // 내비게이션 바 상단에 고정
-    top: "0px",                                     // 내비게이션 바 고정 위치: 0px
+  // const navigationBarStyle = {
+  //   // 위치
+  //   position: "fixed",                              // 내비게이션 바 상단에 고정
+  //   top: "0px",                                     // 내비게이션 바 고정 위치: 0px
 
-    // 디자인
-    width: "100%",                                  // 내비게이션 바 넓이: 100%
-    height: "100px",                                // 내비게이션 바 높이: 100px
-    padding: "0 100px",                             // 내비게이션 좌우 padding: 100px
-    background: "#FFFFFF",                          // 배경 색상: 흰색
+  //   // 디자인
+  //   width: "100%",                                  // 내비게이션 바 넓이: 100%
+  //   height: "100px",                                // 내비게이션 바 높이: 100px
+  //   padding: "0 100px",                             // 내비게이션 좌우 padding: 100px
+  //   background: "#FFFFFF",                          // 배경 색상: 흰색
 
-    // 컨텐츠 정렬
-    display: "flex",                                // 항목 수평 정렬
-    justifyContent: "space-between",                // 항목 균일 간격으로 정렬
-    alignItems: "center",                           // 항목 수직 정렬
-  };
+  //   // 컨텐츠 정렬
+  //   display: "flex",                                // 항목 수평 정렬
+  //   justifyContent: "space-between",                // 항목 균일 간격으로 정렬
+  //   alignItems: "center",                           // 항목 수직 정렬
+  // };
 
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
@@ -190,7 +190,7 @@ const NavigationBar = () => {
 
   
   return (
-    <nav style={navigationBarStyle}>
+    <nav className="fixed top-0 w-full h-20 px-20 bg-white flex justify-between items-center">
       {/* --------------------------------- 로고 --------------------------------- */}
       <div style={logoContainerStyle}>
         <NavLink to="/" style={logoStyle}>
