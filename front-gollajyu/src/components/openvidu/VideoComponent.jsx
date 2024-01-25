@@ -12,17 +12,8 @@ import { Button, Input, Tooltip } from "@mui/material";
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-const broadcastInfo = {
-  base: "bg-white rounded-md p-3",
-};
-
-const videoContainer = {
-  base: "container mx-5 rounded-lg bg-opacity-20 bg-black p-6 my-12 mx-auto",
-};
-
-const settingButton = {
-  base: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-1",
-};
+const settingButton =
+  "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-1";
 
 export default function VideoComponent() {
   const navigate = useNavigate();
@@ -330,7 +321,7 @@ export default function VideoComponent() {
 
   return (
     // container는 최상위 div
-    <div className={videoContainer.base}>
+    <div className="container mx-5 rounded-lg bg-opacity-20 bg-black p-6 my-12 mx-auto space-y-3">
       {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
       {session === undefined ? (
         <div id="join">
@@ -348,10 +339,10 @@ export default function VideoComponent() {
           {isHost ? (
             <div id="session-header" className="flex justify-between mb-2">
               <div>
-                <button className={settingButton.base} onClick={screenShare}>
+                <button className={settingButton} onClick={screenShare}>
                   화면 공유
                 </button>
-                <button className={settingButton.base} onClick={mute}>
+                <button className={settingButton} onClick={mute}>
                   {audioState
                     ? "마이크 음소거 (안됨)"
                     : "마이크 음소거 해제 (안됨)"}
@@ -397,7 +388,7 @@ export default function VideoComponent() {
                   <UserVideoComponent streamManager={subscribers[0]} />
                 </div>
               )}
-              <div className={`basis-2/5 ${broadcastInfo.base}`}>
+              <div className="basis-2/5 bg-white rounded-md p-3">
                 {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
                 <p>{hostNickName}</p>
                 <p>{title}</p>
