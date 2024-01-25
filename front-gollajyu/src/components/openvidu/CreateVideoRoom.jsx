@@ -5,8 +5,6 @@ import AddVoteItemModal from "./AddVoteItemModal";
 
 const CreateVideoRoom = () => {
   // 화면 구성 => VideoRoomComponent와 유사하게, 채팅창 부분은 빈 상태로
-  // 투표 생성
-  // 웹캠화면 미리보기
   // 방송 시작하기 버튼 => 제목, 투표항목, 호스트 닉네임, 세션 아이디 넘겨주기(VideoComponent와 서버에) => VideoComponent에서 isHost=true이면 enterRoom 건너뛰게..?
   const settingButton = "text-white py-2 px-4 rounded";
 
