@@ -2,7 +2,6 @@ package com.jaecheop.backgollajyu.vote.entity;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
-import com.jaecheop.backgollajyu.member.model.Birthday;
 import com.jaecheop.backgollajyu.member.model.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,7 @@ public class VoteResult {
     @JoinColumn(name="member_id")
     private Member member;
 
-    private Birthday birthday;
+    private Integer age;
 
     @OneToOne
     @JoinColumn(name = "type_id")

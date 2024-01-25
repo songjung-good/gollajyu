@@ -1,5 +1,6 @@
 package com.jaecheop.backgollajyu.member.controller;
 
+import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
 import com.jaecheop.backgollajyu.member.service.MemberService;
@@ -8,8 +9,7 @@ import com.jaecheop.backgollajyu.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import com.jaecheop.backgollajyu.member.model.LoginReqDto;
 import com.jaecheop.backgollajyu.member.model.LoginResDto;
@@ -19,10 +19,6 @@ import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -47,8 +43,10 @@ public class MemberController {
 
     // Controller method to handle GET request for votes by member ID
     @GetMapping("/{memberId}/votes")
-    public ResponseEntity<List<VoteResDto>> getVotesByMemberId(@PathVariable Long memberId) {
-        List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId);
+    public ResponseEntity<List<VoteResDto>> getVotesByMemberId(
+            @PathVariable Long memberId,
+            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
+        List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId, statisticsSearchReqDto);
 
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -58,8 +56,10 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/votes/participation")
-    public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(@PathVariable Long memberId) {
-        List<VoteResDto> voteResDtoList = voteService.getVotesByResultMemberId(memberId);
+    public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(
+            @PathVariable Long memberId,
+            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
+        List<VoteResDto> voteResDtoList = voteService.getVotesByResultMemberId(memberId, statisticsSearchReqDto);
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -68,8 +68,10 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/votes/likes")
-    public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(@PathVariable Long memberId) {
-        List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId);
+    public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(
+            @PathVariable Long memberId,
+            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
+        List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId, statisticsSearchReqDto);
 
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -78,8 +80,10 @@ public class MemberController {
         }
     }
     @GetMapping("/{memberId}/comments")
-    public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(@PathVariable Long memberId) {
-        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
+    public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(
+            @PathVariable Long memberId,
+            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
+        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId, statisticsSearchReqDto);
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
