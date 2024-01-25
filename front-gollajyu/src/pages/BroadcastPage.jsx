@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import BroadcastItem from "../components/BroadcastItem";
+import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
 
 const BroadcastPage = () => {
   const navigate = useNavigate();
@@ -29,7 +30,7 @@ const BroadcastPage = () => {
 
   const dummyData = [
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 1000,
       sessionId: "sessionABCD",
@@ -38,7 +39,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지", "햄스터", "도마뱀"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 2,
       sessionId: "sessionABCD",
@@ -47,7 +48,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 123,
       sessionId: "sessionABCD",
@@ -56,7 +57,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 78,
       sessionId: "sessionABCD",
@@ -65,7 +66,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 44,
       sessionId: "sessionABCD",
@@ -74,7 +75,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 678,
       sessionId: "sessionABCD",
@@ -83,7 +84,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 707,
       sessionId: "sessionABCD",
@@ -92,7 +93,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 500,
       sessionId: "sessionABCD",
@@ -101,7 +102,7 @@ const BroadcastPage = () => {
       voteItem: ["고양이", "강아지"],
     },
     {
-      thumbnail: "/src/assets/nowGollajyu.png",
+      thumbnail: tmpThumbnailImg,
       title: "최고의 반려동물은? 고양이 vs 강아지",
       viewerCnt: 10,
       sessionId: "sessionABCD",

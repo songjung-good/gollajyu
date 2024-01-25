@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import NowGollajyuImage from "/src/assets/vote-button/now_gollajyu_img.png";
-import SimpleGollajyuImage from "/src/assets/vote-button/simple_gollajyu_img.png";
-import PurchaseGollajyuImage from "/src/assets/vote-button/purchase_gollajyu_img.png";
+import NowGollajyuImage from "/assets/images/vote-button/now_gollajyu_img.png";
+import SimpleGollajyuImage from "/assets/images/vote-button/simple_gollajyu_img.png";
+import PurchaseGollajyuImage from "/assets/images/vote-button/purchase_gollajyu_img.png";
 
 const VoteButton = () => {
   // 버튼 hover
