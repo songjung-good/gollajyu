@@ -25,7 +25,7 @@ public class VoteResult {
     @JoinColumn(name="vote_id")
     private Vote vote;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="vote_item_id")
     private VoteItem voteItem;
 
