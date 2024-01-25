@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import _ from "lodash";
-import tmp_profile from "/src/assets/tmp_profile.png";
+import tmp_profile from "/assets/images/tmp_profile.png";
 
 const StyledChattingList = styled.div`
   height: 400px;
