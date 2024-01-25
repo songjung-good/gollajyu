@@ -16,7 +16,7 @@ export default function VoteCard() {
           key={index}
           src={NowGollajyuImage}
           title={`Title ${index + 1}`}
-          path="/details"
+          path="/VotePage"
           clicked={clicked[index]}
           onClick={() => handleClick(index)}
         />

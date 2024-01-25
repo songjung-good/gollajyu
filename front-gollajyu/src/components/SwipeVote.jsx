@@ -1,48 +1,59 @@
-import React, { useRef, useState } from 'react';
-// Import Swiper React components
+import React, { useState, useEffect } from 'react';
+// Import Swiper React components and styles
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/pagination';
+import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 // 투표 받아오기
-import VoteCard from "./VoteCard"
-// css
-import './SwipeVote.css';
+import VoteCard from "./VoteCard";
 // import required modules
-import { Pagination, Navigation, HashNavigation } from 'swiper/modules';
+import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
 
 export default function SwipeVote() {
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const swiperInstance = document.querySelector('.mySwiper').swiper;
+
+    swiperInstance.on('slideChange', () => {
+      setActiveSlide(swiperInstance.activeIndex);
+    });
+
+    return () => {
+      swiperInstance.off('slideChange');
+    };
+  }, []);
+
   return (
-    <>
+    <div className="py-7 px-7">
       <Swiper
-        spaceBetween={0}
-        hashNavigation={{
-          watchState: true,
-        }}
-        pagination={{
-          clickable: true,
-        }}
+        effect={'coverflow'}
+        grabCursor={true}
+        spaceBetween={30}
+        centeredSlides={true}
         navigation={true}
-        modules={[Pagination, Navigation, HashNavigation]}
+        slidesPerView={'auto'}
+        loop={true}
+        coverflowEffect={{
+          rotate: 50,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
+        }}
+        modules={[EffectCoverflow, Navigation, HashNavigation]}
         className="mySwiper"
+        style={{ padding: '30px', height: 'calc(100% + 60px)' }}
       >
-        <SwiperSlide data-hash="slide1">
-          <VoteCard />
-        </SwiperSlide>
-        <SwiperSlide data-hash="slide2">
-          <VoteCard />
-        </SwiperSlide>
-        <SwiperSlide data-hash="slide3">
-          <VoteCard />
-        </SwiperSlide>
-        <SwiperSlide data-hash="slide4">Slide 4</SwiperSlide>
-        <SwiperSlide data-hash="slide5">Slide 5</SwiperSlide>
-        <SwiperSlide data-hash="slide6">Slide 6</SwiperSlide>
-        <SwiperSlide data-hash="slide7">Slide 7</SwiperSlide>
-        <SwiperSlide data-hash="slide8">Slide 8</SwiperSlide>
-        <SwiperSlide data-hash="slide9">Slide 9</SwiperSlide>
+        {['slide1', 'slide2', 'slide3'].map((hash, index) => (
+          <SwiperSlide key={hash} data-hash={hash}>
+            <div>
+              <VoteCard />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
-    </>
+    </div>
   );
 }
