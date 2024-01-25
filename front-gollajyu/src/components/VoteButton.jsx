@@ -178,7 +178,7 @@ const VoteButton = () => {
   };
 
   const buttonCloseClick = () => {
-    setButtonHovered(false);                        // X 버튼 클릭 시 떠남 상태로 설정
+    setButtonHovered(false);  // X 버튼 클릭 시 떠남 상태로 설정
   };
   
   // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------

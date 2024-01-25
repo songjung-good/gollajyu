@@ -1,12 +1,14 @@
 package com.jaecheop.backgollajyu.vote.model;
 
 
+import com.jaecheop.backgollajyu.vote.entity.Category;
 import lombok.*;
 
 import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class VoteReqDto {
 
@@ -17,9 +19,7 @@ public class VoteReqDto {
 
     private String description;
 
-    private int code;
-
-    private int codeType;
+    private int categoryId;
 
     // 단일 투표에 들어간 투표 아이템들의 정보
     private List<VoteItemReqDto> voteItemList;

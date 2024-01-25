@@ -8,7 +8,8 @@ import BroadcastPage from "./pages/BroadcastPage";
 import StatisticPage from "./pages/StatisticPage";
 import TestPage from "./pages/TestPage";
 import MyPage from "./pages/MyPage";
-import "./App.css"
+import VideoComponent from "./components/openvidu/VideoComponent";
+import "./App.css";
 
 const App = () => {
   return (
@@ -22,7 +23,8 @@ const App = () => {
           <Route path="/BroadcastPage" element={<BroadcastPage />} />
           <Route path="/StatisticPage" element={<StatisticPage />} />
           <Route path="/TestPage" element={<TestPage />} />
-          <Route path="/MyPage" element={<MyPage />} />
+          <Route path="/MyPage/*" element={<MyPage />} />
+          <Route path="/EnterVideoRoom" element={<VideoComponent />} />
         </Routes>
       </div>
     </Router>

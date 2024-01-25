@@ -1,8 +1,10 @@
 package com.jaecheop.backgollajyu.member.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Type {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="type_id")

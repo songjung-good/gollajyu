@@ -2,6 +2,7 @@ package com.jaecheop.backgollajyu.vote.service;
 
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.*;
 import com.jaecheop.backgollajyu.vote.model.ChoiceReqDto;
@@ -13,17 +14,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class VoteService {
+    private final VoteResultRepository voteResultRepository;
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final MemberRepository memberRepository;
-    private final VoteResultRepository voteResultRepository;
+    private final LikeRepository likeRepository;
+
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
 
@@ -39,11 +41,18 @@ public class VoteService {
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
 
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("해당 멤버가 존재하지 않습니다.");
+            return ServiceResult.fail("존재하지 않는 사용자입니다.");
         }
 
         // 사용자 존재
         Member member = optionalMember.get();
+
+        // 카테고리 존재 유무 확인
+        Optional<Category> optionalCategory = categoryRepository.findById(voteReqDto.getCategoryId());
+        if(optionalCategory.isEmpty()){
+            return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+        }
+        Category category = optionalCategory.get();
 
         // 포인트 차감 - 투표 생성 : 10포인트
         try{
@@ -58,8 +67,7 @@ public class VoteService {
                 .title(voteReqDto.getTitle())
                 .description(voteReqDto.getDescription())
                 .createAt(LocalDateTime.now())
-                .code(voteReqDto.getCode())
-                .codeType(voteReqDto.getCodeType())
+                .category(category)
                 .build();
 
         voteRepository.save(vote);
@@ -79,6 +87,204 @@ public class VoteService {
 
 
     }
+
+
+
+    // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
+    private List<VoteResDto> makeVoteResDtoList(List<Vote> votes, Long currentMemberId) {
+        List<VoteResDto> voteResDtoList = new ArrayList<>();
+
+
+        for (Vote vote : votes) {
+            List<VoteItemResDto> voteItemResDtoList = mapVoteItemsToDto(getVoteItemsForVote(vote));
+            Optional<VoteResult> byMemberIdAndVoteId = voteResultRepository.findByMemberIdAndVoteId(currentMemberId, vote.getId());
+            Long selectedItemId;
+
+            // 투표한 아이템 찾기
+            if (byMemberIdAndVoteId.isPresent()) {
+                selectedItemId = byMemberIdAndVoteId.get().getVoteItem().getId();
+            } else {
+                selectedItemId = -1L;
+            }
+            List<Likes> likes = likeRepository.findByVote(vote);
+
+            VoteResDto voteResDto = VoteResDto.builder()
+                    .voteId(vote.getId())
+                    .memberId(vote.getMember())
+                    .title(vote.getTitle())
+                    .description(vote.getDescription())
+                    .createAt(vote.getCreateAt())
+                    .categoryDto(mapCategoryEntityToDto(vote)) // 카테고리 매핑
+                    .voteItems(voteItemResDtoList)
+                    .selectedItemId(selectedItemId) // 투표 참여한게 있다면 투표아이템 id를 준다.
+                    .likes(mapLikesToDto(likes)) // 좋아요 리스트 매핑
+                    .build();
+
+            voteResDtoList.add(voteResDto);
+        }
+        return voteResDtoList;
+    }
+    // 투표에 아이템을 참조
+    public List<VoteItem> getVoteItemsForVote(Vote vote) {
+        return voteItemRepository.findVoteItemsByVote(vote);
+    }
+
+    // 위에서 참조된 아이템을 Dto로 바꾸기
+    private List<VoteItemResDto> mapVoteItemsToDto(List<VoteItem> voteItems) {
+        return voteItems.stream()
+                .map(this::mapVoteItemToDto)
+                .collect(Collectors.toList());
+    }
+
+    // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
+    private VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
+
+
+        return VoteItemResDto.builder()
+                .voteItemId(voteItem.getId())
+                .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                .voteItemDesc(voteItem.getVoteItemDesc())
+                .price(voteItem.getPrice())
+                .voteResultCountResDtoList(generateStatistics(voteItem)) //
+                .build();
+    }
+
+    // ItemResDto를 만드는 과정에서 태그별 투표수 첨부 해주기
+    public Map<Tag, Long> generateStatistics(VoteItem voteItem) {
+        Map<Tag, Long> statistics = new HashMap<>();
+
+        // Assuming VoteItem has a method to retrieve associated VoteItemResults
+        List<VoteResult> voteResults = voteResultRepository.findByVoteItem(voteItem);
+
+        for (VoteResult voteResult : voteResults) {
+            // Assuming VoteResult has a method to retrieve associated Tag
+            Tag tag = voteResult.getTag();
+
+            // Update count for the tag
+            statistics.put(tag, statistics.getOrDefault(tag, 0L) + 1);
+        }
+
+        return statistics;
+    }
+
+
+    // Like 엔터티를 LikeDto->LikeDtoList 로 변환하는 메서드
+    private List<LikeDto> mapLikesToDto(List<Likes> likes) {
+        return likes.stream()
+                .map(this::mapLikeToDto)
+                .collect(Collectors.toList());
+    }
+    private LikeDto mapLikeToDto(Likes likes) {
+        if (likes != null) {
+            // Implement mapping logic from Like entity to LikeDto using builder
+            return LikeDto.builder()
+                    .likeId(likes.getId())
+                    .memberId(likes.getMember().getId()) // 예시로 Member의 ID를 매핑
+                    // Add other properties based on Like entity structure
+                    .build();
+        } else {
+            return null;
+        }
+    }
+
+    public CategoryDto mapCategoryEntityToDto(Vote vote) {
+        // Assuming vote is an instance of Vote, and it has a category property
+
+        // Retrieve the Category entity associated with the vote
+        Optional<Category> optionalCategory = categoryRepository.findByVotes(vote);
+        if(optionalCategory.isEmpty()){
+            return null;
+        }
+
+        Category categoryEntity = optionalCategory.get();
+
+        // Map the properties to the DTO using the builder pattern
+        return CategoryDto.builder()
+                .categoryId(categoryEntity.getId())
+                .categoryName(categoryEntity.getCategoryName())
+                .tags(tagRepository.findAllByCategoryId(categoryEntity.getId()))
+                .build();
+    }
+
+
+
+
+    // 투표 작성자 Id로 투표 리스트 생성..
+    public List<VoteResDto> getVotesByMemberId(Long memberId) {
+        List<Vote> votes = voteRepository.findByMemberId(memberId);
+        return makeVoteResDtoList(votes, memberId);
+    }
+
+    // 투표한 투표 리스트
+    public List<VoteResDto> getVotesByResultMemberId(Long memberId) {
+
+        List<Vote> votes = voteRepository.findVoteIdsByResultMemberId(memberId);
+        return makeVoteResDtoList(votes, memberId);
+    }
+
+    // 좋아요한 투표 리스트
+    public List<VoteResDto> getLikedVotesByMemberId(Long memberId) {
+        // 멤버가 좋아요 한 투표찾기
+        List<Vote> votes = voteRepository.findVoteLikesByMemberId(memberId);
+        return makeVoteResDtoList(votes, memberId);
+    }
+
+//     댓글 작성한 투표 리스트 +@ Dto 만들어야함 (VoteResDto + 댓글 설명 + 댓글 생성일자) 로 반환할
+//    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
+//        List<Vote> votes = voteRepository.findVotesByCommentMemberId(memberId);
+//
+//        List<VoteResDto> voteResDtoList = makeVoteResDtoList(votes, memberId);
+//
+//        List<CommentResDto> commentResDtoList = mapVotesToCommentResDto(voteResDtoList);
+//
+//        return commentResDtoList;
+//    }
+//    public List<CommentResDto> mapVotesToCommentResDto(List<VoteResDto> voteResDtoList) {
+//        return voteResDtoList.stream()
+//                .map(this::buildCommentResDto)
+//                .collect(Collectors.toList());
+//    }
+
+//    private CommentResDto buildCommentResDto(VoteResDto voteResDto) {
+//        return CommentResDto.builder()
+//                .commentId(/* set commentId based on your requirements */)
+//                .commentCreateAt(/* set commentCreateAt based on your requirements */)
+//                .commentDescription(/* set commentDescription based on your requirements */)
+//                .voteResDto(voteResDto)
+//                // Set other properties of CommentResDto based on your requirements
+//                .build();
+//    }
+
+
+
+//
+//    // Dto 만들자아아아아아ㅏ아ㅏ아ㅏ앙아ㅏ아ㅏㅇ아아
+//    public List<CategoryInfoResDto> perfectResultsMethod(Integer voteId, Integer memberId, Integer age, char gender, String type) {
+//        List<CategoryInfoResDto> result1;
+//
+//        if (memberId != null) {
+//            result1 = voteItemResultRepository.findAllByMemberId(memberId);
+//        } else if (voteId != null) {
+//            result1 = voteItemResultRepository.findByVoteId(voteId);
+//        } else {
+//            result1 = voteItemResultRepository.findAllByType(type);
+//        }
+//
+//        if (type != null) {
+//            result1 = result1.stream().filter(result -> result.getType().equals(type)).collect(Collectors.toList());
+//        }
+//        if (age != null) {
+//            result1 = result1.stream().filter(result -> result.getAge() == age).collect(Collectors.toList());
+//        }
+//        if (gender != 0) {
+//            result1 = result1.stream().filter(result -> result.getGender() == gender).collect(Collectors.toList());
+//        }
+//
+//        return result1;
+//    }
+
+
+
 
     public ServiceResult choiceMain(ChoiceReqDto choiceReqDto) {
         // member 존재 유무

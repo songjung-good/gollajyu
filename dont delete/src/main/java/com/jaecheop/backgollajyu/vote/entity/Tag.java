@@ -15,9 +15,9 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-   private String name;
+    private String name;
 
-   @ManyToOne
-   @JoinColumn(name="category_id")
-   private Category category;
+    @ManyToOne
+    @JoinColumn(name="category_id")
+    private Category category;
 }
