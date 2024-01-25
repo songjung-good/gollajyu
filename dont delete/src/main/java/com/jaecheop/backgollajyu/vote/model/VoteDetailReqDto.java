@@ -9,10 +9,7 @@ public class VoteDetailReqDto {
 
     private Long voteId;
 
-    // TODO:
-    // 투표 상세에는 안쓰임!! 곧 삭제 예정
+    // TODO
     // 나이, 성별, 소비 성향
-//    private int ageRange;
-//    private String gender;
-//    private int typeId;
+    private Filter filter;
 }

@@ -33,7 +33,7 @@ public class VoteResult {
     @JoinColumn(name="member_id")
     private Member member;
 
-    private Birthday birthday;
+    private int age;
 
     @OneToOne
     @JoinColumn(name = "type_id")

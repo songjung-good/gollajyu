@@ -11,7 +11,6 @@ import java.util.List;
 @ToString
 @Getter
 public class VoteDetailResDto {
-    // TODO:
     // 사용자 투표 참여 여부 및 투표한 아이템
     private Long chosenItem;
 

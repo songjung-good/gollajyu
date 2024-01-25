@@ -39,6 +39,7 @@ public class VoteService {
      * - 포인트 차감 (-10)
      * - 투표 등록
      * - 투표 아이템 등록
+     *
      * @param voteReqDto
      */
     public ServiceResult addVote(VoteReqDto voteReqDto) {
@@ -55,15 +56,15 @@ public class VoteService {
 
         // 카테고리 존재 유무 확인
         Optional<Category> optionalCategory = categoryRepository.findById(voteReqDto.getCategoryId());
-        if(optionalCategory.isEmpty()){
+        if (optionalCategory.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 카테고리입니다.");
         }
         Category category = optionalCategory.get();
 
         // 포인트 차감 - 투표 생성 : 10포인트
-        try{
+        try {
             member.minusPoint(10L);
-        } catch (NotEnoughPointException e){
+        } catch (NotEnoughPointException e) {
             return ServiceResult.fail(e.getMessage());
         }
 
@@ -93,7 +94,6 @@ public class VoteService {
 
 
     }
-
 
 
     // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
@@ -130,6 +130,7 @@ public class VoteService {
         }
         return voteResDtoList;
     }
+
     // 투표에 아이템을 참조
     public List<VoteItem> getVoteItemsForVote(Vote vote) {
         return voteItemRepository.findVoteItemsByVote(vote);
@@ -180,6 +181,7 @@ public class VoteService {
                 .map(this::mapLikeToDto)
                 .collect(Collectors.toList());
     }
+
     private LikeDto mapLikeToDto(Likes likes) {
         if (likes != null) {
             // Implement mapping logic from Like entity to LikeDto using builder
@@ -198,7 +200,7 @@ public class VoteService {
 
         // Retrieve the Category entity associated with the vote
         Optional<Category> optionalCategory = categoryRepository.findByVotes(vote);
-        if(optionalCategory.isEmpty()){
+        if (optionalCategory.isEmpty()) {
             return null;
         }
 
@@ -211,8 +213,6 @@ public class VoteService {
                 .tags(tagRepository.findAllByCategoryId(categoryEntity.getId()))
                 .build();
     }
-
-
 
 
     // 투표 작성자 Id로 투표 리스트 생성..
@@ -262,7 +262,6 @@ public class VoteService {
 //    }
 
 
-
 //
 //    // Dto 만들자아아아아아ㅏ아ㅏ아ㅏ앙아ㅏ아ㅏㅇ아아
 //    public List<CategoryInfoResDto> perfectResultsMethod(Integer voteId, Integer memberId, Integer age, char gender, String type) {
@@ -299,6 +298,7 @@ public class VoteService {
      * - 카테고리와 태그 매칭 여부
      * - 중복 투표 여부
      * - 포인트 획득 (+2)
+     *
      * @param choiceReqDto
      * @return
      */
@@ -321,7 +321,7 @@ public class VoteService {
 
         // 카테고리 존재 여부
         Optional<Category> optionalCategory = categoryRepository.findById(choiceReqDto.getCategoryId());
-        if(optionalCategory.isEmpty()){
+        if (optionalCategory.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 카테고리입니다.");
         }
 
@@ -333,8 +333,8 @@ public class VoteService {
         System.out.println(voteItemList);
 
         boolean isItemExist = false;
-        for(VoteItem voteItem : voteItemList){
-            if(Objects.equals(voteItem.getId(), choiceReqDto.getVoteItemId())){
+        for (VoteItem voteItem : voteItemList) {
+            if (Objects.equals(voteItem.getId(), choiceReqDto.getVoteItemId())) {
                 isItemExist = true;
                 break;
             }
@@ -349,13 +349,13 @@ public class VoteService {
         // 카테고리와 태그 매칭 여부
         List<Tag> tagList = tagRepository.findAllByCategoryId(category.getId());
         boolean isTagExist = false;
-        for(Tag tag : tagList){
-            if(tag.getId() == choiceReqDto.getTagId()){
+        for (Tag tag : tagList) {
+            if (tag.getId() == choiceReqDto.getTagId()) {
                 isTagExist = true;
                 break;
             }
         }
-        if(!isTagExist){
+        if (!isTagExist) {
             return ServiceResult.fail("카테고리에 존재하지 않는 태그입니다.");
         }
 
@@ -364,7 +364,7 @@ public class VoteService {
 
         // 중복 투표 여부.
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(choiceReqDto.getMemberId(), choiceReqDto.getVoteId());
-        if(optionalVoteResult.isPresent()){
+        if (optionalVoteResult.isPresent()) {
             return ServiceResult.fail("이미 참여한 투표입니다.");
         }
 
@@ -373,7 +373,7 @@ public class VoteService {
                 .vote(vote)
                 .voteItem(voteItem)
                 .member(member)
-                .birthday(member.getBirthDay())
+                .age(LocalDateTime.now().getYear() - member.getBirthDay().getYear())
                 .type(member.getType())
                 .gender(member.getGender())
                 .tag(tag)
@@ -389,6 +389,7 @@ public class VoteService {
 
     /**
      * 투표 상세
+     *
      * @param voteDetailReqDto
      * @return
      */
@@ -396,46 +397,56 @@ public class VoteService {
     public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
-        if(optionalMember.isEmpty()){
+        if (optionalMember.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 사용자입니다");
         }
         Member member = optionalMember.get();
 
         // 투표 존재 여부
         Optional<Vote> optionalVote = voteRepository.findById(voteDetailReqDto.getVoteId());
-        if(optionalVote.isEmpty()){
+        if (optionalVote.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 투표입니다");
         }
         Vote vote = optionalVote.get();
 
         // 이 사용자의 투표 참여 여부
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(member.getId(), vote.getId());
-        if(optionalVoteResult.isEmpty()){
+        if (optionalVoteResult.isEmpty()) {
             return ServiceResult.fail("투표하지 않은 사용자입니다.");
         }
         VoteResult voteResult = optionalVoteResult.get();
 
         // 상세정보 - 나이, 성별, 성향 별
         // 1. 투표 관련 정보 + 총 투표 수 + 좋아요
+        // TODO: 필터링 된 투표 결과 리스트 받아오기
+        List<VoteResult> voteResultList = filteredVoteResultList(vote.getVoteResultList(), voteDetailReqDto.getFilter());
+
         VoteInfoDto voteInfoDto = VoteInfoDto.builder()
                 .memberId(vote.getMember().getId())
                 .title(vote.getTitle())
                 .description(vote.getDescription())
                 .createAt(vote.getCreateAt())
                 .likesCnt((long) vote.getLikesList().size())
-                .totalChoiceCnt((long)vote.getVoteResultList().size())
+                .totalChoiceCnt((long) voteResultList.size())
                 .build();
         // 2. 각 아이템 기본 정보
         List<VoteItemInfoDto> voteItemInfoDtoList = new ArrayList<>();
-        for(VoteItem voteItem : vote.getVoteItemList()){
+        for (VoteItem voteItem : vote.getVoteItemList()) {
             // 아이템 당 표 개수 choiceCount
-            Long choiceCnt =(long) voteItem.getVoteResultList().size();
+            // TODO: 아이템 당 필터링된 투표 결과 O
+            List<VoteResult> voteResultListPerItem = filteredVoteResultList(voteItem.getVoteResultList(), voteDetailReqDto.getFilter());
+            Long choiceCnt = (long) voteResultListPerItem.size();
 
             // 아이템 - 태그 별 개수 ==> 즉, TagCount의 모든 개수를 더하면 = choiceCnt
             List<TagCount> tagCountList = new ArrayList<>(); // 각 태그 별 개수를 담은 리스트
             List<Tag> tagList = vote.getCategory().getTagList(); // 어떤 카테고리의 태그리스트(static)
-            for(Tag tag : tagList){
-                Long count = voteResultRepository.countByVoteItemIdAndTagId(voteItem.getId(), tag.getId());
+            for (Tag tag : tagList) {
+                // TODO: 필더된 결과에서 일치하는 테그의 개수를 센다
+                Long count = 0L;
+                for (VoteResult vr : voteResultListPerItem) {
+                    if (vr.getTag().getId() == tag.getId()) count++;
+                }
+                //Long count = voteResultRepository.countByVoteItemIdAndTagId(voteItem.getId(), tag.getId());
                 tagCountList.add(
                         TagCount.builder()
                                 .tagId(tag.getId())
@@ -474,6 +485,49 @@ public class VoteService {
 
         System.out.println("voteDetailResDto = " + voteDetailResDto);
         return ServiceResult.success(voteDetailResDto);
+    }
+
+    // 필터링된 투표 결과 리스트 가져오기
+    private List<VoteResult> filteredVoteResultList(List<VoteResult> voteResultList, Filter filter) {
+        // 소비성향으로 거르기
+        List<VoteResult> filterByType = new ArrayList<>();
+        if (filter.getTypeId() != -1) {
+            for (VoteResult vr : voteResultList) {
+                if (vr.getType().getId() == filter.getTypeId()) {
+                    filterByType.add(vr);
+                }
+            }
+        } else{
+            filterByType = voteResultList;
+        }
+
+        // 나이로 거르기
+        List<VoteResult> filterByTypeAndAge = new ArrayList<>();
+        if (filter.getAge() != -1) {
+            for (VoteResult vr : filterByType) {
+                if (vr.getAge() % 10 != filter.getAge()) {
+                    filterByTypeAndAge.add(vr);
+                }
+            }
+        } else{
+            filterByTypeAndAge = filterByType;
+        }
+
+        // 성별으로 거르기
+        List<VoteResult> filterByTypeAndAgeAndGender = new ArrayList<>();
+        if (!filter.getGender().equals("A")) {
+            for (VoteResult vr : filterByTypeAndAge) {
+                if (vr.getGender().name().equals(filter.getGender())) {
+                    filterByTypeAndAgeAndGender.add(vr);
+                }
+            }
+        } else{
+            filterByTypeAndAgeAndGender = filterByTypeAndAge;
+        }
+        System.out.println(filterByTypeAndAgeAndGender);
+
+        return filterByTypeAndAgeAndGender;
+
     }
 
 }
