@@ -77,7 +77,7 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: isSmall ? "140px" : "240px",             // (반응형) 로고 넓이
+    width: isSmall ? "200px" : "240px",             // (반응형) 로고 넓이
   };
 
   // ----------- 로고 스타일 -----------
@@ -157,8 +157,8 @@ const NavigationBar = () => {
     ...listStyle,                                   // 메뉴 리스트 스타일 상속
 
     // 디자인
-    width: "240px",                                 // 넓이: 200px
-    hieght: "100px",                                // 높이: 100px
+    width: !isLarge ? "360px" : "240px",            // (반응형) 버튼 리스트 넓이
+    height: "100px",                                 // 높이: 100px
 
     // 컨텐츠 정렬
     justifyContent: "flex-end",                     // 내부 버튼 오른쪽 정렬
@@ -231,8 +231,9 @@ const NavigationBar = () => {
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerButtonStyle = {
     // 디자인
-    marginTop: "5px",                               // 위쪽 여백: 5px
-    marginLeft: "10px",                             // 왼쪽 여백: 10px
+    marginTop: "5px",                               // 상단 margin: 5px
+    width: "50px",                                  // 버튼 가로 길이: 50px
+    height: "95px",                                 // 버튼 세로 길이: 95px
 
     // 글자
     fontSize: "28px",                               // 햄버거 버튼 사이즈
@@ -243,7 +244,7 @@ const NavigationBar = () => {
   const menuStyle = {
     // 위치
     position: "absolute",                           // 메뉴 위치 기준
-    top: "100px",                                   // 상단 여백: 100px
+    top: "90px",                                   // 상단 여백: 100px
     right: "0px",                                   // 오른쪽 여백: 0px
 
     // 디자인
@@ -262,10 +263,7 @@ const NavigationBar = () => {
   
   return (
     <div style={navigationBarContainerStyle}>
-      <nav
-        style={navigationBarStyle}
-        onMouseLeave={menuLeave}  // 내비게이션 바를 벗어나면 햄버거 메뉴를 끔
-      >
+      <nav style={navigationBarStyle}>
         {/* --------------------------------- 로고 --------------------------------- */}
         <div style={logoContainerStyle}>
           <NavLink to="/" style={logoStyle}>
@@ -341,7 +339,7 @@ const NavigationBar = () => {
         )}
 
         {/* --------------------------------- 프로필, 회원관리 --------------------------------- */}
-        <div style={buttonListStyle}>
+        <div style={buttonListStyle} onMouseLeave={menuLeave}>
           {isLoggedIn ? (  // ------------- 로그인 시 -------------
             <>
               <NavLink to="/MyPage">
