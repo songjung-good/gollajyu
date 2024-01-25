@@ -7,9 +7,8 @@ function VoteCardItem(props) {
 
   return (
     <div className='w-200 h-500 flex flex-col'>
-      <Link 
+      <container 
         className='h-1/2 w-full bg-gray-200 p-4 relative' 
-        to={props.path}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
@@ -32,7 +31,7 @@ function VoteCardItem(props) {
             ))}
           </div>
         )}
-      </Link>
+      </container>
       <div className='h-1/2 w-full flex flex-col justify-center items-center'>
         <h2 className='text-lg font-bold mb-4'>{props.title}</h2>
         {clicked !== null ? (
