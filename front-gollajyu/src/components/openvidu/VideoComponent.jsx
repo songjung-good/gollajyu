@@ -25,6 +25,7 @@ const settingButton = {
 };
 
 export default function VideoComponent() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [mySessionId, setMySessionId] = useState(location.state.sessionId);
   const isHost = location.state.isHost; // isHost로 분기해서 isHost=true면 화면을 publish하고 아니면 publish는 없이 subscribe만 함
@@ -34,10 +35,16 @@ export default function VideoComponent() {
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
   const [chatDisplay, setChatDisplay] = useState(true); // 채팅창 보이기(초깃값: true)
   const [audioState, setAudioSate] = useState(true);
+  const voteItem = location.state.voteItem
+    ? location.state.voteItem
+    : undefined;
+  const title = location.state.title ? location.state.title : undefined;
+  const hostNickName = location.state.hostNickName
+    ? location.state.hostNickName
+    : undefined;
   console.log("isHost?:", isHost);
 
   const OV = useRef(new OpenVidu());
@@ -147,6 +154,8 @@ export default function VideoComponent() {
     setMySessionId("SessionA");
     setMyUserName("Anonymous");
     setPublisher(undefined);
+
+    navigate("/BroadcastPage");
   }, [session]);
 
   // 메세지 보내기(Sender of the message (after 'session.connect'))
@@ -322,7 +331,7 @@ export default function VideoComponent() {
   return (
     // container는 최상위 div
     <div className={videoContainer.base}>
-      {/* 방송 화면으로 진입하기 전, 한번 막음 */}
+      {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
       {session === undefined ? (
         <div id="join">
           <h1> Join a video session </h1>
@@ -337,7 +346,7 @@ export default function VideoComponent() {
         // 방송자의 영상 송출 부분
         <div id="session">
           {isHost ? (
-            <div id="session-header" className="flex justify-between">
+            <div id="session-header" className="flex justify-between mb-2">
               <div>
                 <button className={settingButton.base} onClick={screenShare}>
                   화면 공유
@@ -360,7 +369,7 @@ export default function VideoComponent() {
               </Button>
             </div>
           ) : (
-            <div id="session-header" className="flex justify-end">
+            <div id="session-header" className="flex justify-end mb-2">
               <Button
                 className="flex-none"
                 variant="contained"
@@ -390,13 +399,24 @@ export default function VideoComponent() {
               )}
               <div className={`basis-2/5 ${broadcastInfo.base}`}>
                 {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
-                <p>방송자 닉네임: 닉네임</p>
-                <p>방송 제목</p>
+                <p>{hostNickName}</p>
+                <p>{title}</p>
               </div>
             </div>
             <div id="vote+chatting" className="basis-1/3 flex flex-col gap-y-5">
-              <div id="vote" className="mb-3 basis-1/3">
-                투표창이 여기 생길거에요
+              <div
+                id="vote"
+                className="mb-3 basis-1/3 bg-white border-2 rounded-md"
+              >
+                {voteItem && (
+                  <div className="grid grid-cols-2">
+                    {voteItem.map((item) => (
+                      <div className="flex items-center justify-center h-24 border">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               {chatDisplay && (
                 <div id="chatting" className="basis-2/3">
