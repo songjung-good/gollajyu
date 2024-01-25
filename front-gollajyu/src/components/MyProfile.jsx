@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DefaultProfileImage from "/@images/default_profile_img.png";
+import DefaultProfileImage from "../assets/images/default_profile_img.png";
 
 const MyProfile = () => {
   // 버튼 hover
