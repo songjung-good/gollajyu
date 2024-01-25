@@ -39,6 +39,7 @@ const NavigationBar = () => {
     // 위치
     position: "fixed", // 내비게이션 바 상단에 고정
     top: "0px", // 내비게이션 바 고정 위치: 0px
+    zIndex: 9999, // 내비게이션 바를 가장 위의 레이어에 고정
 
     // 디자인
     width: "100%", // 내비게이션 바 넓이

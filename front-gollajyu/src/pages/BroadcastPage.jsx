@@ -160,7 +160,7 @@ const BroadcastPage = () => {
         </div>
         <div id="broadcast-list" className="grow">
           <p className="px-5 py-3 text-2xl font-bold">지금 골라쥬</p>
-          <div className="grid grid-cols-4 bg-slate-200 rounded-[30px] p-7 gap-10">
+          <div className="grid grid-cols-4 bg-white rounded-[30px] p-7 gap-10">
             {dummyData
               .sort((a, b) => b.createdDate.getTime() - a.createdDate.getTime())
               .map((item, index) => {
