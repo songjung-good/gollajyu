@@ -34,4 +34,10 @@ public class VoteItem {
 
     @OneToMany(mappedBy = "voteItem")
     List<VoteResult> voteResultList = new ArrayList<>();
+
+    public void updateImgPath(String imgPath){
+        this.voteItemImgUrl = imgPath;
+    }
+
+
 }

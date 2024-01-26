@@ -35,7 +35,7 @@ public class VoteResult {
 
     private int age;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "type_id")
     private Type type;
 
@@ -43,7 +43,7 @@ public class VoteResult {
     private Gender gender;
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
 

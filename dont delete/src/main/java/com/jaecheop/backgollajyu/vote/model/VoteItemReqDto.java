@@ -1,17 +1,18 @@
 package com.jaecheop.backgollajyu.vote.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.jaecheop.backgollajyu.vote.entity.VoteItem;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class VoteItemReqDto {
-    private String voteItemImgUrl;
+    private MultipartFile voteItemImg;
     private String voteItemDesc;
     private Long price;
+
 
 }
