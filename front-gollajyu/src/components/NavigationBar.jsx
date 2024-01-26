@@ -26,10 +26,10 @@ const NavigationBar = () => {
     query : "(min-width:1024px)"
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023px)"
+    query : "(min-width:768px) and (max-width:1024px)"
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:767px)"
+    query : "(max-width:768px)"
   });
 
   // ----------- 햄버거 버튼 호버/떠남 상태 업데이트 함수 -----------
@@ -66,7 +66,7 @@ const NavigationBar = () => {
     transform: "translateX(-50%)",                  // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "960px" : (isMedium ? "740px" : "400px"),  // (반응형) 내비게이션 바 넓이
+    width: isLarge ? "90%" : (isMedium ? "740px" : "400px"),  // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
     display: "flex",                                // 항목 수평 정렬
@@ -88,7 +88,7 @@ const NavigationBar = () => {
     color: "#FFD257",                               // 글자 색: 노란색
   };
 
-  // ----------- 내비게이션 바 메뉴 리스트 스타일 -----------
+  // ----------- 메뉴 리스트 공통 스타일 -----------
   const listStyle = {
     // 글자
     fontSize: "14px",                               // 글자 크기: 18px
@@ -98,11 +98,27 @@ const NavigationBar = () => {
     alignItems: "center",                           // 리스트 수직 정렬
   };
 
+  // ----------- 내비게이션 바 메뉴 리스트 스타일 -----------
+  const menulistStyle = {
+    // 상속
+    ...listStyle,                                   // 메뉴 리스트 스타일 상속        
+    
+    // 디자인
+    width: "50%",                                   // 가로 넓이: 50%
+    
+    // 컨텐츠 정렬
+    display: "flex",                                // 리스트 수평 정렬
+    justifyContent: "space-between",                // 항목 균일 간격으로 정렬
+  }
+
   // ----------- 내비게이션 바 메뉴 공통 스타일 -----------
   const commonStyle = {
     // 디자인
-    padding: "0 15px",                              // 항목 좌우 padding: 15px
+    padding: !isLarge ? "0 15px" : "0px",           // (반응형) 항목 좌우 padding: 15px
     height: "100px",                                // 항목 높이: 100px
+
+    // 글자
+    fontSize: isLarge ? "18px" : "16px",            // (반응형) 글자 크기
 
     // 컨텐츠 정렬
     display: "flex",                                // 링크 수평 정렬
@@ -274,7 +290,7 @@ const NavigationBar = () => {
         {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
         {isLarge ? (  // (반응형) min-width:1024px 이상일 경우
           <>
-            <ul style={listStyle}>
+            <ul style={menulistStyle}>
               <NavLink
                 to="/VotePage" 
                 style={({ isActive }) =>
