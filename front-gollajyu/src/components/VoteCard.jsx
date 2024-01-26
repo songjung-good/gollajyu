@@ -10,7 +10,7 @@ export default function VoteCard() {
   };
 
   return (
-    <div className="w-1000 h-500 flex justify-around items-center bg-white">
+    <div className="flex justify-center items-center bg-white" style={{ height: '500px' }}>
       {Array(4).fill(null).map((_, index) => (
         <VoteCardItem 
           key={index}
