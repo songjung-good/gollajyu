@@ -8,16 +8,24 @@ import ChattingForm from "./chat/ChattingForm";
 import ChattingList from "./chat/ChattingList";
 import Loading from "./Loading";
 import { Button, Input, Tooltip } from "@mui/material";
+import tmpProfileImg from "/assets/images/tmp_profile.png";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-const settingButton =
-  "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-1";
+const settingButton = "text-white py-2 px-4 rounded-xl";
+
+const logoStyle = {
+  // 글자
+  fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
+  fontSize: "70px", // 글자 크기
+  color: "#FFD257", // 글자 색: 노란색
+};
 
 export default function VideoComponent() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [profileImg, setProfileImg] = useState(tmpProfileImg);
   const [mySessionId, setMySessionId] = useState(location.state.sessionId);
   const isHost = location.state.isHost; // isHost로 분기해서 isHost=true면 화면을 publish하고 아니면 publish는 없이 subscribe만 함
   const [myUserName, setMyUserName] = useState(
@@ -31,11 +39,11 @@ export default function VideoComponent() {
   const [audioState, setAudioSate] = useState(true);
   const voteItem = location.state.voteItem
     ? location.state.voteItem
-    : undefined;
-  const title = location.state.title ? location.state.title : undefined;
+    : ["임시", "임시", "임시", "임시"];
+  const title = location.state.title ? location.state.title : "임시 제목";
   const hostNickName = location.state.hostNickName
     ? location.state.hostNickName
-    : undefined;
+    : "임시 닉네임";
   console.log("isHost?:", isHost);
 
   const OV = useRef(new OpenVidu());
@@ -320,8 +328,10 @@ export default function VideoComponent() {
   };
 
   return (
-    // container는 최상위 div
-    <div className="container mx-5 rounded-lg bg-opacity-20 bg-black p-6 my-12 mx-auto space-y-3">
+    <>
+      <div id="logo" className="m-5 text-center">
+        <p style={logoStyle}>골라쥬</p>
+      </div>
       {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
       {session === undefined ? (
         <div id="join">
@@ -332,97 +342,130 @@ export default function VideoComponent() {
         </div>
       ) : null}
 
-      {/* 방송 화면으로 진입 후 */}
-      {session !== undefined ? (
-        // 방송자의 영상 송출 부분
-        <div id="session">
-          {isHost ? (
-            <div id="session-header" className="flex justify-between mb-2">
-              <div>
-                <button className={settingButton} onClick={screenShare}>
-                  화면 공유
-                </button>
-                <button className={settingButton} onClick={mute}>
-                  {audioState
-                    ? "마이크 음소거 (안됨)"
-                    : "마이크 음소거 해제 (안됨)"}
+      <div className="container my-7 mx-auto space-y-3">
+        {/* 방송 화면으로 진입 후 */}
+        {session !== undefined ? (
+          // 방송자의 영상 송출 부분
+          <div id="session">
+            {isHost ? (
+              <div id="session-header" className="flex justify-between mb-3">
+                <div className="space-x-2">
+                  <button
+                    className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
+                    onClick={screenShare}
+                  >
+                    화면 공유
+                  </button>
+                  <button
+                    className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
+                    onClick={mute}
+                  >
+                    {audioState
+                      ? "마이크 음소거 (안됨)"
+                      : "마이크 음소거 해제 (안됨)"}
+                  </button>
+                </div>
+                <button
+                  className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
+                  id="buttonLeaveSession"
+                  onClick={leaveSession}
+                  value="Leave session"
+                >
+                  방송 종료
                 </button>
               </div>
-              <Button
-                className="flex-none"
-                variant="contained"
-                color="error"
-                id="buttonLeaveSession"
-                onClick={leaveSession}
-                value="Leave session"
-              >
-                방송 종료
-              </Button>
-            </div>
-          ) : (
-            <div id="session-header" className="flex justify-end mb-2">
-              <Button
-                className="flex-none"
-                variant="contained"
-                color="error"
-                id="buttonLeaveSession"
-                onClick={leaveSession}
-                value="Leave session"
-              >
-                나가기
-              </Button>
-            </div>
-          )}
-          <div
-            id="sub-container"
-            className="flex flex-row justify-between gap-7"
-          >
-            <div id="video+detail" className="basis-2/3 flex flex-col gap-y-5">
-              {isHost && (
-                <div id="main-video" className="basis-3/5">
-                  <UserVideoComponent streamManager={publisher} />
-                </div>
-              )}
-              {!isHost && (
-                <div id="main-video" className="basis-3/5">
-                  <UserVideoComponent streamManager={subscribers[0]} />
-                </div>
-              )}
-              <div className="basis-2/5 bg-white rounded-md p-3">
-                {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
-                <p>{hostNickName}</p>
-                <p>{title}</p>
+            ) : (
+              <div id="session-header" className="flex justify-end mb-2">
+                <button
+                  className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
+                  id="buttonLeaveSession"
+                  onClick={leaveSession}
+                  value="Leave session"
+                >
+                  나가기
+                </button>
               </div>
-            </div>
-            <div id="vote+chatting" className="basis-1/3 flex flex-col gap-y-5">
+            )}
+            <div
+              id="sub-container"
+              className="flex flex-row justify-between gap-7"
+            >
               <div
-                id="vote"
-                className="mb-3 basis-1/3 bg-white border-2 rounded-md"
+                id="video+detail"
+                className="basis-2/3 flex flex-col gap-y-5"
               >
-                {voteItem && (
-                  <div className="grid grid-cols-2">
-                    {voteItem.map((item) => (
-                      <div className="flex items-center justify-center h-24 border">
-                        {item}
-                      </div>
-                    ))}
+                {isHost && (
+                  <div
+                    id="main-video"
+                    className="basis-3/5 w-full h-full rounded-md"
+                  >
+                    <UserVideoComponent streamManager={publisher} />
+                  </div>
+                )}
+                {!isHost && (
+                  <div
+                    id="main-video"
+                    className="basis-3/5 w-full h-full rounded-md"
+                    style={{ transform: "scaleX(-1)" }}
+                  >
+                    <UserVideoComponent streamManager={subscribers[0]} />
+                  </div>
+                )}
+                <div
+                  id="detail"
+                  className="basis-2/5 rounded-md p-3 space-y-3 bg-gray-100"
+                >
+                  {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
+                  <div
+                    id="host-info"
+                    className="flex text-center items-center space-x-2"
+                  >
+                    <img
+                      className="w-8 h-8 rounded-full border border-black"
+                      src={tmpProfileImg}
+                      alt=""
+                    />
+                    <p className="text-lg">{hostNickName}</p>
+                  </div>
+                  <p className="text-lg font-bold px-5">{title}</p>
+                </div>
+              </div>
+              <div
+                id="vote+chatting"
+                className="basis-1/3 flex flex-col gap-y-5"
+              >
+                <div
+                  id="vote"
+                  className="mb-3 basis-1/3 bg-white border-2 rounded-md bg-gray-100"
+                >
+                  {voteItem && (
+                    <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
+                      {voteItem.map((item) => (
+                        <div className="flex border justify-center items-center w-1/2 h-1/2 text-center text-2xl">
+                          {item}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {chatDisplay && (
+                  <div
+                    id="chatting"
+                    className="basis-2/3 rounded-md bg-gray-100 p-1"
+                  >
+                    <ChattingList messageList={messageList}></ChattingList>
+                    <ChattingForm
+                      myUserName={myUserName}
+                      onMessage={sendMsg}
+                      currentSession={session}
+                    ></ChattingForm>
                   </div>
                 )}
               </div>
-              {chatDisplay && (
-                <div id="chatting" className="basis-2/3">
-                  <ChattingList messageList={messageList}></ChattingList>
-                  <ChattingForm
-                    myUserName={myUserName}
-                    onMessage={sendMsg}
-                    currentSession={session}
-                  ></ChattingForm>
-                </div>
-              )}
             </div>
           </div>
-        </div>
-      ) : null}
-    </div>
+        ) : null}
+      </div>
+    </>
   );
 }
