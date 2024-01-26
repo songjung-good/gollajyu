@@ -15,5 +15,5 @@ public class StatisticsSearchReqDto {
 
     private String gender;
 
-    private String category;
+    private Integer categoryId;
 }

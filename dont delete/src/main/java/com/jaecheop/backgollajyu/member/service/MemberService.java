@@ -1,18 +1,17 @@
 package com.jaecheop.backgollajyu.member.service;
 
+import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
+import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
-import com.jaecheop.backgollajyu.member.model.Birthday;
-import com.jaecheop.backgollajyu.member.model.Gender;
-import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
+import com.jaecheop.backgollajyu.member.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.member.repostory.TypeRepository;
+import com.jaecheop.backgollajyu.vote.entity.Category;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
-import com.jaecheop.backgollajyu.member.model.Birthday;
-import com.jaecheop.backgollajyu.member.model.LoginReqDto;
-import com.jaecheop.backgollajyu.member.model.LoginResDto;
-import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
-import com.jaecheop.backgollajyu.vote.model.ServiceResult;
+import com.jaecheop.backgollajyu.vote.repository.CategoryRepository;
+import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
+import com.jaecheop.backgollajyu.vote.service.VoteService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -20,6 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -28,6 +30,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final TypeRepository typeRepository;
+    private final CategoryRepository categoryRepository;
+    private final VoteService voteService;
+    private final VoteResultRepository voteResultRepository;
 
     private String getEncryptedPassword(String plainPassword) {
         return new BCryptPasswordEncoder().encode(plainPassword);
@@ -123,5 +128,25 @@ public class MemberService {
         session.setAttribute("memberInfo", loginResDto);
         // 4. loginResDto에 멤버정보와 세션정보를 담아 반환하기
         return ServiceResult.success(loginResDto);
+    }
+
+
+
+
+    // myPage 카테고리별 나의 투표 비율
+    public List<CategoryInfoResDto> makeCategoryInfoResDto(Long memberId, Integer categoryId) {
+        List<CategoryInfoResDto> categoryInfoResDtoList = new ArrayList<>();
+
+        // Assuming you have a list of categories, replace it with your actual data source
+        List<Category> categories = (categoryId != null )
+                ? categoryRepository.findAllById(categoryId) : categoryRepository.findAll();
+
+        for (Category category : categories) {
+            Map<String, Long> categoryStatistics = voteService.generateStatistics(voteResultRepository.findByMemberIdAndCategoryId(memberId, category.getId()), null);
+            CategoryInfoResDto categoryInfoResDto = CategoryInfoResDto.buildFromStatistics(category, categoryStatistics);
+            categoryInfoResDtoList.add(categoryInfoResDto);
+        }
+
+        return categoryInfoResDtoList;
     }
 }

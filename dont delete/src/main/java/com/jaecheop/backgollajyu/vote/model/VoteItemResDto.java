@@ -1,7 +1,5 @@
 package com.jaecheop.backgollajyu.vote.model;
 
-import com.jaecheop.backgollajyu.vote.entity.Tag;
-import com.jaecheop.backgollajyu.vote.entity.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +17,6 @@ public class VoteItemResDto {
     private String voteItemImgUrl;
     private String voteItemDesc;
     private Long price; // tag1 = 30
+    private Long resultSize;
     private Map<String, Long> voteResultCountResDtoList;
 }

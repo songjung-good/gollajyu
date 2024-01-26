@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -46,5 +48,10 @@ public class VoteResult {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    private LocalDateTime createAt;
 
 }

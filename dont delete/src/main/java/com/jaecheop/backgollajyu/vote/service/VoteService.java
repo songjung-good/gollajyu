@@ -1,5 +1,6 @@
 package com.jaecheop.backgollajyu.vote.service;
 
+import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
 import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.entity.Comment;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
@@ -16,6 +17,7 @@ import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -146,51 +148,9 @@ public class VoteService {
                 .voteItemImgUrl(voteItem.getVoteItemImgUrl())
                 .voteItemDesc(voteItem.getVoteItemDesc())
                 .price(voteItem.getPrice())
-                .voteResultCountResDtoList(generateStatistics(voteItem, statisticsSearchReqDto)) //
+                .resultSize((long) voteResultRepository.findByVoteItem(voteItem).size()) //
+//                .voteResultCountResDtoList(generateStatistics(voteItem, statisticsSearchReqDto)) //
                 .build();
-    }
-
-    // 태그별 투표수 첨부 해주기 For ItemResDto
-    public Map<String, Long> generateStatistics(VoteItem voteItem, StatisticsSearchReqDto statisticsSearchReqDto) {
-        Map<String, Long> statistics = new HashMap<>();
-
-        // Assuming VoteItem has a method to retrieve associated VoteItemResults
-        List<VoteResult> voteResults = voteResultRepository.findByVoteItem(voteItem);
-        List<VoteResult> voteResultList = perfectResultsMethod(voteResults, statisticsSearchReqDto);
-
-        // 여기에 voteResults 를 필터링하는 함수 추가
-
-        for (VoteResult voteResult : voteResultList) {
-            // Assuming VoteResult has a method to retrieve associated Tag
-            Tag tag = voteResult.getTag();
-
-            // Update count for the tag
-            statistics.put(tag.getName(), statistics.getOrDefault(tag.getName(), 0L) + 1);
-            statistics.put("all", statistics.getOrDefault("all", 0L) + 1);
-        }
-        return statistics;
-    }
-
-    // StatisticsSearchReqDto 에 따른 필터링 작업 ,,,voteResultList(byVoteItem or byMemberId or byAll)
-    public List<VoteResult> perfectResultsMethod(List<VoteResult> voteResultList, StatisticsSearchReqDto statisticsSearchReqDto) {
-        List<VoteResult> resultList = voteResultList;
-
-        if (statisticsSearchReqDto.getTypeId() != null) {
-            resultList = resultList.stream()
-                    .filter(result -> result.getType().getId() == statisticsSearchReqDto.getTypeId())
-                    .collect(Collectors.toList());
-        }
-        if (statisticsSearchReqDto.getAge() != null) {
-            resultList = resultList.stream()
-                    .filter(result -> result.getAge().equals(statisticsSearchReqDto.getAge()))
-                    .collect(Collectors.toList());
-        }
-        if (statisticsSearchReqDto.getGender() != null) {
-            resultList = resultList.stream()
-                    .filter(result -> result.getGender().name().equals(statisticsSearchReqDto.getGender()))
-                    .collect(Collectors.toList());
-        }
-        return resultList;
     }
 
 
@@ -213,6 +173,9 @@ public class VoteService {
         }
     }
 
+
+
+    // CategoryDto 빌더
     public CategoryDto mapCategoryEntityToDto(Vote vote) {
         // Retrieve the Category entity associated with the vote
         Optional<Category> optionalCategory = categoryRepository.findByVotes(vote);
@@ -230,11 +193,59 @@ public class VoteService {
     }
 
 
+    // 태그별 투표수 첨부 해주기 For ItemResDto
+    public Map<String, Long> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
+        Map<String, Long> statistics = new HashMap<>();
+
+        // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
+        List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
+                ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
+                : voteResults;
+        // 반복문을 돌면서 all:전체 사이즈 및 각 태그의 사이즈를 Map으로 만들어 줌.
+        for (VoteResult voteResult : voteResultList) {
+            // Assuming VoteResult has a method to retrieve associated Tag
+            Tag tag = voteResult.getTag();
+
+            // Update count for the tag
+            statistics.put(tag.getName(), statistics.getOrDefault(tag.getName(), 0L) + 1);
+            statistics.put("all", statistics.getOrDefault("all", 0L) + 1);
+        }
+        return statistics;
+    }
+
+
+    // StatisticsSearchReqDto 에 따른 필터링 작업 ,,,voteResultList(byVoteItem or byMemberId or byAll)
+    public List<VoteResult> perfectResultsMethod(List<VoteResult> voteResultList, StatisticsSearchReqDto statisticsSearchReqDto) {
+        List<VoteResult> resultList = voteResultList;
+
+        // 소비성향이 있다면
+        if (statisticsSearchReqDto.getTypeId() != null) {
+            resultList = resultList.stream()
+                    .filter(result -> result.getType().getId() == statisticsSearchReqDto.getTypeId())
+                    .collect(Collectors.toList());
+        }
+        // 나이 정보가 있다면
+        if (statisticsSearchReqDto.getAge() != null) {
+            resultList = resultList.stream()
+                    .filter(result -> result.getAge().equals(statisticsSearchReqDto.getAge()))
+                    .collect(Collectors.toList());
+        }
+        // 성별 정보가 있다면
+        if (statisticsSearchReqDto.getGender() != null) {
+            resultList = resultList.stream()
+                    .filter(result -> result.getGender().name().equals(statisticsSearchReqDto.getGender()))
+                    .collect(Collectors.toList());
+        }
+        return resultList;
+    }
+
 
 
     // 투표 작성자 Id로 투표 리스트 생성..
     public List<VoteResDto> getVotesByMemberId(Long memberId, StatisticsSearchReqDto statisticsSearchReqDto) {
-        List<Vote> votes = voteRepository.findByMemberId(memberId);
+//        List<Vote> votes = voteRepository.findByMemberId(memberId);
+        List<Vote> votes = voteRepository.findByMemberId(memberId, Sort.by(Sort.Order.asc("createAt")));
+
         return makeVoteResDtoList(votes, memberId, statisticsSearchReqDto);
     }
 

@@ -1,5 +1,6 @@
 package com.jaecheop.backgollajyu.member.controller;
 
+import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
 import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
@@ -38,6 +39,16 @@ public class MemberController {
        }
 
        return ResponseEntity.ok().body(ResponseMessage.success());
+    }
+
+
+    @PostMapping("/login")
+    public ResponseEntity<ResponseMessage> login(@RequestBody LoginReqDto loginReqDto, HttpSession session){
+        ServiceResult result = memberService.login(loginReqDto, session);
+        if(!result.isResult()){
+            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+        }
+        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
     }
 
 
@@ -91,12 +102,16 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/login")
-        public ResponseEntity<ResponseMessage> login(@RequestBody LoginReqDto loginReqDto, HttpSession session){
-            ServiceResult result = memberService.login(loginReqDto, session);
-            if(!result.isResult()){
-                return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
-            }
-            return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
+    @GetMapping("/{memberId}/votes/statistics")
+    public ResponseEntity<List<CategoryInfoResDto>> statisticMemberResult(
+            @PathVariable Long memberId,
+            @RequestParam(required = false) Integer categoryId) {
+
+        List<CategoryInfoResDto> categoryInfoResDtoList = memberService.makeCategoryInfoResDto(memberId, categoryId);
+        if (categoryInfoResDtoList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(categoryInfoResDtoList, HttpStatus.OK);
         }
     }
+}

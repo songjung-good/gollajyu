@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.vote.repository;
 
 import com.jaecheop.backgollajyu.vote.entity.Vote;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,16 +11,27 @@ import java.util.List;
 
 @Repository
 public interface VoteRepository extends JpaRepository<Vote, Long> {
-    List<Vote> findByMemberId(Long memberId);
 
-    // 투표한 투표 리스트
+
+    // 작성한 투표 시간순
+    // List<Vote> findByMemberId(Long memberId);
+    List<Vote> findByMemberId(@Param("memberId") Long memberId, Sort sort);
+
+    // 투표한 투표 리스트 시간 순
     @Query("SELECT vir.vote FROM VoteResult vir " +
-            "WHERE vir.member.id = :memberId")
+            "WHERE vir.member.id = :memberId " +
+            "ORDER BY vir.createAt DESC")
     List<Vote> findVoteIdsByResultMemberId(@Param("memberId") Long memberId);
 
-    @Query("SELECT cm.vote FROM Comment cm WHERE cm.id = :commentId")
+
+    // 댓글 쓴 투표 시간 순
+    @Query("SELECT cm.vote FROM Comment cm WHERE cm.id = :commentId " +
+            "ORDER BY cm.commentCreateAt DESC")
     List<Vote> findVoteByCommentId(@Param("commentId") int commentId);
 
-    @Query("SELECT r.vote FROM VoteResult r WHERE r.member.id = :memberId")
+
+    // 좋아요한 투표 시간순 정렬
+    @Query("SELECT li.vote FROM Likes li WHERE li.member.id = :memberId " +
+            "ORDER BY li.createAt DESC")
     List<Vote> findVoteLikesByMemberId(@Param("memberId") Long memberId);
 }
