@@ -1,11 +1,10 @@
 package com.jaecheop.backgollajyu.vote.controller;
 
 import com.jaecheop.backgollajyu.vote.entity.Vote;
-import com.jaecheop.backgollajyu.vote.model.ChoiceReqDto;
-import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
-import com.jaecheop.backgollajyu.vote.model.ServiceResult;
-import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
+import com.jaecheop.backgollajyu.vote.model.*;
+import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Parameter;
@@ -39,6 +38,11 @@ public class VoteController {
         return ResponseEntity.ok().body(ResponseMessage.success());
     }
 
+    /**
+     * 메인에서 투표하기
+     * @param choiceReqDto
+     * @return
+     */
     @PostMapping("/choices")
     public ResponseEntity<ResponseMessage> choiceMain(@RequestBody ChoiceReqDto choiceReqDto) {
 
@@ -50,4 +54,26 @@ public class VoteController {
         return ResponseEntity.ok().body(ResponseMessage.success());
 
     }
+
+    /**
+     * 투표 상세
+     * @param voteDetailReqDto
+     * @return
+     */
+
+    @GetMapping("/{voteId}")
+    public ResponseEntity<ResponseMessage> voteDetail(@PathVariable String voteId, @RequestBody VoteDetailReqDto voteDetailReqDto){
+
+        ServiceResult result = voteService.voteDetail(voteDetailReqDto);
+
+        if(!result.isResult()){
+            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+        }
+
+        System.out.println("result.getData() = ::::::::::::::::::" + result.getData());
+
+        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
+
+    }
+
 }

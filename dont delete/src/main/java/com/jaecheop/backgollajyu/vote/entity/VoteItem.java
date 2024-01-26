@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Builder
 @Getter
@@ -28,4 +31,7 @@ public class VoteItem {
     private String voteItemDesc;
 
     private Long price;
+
+    @OneToMany(mappedBy = "voteItem")
+    List<VoteResult> voteResultList = new ArrayList<>();
 }
