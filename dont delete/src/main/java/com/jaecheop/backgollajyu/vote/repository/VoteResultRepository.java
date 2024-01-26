@@ -2,6 +2,7 @@ package com.jaecheop.backgollajyu.vote.repository;
 
 import com.jaecheop.backgollajyu.vote.entity.VoteItem;
 import com.jaecheop.backgollajyu.vote.entity.VoteResult;
+import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,6 @@ public interface VoteResultRepository extends JpaRepository<VoteResult, Long> {
     @Query("SELECT vr FROM VoteResult vr WHERE vr.voteItem = :voteItem")
     List<VoteResult> findByVoteItem(VoteItem voteItem);
 
+
+    Long countByVoteItemIdAndTagId(Long voteItemId, int tagId);
 }
