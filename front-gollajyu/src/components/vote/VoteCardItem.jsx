@@ -8,7 +8,7 @@ function VoteCardItem(props) {
   const [clicked, setClicked] = useState(null);
 
   return (
-    <div className='flex flex-col' style={{ width: '200px', height: '500px' }}>
+    <div className='flex flex-col' style={{ width: '200px', height: '400px' }}> {/* 높이를 조정했습니다. */}
       <Container
         className='h-1/2 w-full bg-gray-200 p-4 relative' 
         onMouseEnter={() => setHover(true)}

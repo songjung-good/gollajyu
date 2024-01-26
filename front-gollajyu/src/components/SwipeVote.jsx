@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 // 투표 받아오기
-import VoteCard from "./VoteCard";
+import SwipeCard from "./SwipeCard";
 // import required modules
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
 
@@ -49,7 +49,7 @@ export default function SwipeVote() {
         {['slide1', 'slide2', 'slide3'].map((hash, index) => (
           <SwiperSlide key={hash} data-hash={hash}>
             <div>
-              <VoteCard />
+              <SwipeCard />
             </div>
           </SwiperSlide>
         ))}
