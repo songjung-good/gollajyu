@@ -104,12 +104,6 @@ const SideBarContainer = () => {
 
   return (
     <div style={sidebarStyle}>
-      <div style={topBarStyle}></div>
-      <div style={profileStyle}>
-        <img style={imageStyle} src={DefaultProfileImage} alt="프로필 사진" />
-        <p style={nicknameStyle}>[닉네임]</p>
-        <p style={typeStyle}>[소비성향]</p>
-      </div>
       <div style={menuContainerStyle}>
         <div
           style={myProfileStyle}

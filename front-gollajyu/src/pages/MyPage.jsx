@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import SideBar from "../components/SideBar";
 import MyProfile from "../components/MyProfile";
 import MyActivities from "../components/MyActivities";
 
@@ -14,7 +13,6 @@ const MyPage = () => {
 
   return (
     <div>
-      <SideBar />
       <div style={body}>
         <Routes>
           <Route path="/" element={<MyProfile />} />
