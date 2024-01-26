@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
 import AddVoteItemModal from "./AddVoteItemModal";
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 const CreateVideoRoom = () => {
   // 화면 구성 => VideoRoomComponent와 유사하게, 채팅창 부분은 빈 상태로
@@ -17,8 +19,41 @@ const CreateVideoRoom = () => {
   const [title, setTitle] = useState("");
   const [voteItem, setVoteItem] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [thumbnail, setThumbnail] = useState("");
+  const thumbnailRef = useRef();
 
-  const startBroadcast = () => {};
+  const sendRoomInfo = async () => {
+    await axios();
+  };
+
+  const startBroadcast = async () => {
+    //sessionId 생성
+    //title, hostNickName, voteItem, thumbnail, sessionId, isHost 담아서 VideoRoom으로 진입 + 서버로 데이터 전송
+
+    const sessionId = uuidv4();
+    console.log(sessionId);
+    const roomIs = await sendRoomInfo(
+      sessionId,
+      title,
+      nickName,
+      voteItem,
+      thumbnail,
+      dispatch // dispatch가 뭐지..?
+    );
+    if (roomIs !== false) {
+      console.log("방송 생성 성공");
+      navigate("/enterVideoRoom", {
+        state: {
+          id: sessionId,
+          title: title,
+          voteItem: voteItem,
+          nickName: nickName,
+          thumbnail: thumbnail,
+          isHost: true,
+        },
+      });
+    }
+  };
 
   useEffect(() => {
     const initWebcam = async () => {
@@ -64,7 +99,7 @@ const CreateVideoRoom = () => {
     for (let i = 0; i < 4 - voteItem.length; i++) {
       newArr.push(
         <div
-          className="border flex justify-center items-center text-center hover:text-amber-500"
+          className="border flex justify-center items-center text-center hover:text-amber-500 w-1/2 h-32"
           key={i}
           onClick={openModal}
         >
@@ -75,6 +110,17 @@ const CreateVideoRoom = () => {
     return newArr;
   };
 
+  // 이미지 업로드 input의 onChange
+  const saveImgFile = () => {
+    const file = thumbnailRef.current.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setThumbnail(reader.result);
+    };
+  };
+
+  // 모달 열기
   const openModal = () => {
     setModalOpen(true);
   };
@@ -130,7 +176,6 @@ const CreateVideoRoom = () => {
             >
               <img
                 className="w-8 h-8 rounded-full border border-black"
-                // style={{ width: "40px", height: "40px" }}
                 src={tmpProfileImg}
                 alt=""
               />
@@ -148,18 +193,17 @@ const CreateVideoRoom = () => {
             </form>
           </div>
         </div>
-        <div id="vote+chatting" className="basis-1/3 flex flex-col gap-y-5">
+        <div id="vote+thumbnail" className="basis-1/3 flex flex-col gap-y-5">
           <div
             id="vote"
             className="mb-3 basis-1/3 bg-white border-2 rounded-md"
           >
-            <div className="grid grid-cols-2 h-full">
-              {/* 이미지 들어갔을때 화질이랑 칸 크기 달라지는거 수정해야함 */}
+            <div className="w-full h-64 justify-center items-center inline-flex flex-wrap">
               {voteItem &&
                 voteItem.map((item, index) => {
                   if (item.slice(0, 10) === "data:image") {
                     return (
-                      <div className="flex border justify-center items-center">
+                      <div className="flex border justify-center items-center w-1/2 h-32">
                         <img
                           src={item}
                           className="size-32 m-0"
@@ -170,7 +214,7 @@ const CreateVideoRoom = () => {
                   } else {
                     return (
                       <div
-                        className="border flex text-2xl justify-center items-center text-center h-full"
+                        className="border flex text-2xl justify-center items-center text-center w-1/2 h-32"
                         key={index}
                       >
                         {item}
@@ -183,10 +227,25 @@ const CreateVideoRoom = () => {
             <AddVoteItemModal isOpen={isModalOpen} onClose={closeModal} />
           </div>
           <div
-            id="chatting"
-            className="basis-2/3 bg-white rounded-md text-center flex justify-center items-center p-5"
+            id="thumbnail"
+            className="basis-2/3 bg-white rounded-md text-center flex flex-col justify-around items-center p-10"
           >
-            <p>채팅창은 방송 시작 후 활성화됩니다.</p>
+            <p className="text-lg font-bold">방송 썸네일 추가</p>
+            {thumbnail && (
+              <img
+                src={thumbnail}
+                className="w-48 h-40 mx-auto"
+                alt="이미지 미리보기"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              id="thumbnail"
+              onChange={saveImgFile}
+              ref={thumbnailRef}
+              className="w-3/5"
+            />
           </div>
         </div>
       </div>

@@ -57,7 +57,7 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
           <input
             type="file"
             accept="image/*"
-            id="profileImg"
+            id="img"
             onChange={saveImgFile}
             ref={imgRef}
             className="w-3/5"
