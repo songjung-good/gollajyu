@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Container } from '@mui/system';
 
+// 각 투표카드 내의 아이템
 function VoteCardItem(props) {
   const [hover, setHover] = useState(false);
   const [clicked, setClicked] = useState(null);
 
   return (
-    <div className='w-200 h-500 flex flex-col'>
-      <container 
+    <div className='flex flex-col' style={{ width: '200px', height: '400px' }}> {/* 높이를 조정했습니다. */}
+      <Container
         className='h-1/2 w-full bg-gray-200 p-4 relative' 
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -31,7 +33,7 @@ function VoteCardItem(props) {
             ))}
           </div>
         )}
-      </container>
+      </Container>
       <div className='h-1/2 w-full flex flex-col justify-center items-center'>
         <h2 className='text-lg font-bold mb-4'>{props.title}</h2>
         {clicked !== null ? (
