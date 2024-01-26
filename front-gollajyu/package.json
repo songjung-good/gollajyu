@@ -1,5 +1,5 @@
 {
-  "name": "front-golraju",
+  "name": "front-gollajyu",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -24,7 +24,8 @@
     "react-router-dom": "^6.21.3",
     "react-scripts": "^5.0.1",
     "styled-components": "^6.1.8",
-    "swiper": "^11.0.5"
+    "swiper": "^11.0.5",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
