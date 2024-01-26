@@ -6,8 +6,7 @@ import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChattingForm from "./chat/ChattingForm";
 import ChattingList from "./chat/ChattingList";
-import Loading from "./Loading";
-import { Button, Input, Tooltip } from "@mui/material";
+import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
 
 const APPLICATION_SERVER_URL =
@@ -37,6 +36,7 @@ export default function VideoComponent() {
   const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
   const [chatDisplay, setChatDisplay] = useState(true); // 채팅창 보이기(초깃값: true)
   const [audioState, setAudioSate] = useState(true);
+  const [totalUsers, setTotalUsers] = useState(0); // 총 유저수
   const voteItem = location.state.voteItem
     ? location.state.voteItem
     : ["임시", "임시", "임시", "임시"];
@@ -74,6 +74,20 @@ export default function VideoComponent() {
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
+    });
+
+    mySession.on("connectionCreated", ({ stream }) => {
+      // 유저가 접속할 때마다 인원수를 += 1
+      setTotalUsers((prevTotalUsers) => {
+        return prevTotalUsers + 1;
+      });
+    });
+
+    mySession.on("connectionDestroyed", ({ stream }) => {
+      // 유저가 접속을 끊을 때마다 -= 1
+      setTotalUsers((prevTotalUsers) => {
+        return prevTotalUsers - 1;
+      });
     });
 
     // 채팅 신호 수신하여 메세지 리스트 업데이트
@@ -334,11 +348,57 @@ export default function VideoComponent() {
       </div>
       {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
       {session === undefined ? (
-        <div id="join">
-          <h1> Join a video session </h1>
-          <Button variant="contained" color="error" onClick={enterOnAirRoom}>
-            방송 진입
-          </Button>
+        <div
+          id="join"
+          className="container my-24 mx-auto flex flex-col justify-center items-center space-y-10"
+        >
+          <h1 className="text-2xl text-center">
+            글씨를 클릭하면, 방송으로 입장합니다.
+          </h1>
+          <div
+            id="spinner"
+            className="box-content w-[400px] h-[400px] flex items-center justify-center"
+          >
+            <CircularProgress
+              variant="determinate"
+              sx={{
+                color: (theme) =>
+                  theme.palette.grey[
+                    theme.palette.mode === "light" ? 200 : 800
+                  ],
+                position: "absolute",
+              }}
+              size={400}
+              thickness={3}
+              value={100}
+            />
+            <CircularProgress
+              variant="indeterminate"
+              disableShrink
+              sx={{
+                color: "#FFD257",
+                animationDuration: "3000ms",
+                position: "absolute",
+              }}
+              size={400}
+              thickness={3}
+            />
+            <button
+              className="text-5xl font-bold text-gray-700 z-10 hover:text-amber-300"
+              onClick={enterOnAirRoom}
+            >
+              지금골라쥬
+            </button>
+          </div>
+          <button
+            className={`bg-gray-400 hover:bg-gray-500 ${settingButton}`}
+            onClick={() => {
+              leaveSession();
+              navigate("/");
+            }}
+          >
+            메인으로 돌아가기
+          </button>
         </div>
       ) : null}
 
@@ -416,18 +476,21 @@ export default function VideoComponent() {
                   className="basis-2/5 rounded-md p-3 space-y-3 bg-gray-100"
                 >
                   {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
-                  <div
-                    id="host-info"
-                    className="flex text-center items-center space-x-2"
-                  >
-                    <img
-                      className="w-8 h-8 rounded-full border border-black"
-                      src={tmpProfileImg}
-                      alt=""
-                    />
-                    <p className="text-lg">{hostNickName}</p>
+                  <div className="flex flex-row justify-between">
+                    <div
+                      id="host-info"
+                      className="flex text-center items-center space-x-2"
+                    >
+                      <img
+                        className="w-8 h-8 rounded-full border border-black"
+                        src={tmpProfileImg}
+                        alt=""
+                      />
+                      <p className="text-lg">{hostNickName}</p>
+                    </div>
+                    <div>시청자 수 : {totalUsers}</div>
                   </div>
-                  <p className="text-lg font-bold px-5">{title}</p>
+                  <p className="text-xl font-bold px-5">{title}</p>
                 </div>
               </div>
               <div
@@ -436,7 +499,7 @@ export default function VideoComponent() {
               >
                 <div
                   id="vote"
-                  className="mb-3 basis-1/3 bg-white border-2 rounded-md bg-gray-100"
+                  className="mb-3 basis-1/3 border-2 rounded-md bg-gray-100"
                 >
                   {voteItem && (
                     <div className="w-full h-full justify-center items-center inline-flex flex-wrap">

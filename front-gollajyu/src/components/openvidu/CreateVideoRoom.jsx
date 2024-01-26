@@ -5,6 +5,14 @@ import AddVoteItemModal from "./AddVoteItemModal";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
+/*
+<uuid란?>
+uuid는 범용고유식별자(Universal Unique IDentifier)라고 한다.
+네트워크상에 존재하는 개체들을 식별하고 구별하기 위해 개발 주체가 스스로 이름을 짓도록 하며 고유성을 충족시킬 수 있는 방법이다.
+
+uuid v4는 충분히 안전하게 유일한 uuid를 발급해주며 uuid가 중복될 수 있는 통계적 가능성 역시 극히 희박하기에 uuid가 중복되면 어쩌지 하는 걱정은 안해도 된다. 
+*/
+
 const logoStyle = {
   // 글자
   fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
@@ -29,36 +37,48 @@ const CreateVideoRoom = () => {
   const [thumbnail, setThumbnail] = useState("");
   const thumbnailRef = useRef();
 
-  const sendRoomInfo = async () => {
-    await axios();
+  // 서버로 지금골라쥬 방의 정보를 보내는 함수
+  const sendRoomInfo = async (
+    sessionId,
+    title,
+    nickName,
+    voteItem,
+    thumbnail
+  ) => {
+    // await axios();
+    console.log({ sessionId, title, nickName, voteItem, thumbnail });
+    return true;
   };
 
   const startBroadcast = async () => {
     //sessionId 생성
     //title, hostNickName, voteItem, thumbnail, sessionId, isHost 담아서 VideoRoom으로 진입 + 서버로 데이터 전송
 
-    const sessionId = uuidv4();
-    console.log(sessionId);
-    const roomIs = await sendRoomInfo(
-      sessionId,
-      title,
-      nickName,
-      voteItem,
-      thumbnail,
-      dispatch // dispatch가 뭐지..?
-    );
-    if (roomIs !== false) {
-      console.log("방송 생성 성공");
-      navigate("/enterVideoRoom", {
-        state: {
-          id: sessionId,
-          title: title,
-          voteItem: voteItem,
-          nickName: nickName,
-          thumbnail: thumbnail,
-          isHost: true,
-        },
-      });
+    if (title | (voteItem.length < 2) | thumbnail) {
+      window.alert("제목, 투표 항목(2개 이상), 썸네일을 모두 등록하세요!");
+    } else {
+      const sessionId = "Session" + uuidv4();
+      console.log("sessionId :", sessionId);
+      const roomIs = await sendRoomInfo(
+        sessionId,
+        title,
+        nickName,
+        voteItem,
+        thumbnail
+      );
+      if (roomIs !== false) {
+        console.log("방송 생성 성공");
+        navigate("/enterVideoRoom", {
+          state: {
+            sessionId: sessionId,
+            title: title,
+            voteItem: voteItem,
+            hostNickName: nickName,
+            thumbnail: thumbnail,
+            isHost: true,
+          },
+        });
+      }
     }
   };
 
@@ -150,13 +170,16 @@ const CreateVideoRoom = () => {
       <div id="logo" className="m-5 text-center">
         <p style={logoStyle}>골라쥬</p>
       </div>
-      <div className="container my-7 mx-auto space-y-3">
+      <div className="container my-7 mx-5 md:mx-auto space-y-3">
         <div id="header" className="flex justify-between m-1">
           <p className="text-2xl font-bold my-auto text-gray-900">
             지금 골라쥬 생성
           </p>
           <div id="button" className="space-x-2">
-            <button className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}>
+            <button
+              className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
+              onClick={startBroadcast}
+            >
               방송 시작하기
             </button>
             <button
@@ -198,9 +221,16 @@ const CreateVideoRoom = () => {
                 <input
                   type="text"
                   name="title"
-                  placeholder="방송 제목을 입력하세요"
+                  placeholder="방송 제목을 입력하세요(50자 이내)"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => {
+                    if (e.target.value.length > 50) {
+                      window.alert("글자수가 50자를 넘었습니다");
+                      setTitle(e.target.value.slice(0, 50));
+                    } else {
+                      setTitle(e.target.value);
+                    }
+                  }}
                   className="w-full focus:outline-none rounded-md"
                 />
               </form>
@@ -209,7 +239,7 @@ const CreateVideoRoom = () => {
           <div id="vote+thumbnail" className="basis-1/3 flex flex-col gap-y-5">
             <div
               id="vote"
-              className="mb-3 basis-1/3 bg-white border-2 rounded-md bg-gray-100"
+              className="mb-3 basis-1/3 bg-white border-2 rounded-md"
             >
               <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
                 {voteItem &&
@@ -227,7 +257,7 @@ const CreateVideoRoom = () => {
                     } else {
                       return (
                         <div
-                          className="border flex text-2xl justify-center items-center text-center w-1/2 h-1/2"
+                          className="border flex text-2xl justify-center items-center text-center bg-gray-50 w-1/2 h-1/2"
                           key={index}
                         >
                           {item}
