@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import VoteCardItem from './Vote/VoteCardItem';
-import NowGollajyuImage from "../assets/images/now_gollajyu_img.png";
+import NowGollajyuImage from "/assets/images/nowGollajyu.png";
 
 export default function VoteCard() {
   const [clicked, setClicked] = useState([false, false, false, false]);
