@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import MyProfile from "../components/MyProfile";
 import MyActivities from "../components/MyActivities";
+import MyStatistics from "../components/MyStatistics";
 
 const MyPage = () => {
   const body = {
@@ -17,6 +18,7 @@ const MyPage = () => {
         <Routes>
           <Route path="/" element={<MyProfile />} />
           <Route path="/MyActivities" element={<MyActivities />} />
+          <Route path="/MyStatistics" element={<MyStatistics />} />
         </Routes>
       </div>
     </div>
