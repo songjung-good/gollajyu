@@ -84,26 +84,20 @@ public class VoteService {
                 .build();
 
         voteRepository.save(vote);
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        System.out.println("vote.getId() = " + vote.getId());
-
-        System.out.println("voteReqDto = " + voteReqDto);
         // 투표 아이템들 디비에 저장
         for (VoteItemReqDto voteItemReqDto : voteReqDto.getVoteItemList()) {
             // 받은 MultipartFile 이미지 파일을 저장
             String fullPath = "";
-            System.out.println("voteItemReqDto = " + voteItemReqDto);
-            System.out.println("voteItemReqDto.getVoteItemImg() = " + voteItemReqDto.getVoteItemImg());
             try {
                 fullPath = saveFile(voteItemReqDto.getVoteItemImg(), fileDir);
-                System.out.println("fullPath = " + fullPath);            } catch (IOException e) {
+                System.out.println("fullPath = " + fullPath);
+            } catch (IOException e) {
                 return ServiceResult.fail(e.getMessage());
             }
             // 저장한 경로 반환
             // VoteItem 저장시 이미지가 저장된 경로를 DB에 저장
             VoteItem voteItem = VoteItem.builder()
                     .vote(vote)
-//                    .voteItemImgUrl(voteItemReqDto.getVoteItemImgUrl())
                     .voteItemDesc(voteItemReqDto.getVoteItemDesc())
                     .price(voteItemReqDto.getPrice())
                     .build();
@@ -118,13 +112,13 @@ public class VoteService {
     }
 
     private String saveFile(MultipartFile file, String fileDir) throws IOException {
-        String imgPath ="";
+        String imgPath = "";
 
         if (!file.isEmpty()) {
-            imgPath =  UUID.randomUUID()+"_"+ file.getOriginalFilename();
-            file.transferTo(new File(fileDir+"\\" + imgPath));
+            imgPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            file.transferTo(new File(fileDir + "\\" + imgPath));
         }
-        return fileDir + imgPath;
+        return fileDir + "\\" + imgPath;
     }
 
 
@@ -427,6 +421,7 @@ public class VoteService {
      */
 
     public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
+        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
         if (optionalMember.isEmpty()) {

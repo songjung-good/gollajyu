@@ -27,8 +27,9 @@ public class VoteController {
 
     @Value("${file.dir}")
     private String fileDir;
-    // TODO: 투표 생성 시 받아온 투표 아이템 이미지 저장
+    // TODO: 투표 생성 시 받아온 투표 아이템 이미지 저장 done
     // TODO: 투표 상세에서 저장된 이미지 파일 전달
+    // TODO: main GET들...
 
     /**
      * 투표 생성 - create
@@ -37,8 +38,6 @@ public class VoteController {
      */
     @PostMapping("")
     public ResponseEntity<ResponseMessage> addVote(VoteReqDto voteReqDto) {
-        System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&");
-        System.out.println("voteReqDto = " + voteReqDto);
 
         // 서비스단으로 넘겨서 로직 처리 -> ServiceResult(result, message, object-data)로 반환
         ServiceResult result = voteService.addVote(voteReqDto, fileDir);
