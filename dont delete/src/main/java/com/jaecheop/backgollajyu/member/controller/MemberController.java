@@ -52,12 +52,11 @@ public class MemberController {
     }
 
 
-    // Controller method to handle GET request for votes by member ID
+    // 내가 작성한 투표 모아보기
     @GetMapping("/{memberId}/votes")
     public ResponseEntity<List<VoteResDto>> getVotesByMemberId(
-            @PathVariable Long memberId,
-            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
-        List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId, statisticsSearchReqDto);
+            @PathVariable Long memberId) {
+        List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId);
 
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -68,9 +67,8 @@ public class MemberController {
 
     @GetMapping("/{memberId}/votes/participation")
     public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(
-            @PathVariable Long memberId,
-            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
-        List<VoteResDto> voteResDtoList = voteService.getVotesByResultMemberId(memberId, statisticsSearchReqDto);
+            @PathVariable Long memberId) {
+        List<VoteResDto> voteResDtoList = voteService.findVotesByResultMemberId(memberId);
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
@@ -80,9 +78,8 @@ public class MemberController {
 
     @GetMapping("/{memberId}/votes/likes")
     public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(
-            @PathVariable Long memberId,
-            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
-        List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId, statisticsSearchReqDto);
+            @PathVariable Long memberId) {
+        List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId);
 
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -92,9 +89,8 @@ public class MemberController {
     }
     @GetMapping("/{memberId}/comments")
     public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(
-            @PathVariable Long memberId,
-            @RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
-        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId, statisticsSearchReqDto);
+            @PathVariable Long memberId) {
+        List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
         if (voteResDtoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {

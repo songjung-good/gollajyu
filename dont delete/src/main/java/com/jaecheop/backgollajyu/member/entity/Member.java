@@ -21,7 +21,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "type_id")
     private Type type;
 

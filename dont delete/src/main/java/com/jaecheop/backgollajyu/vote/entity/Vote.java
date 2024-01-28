@@ -33,7 +33,7 @@ public class Vote {
 
     private LocalDateTime createAt;
 
-    @OneToOne // Many votes can belong to one category
+    @ManyToOne // Many votes can belong to one category
     @JoinColumn(name = "category_id")
     private Category category;
 }

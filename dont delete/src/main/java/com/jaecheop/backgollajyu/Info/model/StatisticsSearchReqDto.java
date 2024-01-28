@@ -1,8 +1,10 @@
 package com.jaecheop.backgollajyu.Info.model;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class StatisticsSearchReqDto {
 
 //    private Long memberId;

@@ -5,25 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86c1ffc9-0e53-43a7-9c81-e70fd9ac44de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/Info/controller/InfoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/Info/service/InfoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/Info/model/CategoryInfoResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/Info/model/CategoryInfoResDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/Info/model/StatisticsSearchReqDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/Info/model/StatisticsSearchReqDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/service/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Likes.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/Likes.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/VoteResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/entity/VoteResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteItemResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/VoteItemResDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/CategoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteResultRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/S10P12E107.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/back-gollajyu.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24_오후_4_44_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +85,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.BackGollajyuApplication.executor": "Run",
+    "Gradle.C:/Users/82104/Desktop/S10P12E107/dont delete/build.gradle.executor": "Run",
     "Gradle.dont delete [:BackGollajyuApplication.main()].executor": "Run",
     "Gradle.dont delete.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -98,7 +96,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "comment-get-back",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/SSAFY/Desktop/S10P12E107",
+    "last_opened_file_path": "C:/Users/82104/Desktop/S10P12E107/dont delete",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",

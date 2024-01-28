@@ -1,13 +1,11 @@
 package com.jaecheop.backgollajyu.vote.service;
 
-import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
 import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.entity.Comment;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.comment.repository.CommentRepository;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.member.entity.Member;
-import com.jaecheop.backgollajyu.member.model.Birthday;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.*;
@@ -99,12 +97,12 @@ public class VoteService {
 
 
     // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
-    public List<VoteResDto> makeVoteResDtoList(List<Vote> votes, Long currentMemberId, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public List<VoteResDto> makeVoteResDtoList(List<Vote> votes, Long currentMemberId) {
         List<VoteResDto> voteResDtoList = new ArrayList<>();
 
         for (Vote vote : votes) {
             // 현재 투표의 아이템 리스트
-            List<VoteItemResDto> voteItemResDtoList = mapVoteItemsToDto(voteItemRepository.findVoteItemsByVote(vote), statisticsSearchReqDto);
+            List<VoteItemResDto> voteItemResDtoList = mapVoteItemsToDto(voteItemRepository.findVoteItemsByVote(vote));
 
             // 투표에 내가 투표한 결과가 있는지
             Optional<VoteResult> byMemberIdAndVoteId = voteResultRepository.findByMemberIdAndVoteId(currentMemberId, vote.getId());
@@ -136,13 +134,13 @@ public class VoteService {
     }
 
     // 위에서 참조된 아이템을 Dto로 바꾸기
-    public List<VoteItemResDto> mapVoteItemsToDto(List<VoteItem> voteItems, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public List<VoteItemResDto> mapVoteItemsToDto(List<VoteItem> voteItems) {
         return voteItems.stream()
-                .map(voteItem -> mapVoteItemToDto(voteItem, statisticsSearchReqDto))
+                .map(this::mapVoteItemToDto)
                 .collect(Collectors.toList());
     }
     // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
-    public VoteItemResDto mapVoteItemToDto(VoteItem voteItem, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
         return VoteItemResDto.builder()
                 .voteItemId(voteItem.getId())
                 .voteItemImgUrl(voteItem.getVoteItemImgUrl())
@@ -178,12 +176,9 @@ public class VoteService {
     // CategoryDto 빌더
     public CategoryDto mapCategoryEntityToDto(Vote vote) {
         // Retrieve the Category entity associated with the vote
-        Optional<Category> optionalCategory = categoryRepository.findByVotes(vote);
-        if(optionalCategory.isEmpty()){
-            return null;
-        }
 
-        Category categoryEntity = optionalCategory.get();
+        Category categoryEntity = vote.getCategory();
+
         // Map the properties to the DTO using the builder pattern
         return CategoryDto.builder()
                 .categoryId(categoryEntity.getId())
@@ -196,6 +191,7 @@ public class VoteService {
     // 태그별 투표수 첨부 해주기 For ItemResDto
     public Map<String, Long> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
         Map<String, Long> statistics = new HashMap<>();
+
 
         // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
         List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
@@ -242,29 +238,29 @@ public class VoteService {
 
 
     // 투표 작성자 Id로 투표 리스트 생성..
-    public List<VoteResDto> getVotesByMemberId(Long memberId, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public List<VoteResDto> getVotesByMemberId(Long memberId) {
 //        List<Vote> votes = voteRepository.findByMemberId(memberId);
         List<Vote> votes = voteRepository.findByMemberId(memberId, Sort.by(Sort.Order.asc("createAt")));
 
-        return makeVoteResDtoList(votes, memberId, statisticsSearchReqDto);
+        return makeVoteResDtoList(votes, memberId);
     }
 
     // 투표한 투표 리스트
-    public List<VoteResDto> getVotesByResultMemberId(Long memberId, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public List<VoteResDto> findVotesByResultMemberId(Long memberId) {
 
         List<Vote> votes = voteRepository.findVoteIdsByResultMemberId(memberId);
-        return makeVoteResDtoList(votes, memberId, statisticsSearchReqDto);
+        return makeVoteResDtoList(votes, memberId);
     }
 
     // 좋아요한 투표 리스트
-    public List<VoteResDto> getLikedVotesByMemberId(Long memberId, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public List<VoteResDto> getLikedVotesByMemberId(Long memberId) {
         // 멤버가 좋아요 한 투표찾기
         List<Vote> votes = voteRepository.findVoteLikesByMemberId(memberId);
-        return makeVoteResDtoList(votes, memberId, statisticsSearchReqDto);
+        return makeVoteResDtoList(votes, memberId);
     }
 
     // 댓글 작성한 투표 리스트 /// TODO 상훈 최적화 필.
-    public List<CommentResDto> findVotesByCommentMemberId(Long memberId, StatisticsSearchReqDto statisticsSearchReqDto) {
+    public List<CommentResDto> findVotesByCommentMemberId(Long memberId) {
         List<Comment> comments = commentRepository.findByMemberId(memberId);
         List<CommentResDto> commentResDtoList = new ArrayList<>();
 
@@ -274,7 +270,7 @@ public class VoteService {
                     .commentId(comment.getId())
                     .commentCreateAt(comment.getCommentCreateAt().toLocalDateTime())
                     .commentDescription(comment.getCommentDescription())
-                    .voteResDto(makeVoteResDtoList(votes, memberId, statisticsSearchReqDto).get(0))
+                    .voteResDto(makeVoteResDtoList(votes, memberId).get(0))
                     .build();
 
             commentResDtoList.add(commentResDto);

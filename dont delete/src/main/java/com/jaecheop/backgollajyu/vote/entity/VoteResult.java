@@ -26,7 +26,7 @@ public class VoteResult {
     @JoinColumn(name="vote_id")
     private Vote vote;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="vote_item_id")
     private VoteItem voteItem;
 
@@ -36,7 +36,7 @@ public class VoteResult {
 
     private Integer age;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "type_id")
     private Type type;
 
@@ -44,11 +44,11 @@ public class VoteResult {
     private Gender gender;
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
