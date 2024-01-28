@@ -15,17 +15,17 @@ const useHoverState = () => {
 };
 
 // ----------- 메뉴 아이템 함수형 컴포넌트 -----------
-const MenuItem = ({ to, label, style, hoverState }) => (
+const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
   <NavLink
     to={to}
-    style={{
-      ...style,
-      ...(hoverState.hovered ? hoverState.hoverStyle : undefined),
-    }}
+    end
+    style={({ isActive }) =>
+      isActive ? activeStyle : style
+    }
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
   >
-    {label}
+    {children}
   </NavLink>  
 );
 
@@ -36,17 +36,6 @@ const ButtonItem = ({ label, style, hoverState }) => (
       ...style,
       ...(hoverState.hovered ? hoverState.hoverStyle : undefined),
     }}
-    onMouseOver={hoverState.handleMouseEnter}
-    onMouseOut={hoverState.handleMouseLeave}
-  >
-    {label}
-  </button>
-);
-
-// ----------- 서브 메뉴 아이템 함수형 컴포넌트 -----------
-const SubMenuItem = ({ label, style, hoverState }) => (
-  <button
-    style={style}
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
   >
@@ -100,21 +89,40 @@ const NavigationBar = () => {
   ] = useHoverState();
 
 
-  // ----------- 프로필 메뉴 상태 관리 -----------
-  // const [isProfileOpen, setProfileOpen] = useState(false);
-  // const profileHover = () => setProfileOpen(true);
-  // const profileLeave = () => setProfileOpen(false);
+  // ----------- 프로필 버튼 hover -----------
+  const [
+    profileHovered,
+    profileMouseEnter,
+    profileMouseLeave
+  ] = useHoverState();
 
-  // ----------- 햄버거 메뉴 상태 관리 -----------
+  // ----------- 프로필 아이템 hover -----------
+  const [
+    myProfileHovered,
+    myProfileMouseEnter,
+    myProfileMouseLeave
+  ] = useHoverState();
+
+  const [
+    myActivitiesHovered,
+    myActivitiesMouseEnter,
+    myActivitiesMouseLeave
+  ] = useHoverState();
+
+  const [
+    myStatisticsHovered,
+    myStatisticsMouseEnter,
+    myStatisticsMouseLeave
+  ] = useHoverState();
+
+  // ----------- 햄버거 버튼 hover -----------
   const [
     hamburgerHovered,
     hamburgerMouseEnter,
     hamburgerMouseLeave
   ] = useHoverState();
 
-  const [isHamburgerOpen, setHamburgerOpen] = useState(false);
-  const hamburgerHover = () => setHamburgerOpen(true);
-  const hamburgerLeave = () => setHamburgerOpen(false);
+
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isLarge = useMediaQuery({
@@ -156,7 +164,7 @@ const NavigationBar = () => {
     transform: "translateX(-50%)",                  // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "90%" : (isMedium ? "740px" : "400px"),  // (반응형) 내비게이션 바 넓이
+    width: isLarge ? "90%" : (isMedium ? "740px" : "480px"),  // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
     display: "flex",                                // 항목 수평 정렬
@@ -204,17 +212,27 @@ const NavigationBar = () => {
     alignItems: "center",                           // 링크 수직 정렬
   };
 
+  // ----------- 메뉴 active 스타일 -----------
+  const menuActiveStyle = {
+    ...menuStyle,
+
+    // 글자
+    fontWeight: "bold",
+    color: "#000000",
+  }
+
   // ----------- 메뉴 hover 스타일 -----------
   const menuHoverStyle = {
-    // 글자
-    color: "#BEBEBE",
+    width: "100%",
+    height: "5px",
+    transition: "background 0.2s ease",
   }
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
     // 디자인
     width: !isLarge ? "360px" : "240px",            // (반응형) 버튼 리스트 넓이
-    height: "100px",                                 // 높이: 100px
+    height: "100px",                                // 높이: 100px
 
     // 컨텐츠 정렬
     display: "flex",                                // 링크 수평 정렬
@@ -222,10 +240,11 @@ const NavigationBar = () => {
     justifyContent: "flex-end",                     // 내부 버튼 오른쪽 정렬
   }
 
-  // ----------- 내 프로필 페이지 버튼 스타일 -----------
+  // ----------- 프로필 버튼 스타일 -----------
   const myPageStyle = {
     // 디자인
-    margin: "0 5px",                               // 버튼 좌우 margin: 10px
+    margin: "0 5px",                                // 버튼 좌우 margin: 5px
+    height: "100px",
 
     // 컨텐츠 정렬
     display: "flex",                                // 버튼 수평 정렬
@@ -239,6 +258,24 @@ const NavigationBar = () => {
     width: "35px",                                  // 이미지 가로 길이: 35px
     height: "35px",                                 // 이미지 세로 길이: 35px
     borderRadius: "50%",                            // 둥근 테두리: 50% (원)
+  };
+
+  // ----------- 프로필 컨테이너 스타일 -----------
+  const profileContainerStyle = {
+    // 위치
+    position: "absolute",                           // 메뉴 위치 기준
+    top: "90px",                                    // 상단 여백: 100px
+    right: "0px",                                   // 오른쪽 여백: 0px
+
+    // 디자인
+    padding: "10px",                                // 메뉴 내부 여백: 10px
+    background: "#FFFFFF",                          // 메뉴 배경 색: 흰색
+    boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",    // 메뉴 그림자
+
+    // 컨텐츠 정렬
+    display: profileHovered ? "flex" : "none",      // 메뉴 오픈 여부
+    flexDirection: "column",                        // 아이템 세로 방향으로 배치
+    alignItems: "flex-end",                         // 아이템 오른쪽 정렬
   };
 
   // ----------- 버튼 공통 스타일 -----------
@@ -294,13 +331,13 @@ const NavigationBar = () => {
     ...buttonStyle,                                 // 버튼 공통 스타일 상속
 
     // 디자인
-    background: "#FFD257",  // 마우스 호버 시 배경 색상 변경
+    background: "#FFD257",                          // 마우스 호버 시 배경 색상 변경
   };
 
   // ----------- 회원가입 버튼 hover 스타일 -----------
   const signupButtonHoverStyle = {
     // 디자인
-    background: "#E6BE3D",  // 마우스 호버 시 배경 색상 변경
+    background: "#E6BE3D",                          // 마우스 호버 시 배경 색상 변경
   }
 
   // ----------- 햄버거 버튼 스타일 -----------
@@ -319,7 +356,7 @@ const NavigationBar = () => {
   const hamburgerContainerStyle = {
     // 위치
     position: "absolute",                           // 메뉴 위치 기준
-    top: "90px",                                   // 상단 여백: 100px
+    top: "90px",                                    // 상단 여백: 100px
     right: "0px",                                   // 오른쪽 여백: 0px
 
     // 디자인
@@ -328,20 +365,99 @@ const NavigationBar = () => {
     boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",    // 메뉴 그림자
 
     // 컨텐츠 정렬
-    display: "none",                                // 메뉴 오픈 여부
+    display: hamburgerHovered ? "flex" : "none",    // 메뉴 오픈 여부
     flexDirection: "column",                        // 아이템 세로 방향으로 배치
     alignItems: "flex-end",                         // 아이템 오른쪽 정렬
   };
 
-  // ----------- 햄버거 버튼 hover 스타일 -----------
-  const hamburgerHoverStyle = {
-    // 디자인
-    dispaly: "flex",
-  }
 
   // --------------------------------- css 끝 ---------------------------------
 
-  
+  // ----------- 메뉴 아이템 목록 -----------
+  const menuItems = [
+    { 
+      to: "/VotePage", 
+      label: "투표모아쥬", 
+      hovered: votePageHovered, 
+      mouseEnter: votePageMouseEnter, 
+      mouseLeave: votePageMouseLeave 
+    },
+    { 
+      to: "/BroadcastPage", 
+      label: "지금골라쥬", 
+      hovered: broadcastPageHovered, 
+      mouseEnter: broadcastPageMouseEnter, 
+      mouseLeave: broadcastPageMouseLeave 
+    },
+    { 
+      to: "/StatisticPage", 
+      label: "통계보여쥬", 
+      hovered: statisticPageHovered, 
+      mouseEnter: statisticPageMouseEnter, 
+      mouseLeave: statisticPageMouseLeave 
+    },
+    { 
+      to: "/TestPage", 
+      label: "소비성향알려쥬", 
+      hovered: testPageHovered, 
+      mouseEnter: testPageMouseEnter, 
+      mouseLeave: testPageMouseLeave 
+    },
+  ];
+
+  // ----------- 버튼 아이템 목록 -----------
+  const buttonItems = [
+    { 
+      label: "로그아웃",
+      style: logoutButtonStyle,
+      hovered: logoutButtonHovered, 
+      mouseEnter: logoutButtonMouseEnter, 
+      mouseLeave: logoutButtonMouseLeave,
+      hoverStyle: logoutButtonHoverStyle
+    },
+    { 
+      label: "로그인",
+      style: loginButtonStyle,
+      hovered: loginButtonHovered, 
+      mouseEnter: loginButtonMouseEnter, 
+      mouseLeave: loginButtonMouseLeave,
+      hoverStyle: loginButtonHoverStyle
+    },
+    { 
+      label: "회원가입",
+      style: signupButtonStyle,
+      hovered: signupButtonHovered, 
+      mouseEnter: signupButtonMouseEnter, 
+      mouseLeave: signupButtonMouseLeave,
+      hoverStyle: signupButtonHoverStyle
+    },
+  ];
+
+  // ----------- 프로필 아이템 목록 -----------
+  const profileItems = [
+    { 
+      to: "/Mypage", 
+      label: "내 프로필 요약", 
+      hovered: myProfileHovered, 
+      mouseEnter: myProfileMouseEnter, 
+      mouseLeave: myProfileMouseLeave 
+    },
+    { 
+      to: "/Mypage/MyActivities", 
+      label: "내 활동 요약", 
+      hovered: myActivitiesHovered, 
+      mouseEnter: myActivitiesMouseEnter, 
+      mouseLeave: myActivitiesMouseLeave 
+    },
+    { 
+      to: "/Mypage/MyStatistics", 
+      label: "내 통계 요약", 
+      hovered: myStatisticsHovered, 
+      mouseEnter: myStatisticsMouseEnter, 
+      mouseLeave: myStatisticsMouseLeave 
+    },
+  ];
+
   return (
     <>
       <div style={navigationBarBackgroundStyle}></div>
@@ -354,57 +470,31 @@ const NavigationBar = () => {
         </div>
 
         {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
-        {isLarge ? (  // (반응형) min-width:1024px 이상일 경우
+        {isLarge && (  // (반응형) min-width:1024px 이상일 경우
           <>
             <div style={menuContainerStyle}>
-              <MenuItem
-                to="/VotePage"
-                label="투표모아쥬"
-                style={menuStyle}
-                hoverState={{
-                  hovered: votePageHovered,
-                  handleMouseEnter: votePageMouseEnter,
-                  handleMouseLeave: votePageMouseLeave,
-                  hoverStyle: menuHoverStyle
-                }}
-              />
-              <MenuItem
-                to="/BroadcastPage"
-                label="지금골라쥬"
-                style={menuStyle}
-                hoverState={{
-                  hovered: broadcastPageHovered,
-                  handleMouseEnter: broadcastPageMouseEnter,
-                  handleMouseLeave: broadcastPageMouseLeave,
-                  hoverStyle: menuHoverStyle
-                }}
-              />
-              <MenuItem
-                to="/StatisticPage"
-                label="통계보여쥬"
-                style={menuStyle}
-                hoverState={{
-                  hovered: statisticPageHovered,
-                  handleMouseEnter: statisticPageMouseEnter,
-                  handleMouseLeave: statisticPageMouseLeave,
-                  hoverStyle: menuHoverStyle
-                }}
-              />
-              <MenuItem
-                to="/TestPage"
-                label="소비성향알려쥬"
-                style={menuStyle}
-                hoverState={{
-                  hovered: testPageHovered,
-                  handleMouseEnter: testPageMouseEnter,
-                  handleMouseLeave: testPageMouseLeave,
-                  hoverStyle: menuHoverStyle
-                }}
-              />
+              {menuItems.map((item, index) => (
+                <MenuItem
+                  key={index}
+                  to={item.to}
+                  style={menuStyle}
+                  activeStyle={menuActiveStyle}
+                  hoverState={{
+                    hovered: item.hovered,
+                    handleMouseEnter: item.mouseEnter,
+                    handleMouseLeave: item.mouseLeave
+                  }}
+                >
+                  <div>
+                    <div>{item.label}</div>
+                    <div style={{
+                      ...menuHoverStyle,
+                      background: item.hovered ? "#FFD257" : "#FFFFFF"
+                    }}></div>
+                  </div>
+                </MenuItem>
+              ))}
             </div>
-          </>
-        ) : (  // (반응형) min-width:1024px 미만일 경우 아무것도 렌더링 하지 않음
-          <>  
           </>
         )}
 
@@ -412,114 +502,101 @@ const NavigationBar = () => {
         <div style={buttonContainerStyle}>
           {isLoggedIn ? (  // ------------- 로그인 시 -------------
             <>
-              <div style={myPageStyle}>
-                <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
-                <p>[닉네임]</p>
+              <div onMouseLeave={profileMouseLeave}>
+                <button
+                  style={myPageStyle}
+                  onMouseEnter={profileMouseEnter}
+                >
+                  <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
+                  <p>[닉네임]</p>
+                </button>
+                <div style={profileContainerStyle}>
+                  {profileItems.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      to={item.to}
+                      style={{ ...menuStyle, height: "60px" }}
+                      activeStyle={{ ...menuActiveStyle, height: "60px" }}
+                      hoverState={{
+                        hovered: item.hovered,
+                        handleMouseEnter: item.mouseEnter,
+                        handleMouseLeave: item.mouseLeave
+                      }}
+                    >
+                      <div>
+                        <div>{item.label}</div>
+                        <div style={{
+                          ...menuHoverStyle,
+                          background: item.hovered ? "#FFD257" : "#FFFFFF"
+                        }}></div>
+                      </div>
+                    </MenuItem>
+                  ))}
+                </div>
               </div>
               <ButtonItem
-                style={logoutButtonStyle}
-                label="로그아웃"
+                style={buttonItems[0].style}
+                label={buttonItems[0].label}
                 hoverState={{
-                  hovered: logoutButtonHovered,
-                  handleMouseEnter: logoutButtonMouseEnter,
-                  handleMouseLeave: logoutButtonMouseLeave,
-                  hoverStyle: logoutButtonHoverStyle
+                  hovered: buttonItems[0].hovered,
+                  handleMouseEnter: buttonItems[0].mouseEnter,
+                  handleMouseLeave: buttonItems[0].mouseLeave,
+                  hoverStyle: buttonItems[0].hoverStyle
                 }}
               />
             </>
           ) : (  // ------------- 비 로그인 시 -------------
             <>
-              <ButtonItem
-                style={loginButtonStyle}
-                label="로그인"
-                hoverState={{
-                  hovered: loginButtonHovered,
-                  handleMouseEnter: loginButtonMouseEnter,
-                  handleMouseLeave: loginButtonMouseLeave,
-                  hoverStyle: loginButtonHoverStyle
-                }}
-              />
-              <ButtonItem
-                style={signupButtonStyle}
-                label="회원가입"
-                hoverState={{
-                  hovered: signupButtonHovered,
-                  handleMouseEnter: signupButtonMouseEnter,
-                  handleMouseLeave: signupButtonMouseLeave,
-                  hoverStyle: signupButtonHoverStyle
-                }}
-              />
+              {buttonItems.slice(1).map((item, index) => (
+                <ButtonItem
+                  key={index}
+                  style={item.style}
+                  label={item.label}
+                  hoverState={{
+                    hovered: item.hovered,
+                    handleMouseEnter: item.mouseEnter,
+                    handleMouseLeave: item.mouseLeave,
+                    hoverStyle: item.hoverStyle
+                  }}
+                />
+              ))}
             </>
           )}
 
           {/* ------------- 내비게이션 메뉴 -------------  */}
-          {!isLarge ? (  // (반응형) min-width:1024px 미만일 경우 메뉴를 햄버거 버튼으로 대체
+          {!isLarge && (  // (반응형) min-width:1024px 미만일 경우 메뉴를 햄버거 버튼으로 대체
             <>
-              {!isLarge && (
-                <SubMenuItem
-                  label="&#9776"
+              <div onMouseLeave={hamburgerMouseLeave}>
+                <button
                   style={hamburgerStyle}
-                  hoverState={{
-                    hovered: hamburgerHovered,
-                    handleMouseEnter: hamburgerMouseEnter,
-                    handleMouseLeave: hamburgerMouseLeave,
-                    hoverStyle: hamburgerHoverStyle
-                  }}
-                />
-              )}
-              {!isLarge && (
-                <div
-                  style={hamburgerContainerStyle}
-                  >
-                  <MenuItem
-                    to="/VotePage"
-                    label="투표모아쥬"
-                    style={{ ...menuStyle, height:"60px" }}
-                    hoverState={{
-                      hovered: votePageHovered,
-                      handleMouseEnter: votePageMouseEnter,
-                      handleMouseLeave: votePageMouseLeave,
-                      hoverStyle: menuHoverStyle
-                    }}
-                  />
-                  <MenuItem
-                    to="/BroadcastPage"
-                    label="지금골라쥬"
-                    style={{ ...menuStyle, height:"60px" }}
-                    hoverState={{
-                      hovered: broadcastPageHovered,
-                      handleMouseEnter: broadcastPageMouseEnter,
-                      handleMouseLeave: broadcastPageMouseLeave,
-                      hoverStyle: menuHoverStyle
-                    }}
-                  />
-                  <MenuItem
-                    to="/StatisticPage"
-                    label="통계보여쥬"
-                    style={{ ...menuStyle, height:"60px" }}
-                    hoverState={{
-                      hovered: statisticPageHovered,
-                      handleMouseEnter: statisticPageMouseEnter,
-                      handleMouseLeave: statisticPageMouseLeave,
-                      hoverStyle: menuHoverStyle
-                    }}
-                  />
-                  <MenuItem
-                    to="/TestPage"
-                    label="소비성향알려쥬"
-                    style={{ ...menuStyle, height:"60px" }}
-                    hoverState={{
-                      hovered: testPageHovered,
-                      handleMouseEnter: testPageMouseEnter,
-                      handleMouseLeave: testPageMouseLeave,
-                      hoverStyle: menuHoverStyle
-                    }}
-                  />
+                  onMouseEnter={hamburgerMouseEnter}
+                >
+                  &#9776;
+                </button>
+                <div style={hamburgerContainerStyle}>
+                  {menuItems.map((item, index) => (
+                    <MenuItem
+                      key={index}
+                      to={item.to}
+                      style={{ ...menuStyle, height: "60px", padding: "0 15px" }}
+                      activeStyle={{ ...menuActiveStyle, height: "60px" }}
+                      hoverState={{
+                        hovered: item.hovered,
+                        handleMouseEnter: item.mouseEnter,
+                        handleMouseLeave: item.mouseLeave
+                      }}
+                    >
+                      <div>
+                        <div>{item.label}</div>
+                        <div style={{
+                          ...menuHoverStyle,
+                          background: item.hovered ? "#FFD257" : "#FFFFFF"
+                        }}></div>
+                      </div>
+                    </MenuItem>
+                  ))}
                 </div>
-              )}
-            </>
-          ) : (  // (반응형) min-width:1024px 이상일 경우 아무것도 렌더링 하지 않음
-            <>
+              </div>
             </>
           )}
         </div>
