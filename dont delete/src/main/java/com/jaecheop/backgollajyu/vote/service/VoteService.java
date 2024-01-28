@@ -12,14 +12,20 @@ import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@PropertySource("classpath:application.properties")
 public class VoteService {
     private final VoteResultRepository voteResultRepository;
     private final VoteRepository voteRepository;
@@ -42,7 +48,7 @@ public class VoteService {
      *
      * @param voteReqDto
      */
-    public ServiceResult addVote(VoteReqDto voteReqDto) {
+    public ServiceResult addVote(VoteReqDto voteReqDto, String fileDir) {
 
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
@@ -78,21 +84,41 @@ public class VoteService {
                 .build();
 
         voteRepository.save(vote);
-
         // 투표 아이템들 디비에 저장
         for (VoteItemReqDto voteItemReqDto : voteReqDto.getVoteItemList()) {
+            // 받은 MultipartFile 이미지 파일을 저장
+            String fullPath = "";
+            try {
+                fullPath = saveFile(voteItemReqDto.getVoteItemImg(), fileDir);
+                System.out.println("fullPath = " + fullPath);
+            } catch (IOException e) {
+                return ServiceResult.fail(e.getMessage());
+            }
+            // 저장한 경로 반환
+            // VoteItem 저장시 이미지가 저장된 경로를 DB에 저장
             VoteItem voteItem = VoteItem.builder()
                     .vote(vote)
-                    .voteItemImgUrl(voteItemReqDto.getVoteItemImgUrl())
                     .voteItemDesc(voteItemReqDto.getVoteItemDesc())
                     .price(voteItemReqDto.getPrice())
                     .build();
+            voteItem.updateImgPath(fullPath);
+            System.out.println("voteItem = " + voteItem);
             voteItemRepository.save(voteItem);
         }
 
         return ServiceResult.success();
 
 
+    }
+
+    private String saveFile(MultipartFile file, String fileDir) throws IOException {
+        String imgPath = "";
+
+        if (!file.isEmpty()) {
+            imgPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            file.transferTo(new File(fileDir + "\\" + imgPath));
+        }
+        return fileDir + "\\" + imgPath;
     }
 
 
@@ -395,6 +421,7 @@ public class VoteService {
      */
 
     public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
+        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
         if (optionalMember.isEmpty()) {
@@ -497,7 +524,7 @@ public class VoteService {
                     filterByType.add(vr);
                 }
             }
-        } else{
+        } else {
             filterByType = voteResultList;
         }
 
@@ -509,7 +536,7 @@ public class VoteService {
                     filterByTypeAndAge.add(vr);
                 }
             }
-        } else{
+        } else {
             filterByTypeAndAge = filterByType;
         }
 
@@ -521,7 +548,7 @@ public class VoteService {
                     filterByTypeAndAgeAndGender.add(vr);
                 }
             }
-        } else{
+        } else {
             filterByTypeAndAgeAndGender = filterByTypeAndAge;
         }
         System.out.println(filterByTypeAndAgeAndGender);
@@ -530,4 +557,9 @@ public class VoteService {
 
     }
 
+    public String test(MultipartFile file, String fileDir) throws IOException {
+        String fullPath = saveFile(file, fileDir);
+        return fullPath;
+
+    }
 }
