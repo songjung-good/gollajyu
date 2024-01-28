@@ -53,7 +53,7 @@ const ChattingForm = (props) => {
         <Button
           className="flex-none w-10"
           variant="contained"
-          style={{ color: "white", background: "#019267" }}
+          style={{ color: "white", background: "#FFD257" }}
           onClick={sendMessage}
         >
           <Send></Send>

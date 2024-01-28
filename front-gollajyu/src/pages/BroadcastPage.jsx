@@ -137,7 +137,7 @@ const BroadcastPage = () => {
           시청자로 진입(Guest)
         </button>
       </div>
-      <div className="container mx-auto my-5 w-3/4 h-1/5 flex flex-col space-y-10">
+      <div className="container mx-auto my-5 sm:w-3/5 lg:w-3/4 h-1/5 flex flex-col space-y-10">
         <div id="page-info">
           <p className="text-black-70 text-xl mx-4">
             <span className="font-bold">라이브 방송</span>을 시청하며
