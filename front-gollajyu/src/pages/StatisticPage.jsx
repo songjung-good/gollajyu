@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useState } from 'react';
+import VoteMakeSimple from '../components/vote/VoteSimple';
 
-const MainPage = () => {
-  return (
-    <div>
-      <h1>통계보여쥬</h1>
-    </div>
-  );
+const StatisticPage = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    return (
+        <div>
+            <button onClick={handleOpenModal}>간단투표 만들기</button>
+            {isModalOpen && <VoteMakeSimple isOpen={isModalOpen} closeModal={handleCloseModal} />}
+        </div>
+    );
 };
-
-export default MainPage;
+  
+export default StatisticPage;

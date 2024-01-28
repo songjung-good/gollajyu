@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
-// Import Swiper React components and styles
 import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
-// 투표 받아오기
-import SwipeCard from "./SwipeCard";
-// import required modules
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
+import SwipeCard from "./SwipeCard";
 
 export default function SwipeVote() {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -26,11 +22,11 @@ export default function SwipeVote() {
   }, []);
 
   return (
-    <div className="py-7 px-7">
+    <div className="py-7 px-7" style={{ margin: '-15px' }}>
       <Swiper
         effect={'coverflow'}
         grabCursor={true}
-        spaceBetween={30}
+        spaceBetween={-300} // 여기를 조절하여 좌우 여백을 변경
         centeredSlides={true}
         navigation={true}
         slidesPerView={'auto'}
@@ -40,7 +36,7 @@ export default function SwipeVote() {
           stretch: 0,
           depth: 100,
           modifier: 1,
-          slideShadows: true,
+          slideShadows: false,
         }}
         modules={[EffectCoverflow, Navigation, HashNavigation]}
         className="mySwiper"

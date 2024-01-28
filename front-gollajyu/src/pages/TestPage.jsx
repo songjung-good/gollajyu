@@ -1,6 +1,6 @@
 import React from "react";
 
-const MainPage = () => {
+const TestPage = () => {
   return (
     <div>
       <h1>소비성향알려쥬</h1>
@@ -8,4 +8,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default TestPage;
