@@ -23,9 +23,9 @@ const MyPage = () => {
   // ----------- body 스타일 -----------
   const body = {
     // 디자인
-    margin: "0 auto",                                // 가로 중앙 정렬
-    padding: "50px 0",                               // 상하단 여백: 50px
-    width: isLarge ? "1000px" : isMedium ? "740px" : "480px",  // (반응형) 컨텐츠 가로 길이
+    margin: "0 auto", // 가로 중앙 정렬
+    padding: "50px 0", // 상하단 여백: 50px
+    width: isLarge ? "1000px" : isMedium ? "740px" : "480px", // (반응형) 컨텐츠 가로 길이
   };
 
   // --------------------------------- css 끝 ---------------------------------
