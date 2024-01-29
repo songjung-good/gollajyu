@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import VoteSimple from '../components/vote/VoteSimple';
+import React from "react";
 
 const StatisticPage = () => {
   return (
     <div>
-      <VoteSimple />
+      <h1>소비성향알려쥬</h1>
     </div>
   );
 };
