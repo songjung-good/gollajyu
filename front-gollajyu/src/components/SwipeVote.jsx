@@ -26,7 +26,7 @@ export default function SwipeVote() {
       <Swiper
         effect={'coverflow'}
         grabCursor={true}
-        spaceBetween={-300} // 여기를 조절하여 좌우 여백을 변경
+        spaceBetween={50} // 여기를 조절하여 좌우 여백을 변경
         centeredSlides={true}
         navigation={true}
         slidesPerView={'auto'}
@@ -43,7 +43,7 @@ export default function SwipeVote() {
         style={{ padding: '30px', height: 'calc(100% + 60px)' }}
       >
         {['slide1', 'slide2', 'slide3'].map((hash, index) => (
-          <SwiperSlide key={hash} data-hash={hash}>
+          <SwiperSlide key={hash} data-hash={hash} style={{ width: '1024px' }}>
             <div>
               <SwipeCard />
             </div>

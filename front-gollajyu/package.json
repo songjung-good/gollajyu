@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.6",
     "@tailwindcss/container-queries": "^0.1.1",
     "axios": "^1.6.5",
+    "html2canvas": "^1.4.1",
     "nth-check": "^2.1.1",
     "openvidu-browser": "^2.29.1",
     "react": "^18.2.0",
