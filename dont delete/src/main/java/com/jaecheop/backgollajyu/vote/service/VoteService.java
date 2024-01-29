@@ -6,6 +6,7 @@ import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.comment.repository.CommentRepository;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.member.model.MemberDto;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.*;
@@ -118,14 +119,18 @@ public class VoteService {
 
             VoteResDto voteResDto = VoteResDto.builder()
                     .voteId(vote.getId())
-                    .memberId(vote.getMember())
+                    .memberDto(MemberDto.builder()//
+                            .memberNickname(vote.getMember().getNickname())
+                            .memberId(vote.getMember().getId())
+                            .build())
                     .title(vote.getTitle())
                     .description(vote.getDescription())
                     .createAt(vote.getCreateAt())
-                    .categoryDto(mapCategoryEntityToDto(vote)) // 카테고리 매핑
-                    .voteItems(voteItemResDtoList)
                     .selectedItemId(selectedItemId) // 투표 참여한게 있다면 투표아이템 id를 준다.
                     .likes(mapLikesToDto(likes)) // 좋아요 리스트 매핑
+                    .categoryDto(mapCategoryEntityToDto(vote)) // 카테고리 매핑
+                    //TODO 위까지 하나의 Dto로 메서드로 붙이기 메서드 다른 곳에서 활용하기(메인 페이지)
+                    .voteItems(voteItemResDtoList)
                     .build();
 
             voteResDtoList.add(voteResDto);
@@ -147,7 +152,8 @@ public class VoteService {
                 .voteItemDesc(voteItem.getVoteItemDesc())
                 .price(voteItem.getPrice())
                 .resultSize((long) voteResultRepository.findByVoteItem(voteItem).size()) //
-//                .voteResultCountResDtoList(generateStatistics(voteItem, statisticsSearchReqDto)) //
+                // 밑에건 빼도 될거 같음
+                .voteResultCountResDtoList(generateStatistics(voteResultRepository.findByVoteItem(voteItem), null)) //
                 .build();
     }
 
@@ -178,12 +184,12 @@ public class VoteService {
         // Retrieve the Category entity associated with the vote
 
         Category categoryEntity = vote.getCategory();
+        List<Tag> tagList = tagRepository.findAllByCategoryId(categoryEntity.getId());
 
-        // Map the properties to the DTO using the builder pattern
         return CategoryDto.builder()
                 .categoryId(categoryEntity.getId())
                 .categoryName(categoryEntity.getCategoryName())
-                .tags(tagRepository.findAllByCategoryId(categoryEntity.getId()))
+                .tagNameList(tagList.stream().map(Tag::getName).collect(Collectors.toList()))
                 .build();
     }
 
