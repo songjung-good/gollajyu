@@ -8,10 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,16 +25,22 @@ public class VoteController {
 
     private final VoteService voteService;
 
+    @Value("${file.dir}")
+    private String fileDir;
+    // TODO: 투표 생성 시 받아온 투표 아이템 이미지 저장 done
+    // TODO: 투표 상세에서 저장된 이미지 파일 전달
+    // TODO: main GET들...
+
     /**
      * 투표 생성 - create
      *
      * @return
      */
     @PostMapping("")
-    public ResponseEntity<ResponseMessage> addVote(@RequestBody VoteReqDto voteReqDto) {
+    public ResponseEntity<ResponseMessage> addVote(VoteReqDto voteReqDto) {
 
         // 서비스단으로 넘겨서 로직 처리 -> ServiceResult(result, message, object-data)로 반환
-        ServiceResult result = voteService.addVote(voteReqDto);
+        ServiceResult result = voteService.addVote(voteReqDto, fileDir);
 
         // 받아온 결과에 따라 에러 메세지 출력하거나 return 하거나
         if (!result.isResult()) {
@@ -70,10 +81,16 @@ public class VoteController {
             return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
         }
 
-        System.out.println("result.getData() = ::::::::::::::::::" + result.getData());
 
         return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
 
+    }
+
+    @PostMapping("/test")
+    public String test(MultipartFile file) throws IOException {
+       String path =  voteService.test(file, fileDir);
+        System.out.println("path = " + path);
+        return path;
     }
 
 }
