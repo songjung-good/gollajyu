@@ -2,19 +2,17 @@ package com.jaecheop.backgollajyu.vote.entity;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Builder
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Vote {
 
     @Id
@@ -23,7 +21,7 @@ public class Vote {
     private Long id;
 
     // FK
-    @JoinColumn(name="member_id")
+    @JoinColumn(name = "member_id")
     @ManyToOne
     private Member member;
 
@@ -33,7 +31,16 @@ public class Vote {
 
     private LocalDateTime createAt;
 
-    @OneToOne // Many votes can belong to one category
+    @ManyToOne // Many votes can belong to one category
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @OneToMany(mappedBy = "vote")
+    List<Likes> likesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "vote")
+    List<VoteItem> voteItemList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "vote")
+    List<VoteResult> voteResultList = new ArrayList<>();
 }

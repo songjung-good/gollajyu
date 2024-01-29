@@ -8,38 +8,41 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
+import lombok.ToString;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
     private int id;
 
-    @JoinColumn(name="vote_id")
     @ManyToOne
+    @JoinColumn(name = "vote_id")
     private Vote vote;
 
-    @JoinColumn(name="member_id")
     @ManyToOne
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @JoinColumn(name="vote_item_id")
     @ManyToOne
+    @JoinColumn(name = "vote_item_id")
     private VoteItem voteItem;
 
-    private String commentDescription;
+    private String commentDesc;
 
-    private Timestamp commentCreateAt;
+    private LocalDateTime createAt;
 
-    private Boolean status;
+    private boolean isDeleted;
 
     private Long commentMentionId;
 
+
+    
 }

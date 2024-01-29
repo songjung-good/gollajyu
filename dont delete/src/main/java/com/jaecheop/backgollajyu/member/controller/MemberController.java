@@ -33,6 +33,11 @@ public class MemberController {
     private final MemberService memberService;
     private final VoteService voteService;
 
+    /**
+     * 회원가입
+     * @param signUpReqDto
+     * @return
+     */
     @PostMapping("")
     public ResponseEntity<ResponseMessage> signUp(@RequestBody SignUpReqDto signUpReqDto){
        ServiceResult result =  memberService.signUp(signUpReqDto);
@@ -86,6 +91,13 @@ public class MemberController {
             return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
         }
     }
+
+    /**
+     * 로그인
+     * @param loginReqDto
+     * @param session
+     * @return
+     */
 
     @PostMapping("/login")
         public ResponseEntity<ResponseMessage> login(@RequestBody LoginReqDto loginReqDto, HttpSession session){

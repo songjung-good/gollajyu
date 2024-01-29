@@ -1,5 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import firstMedal from "/assets/images/medals/first.png";
+import secondMedal from "/assets/images/medals/second.png";
+import thirdMedal from "/assets/images/medals/third.png";
+import viewerIcon from "/assets/images/viewer_icon.png";
 
 const medalImg = {
   position: "absolute",
@@ -16,6 +20,9 @@ const BroadcastItem = ({ index, item }) => {
         isHost: false,
         sessionId: item.sessionId,
         userNickName: localStorage.userNickName,
+        voteItem: item.voteItem,
+        title: item.title,
+        hostNickName: item.hostNickName,
       },
     });
   };
@@ -23,15 +30,9 @@ const BroadcastItem = ({ index, item }) => {
   return (
     <div onClick={enterRoom}>
       <div id="thumbnail">
-        {index === 0 ? (
-          <img style={medalImg} src="/src/assets/first-medal.png"></img>
-        ) : null}
-        {index === 1 ? (
-          <img style={medalImg} src="/src/assets/second-medal.png"></img>
-        ) : null}
-        {index === 2 ? (
-          <img style={medalImg} src="/src/assets/third-medal.png"></img>
-        ) : null}
+        {index === 0 ? <img style={medalImg} src={firstMedal}></img> : null}
+        {index === 1 ? <img style={medalImg} src={secondMedal}></img> : null}
+        {index === 2 ? <img style={medalImg} src={thirdMedal}></img> : null}
         <img
           className="rounded-[30px] mb-2"
           src={item.thumbnail}
@@ -43,7 +44,7 @@ const BroadcastItem = ({ index, item }) => {
         <div className="flex">
           <img
             style={{ width: "20px", height: "20px" }}
-            src="/src/assets/viewer_icon.png"
+            src={viewerIcon}
             alt=""
           />
           <p>{item.viewerCnt}</p>

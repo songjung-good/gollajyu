@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "/src/assets/nowGollajyu.png";
+import logo from "/assets/images/nowGollajyu.png";
 import styled, { keyframes } from "styled-components";
 import classes from "./Loading.module.css";
 
