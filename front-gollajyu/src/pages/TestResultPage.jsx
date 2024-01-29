@@ -80,13 +80,13 @@ const TestResultPage = () => {
             나의 결과
           </div>
         ) : (
-          <div className="flex flex-wrap mb-5">
+          <div className="flex flex-wrap mb-5 justify-center">
             {items.map((item, index) => {
               return (
                 <button
                   key={index}
                   className={`m-1 px-3 py-2 border border-amber-200 rounded-lg ${
-                    result === index ? "bg-amber-300" : ""
+                    result === index ? `bg-amber-300` : ""
                   }`}
                   onClick={() => {
                     setResult(index);
