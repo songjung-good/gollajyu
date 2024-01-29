@@ -1,5 +1,3 @@
-// src/components/vote/VoteControls.jsx
-
 import React from 'react';
 
 const VoteControls = () => {

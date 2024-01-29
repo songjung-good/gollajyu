@@ -11,7 +11,7 @@ export default function SwipeCard() {
   };
 
   return (
-    <div className="mx-auto max-w-screen-lg bg-white" style={{ height: '500px' }}>
+    <div className="mx-auto max-w-[1024px] bg-white" style={{ height: '500px' }}>
       <div className="flex justify-around items-center h-full">
         {Array(4).fill(null).map((_, index) => (
           <VoteCardItem 
