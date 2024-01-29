@@ -69,26 +69,6 @@ const NavigationBar = () => {
     testPageMouseLeave
   ] = useHoverState();
 
-  // ----------- 로그아웃, 로그인, 회원가입 버튼 hover -----------
-  const [
-    logoutButtonHovered,
-    logoutButtonMouseEnter,
-    logoutButtonMouseLeave
-  ] = useHoverState();
-
-  const [
-    loginButtonHovered,
-    loginButtonMouseEnter,
-    loginButtonMouseLeave
-  ] = useHoverState();
-
-  const [
-    signupButtonHovered,
-    signupButtonMouseEnter,
-    signupButtonMouseLeave
-  ] = useHoverState();
-
-
   // ----------- 프로필 버튼 hover -----------
   const [
     profileHovered,
@@ -115,14 +95,31 @@ const NavigationBar = () => {
     myStatisticsMouseLeave
   ] = useHoverState();
 
+  // ----------- 로그아웃, 로그인, 회원가입 버튼 hover -----------
+  const [
+    logoutButtonHovered,
+    logoutButtonMouseEnter,
+    logoutButtonMouseLeave
+  ] = useHoverState();
+
+  const [
+    loginButtonHovered,
+    loginButtonMouseEnter,
+    loginButtonMouseLeave
+  ] = useHoverState();
+
+  const [
+    signupButtonHovered,
+    signupButtonMouseEnter,
+    signupButtonMouseLeave
+  ] = useHoverState();
+
   // ----------- 햄버거 버튼 hover -----------
   const [
     hamburgerHovered,
     hamburgerMouseEnter,
     hamburgerMouseLeave
   ] = useHoverState();
-
-
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isLarge = useMediaQuery({
@@ -134,7 +131,6 @@ const NavigationBar = () => {
   const isSmall = useMediaQuery({
     query : "(max-width:768px)"
   });
-
 
   const isLoggedIn = true;  // 로그인 상태
   // const isLoggedIn = false;  // 비로그인 상태
@@ -149,7 +145,7 @@ const NavigationBar = () => {
     top: "0px",                                     // 내비게이션 바 고정 위치: 0px
 
     // 디자인
-    width: "100%",                                  // 내비게이션 바 넓이
+    width: "100%",                                  // 내비게이션 바 배경 넓이
     height: "100px",                                // 내비게이션 바 높이: 100px
     background: "#FFFFFF",                          // 배경 색상: 흰색
   }
@@ -186,8 +182,8 @@ const NavigationBar = () => {
     color: "#FFD257",                               // 글자 색: 노란색
   };
 
-  // ----------- 메뉴 컨테이너 스타일 -----------
-  const menuContainerStyle = {
+  // ----------- 링크 컨테이너 스타일 -----------
+  const linkContainerStyle = {
     // 디자인
     width: "50%",                                   // 가로 넓이: 50%
     
@@ -197,14 +193,14 @@ const NavigationBar = () => {
     justifyContent: "space-between",                // 항목 균일 간격으로 정렬
   }
 
-  // ----------- 메뉴 아이템 스타일 -----------
-  const menuStyle = {
+  // ----------- 링크 아이템 스타일 -----------
+  const linkItemStyle = {
     // 디자인
     padding: !isLarge ? "0 15px" : "0px",           // (반응형) 항목 좌우 padding: 15px
     height: "100px",                                // 항목 높이: 100px
 
     // 글자
-    fontSize: isLarge ? "18px" : "16px",            // (반응형) 글자 크기
+    fontSize: isLarge ? "20px" : "18px",            // (반응형) 글자 크기
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
@@ -212,20 +208,22 @@ const NavigationBar = () => {
     alignItems: "center",                           // 링크 수직 정렬
   };
 
-  // ----------- 메뉴 active 스타일 -----------
-  const menuActiveStyle = {
-    ...menuStyle,
+  // ----------- 링크 아이템 active 스타일 -----------
+  const linkItemActiveStyle = {
+    // 상속
+    ...linkItemStyle,                               // 링크 아이템 스타일 상속
 
     // 글자
-    fontWeight: "bold",
-    color: "#000000",
+    fontWeight: "bold",                             // 활성화 시 글자 두껍게
+    color: "#000000",                               // 활성화 시 글자 색: 검정
   }
 
-  // ----------- 메뉴 hover 스타일 -----------
-  const menuHoverStyle = {
-    width: "100%",
-    height: "5px",
-    transition: "background 0.2s ease",
+  // ----------- 아이템 hover 스타일 -----------
+  const itemHoverStyle = {
+    // 디자인
+    width: "100%",                                  // 가로 길이: 100%
+    height: "5px",                                  // 세로 길이: 5px
+    transition: "background 0.2s ease",             // 나타날 때 애니메이션
   }
 
   // ----------- 버튼 컨테이너 스타일 -----------
@@ -238,6 +236,12 @@ const NavigationBar = () => {
     display: "flex",                                // 링크 수평 정렬
     alignItems: "center",                           // 링크 수직 정렬
     justifyContent: "flex-end",                     // 내부 버튼 오른쪽 정렬
+  }
+
+  // ----------- 프로필 컨테이너 스타일 -----------
+  const profileContainerStyle = {
+    // 위치
+    position: "relative",                           // 기준 위치
   }
 
   // ----------- 프로필 버튼 스타일 -----------
@@ -260,8 +264,8 @@ const NavigationBar = () => {
     borderRadius: "50%",                            // 둥근 테두리: 50% (원)
   };
 
-  // ----------- 프로필 컨테이너 스타일 -----------
-  const profileContainerStyle = {
+  // ----------- 공통 메뉴 스타일 -----------
+  const commonMenuStyle = {
     // 위치
     position: "absolute",                           // 메뉴 위치 기준
     top: "90px",                                    // 상단 여백: 100px
@@ -269,21 +273,55 @@ const NavigationBar = () => {
 
     // 디자인
     padding: "10px",                                // 메뉴 내부 여백: 10px
+    width: "180px",                                 // 가로 길이: 180px
     background: "#FFFFFF",                          // 메뉴 배경 색: 흰색
     boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",    // 메뉴 그림자
 
     // 컨텐츠 정렬
-    display: profileHovered ? "flex" : "none",      // 메뉴 오픈 여부
     flexDirection: "column",                        // 아이템 세로 방향으로 배치
     alignItems: "flex-end",                         // 아이템 오른쪽 정렬
   };
 
+  // ----------- 프로필 메뉴 스타일 -----------
+  const profileMenuStyle = {
+    // 상속
+    ...commonMenuStyle,                             // 공통 메뉴 스타일 상속
+
+    // 컨텐츠 정렬
+    display: profileHovered ? "flex" : "none",      // 메뉴 오픈 여부
+  };
+
+  // ----------- 메뉴 아이템 스타일 -----------
+  const menuItemStyle = {
+    // 디자인
+    padding: "0 15px",                              // 항목 좌우 padding: 15px
+    height: "60px",                                 // 항목 높이: 60px
+
+    // 글자
+    fontSize: "18px",                               // 글자 크기: 18px
+    color: "#4A4A4A",                               // 글자 색: 회색
+
+    // 컨텐츠 정렬
+    display: "flex",                                // 링크 수평 정렬
+    alignItems: "center",                           // 링크 수직 정렬
+  };
+
+  // ----------- 메뉴 아이템 active 스타일 -----------
+  const menuItemActiveStyle = {
+    // 상속
+    ...menuItemStyle,                               // 메뉴 아이템 스타일 상속
+
+    // 글자
+    fontWeight: "bold",                             // 글자 두껍게
+    color: "#000000",                               // 글자 색: 검정
+  }
+
   // ----------- 버튼 공통 스타일 -----------
   const buttonStyle = {
     // 디자인
-    margin: "0 5px",                                // 버튼 좌우 margin: 10px
-    width: "70px",                                  // 버튼 넓이: 90px
-    height: "35px",                                 // 버튼 높이: 40px
+    margin: "0 5px",                                // 버튼 좌우 margin: 5px
+    width: "70px",                                  // 버튼 넓이: 70px
+    height: "35px",                                 // 버튼 높이: 35px
     borderRadius: "5px",                            // 둥근 테두리: 5px
     transition: "background 0.5s ease",             // 마우스 호버 시 색깔 천천히 변경
 
@@ -307,7 +345,7 @@ const NavigationBar = () => {
   // ----------- 로그아웃 버튼 hover 스타일 -----------
   const logoutButtonHoverStyle = {
     // 디자인
-    background: "#D9D9D9",  // 마우스 호버 시 배경 색상 변경
+    background: "#D9D9D9",                          // 마우스 호버 시 배경 색상 변경
   }
 
   // ----------- 로그인 버튼 스타일 -----------
@@ -316,13 +354,13 @@ const NavigationBar = () => {
     ...buttonStyle,                                 // 버튼 공통 스타일 상속
 
     // 디자인
-    background: "#CEFA70",  // 마우스 호버 시 배경 색상 변경
+    background: "#CEFA70",                          // 마우스 호버 시 배경 색상 변경
   };
 
   // ----------- 로그인 버튼 hover 스타일 -----------
   const loginButtonHoverStyle = {
     // 디자인
-    background: "#ACD145",  // 마우스 호버 시 배경 색상 변경
+    background: "#ACD145",                          // 마우스 호버 시 배경 색상 변경
   }
   
   // ----------- 회원가입 버튼 스타일 -----------
@@ -340,6 +378,12 @@ const NavigationBar = () => {
     background: "#E6BE3D",                          // 마우스 호버 시 배경 색상 변경
   }
 
+  // ----------- 햄버거 컨테이너 스타일 -----------
+  const hamburgerContainerStyle = {
+    position: "relative",                           // 기준 위치
+  }
+
+
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerStyle = {
     // 디자인
@@ -352,29 +396,19 @@ const NavigationBar = () => {
     color: "#4A4A4A",                               // 햄버거 버튼 색
   };
 
-  // ----------- 햄버거 컨테이너 스타일 -----------
-  const hamburgerContainerStyle = {
-    // 위치
-    position: "absolute",                           // 메뉴 위치 기준
-    top: "90px",                                    // 상단 여백: 100px
-    right: "0px",                                   // 오른쪽 여백: 0px
-
-    // 디자인
-    padding: "10px",                                // 메뉴 내부 여백: 10px
-    background: "#FFFFFF",                          // 메뉴 배경 색: 흰색
-    boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",    // 메뉴 그림자
+  // ----------- 햄버거 메뉴 스타일 -----------
+  const hamburgerMenuStyle = {
+    // 상속
+    ...commonMenuStyle,                             // 공통 메뉴 스타일 상속
 
     // 컨텐츠 정렬
     display: hamburgerHovered ? "flex" : "none",    // 메뉴 오픈 여부
-    flexDirection: "column",                        // 아이템 세로 방향으로 배치
-    alignItems: "flex-end",                         // 아이템 오른쪽 정렬
   };
-
 
   // --------------------------------- css 끝 ---------------------------------
 
-  // ----------- 메뉴 아이템 목록 -----------
-  const menuItems = [
+  // ----------- 링크 아이템 목록 -----------
+  const linkItems = [
     { 
       to: "/VotePage", 
       label: "투표모아쥬", 
@@ -472,13 +506,13 @@ const NavigationBar = () => {
         {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
         {isLarge && (  // (반응형) min-width:1024px 이상일 경우
           <>
-            <div style={menuContainerStyle}>
-              {menuItems.map((item, index) => (
+            <div style={linkContainerStyle}>
+              {linkItems.map((item, index) => (
                 <MenuItem
                   key={index}
                   to={item.to}
-                  style={menuStyle}
-                  activeStyle={menuActiveStyle}
+                  style={linkItemStyle}
+                  activeStyle={linkItemActiveStyle}
                   hoverState={{
                     hovered: item.hovered,
                     handleMouseEnter: item.mouseEnter,
@@ -488,7 +522,7 @@ const NavigationBar = () => {
                   <div>
                     <div>{item.label}</div>
                     <div style={{
-                      ...menuHoverStyle,
+                      ...itemHoverStyle,
                       background: item.hovered ? "#FFD257" : "#FFFFFF"
                     }}></div>
                   </div>
@@ -502,7 +536,10 @@ const NavigationBar = () => {
         <div style={buttonContainerStyle}>
           {isLoggedIn ? (  // ------------- 로그인 시 -------------
             <>
-              <div onMouseLeave={profileMouseLeave}>
+              <div
+                style={profileContainerStyle}
+                onMouseLeave={profileMouseLeave}
+              >
                 <button
                   style={myPageStyle}
                   onMouseEnter={profileMouseEnter}
@@ -510,13 +547,13 @@ const NavigationBar = () => {
                   <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
                   <p>[닉네임]</p>
                 </button>
-                <div style={profileContainerStyle}>
+                <div style={profileMenuStyle}>
                   {profileItems.map((item, index) => (
                     <MenuItem
                       key={index}
                       to={item.to}
-                      style={{ ...menuStyle, height: "60px" }}
-                      activeStyle={{ ...menuActiveStyle, height: "60px" }}
+                      style={menuItemStyle}
+                      activeStyle={menuItemActiveStyle}
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
@@ -526,7 +563,7 @@ const NavigationBar = () => {
                       <div>
                         <div>{item.label}</div>
                         <div style={{
-                          ...menuHoverStyle,
+                          ...itemHoverStyle,
                           background: item.hovered ? "#FFD257" : "#FFFFFF"
                         }}></div>
                       </div>
@@ -564,22 +601,25 @@ const NavigationBar = () => {
           )}
 
           {/* ------------- 내비게이션 메뉴 -------------  */}
-          {!isLarge && (  // (반응형) min-width:1024px 미만일 경우 메뉴를 햄버거 버튼으로 대체
+          {!isLarge && (  // (반응형) min-width:1024px 미만일 경우 링크를 햄버거 버튼으로 대체
             <>
-              <div onMouseLeave={hamburgerMouseLeave}>
+              <div
+                style={hamburgerContainerStyle}
+                onMouseLeave={hamburgerMouseLeave}
+              >
                 <button
                   style={hamburgerStyle}
                   onMouseEnter={hamburgerMouseEnter}
                 >
                   &#9776;
                 </button>
-                <div style={hamburgerContainerStyle}>
-                  {menuItems.map((item, index) => (
+                <div style={hamburgerMenuStyle}>
+                  {linkItems.map((item, index) => (
                     <MenuItem
                       key={index}
                       to={item.to}
-                      style={{ ...menuStyle, height: "60px", padding: "0 15px" }}
-                      activeStyle={{ ...menuActiveStyle, height: "60px" }}
+                      style={menuItemStyle}
+                      activeStyle={menuItemActiveStyle}
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
@@ -589,7 +629,7 @@ const NavigationBar = () => {
                       <div>
                         <div>{item.label}</div>
                         <div style={{
-                          ...menuHoverStyle,
+                          ...itemHoverStyle,
                           background: item.hovered ? "#FFD257" : "#FFFFFF"
                         }}></div>
                       </div>
