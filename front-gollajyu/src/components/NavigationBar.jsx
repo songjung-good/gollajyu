@@ -156,16 +156,16 @@ const NavigationBar = () => {
     ...navigationBarBackgroundStyle,                // 배경 스타일 상속
 
     // 위치
-    left: "50%", // 화면 가로 중앙으로 이동
-    transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
+    left: "50%",                                    // 화면 가로 중앙으로 이동
+    transform: "translateX(-50%)",                  // 화면 가로 중앙으로 이동
 
     // 디자인
     width: isLarge ? "90%" : (isMedium ? "740px" : "480px"),  // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
-    display: "flex", // 항목 수평 정렬
-    justifyContent: "space-between", // 항목 균일 간격으로 정렬
-    alignItems: "center", // 항목 수직 정렬
+    display: "flex",                                // 항목 수평 정렬
+    justifyContent: "space-between",                // 항목 균일 간격으로 정렬
+    alignItems: "center",                           // 항목 수직 정렬
   };
 
   // ----------- 로고 컨테이너 스타일 -----------
@@ -251,17 +251,17 @@ const NavigationBar = () => {
     height: "100px",
 
     // 컨텐츠 정렬
-    display: "flex", // 버튼 수평 정렬
-    alignItems: "center", // 버튼 수직 정렬
+    display: "flex",                                // 버튼 수평 정렬
+    alignItems: "center",                           // 버튼 수직 정렬
   };
 
   // ----------- 프로필 이미지 스타일 -----------
   const profileImageStyle = {
     // 디자인
-    marginRight: "10px", // 오른쪽 여백: 10px
-    width: "35px", // 이미지 가로 길이: 35px
-    height: "35px", // 이미지 세로 길이: 35px
-    borderRadius: "50%", // 둥근 테두리: 50% (원)
+    marginRight: "10px",                            // 오른쪽 여백: 10px
+    width: "35px",                                  // 이미지 가로 길이: 35px
+    height: "35px",                                 // 이미지 세로 길이: 35px
+    borderRadius: "50%",                            // 둥근 테두리: 50% (원)
   };
 
   // ----------- 공통 메뉴 스타일 -----------
