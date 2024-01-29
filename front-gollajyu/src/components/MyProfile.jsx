@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
-  // 버튼 hover
-  const [informationButtonHovered, setInformationButtonHovered] =
-    useState(false);
-  const [testButtonHovered, setTestButtonHovered] = useState(false);
+  // ----------- 버튼 hover -----------
+  const [
+    informationButtonHovered,
+    setInformationButtonHovered
+  ] = useState(false);
 
-  const body = {
-    // padding: "70px",
-  };
+  const [
+    testButtonHovered,
+    setTestButtonHovered
+  ] = useState(false);
+
+
+  // --------------------------------- css 시작 ---------------------------------
 
   const containerStyle = {
     marginBottom: "50px",
@@ -127,8 +132,11 @@ const MyProfile = () => {
     marginRight: "20px",
   };
 
+  // --------------------------------- css 끝 ---------------------------------
+
+
   return (
-    <div style={body}>
+    <>
       <div style={containerStyle}>
         <div style={titleButtonContainerStyle}>
           <span style={bigTextStyle}>기본정보</span>
@@ -190,7 +198,7 @@ const MyProfile = () => {
           <div style={smallTextStyle}>[소비성향에 대한 설명]</div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
