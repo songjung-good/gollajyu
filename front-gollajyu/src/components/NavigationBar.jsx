@@ -19,7 +19,7 @@ const NavigationBar = () => {
   const [votePageHovered, setVotePageHovered] = useState(false);
   const [broadcastPageHovered, setBroadcastPageHovered] = useState(false);
   const [statisticPageHovered, setStatisticPageHovered] = useState(false);
-  const [testPageHovered, setTestPageHovered] = useState(false);
+  const [testResultPageHovered, setTestResultPageHovered] = useState(false);
 
   // 버튼 hover
   const [logoutButtonHovered, setLogoutButtonHovered] = useState(false);
@@ -128,12 +128,12 @@ const NavigationBar = () => {
   };
 
   // ----------- 소비성향알려쥬 메뉴 스타일 -----------
-  const testPageStyle = {
+  const testResultPageStyle = {
     // 상속
     ...commonStyle, // 메뉴 공통 스타일 상속
 
     // 글자
-    color: testPageHovered ? "#BEBEBE" : "#4A4A4A", // 마우스 호버 시 글자 색 변경
+    color: testResultPageHovered ? "#BEBEBE" : "#4A4A4A", // 마우스 호버 시 글자 색 변경
   };
 
   // ----------- 활성화 된 메뉴 스타일 -----------
@@ -306,15 +306,15 @@ const NavigationBar = () => {
                 </li>
               </NavLink>
               <NavLink
-                to="/TestPage"
+                to="/TestResultPage"
                 style={({ isActive }) =>
                   isActive ? activeItemStyle : undefined
                 }
               >
                 <li
-                  style={testPageStyle}
-                  onMouseOver={() => setTestPageHovered(true)}
-                  onMouseOut={() => setTestPageHovered(false)}
+                  style={testResultPageStyle}
+                  onMouseOver={() => setTestResultPageHovered(true)}
+                  onMouseOut={() => setTestResultPageHovered(false)}
                 >
                   소비성향알려쥬
                 </li>
@@ -425,15 +425,15 @@ const NavigationBar = () => {
                     </li>
                   </NavLink>
                   <NavLink
-                    to="/TestPage"
+                    to="/TestResultPage"
                     style={({ isActive }) =>
                       isActive ? activeItemStyle : undefined
                     }
                   >
                     <li
-                      style={{ ...testPageStyle, height: "60px" }}
-                      onMouseOver={() => setTestPageHovered(true)}
-                      onMouseOut={() => setTestPageHovered(false)}
+                      style={{ ...testResultPageStyle, height: "60px" }}
+                      onMouseOver={() => setTestResultPageHovered(true)}
+                      onMouseOut={() => setTestResultPageHovered(false)}
                     >
                       소비성향알려쥬
                     </li>

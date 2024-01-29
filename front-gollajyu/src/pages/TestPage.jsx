@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TestItem from "../components/TestItem";
+import mainImg from "/assets/images/sobiTest/tmp_mainImg.png";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
+import { styled } from "@mui/material/styles";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -72,7 +77,7 @@ const MainPage = () => {
   ];
 
   const [response, setResponse] = useState([]);
-  const [questionNumber, setQuestionNumber] = useState(0);
+  const [questionNumber, setQuestionNumber] = useState(-1);
 
   const handleResponse = (answerType) => {
     console.log(questionNumber, answerType);
@@ -84,33 +89,87 @@ const MainPage = () => {
 
   const goResultPage = () => {
     // 테스트 결과 페이지로 경로 설정 필요함
-    navigate("/", {
+    navigate("/TestResultPage", {
       state: {
+        isFirstTime: true,
         response: response,
       },
     });
   };
 
+  const BorderLinearProgress = styled(LinearProgress)(() => ({
+    height: 6,
+    borderRadius: 5,
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor: "lightgrey",
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      borderRadius: 5,
+      backgroundColor: "#FFD257",
+    },
+  }));
+
   return (
-    <div>
-      <h1>소비성향알려쥬</h1>
-      {/* 진행도 나타내는 막대 추가하기 */}
-      <div>
-        {questionNumber <= 11 ? (
-          <TestItem
-            data={{
-              answer: answers[questionNumber],
-              question: questions[questionNumber],
-            }}
-            handleResponse={handleResponse}
-          />
-        ) : (
-          <div>
-            <h1>테스트 결과보기</h1>
-            <div>{response}</div>
-            <p onClick={goResultPage}>결과보러가기</p>
-          </div>
-        )}
+    <div className="p-5 h-screen">
+      <div className="container mx-auto my-5 p-10 bg-white rounded-lg w-2/3 lg:w-1/2">
+        <div>
+          {questionNumber === -1 ? (
+            <div className="flex flex-col items-center space-y-24">
+              <h1 className="text-4xl text-center">
+                <span className="text-sky-600">선택</span>으로 알아보는
+                <br />
+                <span className="text-lime-500">소비성향</span> 테스트
+              </h1>
+              <img className="w-2/3 h-2/3" src={mainImg} alt="" />
+              <button
+                className="border rounded-full p-5 w-2/3 bg-amber-300"
+                onClick={() => {
+                  setQuestionNumber(questionNumber + 1);
+                }}
+              >
+                테스트 시작하기
+              </button>
+            </div>
+          ) : null}
+          {questionNumber >= 0 && questionNumber <= 11 ? (
+            <>
+              <div className="mx-auto mb-5 max-w-lg">
+                <div className="flex justify-between">
+                  <p>소비성향 테스트</p> <p>{questionNumber + 1} /12</p>
+                </div>
+                <BorderLinearProgress
+                  variant="determinate"
+                  value={(questionNumber / 12) * 100}
+                />
+              </div>
+              <TestItem
+                data={{
+                  answer: answers[questionNumber],
+                  question: questions[questionNumber],
+                }}
+                handleResponse={handleResponse}
+              />
+            </>
+          ) : null}
+          {questionNumber === 12 ? (
+            <div className="flex flex-col items-center space-y-24">
+              <p className="text-4xl text-center">
+                <span className="text-rose-500">두근두근</span>
+                <br />
+                당신의 <span className="text-lime-500">소비성향</span>은?
+              </p>
+              <img className="w-2/3 h-2/3" src={mainImg} alt="" />
+              <button
+                className="border rounded-full p-5 w-2/3 bg-amber-300 text-lg"
+                onClick={() => {
+                  goResultPage();
+                }}
+              >
+                결과 보러가기
+              </button>
+            </div>
+          ) : null}
+        </div>
       </div>
     </div>
   );
