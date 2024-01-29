@@ -1,9 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import MyProfile from "../components/MyProfile";
-import MyActivities from "../components/MyActivities";
-import MyStatistics from "../components/MyStatistics";
+import MyProfile from "../components/MyPage/MyProfile";
+import MyActivities from "../components/MyPage/MyActivities";
+import MyStatistics from "../components/MyPage/MyStatistics";
 
 const MyPage = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -36,7 +36,7 @@ const MyPage = () => {
       <div style={body}>
         <Routes>
           <Route path="/" element={<MyProfile />} />
-          <Route path="/MyActivities" element={<MyActivities />} />
+          <Route path="/MyActivities/*" element={<MyActivities />} />
           <Route path="/MyStatistics" element={<MyStatistics />} />
         </Routes>
       </div>
