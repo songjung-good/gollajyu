@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import VoteCardItem from './Vote/VoteCardItem';
+import VoteCardItem from './vote/VoteCardItem';
 import NowGollajyuImage from "../assets/images/now_gollajyu_img.png";
 
 export default function VoteCard() {
