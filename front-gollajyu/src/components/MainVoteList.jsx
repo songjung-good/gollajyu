@@ -23,7 +23,7 @@ const PostGridItem = ({ topic, posts }) => {
   );
 };
 
-const PostsGrid = () => {
+const MainVoteList = () => {
   return (
     <div className="grid grid-cols-2 gap-4">
       <PostGridItem topic="좋아요 많이 받은 top 5" posts={posts} />
@@ -34,4 +34,4 @@ const PostsGrid = () => {
   );
 };
 
-export default PostsGrid;
+export default MainVoteList;

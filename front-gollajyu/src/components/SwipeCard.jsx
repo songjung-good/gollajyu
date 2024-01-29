@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import VoteCardItem from './Vote/VoteCardItem';
-import NowGollajyuImage from "../assets/images/now_gollajyu_img.png";
+import NowGollajyuImage from "/assets/images/nowGollajyu.png";
 
-export default function VoteCard() {
+export default function SwipeCard() {
   const [clicked, setClicked] = useState([false, false, false, false]);
 
   const handleClick = (index) => {
@@ -11,7 +11,7 @@ export default function VoteCard() {
   };
 
   return (
-    <div className="mx-auto max-w-screen-lg bg-white" style={{ height: '500px' }}>
+    <div className="mx-auto max-w-[1024px] bg-white" style={{ height: '500px' }}>
       <div className="flex justify-around items-center h-full">
         {Array(4).fill(null).map((_, index) => (
           <VoteCardItem 
