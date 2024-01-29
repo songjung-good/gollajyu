@@ -111,7 +111,10 @@ const TestResultPage = () => {
               ))}
             </div>
             <p className="my-10 text-xl">{matchingData.characteristic}</p>
-            <div id="description" className="bg-stone-100 p-10 rounded-lg">
+            <div
+              id="description"
+              className="bg-stone-100 p-10 rounded-lg break-keep"
+            >
               {matchingData.description?.map((item, index) => (
                 <li className="p-2 text-lg" key={index}>
                   {item}
