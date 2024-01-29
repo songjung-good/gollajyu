@@ -5,14 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86c1ffc9-0e53-43a7-9c81-e70fd9ac44de" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/repository/CommentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/member/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/model/CommentResDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/model/CommentResDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/repository/VoteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/vote/service/VoteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/S10P12E107.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/back-gollajyu.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24__4_44__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024-01-24_오후_4_44_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,8 +55,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -63,6 +71,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -74,7 +85,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.BackGollajyuApplication.executor": "Run",
-    "Gradle.Build dont delete.executor": "Run",
+    "Gradle.C:/Users/82104/Desktop/S10P12E107/dont delete/build.gradle.executor": "Run",
     "Gradle.dont delete [:BackGollajyuApplication.main()].executor": "Run",
     "Gradle.dont delete.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
@@ -83,21 +94,19 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.BackGollajyuApplication.executor": "Run",
     "git-widget-placeholder": "comment-get-back",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/SSAFY/Desktop/S10P12E107",
+    "last_opened_file_path": "C:/Users/82104/Desktop/S10P12E107/dont delete",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.general",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Spring Boot.BackGollajyuApplication">
+  <component name="RunManager">
     <configuration name="dont delete" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -117,14 +126,6 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <RunAsTest>false</RunAsTest>
       <method v="2" />
-    </configuration>
-    <configuration name="BackGollajyuApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
-      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="back-gollajyu.main" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.jaecheop.backgollajyu.BackGollajyuApplication" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
     <recent_temporary>
       <list>
@@ -147,45 +148,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1705883839633</updated>
-      <workItem from="1706079707567" duration="10409000" />
+      <workItem from="1706227138351" duration="3480000" />
+      <workItem from="1706248792030" duration="10356000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="comment-get-back" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dont delete/src/main/java/com/jaecheop/backgollajyu/comment/entity/Comment.java</url>
-          <line>18</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

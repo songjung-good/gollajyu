@@ -17,5 +17,5 @@ public class CategoryDto {
 
     private int categoryId;
     private String categoryName;
-    private List<Tag> tags;
+    private List<String> tagNameList;
 }

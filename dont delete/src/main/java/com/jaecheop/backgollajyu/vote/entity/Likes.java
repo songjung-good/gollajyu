@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @Data
@@ -26,4 +28,6 @@ public class Likes {
     @JoinColumn(name="vote_id")
     @ManyToOne
     private Vote vote;
+
+    private LocalDateTime createAt;
 }

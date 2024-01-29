@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.vote.model;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.member.model.MemberDto;
 import com.jaecheop.backgollajyu.vote.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,14 +18,16 @@ import java.util.List;
 public class VoteResDto {
 
     private Long voteId;
-    private Member memberId;
+    private MemberDto memberDto;
     private String title;
     private String description;
     private LocalDateTime createAt;
+    private Long selectedItemId;
+
+    private List<LikeDto> likes;
     private CategoryDto categoryDto; // 참조 어케 해야되지?
     private List<VoteItemResDto> voteItems;  // Include List of VoteItemDto
-    private Long selectedItemId;
-    private List<LikeDto> likes;  // Include List of LikeDto
+
 
     // Constructors, getters, setters...
 }

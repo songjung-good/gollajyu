@@ -2,13 +2,14 @@ package com.jaecheop.backgollajyu.vote.entity;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
-import com.jaecheop.backgollajyu.member.model.Birthday;
 import com.jaecheop.backgollajyu.member.model.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -33,7 +34,7 @@ public class VoteResult {
     @JoinColumn(name="member_id")
     private Member member;
 
-    private int age;
+    private Integer age;
 
     @ManyToOne
     @JoinColumn(name = "type_id")
@@ -47,5 +48,10 @@ public class VoteResult {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    private LocalDateTime createAt;
 
 }
