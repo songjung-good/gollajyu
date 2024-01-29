@@ -50,10 +50,6 @@ public class VoteResult {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
     private LocalDateTime createAt;
 
 }

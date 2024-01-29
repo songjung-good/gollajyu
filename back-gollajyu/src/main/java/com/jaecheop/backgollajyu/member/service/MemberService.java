@@ -141,7 +141,7 @@ public class MemberService {
                 ? categoryRepository.findAllById(categoryId) : categoryRepository.findAll();
 
         for (Category category : categories) {
-            Map<String, Long> categoryStatistics = voteService.generateStatistics(voteResultRepository.findByMemberIdAndCategoryId(memberId, category.getId()), null);
+            Map<String, Long> categoryStatistics = voteService.generateStatistics(voteResultRepository.findAllByMemberIdAndCategoryId(memberId, category.getId()), null);
             CategoryInfoResDto categoryInfoResDto = CategoryInfoResDto.buildFromStatistics(category, categoryStatistics);
             categoryInfoResDtoList.add(categoryInfoResDto);
         }
