@@ -26,8 +26,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     // 댓글 쓴 투표 시간 순
     @Query("SELECT cm.vote FROM Comment cm WHERE cm.id = :commentId " +
-            "ORDER BY cm.createAt DESC")
-    List<Vote> findVoteByCommentId(@Param("commentId") Long commentId);
+            "ORDER BY cm.commentCreateAt DESC")
+    List<Vote> findVoteByCommentId(@Param("commentId") int commentId);
 
 
     // 좋아요한 투표 시간순 정렬
