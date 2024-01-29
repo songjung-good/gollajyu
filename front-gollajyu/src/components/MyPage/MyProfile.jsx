@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
-import { fontSize } from "@mui/system";
 
 const MyProfile = () => {
   // ----------- 반응형 웹페이지 구현 -----------
