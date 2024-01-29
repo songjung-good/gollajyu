@@ -16,7 +16,7 @@ const VoteButton = () => {
   };
 
   const buttonCloseClick = () => {
-    setButtonHovered(false);  // X 버튼 클릭 시 떠남 상태로 설정
+    setButtonHovered(false);  // 클릭 시 떠남 상태로 설정
   };
   
   // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
@@ -79,7 +79,6 @@ const VoteButton = () => {
     // 위치
     position: "absolute", // relative를 기준 위치로
     right: "5px", // 오른쪽 여백: 5px
-    bottom: "80px", // 아래 여백: 80px
 
     // 디자인
     width: "300px", // 박스 가로 길이: 300px
@@ -126,7 +125,7 @@ const VoteButton = () => {
   };
 
   // ----------- 설명 텍스트 스타일 -----------
-  const textExplanationStyle = {
+  const textDescriptionStyle = {
     // 상속
     ...textStyle, // 기본 텍스트 스타일 상속
 
@@ -135,7 +134,7 @@ const VoteButton = () => {
     color: "#4A4A4A", // 글자 색: 회색
   };
 
-  // ----------- 종류별 투표 버튼 스타일 -----------
+  // ----------- 투표 세부 버튼 스타일 -----------
   const circleStyle = {
     // 위치
     position: "absolute", // relative를 기준 위치로
@@ -151,33 +150,6 @@ const VoteButton = () => {
     transition: "opacity 0.5s ease, transform 0.5s ease", // 투명도와 위치 변화에 대한 애니메이션 효과 설정
   };
 
-  // ----------- 지금골라쥬 버튼 스타일 -----------
-  const nowCircleStyle = {
-    // 상속
-    ...circleStyle, // 원 스타일 상속
-
-    // 위치
-    bottom: buttonHovered ? "80px" : "-200px", // 마우스 호버 시 원이 나타나게끔 설정
-  };
-
-  // ----------- 간단골라쥬 버튼 스타일 -----------
-  const simpleCircleStyle = {
-    // 상속
-    ...circleStyle, // 원 스타일 상속
-
-    // 위치
-    bottom: buttonHovered ? "150px" : "-200px", // 마우스 호버 시 원이 나타나게끔 설정
-  };
-
-  // ----------- 구매골라쥬 버튼 스타일 -----------
-  const purchaseCircleStyle = {
-    // 상속
-    ...circleStyle, // 원 스타일 상속
-
-    // 위치
-    bottom: buttonHovered ? "220px" : "-200px", // 마우스 호버 시 원이 나타나게끔 설정
-  };
-
   // ----------- 이미지 스타일 -----------
   const imageStyle = {
     // 디자인
@@ -187,111 +159,89 @@ const VoteButton = () => {
     objectFit: "cover", // 이미지가 부모 요소에 맞게 자동 조절되도록 설정
   };
 
-  // ----------- 닫기 버튼 스타일 -----------
-  const closeButtonStyle = {
-    // 위치
-    position: "absolute", // relative를 기준으로 고정
-    bottom: buttonHovered ? "290px" : "-200px", // 마우스 호버 시 버튼이 나타나게끔 설정
-    transform: `translateX(+50%) translateY(${buttonHovered ? 0 : 100}%)`, // 마우스 호버 시 위치 이동
-
-    // 디자인
-    right: "50%", // 화면의 중앙을 기준으로 오른쪽 50% 설정
-    width: "60px", // 버튼 가로 길이: 60px
-    opacity: buttonHovered ? 1 : 0, // 마우스 호버 시 투명도를 1로, 아닐 경우 0으로 설정
-    transition: "opacity 0.5s ease, transform 0.5s ease", // 투명도와 위치 변화에 대한 애니메이션 효과 설정
-
-    // 글자
-    fontFamily: "GmarketSansMedium", // 중간 폰트로 설정
-    color: "#4A4A4A", // 글자 색: 회색
-  };
-
   // --------------------------------- css 끝 ---------------------------------
 
-  
+
+  // ----------- 버튼 아이템 목록 -----------
+  const buttonItems = [
+    {
+      label: "지금골라쥬!",
+      image: NowGollajyuImage,
+      boxBottom: 80,
+      circleBottom: buttonHovered ? 80 : -200,
+      description: "라이브 방송으로 선택을 맡겨봐요",
+      hovered: nowGollajyuHovered,
+      mouseEnter: nowGollajyuHover,
+      mouseLeave: nowGollajyuLeave,
+    },
+    {
+      label: "간단골라쥬!",
+      image: SimpleGollajyuImage,
+      boxBottom: 150,
+      circleBottom: buttonHovered ? 150 : -200,
+      description: "간단한 질문으로 선택을 맡겨봐요",
+      hovered: simpleGollajyuHovered,
+      mouseEnter: simpleGollajyuHover,
+      mouseLeave: simpleGollajyuLeave,
+    },
+    {
+      label: "구매골라쥬!",
+      image: PurchaseGollajyuImage,
+      boxBottom: 220,
+      circleBottom: buttonHovered ? 220 : -200,
+      description: "상세한 질문으로 선택을 맡겨봐요",
+      hovered: purchaseGollajyuHovered,
+      mouseEnter: purchaseGollajyHover,
+      mouseLeave: purchaseGollajyLeave,
+    },
+  ];
+
+  // ----------- 버튼 렌더링 함수 -----------
+  const renderButtons = () => {
+    return buttonItems.map((button, index) => (
+      <div  // ----------- 설명란 -----------
+        key={index}
+        onMouseLeave={() => button.mouseLeave()}
+      >
+        {button.hovered && buttonHovered && (
+          <div style={{ ...boxStyle, bottom: `${button.boxBottom}px` }}>
+            <div style={textContainerStyle}>
+              <div style={textStyle}>{button.label}</div>
+              <div style={textPointStyle}>(10P 차감됩니다)</div>
+            </div>
+            <div style={textContainerStyle}>
+              <div style={textDescriptionStyle}>{button.description}</div>
+            </div>
+          </div>
+        )}
+        <div  // ------------- 이미지 -------------
+          style={{ ...circleStyle, bottom: `${button.circleBottom}px` }}
+          onMouseEnter={() => button.mouseEnter()}
+        >
+          <img style={imageStyle} src={button.image} alt={button.label} />
+        </div>
+      </div>
+    ));
+  };
+
   return (
-    <div style={voteButtonContainerStyle} onMouseEnter={buttonHover}>
+    <div
+      style={voteButtonContainerStyle}
+      onMouseEnter={buttonHover}
+      onClick={buttonCloseClick}  // 클릭 시 세부 버튼 닫기
+    >
+      {/* ------------- 투표 버튼 ------------- */}
       <button style={voteButtonStyle}>
-        투표
-        <br />
-        생성
-        {/* --------------------------------- '지금골라쥬!' 버튼 --------------------------------- */}
-        <div onMouseLeave={nowGollajyuLeave}>
-          {/* ------------- 설명란 ------------- */}
-          {nowGollajyuHovered && (
-            <div style={boxStyle}>
-              <div style={textContainerStyle}>
-                <div style={textStyle}>지금골라쥬!</div>
-                <div style={textPointStyle}>(10P 차감됩니다)</div>
-              </div>
-              <div style={textContainerStyle}>
-                <div style={textExplanationStyle}>
-                  라이브 방송으로 선택을 맡겨봐요
-                </div>
-              </div>
-            </div>
-          )}
+        {buttonHovered ? "X" : (
+          <>
+            투표
+            <br />
+            생성
+          </>
+        )}
 
-          {/* ------------- 이미지 ------------- */}
-          <div style={nowCircleStyle} onMouseEnter={nowGollajyuHover}>
-            <img style={imageStyle} src={NowGollajyuImage} alt="지금골라쥬" />
-          </div>
-        </div>
-        {/* --------------------------------- '간단골라쥬!' 버튼 --------------------------------- */}
-        <div onMouseLeave={simpleGollajyuLeave}>
-          {/* ------------- 설명란 ------------- */}
-          {simpleGollajyuHovered && (
-            <div style={{ ...boxStyle, bottom: "150px" }}>
-              <div style={textContainerStyle}>
-                <div style={textStyle}>간단골라쥬!</div>
-                <div style={textPointStyle}>(10P 차감됩니다)</div>
-              </div>
-              <div style={textContainerStyle}>
-                <div style={textExplanationStyle}>
-                  간단한 질문으로 선택을 맡겨봐요
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ------------- 이미지 ------------- */}
-          <div style={simpleCircleStyle} onMouseEnter={simpleGollajyuHover}>
-            <img
-              style={imageStyle}
-              src={SimpleGollajyuImage}
-              alt="간단골라쥬"
-            />
-          </div>
-        </div>
-        {/* --------------------------------- '구매골라쥬!' 버튼 --------------------------------- */}
-        <div onMouseLeave={purchaseGollajyLeave}>
-          {/* ------------- 설명란 ------------- */}
-          {purchaseGollajyuHovered && (
-            <div style={{ ...boxStyle, bottom: "220px" }}>
-              <div style={textContainerStyle}>
-                <div style={textStyle}>구매골라쥬!</div>
-                <div style={textPointStyle}>(10P 차감됩니다)</div>
-              </div>
-              <div style={textContainerStyle}>
-                <div style={textExplanationStyle}>
-                  상세한 질문으로 선택을 맡겨봐요
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ------------- 이미지 ------------- */}
-          <div style={purchaseCircleStyle} onMouseEnter={purchaseGollajyHover}>
-            <img
-              style={imageStyle}
-              src={PurchaseGollajyuImage}
-              alt="구매골라쥬"
-            />
-          </div>
-        </div>
-        {/* --------------------------------- 투표 생성 닫기 버튼 --------------------------------- */}
-        <div style={closeButtonStyle} onClick={buttonCloseClick}>
-          X
-        </div>
+        {/* ------------- 버튼 렌더링 함수 호출 ------------- */}
+        {renderButtons()}
       </button>
     </div>
   );
