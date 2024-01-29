@@ -8,7 +8,7 @@ const MyProfile = () => {
   const [testButtonHovered, setTestButtonHovered] = useState(false);
 
   const body = {
-    padding: "70px",
+    // padding: "70px",
   };
 
   const containerStyle = {
