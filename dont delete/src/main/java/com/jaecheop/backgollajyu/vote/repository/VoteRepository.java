@@ -27,4 +27,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     @Query("SELECT r.vote FROM VoteResult r WHERE r.member.id = :memberId")
     List<Vote> findVoteLikesByMemberId(@Param("memberId") Long memberId);
+
+    List<Vote> findAllByOrderByCreateAtDesc();
+
+    List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId);
 }

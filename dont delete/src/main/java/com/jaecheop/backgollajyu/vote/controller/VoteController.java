@@ -1,9 +1,11 @@
 package com.jaecheop.backgollajyu.vote.controller;
 
+import com.jaecheop.backgollajyu.member.model.LoginResDto;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
+import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -70,10 +72,23 @@ public class VoteController {
             return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
         }
 
-        System.out.println("result.getData() = ::::::::::::::::::" + result.getData());
-
         return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
 
+    }
+
+    @GetMapping("")
+    public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam int categoryId, HttpSession session){
+
+        System.out.println("categoryId = " + categoryId);
+        System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto)session.getAttribute("memberInfo"));
+        LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
+        ServiceResult result = voteService.getVoteListByCategory(categoryId, sessionInfo);
+
+        if(!result.isResult()){
+            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+        }
+
+        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
     }
 
 }

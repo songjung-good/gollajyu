@@ -3,6 +3,7 @@ package com.jaecheop.backgollajyu.vote.service;
 import com.jaecheop.backgollajyu.comment.entity.Comment;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.member.model.LoginResDto;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.*;
@@ -11,6 +12,7 @@ import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -377,6 +379,7 @@ public class VoteService {
                 .type(member.getType())
                 .gender(member.getGender())
                 .tag(tag)
+                .category(vote.getCategory())
                 .build();
         voteResultRepository.save(voteResult);
 
@@ -418,7 +421,7 @@ public class VoteService {
 
         // 상세정보 - 나이, 성별, 성향 별
         // 1. 투표 관련 정보 + 총 투표 수 + 좋아요
-        // TODO: 필터링 된 투표 결과 리스트 받아오기
+        // 필터링 된 투표 결과 리스트 받아오기
         List<VoteResult> voteResultList = filteredVoteResultList(vote.getVoteResultList(), voteDetailReqDto.getFilter());
 
         VoteInfoDto voteInfoDto = VoteInfoDto.builder()
@@ -433,20 +436,18 @@ public class VoteService {
         List<VoteItemInfoDto> voteItemInfoDtoList = new ArrayList<>();
         for (VoteItem voteItem : vote.getVoteItemList()) {
             // 아이템 당 표 개수 choiceCount
-            // TODO: 아이템 당 필터링된 투표 결과 O
             List<VoteResult> voteResultListPerItem = filteredVoteResultList(voteItem.getVoteResultList(), voteDetailReqDto.getFilter());
             Long choiceCnt = (long) voteResultListPerItem.size();
 
             // 아이템 - 태그 별 개수 ==> 즉, TagCount의 모든 개수를 더하면 = choiceCnt
             List<TagCount> tagCountList = new ArrayList<>(); // 각 태그 별 개수를 담은 리스트
             List<Tag> tagList = vote.getCategory().getTagList(); // 어떤 카테고리의 태그리스트(static)
+            // TODO:::::: map으로 바꾸면 for문 덜 돌게 할 수 있으므로 고치기!!
             for (Tag tag : tagList) {
-                // TODO: 필더된 결과에서 일치하는 테그의 개수를 센다
                 Long count = 0L;
                 for (VoteResult vr : voteResultListPerItem) {
                     if (vr.getTag().getId() == tag.getId()) count++;
                 }
-                //Long count = voteResultRepository.countByVoteItemIdAndTagId(voteItem.getId(), tag.getId());
                 tagCountList.add(
                         TagCount.builder()
                                 .tagId(tag.getId())
@@ -477,13 +478,6 @@ public class VoteService {
                 .commentList(commentList)
                 .build();
 
-
-        //List<Vote> votes = voteRepository.findByVoteId(voteId);
-
-        // builder()
-        // .voteResDto(makeVoteResDtoList(votes, memberId, Req).get(0))
-
-        System.out.println("voteDetailResDto = " + voteDetailResDto);
         return ServiceResult.success(voteDetailResDto);
     }
 
@@ -497,7 +491,7 @@ public class VoteService {
                     filterByType.add(vr);
                 }
             }
-        } else{
+        } else {
             filterByType = voteResultList;
         }
 
@@ -509,7 +503,7 @@ public class VoteService {
                     filterByTypeAndAge.add(vr);
                 }
             }
-        } else{
+        } else {
             filterByTypeAndAge = filterByType;
         }
 
@@ -521,7 +515,7 @@ public class VoteService {
                     filterByTypeAndAgeAndGender.add(vr);
                 }
             }
-        } else{
+        } else {
             filterByTypeAndAgeAndGender = filterByTypeAndAge;
         }
         System.out.println(filterByTypeAndAgeAndGender);
@@ -530,4 +524,181 @@ public class VoteService {
 
     }
 
+    public ServiceResult getVoteListByCategory(int categoryId, LoginResDto memberSession) {
+        // 반환 할 결과
+        VoteListResDto voteListResDto = null;
+
+        // 로그인 하지 않은 사용자
+        if (memberSession == null) {
+            // 카테고리가 전체일때,
+            if (categoryId == 0) {
+                // 기본 정보
+                voteListResDto = VoteListResDto.builder()
+                        .categoryName("All")
+                        .tagList(null) // 전체에서는 tagList를 특정할 수 없으므로 null로 주고, 각 투표마다 태그 리스트를 따로 저장해준다.
+                        .build();
+                // 단일 투표의 상세 리스트
+                List<ListVoteDto> allVoteList = voteRepository
+                        .findAllByOrderByCreateAtDesc()
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v)).toList();
+                makeVoteDetail(allVoteList);
+                voteListResDto.updateVoteInfoList(allVoteList);
+            }
+
+            // 카테고리가 전체가 아닐 때
+            else {
+                // 카테고리 유무 확인
+                Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+                if (optionalCategory.isEmpty()) {
+                    return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+                }
+                Category category = optionalCategory.get();
+
+                // 순환참조 오류 해결 - Dto 사용
+                List<Tag> allByCategoryId = tagRepository.findAllByCategoryId(category.getId());
+                List<TagDto> tagList = allByCategoryId.stream().map(t -> TagDto.convertToDto(t)).toList();
+
+                // 기본 정보 담기
+                voteListResDto = VoteListResDto.builder()
+                        .categoryName(category.getCategoryName())
+                        .tagList(tagList)
+                        .build();
+
+                // 해당 카테고리 투표 리스트 최신순으로 담기
+                List<ListVoteDto> allVoteList = voteRepository
+                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId)
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+
+                //  단일 투표들의 상세 정보 리스트 생성
+                makeVoteDetail(allVoteList);
+                voteListResDto.updateVoteInfoList(allVoteList);
+            }
+        }
+//         로그인 한 사용자
+        else {
+            // 결과에 담을 투표 리스트 기본 정보
+            // 카테고리가 전체일때
+            if (categoryId == 0) {
+                // 전체 투표에서 투표 한 투표 거르기
+                List<ListVoteDto> allVoteList = voteRepository
+                        .findAllByOrderByCreateAtDesc()
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+                List<ListVoteResultDto> voteResultList = voteResultRepository
+                        .findAllByMemberId(memberSession.getMemberId())
+                        .stream()
+                        .map(vr -> ListVoteResultDto.convertToDto(vr))
+                        .toList();// 참여한 투표 결과 리스트
+
+                List<ListVoteDto> filteredVoteList = filterJoinedVote(allVoteList, voteResultList);
+
+
+                // 기본 정보
+                voteListResDto = VoteListResDto.builder()
+                        .categoryName("All")
+                        .tagList(null) // 전체에서는 tagList를 특정할 수 없으므로 null로 주고, 각 투표마다 태그 리스트를 따로 저장해준다.
+                        .build();
+
+
+                //  단일 투표들의 상세 정보 리스트 생성
+                makeVoteDetail(filteredVoteList);
+                voteListResDto.updateVoteInfoList(filteredVoteList);
+
+            }
+
+//             카테고리가 전체가 아닐 때
+            else {
+                // 카테고리 유무 확인
+                Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+                if (optionalCategory.isEmpty()) {
+                    return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+                }
+                Category category = optionalCategory.get();
+
+                List<Tag> allByCategoryId = tagRepository.findAllByCategoryId(category.getId());
+                List<TagDto> tagList = allByCategoryId.stream().map(t -> TagDto.convertToDto(t)).toList();
+
+                // 결과 기본 정보 담기
+                voteListResDto = VoteListResDto.builder()
+                        .categoryName(category.getCategoryName())
+                        .tagList(tagList)
+                        .build();
+
+                // 해당 카테고리 투표 리스트 최신순으로 담기
+                // 참여한 투표 거르기
+                List<ListVoteDto> allVoteList = voteRepository
+                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId)
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+                List<ListVoteResultDto> voteResultList = voteResultRepository
+                        .findAllByMemberIdAndCategoryId(memberSession.getMemberId(), category.getId())
+                        .stream()
+                        .map(vr -> ListVoteResultDto.convertToDto(vr))
+                        .toList();
+                List<ListVoteDto> filteredVoteList = filterJoinedVote(allVoteList, voteResultList);
+
+
+                //  단일 투표들의 상세 정보 리스트 생성
+                makeVoteDetail(filteredVoteList);
+                voteListResDto.updateVoteInfoList(filteredVoteList);
+            }
+        }
+        return ServiceResult.success(voteListResDto);
+
+    }
+
+    // 투표 상세 정보 for 투표 목록
+    private void makeVoteDetail(List<ListVoteDto> voteList) {
+        for (ListVoteDto vote : voteList) {
+            // 단일 투표 태그 리스트 정보
+            List<Tag> allByCategoryId = tagRepository.findAllByCategoryId(vote.getCategoryId());
+            List<TagDto> tagList = allByCategoryId.stream().map(t -> TagDto.convertToDto(t)).toList();
+            vote.updateTagList(tagList);
+
+            // 아이템들 기본 정보
+            List<ListVoteItemDto> listVoteItemDtoList = makeVoteItemDetailList(vote);
+            vote.updateVoteItemList(listVoteItemDtoList);
+        }
+    }
+
+    // voteItem상세 for 목록조회
+    private List<ListVoteItemDto> makeVoteItemDetailList(ListVoteDto vote) {
+        List<VoteItem> voteItemList = voteRepository.findById(vote.getVoteId()).get().getVoteItemList();
+        List<ListVoteItemDto> listVoteItemDtoList = new ArrayList<>();
+        for (VoteItem voteItem : voteItemList) {
+            listVoteItemDtoList.add(
+                    ListVoteItemDto.builder()
+                            .voteItemId(voteItem.getId())
+                            .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                            .voteItemDesc(voteItem.getVoteItemDesc())
+                            .price(voteItem.getPrice())
+                            .build()
+            );
+        }
+        return listVoteItemDtoList;
+    }
+
+    // 참여한 투표 거르기
+    private List<ListVoteDto> filterJoinedVote(List<ListVoteDto> allVoteList, List<ListVoteResultDto> voteResultList) {
+        List<ListVoteDto> filteredVoteList = new ArrayList<>();
+        for (ListVoteDto vote : allVoteList) {
+            boolean isExist = false;
+            for (ListVoteResultDto voteResult : voteResultList) {
+                if (Objects.equals(vote.getVoteId(), voteResult.getVoteId())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                filteredVoteList.add(vote);
+            }
+        }
+        System.out.println("filteredVoteList!!! = " + filteredVoteList);
+        return filteredVoteList;
+    }
 }

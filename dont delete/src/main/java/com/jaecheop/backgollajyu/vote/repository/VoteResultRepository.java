@@ -20,4 +20,8 @@ public interface VoteResultRepository extends JpaRepository<VoteResult, Long> {
 
 
     Long countByVoteItemIdAndTagId(Long voteItemId, int tagId);
+
+    List<VoteResult> findAllByMemberId(Long memberId);
+
+    List<VoteResult> findAllByMemberIdAndCategoryId(Long memberId, int categoryId);
 }
