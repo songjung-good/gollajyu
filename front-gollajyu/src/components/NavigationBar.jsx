@@ -145,62 +145,62 @@ const NavigationBar = () => {
     zIndex: 9999, // 내비게이션 바를 가장 위의 레이어에 고정
 
     // 디자인
-    width: "100%",                                  // 내비게이션 바 배경 넓이
-    height: "100px",                                // 내비게이션 바 높이: 100px
-    background: "#FFFFFF",                          // 배경 색상: 흰색
+    width: "100%", // 내비게이션 바 배경 넓이
+    height: "100px", // 내비게이션 바 높이: 100px
+    background: "#FFFFFF", // 배경 색상: 흰색
   }
 
   // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
     // 상속
-    ...navigationBarBackgroundStyle,                // 배경 스타일 상속
+    ...navigationBarBackgroundStyle, // 배경 스타일 상속
 
     // 위치
-    left: "50%",                                    // 화면 가로 중앙으로 이동
-    transform: "translateX(-50%)",                  // 화면 가로 중앙으로 이동
+    left: "50%", // 화면 가로 중앙으로 이동
+    transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "90%" : (isMedium ? "740px" : "480px"),  // (반응형) 내비게이션 바 넓이
+    width: isLarge ? "90%" : (isMedium ? "740px" : "480px"), // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
-    display: "flex",                                // 항목 수평 정렬
-    justifyContent: "space-between",                // 항목 균일 간격으로 정렬
-    alignItems: "center",                           // 항목 수직 정렬
+    display: "flex", // 항목 수평 정렬
+    justifyContent: "space-between", // 항목 균일 간격으로 정렬
+    alignItems: "center", // 항목 수직 정렬
   };
 
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: isSmall ? "200px" : "240px",             // (반응형) 로고 넓이
+    width: isSmall ? "200px" : "240px", // (반응형) 로고 넓이
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
-    fontFamily: "HSSantokkiRegular",                // 로고 폰트로 변경
-    fontSize: "48px",                               // 글자 크기: 48px
-    color: "#FFD257",                               // 글자 색: 노란색
+    fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
+    fontSize: "48px", // 글자 크기: 48px
+    color: "#FFD257", // 글자 색: 노란색
   };
 
   // ----------- 링크 컨테이너 스타일 -----------
   const linkContainerStyle = {
     // 디자인
-    width: "50%",                                   // 가로 넓이: 50%
+    width: "50%", // 가로 넓이: 50%
     
     // 컨텐츠 정렬
-    display: "flex",                                // 리스트 수평 정렬
-    alignItems: "center",                           // 리스트 수직 정렬
-    justifyContent: "space-between",                // 항목 균일 간격으로 정렬
+    display: "flex", // 리스트 수평 정렬
+    alignItems: "center", // 리스트 수직 정렬
+    justifyContent: "space-between", // 항목 균일 간격으로 정렬
   }
 
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
     // 디자인
-    padding: !isLarge ? "0 15px" : "0px",           // (반응형) 항목 좌우 padding: 15px
-    height: "100px",                                // 항목 높이: 100px
+    padding: !isLarge ? "0 15px" : "0px", // (반응형) 항목 좌우 padding: 15px
+    height: "100px", // 항목 높이: 100px
 
     // 글자
-    fontSize: isLarge ? "20px" : "18px",            // (반응형) 글자 크기
+    fontSize: isLarge ? "20px" : "18px", // (반응형) 글자 크기
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
@@ -211,119 +211,119 @@ const NavigationBar = () => {
   // ----------- 링크 아이템 active 스타일 -----------
   const linkItemActiveStyle = {
     // 상속
-    ...linkItemStyle,                               // 링크 아이템 스타일 상속
+    ...linkItemStyle, // 링크 아이템 스타일 상속
 
     // 글자
-    fontWeight: "bold",                             // 활성화 시 글자 두껍게
-    color: "#000000",                               // 활성화 시 글자 색: 검정
+    fontWeight: "bold", // 활성화 시 글자 두껍게
+    color: "#000000", // 활성화 시 글자 색: 검정
   }
 
   // ----------- 아이템 hover 스타일 -----------
   const itemHoverStyle = {
     // 디자인
-    width: "100%",                                  // 가로 길이: 100%
-    height: "5px",                                  // 세로 길이: 5px
-    transition: "background 0.2s ease",             // 나타날 때 애니메이션
+    width: "100%", // 가로 길이: 100%
+    height: "5px", // 세로 길이: 5px
+    transition: "background 0.2s ease", // 나타날 때 애니메이션
   }
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
     // 디자인
-    width: !isLarge ? "360px" : "240px",            // (반응형) 버튼 리스트 넓이
-    height: "100px",                                // 높이: 100px
+    width: !isLarge ? "360px" : "240px", // (반응형) 버튼 리스트 넓이
+    height: "100px", // 높이: 100px
 
     // 컨텐츠 정렬
-    display: "flex",                                // 링크 수평 정렬
-    alignItems: "center",                           // 링크 수직 정렬
-    justifyContent: "flex-end",                     // 내부 버튼 오른쪽 정렬
+    display: "flex", // 링크 수평 정렬
+    alignItems: "center", // 링크 수직 정렬
+    justifyContent: "flex-end", // 내부 버튼 오른쪽 정렬
   }
 
   // ----------- 프로필 컨테이너 스타일 -----------
   const profileContainerStyle = {
     // 위치
-    position: "relative",                           // 기준 위치
+    position: "relative", // 기준 위치
   }
 
   // ----------- 프로필 버튼 스타일 -----------
   const myPageStyle = {
     // 디자인
-    margin: "0 5px",                                // 버튼 좌우 margin: 5px
-    height: "100px",
+    margin: "0 5px", // 버튼 좌우 margin: 5px
+    height: "100px", // 버튼 높이: 100px
 
     // 컨텐츠 정렬
-    display: "flex",                                // 버튼 수평 정렬
-    alignItems: "center",                           // 버튼 수직 정렬
+    display: "flex", // 버튼 수평 정렬
+    alignItems: "center", // 버튼 수직 정렬
   };
 
   // ----------- 프로필 이미지 스타일 -----------
   const profileImageStyle = {
     // 디자인
-    marginRight: "10px",                            // 오른쪽 여백: 10px
-    width: "35px",                                  // 이미지 가로 길이: 35px
-    height: "35px",                                 // 이미지 세로 길이: 35px
-    borderRadius: "50%",                            // 둥근 테두리: 50% (원)
+    marginRight: "10px", // 오른쪽 여백: 10px
+    width: "35px", // 이미지 가로 길이: 35px
+    height: "35px", // 이미지 세로 길이: 35px
+    borderRadius: "50%", // 둥근 테두리: 50% (원)
   };
 
   // ----------- 공통 메뉴 스타일 -----------
   const commonMenuStyle = {
     // 위치
-    position: "absolute",                           // 메뉴 위치 기준
-    top: "90px",                                    // 상단 여백: 100px
-    right: "0px",                                   // 오른쪽 여백: 0px
+    position: "absolute", // 메뉴 위치 기준
+    top: "90px", // 상단 여백: 100px
+    right: "0px", // 오른쪽 여백: 0px
 
     // 디자인
-    padding: "10px",                                // 메뉴 내부 여백: 10px
-    width: "180px",                                 // 가로 길이: 180px
-    background: "#FFFFFF",                          // 메뉴 배경 색: 흰색
-    boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",    // 메뉴 그림자
+    padding: "10px", // 메뉴 내부 여백: 10px
+    width: "180px", // 가로 길이: 180px
+    background: "#FFFFFF", // 메뉴 배경 색: 흰색
+    boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
 
     // 컨텐츠 정렬
-    flexDirection: "column",                        // 아이템 세로 방향으로 배치
-    alignItems: "flex-end",                         // 아이템 오른쪽 정렬
+    flexDirection: "column", // 아이템 세로 방향으로 배치
+    alignItems: "flex-end", // 아이템 오른쪽 정렬
   };
 
   // ----------- 프로필 메뉴 스타일 -----------
   const profileMenuStyle = {
     // 상속
-    ...commonMenuStyle,                             // 공통 메뉴 스타일 상속
+    ...commonMenuStyle, // 공통 메뉴 스타일 상속
 
     // 컨텐츠 정렬
-    display: profileHovered ? "flex" : "none",      // 메뉴 오픈 여부
+    display: profileHovered ? "flex" : "none", // 메뉴 오픈 여부
   };
 
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
     // 디자인
-    padding: "0 15px",                              // 항목 좌우 padding: 15px
-    height: "60px",                                 // 항목 높이: 60px
+    padding: "0 15px", // 항목 좌우 padding: 15px
+    height: "60px", // 항목 높이: 60px
 
     // 글자
-    fontSize: "18px",                               // 글자 크기: 18px
-    color: "#4A4A4A",                               // 글자 색: 회색
+    fontSize: "18px", // 글자 크기: 18px
+    color: "#4A4A4A", // 글자 색: 회색
 
     // 컨텐츠 정렬
-    display: "flex",                                // 링크 수평 정렬
-    alignItems: "center",                           // 링크 수직 정렬
+    display: "flex", // 링크 수평 정렬
+    alignItems: "center", // 링크 수직 정렬
   };
 
   // ----------- 메뉴 아이템 active 스타일 -----------
   const menuItemActiveStyle = {
     // 상속
-    ...menuItemStyle,                               // 메뉴 아이템 스타일 상속
+    ...menuItemStyle, // 메뉴 아이템 스타일 상속
 
     // 글자
-    fontWeight: "bold",                             // 글자 두껍게
-    color: "#000000",                               // 글자 색: 검정
+    fontWeight: "bold", // 글자 두껍게
+    color: "#000000", // 글자 색: 검정
   }
 
   // ----------- 버튼 공통 스타일 -----------
   const buttonStyle = {
     // 디자인
-    margin: "0 5px",                                // 버튼 좌우 margin: 5px
-    width: "70px",                                  // 버튼 넓이: 70px
-    height: "35px",                                 // 버튼 높이: 35px
-    borderRadius: "5px",                            // 둥근 테두리: 5px
-    transition: "background 0.5s ease",             // 마우스 호버 시 색깔 천천히 변경
+    margin: "0 5px", // 버튼 좌우 margin: 5px
+    width: "70px", // 버튼 넓이: 70px
+    height: "35px", // 버튼 높이: 35px
+    borderRadius: "5px", // 둥근 테두리: 5px
+    transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
 
     // 글자
     color: "#4A4A4A", // 글자 색: 회색
@@ -335,8 +335,8 @@ const NavigationBar = () => {
     ...buttonStyle, // 버튼 공통 스타일 상속
 
     // 디자인
-    border: "3px solid",                            // 테두리 스타일        
-    borderColor: "#BEBEBE",                         // 테두리 색: 연한 회색
+    border: "3px solid", // 테두리 스타일        
+    borderColor: "#BEBEBE", // 테두리 색: 연한 회색
 
     // 글자
     color: "#9C9C9C", // 글자 색: 회색
@@ -345,7 +345,7 @@ const NavigationBar = () => {
   // ----------- 로그아웃 버튼 hover 스타일 -----------
   const logoutButtonHoverStyle = {
     // 디자인
-    background: "#D9D9D9",                          // 마우스 호버 시 배경 색상 변경
+    background: "#D9D9D9", // 마우스 호버 시 배경 색상 변경
   }
 
   // ----------- 로그인 버튼 스타일 -----------
@@ -354,13 +354,13 @@ const NavigationBar = () => {
     ...buttonStyle, // 버튼 공통 스타일 상속
 
     // 디자인
-    background: "#CEFA70",                          // 마우스 호버 시 배경 색상 변경
+    background: "#CEFA70", // 마우스 호버 시 배경 색상 변경
   };
 
   // ----------- 로그인 버튼 hover 스타일 -----------
   const loginButtonHoverStyle = {
     // 디자인
-    background: "#ACD145",                          // 마우스 호버 시 배경 색상 변경
+    background: "#ACD145", // 마우스 호버 시 배경 색상 변경
   }
   
   // ----------- 회원가입 버튼 스타일 -----------
@@ -369,27 +369,27 @@ const NavigationBar = () => {
     ...buttonStyle, // 버튼 공통 스타일 상속
 
     // 디자인
-    background: "#FFD257",                          // 마우스 호버 시 배경 색상 변경
+    background: "#FFD257", // 마우스 호버 시 배경 색상 변경
   };
 
   // ----------- 회원가입 버튼 hover 스타일 -----------
   const signupButtonHoverStyle = {
     // 디자인
-    background: "#E6BE3D",                          // 마우스 호버 시 배경 색상 변경
+    background: "#E6BE3D", // 마우스 호버 시 배경 색상 변경
   }
 
   // ----------- 햄버거 컨테이너 스타일 -----------
   const hamburgerContainerStyle = {
-    position: "relative",                           // 기준 위치
+    position: "relative", // 기준 위치
   }
 
 
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerStyle = {
     // 디자인
-    marginTop: "5px",                               // 상단 margin: 5px
-    width: "50px",                                  // 버튼 가로 길이: 50px
-    height: "95px",                                 // 버튼 세로 길이: 95px
+    marginTop: "5px", // 상단 margin: 5px
+    width: "50px", // 버튼 가로 길이: 50px
+    height: "95px", // 버튼 세로 길이: 95px
 
     // 글자
     fontSize: "28px", // 햄버거 버튼 사이즈
@@ -399,10 +399,10 @@ const NavigationBar = () => {
   // ----------- 햄버거 메뉴 스타일 -----------
   const hamburgerMenuStyle = {
     // 상속
-    ...commonMenuStyle,                             // 공통 메뉴 스타일 상속
+    ...commonMenuStyle, // 공통 메뉴 스타일 상속
 
     // 컨텐츠 정렬
-    display: hamburgerHovered ? "flex" : "none",    // 메뉴 오픈 여부
+    display: hamburgerHovered ? "flex" : "none", // 메뉴 오픈 여부
   };
 
   // --------------------------------- css 끝 ---------------------------------
@@ -504,7 +504,7 @@ const NavigationBar = () => {
         </div>
 
         {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
-        {isLarge && (  // (반응형) min-width:1024px 이상일 경우
+        {isLarge && ( // (반응형) min-width:1024px 이상일 경우
           <>
             <div style={linkContainerStyle}>
               {linkItems.map((item, index) => (
@@ -534,7 +534,7 @@ const NavigationBar = () => {
 
         {/* --------------------------------- 프로필, 회원관리 --------------------------------- */}
         <div style={buttonContainerStyle}>
-          {isLoggedIn ? (  // ------------- 로그인 시 -------------
+          {isLoggedIn ? ( // ------------- 로그인 시 -------------
             <>
               <div
                 style={profileContainerStyle}
@@ -602,7 +602,7 @@ const NavigationBar = () => {
           )}
 
           {/* ------------- 내비게이션 메뉴 -------------  */}
-          {!isLarge && (  // (반응형) min-width:1024px 미만일 경우 링크를 햄버거 버튼으로 대체
+          {!isLarge && ( // (반응형) min-width:1024px 미만일 경우 링크를 햄버거 버튼으로 대체
             <>
               <div
                 style={hamburgerContainerStyle}
