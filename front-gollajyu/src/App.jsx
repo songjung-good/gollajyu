@@ -12,6 +12,7 @@ import VotePage from "./pages/VotePage";
 import BroadcastPage from "./pages/BroadcastPage";
 import StatisticPage from "./pages/StatisticPage";
 import TestPage from "./pages/TestPage";
+import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
 import VideoComponent from "./components/openvidu/VideoComponent";
 import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
@@ -26,7 +27,7 @@ const Navbar = () => {
     <>
       <NavigationBar />
       {/* body 배경색 있음 */}
-      <div className="body">
+      <div className="body min-h-screen">
         <Outlet />
       </div>
     </>
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/BroadcastPage" element={<BroadcastPage />} />
           <Route path="/StatisticPage" element={<StatisticPage />} />
           <Route path="/TestPage" element={<TestPage />} />
+          <Route path="/TestResultPage" element={<TestResultPage />} />
           <Route path="/MyPage/*" element={<MyPage />} />
         </Route>
       </Routes>
