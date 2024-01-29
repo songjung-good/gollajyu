@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import VoteCardItem from './Vote/VoteCardItem';
 import NowGollajyuImage from "/assets/images/nowGollajyu.png";
 
-export default function VoteCard() {
+export default function SwipeCard() {
   const [clicked, setClicked] = useState([false, false, false, false]);
 
   const handleClick = (index) => {

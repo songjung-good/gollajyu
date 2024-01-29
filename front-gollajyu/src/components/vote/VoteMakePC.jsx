@@ -11,7 +11,6 @@ const VoteMakePC = () => {
         }
     };
 
-
     return (
         <div className="flex items-center justify-center">
             <div className="mx-auto w-full max-w-[550px] bg-white">
