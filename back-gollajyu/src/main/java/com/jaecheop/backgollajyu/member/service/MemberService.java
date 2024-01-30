@@ -101,7 +101,6 @@ public class MemberService {
         Member member = optionalMember.get();
 
         // 비밀번호 암호화 및 일치 여부 - Bcrypt
-        // TODO: 멤버 등록 시 비밀번호 저장할 때에도 BCRYPT를 사용해서 저장하고 여기 부분을 다시 테스트 해보자!
         if (!BCrypt.checkpw(loginReqDto.getPassword(), member.getPassword())) {
             return ServiceResult.fail("틀린 비밀번호입니다");
         }
@@ -142,7 +141,7 @@ public class MemberService {
                 ? categoryRepository.findAllById(categoryId) : categoryRepository.findAll();
 
         for (Category category : categories) {
-            Map<String, Long> categoryStatistics = voteService.generateStatistics(voteResultRepository.findByMemberIdAndCategoryId(memberId, category.getId()), null);
+            Map<String, Long> categoryStatistics = voteService.generateStatistics(voteResultRepository.findAllByMemberIdAndCategoryId(memberId, category.getId()), null);
             CategoryInfoResDto categoryInfoResDto = CategoryInfoResDto.buildFromStatistics(category, categoryStatistics);
             categoryInfoResDtoList.add(categoryInfoResDto);
         }
