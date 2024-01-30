@@ -14,15 +14,14 @@ import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -133,19 +132,30 @@ public class MemberService {
 
 
     // myPage 카테고리별 나의 투표 비율
-    public List<CategoryInfoResDto> makeCategoryInfoResDto(Long memberId, Integer categoryId) {
-        List<CategoryInfoResDto> categoryInfoResDtoList = new ArrayList<>();
+    public List<Map<String, Long>> makeCategoryInfoMypage(Long memberId, Integer categoryId) {
 
-        // Assuming you have a list of categories, replace it with your actual data source
-        List<Category> categories = (categoryId != null )
+        List<Category> categories = (categoryId != null)
                 ? categoryRepository.findAllById(categoryId) : categoryRepository.findAll();
+
+        List<Map<String, Long>> sortedList = null;
 
         for (Category category : categories) {
             Map<String, Long> categoryStatistics = voteService.generateStatistics(voteResultRepository.findAllByMemberIdAndCategoryId(memberId, category.getId()), null);
-            CategoryInfoResDto categoryInfoResDto = CategoryInfoResDto.buildFromStatistics(category, categoryStatistics);
-            categoryInfoResDtoList.add(categoryInfoResDto);
+
+            List<Map.Entry<String, Long>> entryList = new ArrayList<>(categoryStatistics.entrySet());
+
+            // Sort the list based on values
+            entryList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+            // Create a new list of maps from the sorted list
+            sortedList = entryList.stream()
+                    .map(entry -> Collections.singletonMap(entry.getKey(), entry.getValue()))
+                    .collect(Collectors.toList());
+
+            // Print the result
+            sortedList.forEach(System.out::println);
         }
 
-        return categoryInfoResDtoList;
+        return sortedList;
     }
 }

@@ -19,6 +19,7 @@ import com.jaecheop.backgollajyu.vote.repository.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -99,7 +100,6 @@ public class VoteService {
             String fullPath = "";
             try {
                 fullPath = saveFile(voteItemReqDto.getVoteItemImg(), fileDir);
-                System.out.println("fullPath = " + fullPath);
             } catch (IOException e) {
                 return ServiceResult.fail(e.getMessage());
             }
@@ -111,7 +111,6 @@ public class VoteService {
                     .price(voteItemReqDto.getPrice())
                     .build();
             voteItem.updateImgPath(fullPath);
-            System.out.println("voteItem = " + voteItem);
             voteItemRepository.save(voteItem);
         }
 
@@ -127,7 +126,6 @@ public class VoteService {
         }
         return fileDir + "\\" + imgPath;
     }
-
 
 
     // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
@@ -182,6 +180,7 @@ public class VoteService {
                 .map(this::mapVoteItemToDto)
                 .collect(Collectors.toList());
     }
+
     // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
     public VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
         return VoteItemResDto.builder()
@@ -196,13 +195,13 @@ public class VoteService {
     }
 
 
-
     // Like 엔터티를 LikeDto->LikeDtoList 로 변환하는 메서드
     public List<LikeDto> mapLikesToDto(List<Likes> likes) {
         return likes.stream()
                 .map(this::mapLikeToDto)
                 .collect(Collectors.toList());
     }
+
     public LikeDto mapLikeToDto(Likes likes) {
         if (likes != null) {
             // Implement mapping logic from Like entity to LikeDto using builder
@@ -214,7 +213,6 @@ public class VoteService {
             return null;
         }
     }
-
 
 
     // CategoryDto 빌더
@@ -267,7 +265,7 @@ public class VoteService {
         // 나이 정보가 있다면
         if (statisticsSearchReqDto.getAge() != null) {
             resultList = resultList.stream()
-                    .filter(result -> result.getAge().equals(statisticsSearchReqDto.getAge()))
+                    .filter(result -> (result.getAge()/10) == statisticsSearchReqDto.getAge())
                     .collect(Collectors.toList());
         }
         // 성별 정보가 있다면
@@ -278,7 +276,6 @@ public class VoteService {
         }
         return resultList;
     }
-
 
 
     // 투표 작성자 Id로 투표 리스트 생성..
@@ -325,7 +322,6 @@ public class VoteService {
     }
 
 
-
     /**
      * 메인에서 투표하기
      * - 멤버 존재 유무
@@ -350,6 +346,7 @@ public class VoteService {
 
         // 투표 존재 유무
         Optional<Vote> optionalVote = voteRepository.findById(choiceReqDto.getVoteId());
+
         if (optionalVote.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 투표입니다.");
         }
@@ -366,11 +363,10 @@ public class VoteService {
 
 
         // 투표 내 아이템 존재 유무
-        List<VoteItem> voteItemList = voteItemRepository.findAllByVoteId(vote.getId());
-        System.out.println(voteItemList);
+        List<VoteItemDto> voteItemList = voteItemRepository.findAllByVoteId(vote.getId()).stream().map(vi->VoteItem.convertToDto(vi)).toList();
 
         boolean isItemExist = false;
-        for (VoteItem voteItem : voteItemList) {
+        for (VoteItemDto voteItem : voteItemList) {
             if (Objects.equals(voteItem.getId(), choiceReqDto.getVoteItemId())) {
                 isItemExist = true;
                 break;
@@ -380,7 +376,9 @@ public class VoteService {
             return ServiceResult.fail("존재하지 않는 투표 아이템입니다.");
         }
 
+
         VoteItem voteItem = voteItemRepository.findById(choiceReqDto.getVoteItemId()).get();
+
 
 
         // 카테고리와 태그 매칭 여부
@@ -397,6 +395,7 @@ public class VoteService {
         }
 
         Tag tag = tagRepository.findById(choiceReqDto.getTagId()).get();
+
 
 
         // 중복 투표 여부.
@@ -420,6 +419,7 @@ public class VoteService {
                 .gender(member.getGender())
                 .tag(tag)
                 .category(vote.getCategory())
+                .createAt(LocalDateTime.now())
                 .build();
         voteResultRepository.save(voteResult);
 
@@ -438,7 +438,7 @@ public class VoteService {
      */
 
     public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
-        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
+
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
         if (optionalMember.isEmpty()) {
@@ -559,7 +559,6 @@ public class VoteService {
         } else {
             filterByTypeAndAgeAndGender = filterByTypeAndAge;
         }
-        System.out.println(filterByTypeAndAgeAndGender);
 
         return filterByTypeAndAgeAndGender;
 
@@ -620,6 +619,9 @@ public class VoteService {
         }
 //         로그인 한 사용자
         else {
+            // 로그인 한 사용자
+            long memberId = memberSession.getMemberId();
+
             // 결과에 담을 투표 리스트 기본 정보
             // 카테고리가 전체일때
             if (categoryId == 0) {
@@ -637,6 +639,13 @@ public class VoteService {
 
                 List<ListVoteDto> filteredVoteList = filterJoinedVote(allVoteList, voteResultList);
 
+                // 걸러진 투표 사용자의 좋아요 유무 체크
+                filteredVoteList.stream().forEach(lvd ->{
+                    Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
+                    if(optionalLikes.isPresent()){
+                        lvd.updateIsLiked();
+                    }
+                });
 
                 // 기본 정보
                 voteListResDto = VoteListResDto.builder()
@@ -683,6 +692,13 @@ public class VoteService {
                         .toList();
                 List<ListVoteDto> filteredVoteList = filterJoinedVote(allVoteList, voteResultList);
 
+                // 걸러진 투표 사용자의 좋아요 유무 체크
+                filteredVoteList.stream().forEach(lvd ->{
+                    Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
+                    if(optionalLikes.isPresent()){
+                        lvd.updateIsLiked();
+                    }
+                });
 
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(filteredVoteList);
@@ -739,7 +755,131 @@ public class VoteService {
                 filteredVoteList.add(vote);
             }
         }
-        System.out.println("filteredVoteList!!! = " + filteredVoteList);
         return filteredVoteList;
+    }
+
+    /**
+     * top 5 - 좋아요, 최신, 참여자, 박빙
+     *
+     * @return
+     */
+    public ServiceResult getVoteRanking() {
+        // 최근 7일 동안 생성한 투표중에
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(7);
+        List<VoteInfoDto> voteList = new ArrayList<>(voteRepository.findAllByCreateAtBetweenOrderByCreateAtDesc(startDate, endDate)
+                .stream()
+                .map(v -> Vote.convertToVoteInfoDto(v))
+                .toList());
+        // voteinfodto로 변환해서
+        // 각 기준에 맞게 가공하자
+
+        // 좋아요
+        List<VoteInfoDto> sortByLikes = voteList.stream()
+                .sorted(Comparator.comparingLong(VoteInfoDto::getLikesCnt).reversed())
+                .collect(Collectors.toList());
+
+
+        // 최신
+        List<VoteInfoDto> sortByNew = voteList.stream()
+                .sorted(Comparator.comparing(VoteInfoDto::getCreateAt).reversed())
+                .collect(Collectors.toList());
+
+        // 참여자
+        List<VoteInfoDto> sortByVoter = voteList.stream()
+                .sorted(Comparator.comparing(VoteInfoDto::getTotalChoiceCnt).reversed())
+                .collect(Collectors.toList());
+
+        // 박빙
+        // 투표 아이템이 2개인거 고르기
+        // TODO:: total count가 0이 아닌거만 뽑기
+        List<VoteInfoDto> twoList = voteList.stream().filter(v -> v.getItemCnt() == 2 && v.getTotalChoiceCnt() > 0).collect(Collectors.toList());
+
+        // 결과로 반환할 박빙 투표 리스트로 변경
+        List<VoteCloseInfoDto> closeVoteList = twoList
+                .stream()
+                .map(v -> VoteInfoDto.convertToVoteCloseDto(v))
+                .toList();
+
+
+        // 각 투표의 item 정보를 저장하기
+        for (VoteCloseInfoDto voteCloseInfoDto : closeVoteList) {
+
+            // 단일 투표의 아이템리스트 가져오기
+            // 각 아이템에서 아이디와 투표 수만 뽑아서 저장
+            List<VoteItemCloseInfoDto> voteItemList = voteItemRepository.findAllByVoteId(voteCloseInfoDto.getVoteId())
+                    .stream()
+                    .map(vi -> VoteItem.convertToVoteItemCloseInfoDto(vi, voteCloseInfoDto.getTotalChoiceCnt()))
+                    .toList();
+            voteCloseInfoDto.updateVoteItemList(voteItemList);
+
+            voteCloseInfoDto.updatePercentDiff();
+        }
+        
+
+        // 투표아이템의 비율 차에 따라 정렬
+        List<VoteCloseInfoDto> sortByClose = closeVoteList.stream()
+                .sorted(Comparator.comparing(VoteCloseInfoDto::getPercentDiff))
+                .collect(Collectors.toList());
+
+
+        // 정렬해서 보여주기
+        return ServiceResult.success(
+                RankDto.builder()
+                        .sortByLikes(sortByLikes)
+                        .sortByNew(sortByNew)
+                        .sortByVoter(sortByVoter)
+                        .sortByClose(sortByClose)
+                        .build()
+        );
+    }
+
+    /**
+     * 투표 좋아요
+     * @param likesReqDto
+     * @return
+     */
+    public ServiceResult toggleLikes(LikesReqDto likesReqDto) {
+
+        // 멤버 존재 유무
+        Optional<Member> optionalMember = memberRepository.findById(likesReqDto.getMemberId());
+        if(optionalMember.isEmpty()){
+            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+        }
+        Member member = optionalMember.get();
+
+        // 투표 존재 유무
+        Optional<Vote> optionalVote = voteRepository.findById(likesReqDto.getVoteId());
+        if(optionalVote.isEmpty()){
+            return ServiceResult.fail("존재하지 않는 투표입니다.");
+        }
+        Vote vote = optionalVote.get();
+
+        // 좋아요 존재 유무
+        Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(likesReqDto.getMemberId(), likesReqDto.getVoteId());
+
+        LikesResDto likesResDto = LikesResDto.builder()
+                .memberId(member.getId())
+                .voteId(vote.getId())
+                .build();
+        // 존재하지 않을 떄,
+        if(optionalLikes.isEmpty()){
+            likeRepository.save(
+                    Likes.builder()
+                            .member(member)
+                            .vote(vote)
+                            .createAt(LocalDateTime.now())
+                            .build()
+            );
+            likesResDto.updateIsLiked(true);
+            return ServiceResult.success(likesResDto);
+        }
+        // 존재할 때
+        else{
+            Likes likes = optionalLikes.get();
+            likeRepository.deleteById(likes.getId());
+            likesResDto.updateIsLiked(false);
+            return ServiceResult.success(likesResDto);
+        }
     }
 }

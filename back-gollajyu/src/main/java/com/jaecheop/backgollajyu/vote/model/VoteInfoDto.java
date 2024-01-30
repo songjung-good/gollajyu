@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 public class VoteInfoDto {
+    private Long voteId;
     private Long memberId;
     private String title;
     private String description;
@@ -18,4 +19,17 @@ public class VoteInfoDto {
 
     private Long likesCnt;
     private Long totalChoiceCnt;
+
+    private int itemCnt;
+
+    public static VoteCloseInfoDto convertToVoteCloseDto(VoteInfoDto voteInfo){
+        return VoteCloseInfoDto.builder()
+                .voteId(voteInfo.voteId)
+                .memberId(voteInfo.getMemberId())
+                .title(voteInfo.getTitle())
+                .description(voteInfo.getDescription())
+                .createAt(voteInfo.getCreateAt())
+                .totalChoiceCnt(voteInfo.getTotalChoiceCnt())
+                .build();
+    }
 }

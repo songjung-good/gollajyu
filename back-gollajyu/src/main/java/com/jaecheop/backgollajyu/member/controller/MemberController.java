@@ -5,7 +5,9 @@ import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
 import com.jaecheop.backgollajyu.member.service.MemberService;
+import com.jaecheop.backgollajyu.vote.entity.Category;
 import com.jaecheop.backgollajyu.vote.model.*;
+import com.jaecheop.backgollajyu.vote.repository.CategoryRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +33,7 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     private final VoteService voteService;
+    private final CategoryRepository categoryRepository;
 
     /**
      * 회원가입
@@ -104,15 +109,20 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/votes/statistics")
-    public ResponseEntity<List<CategoryInfoResDto>> statisticMemberResult(
-            @PathVariable Long memberId,
-            @RequestParam(required = false) Integer categoryId) {
+    public ResponseEntity<Map<String, List<Map<String, Long>>>> statisticMemberResult(
+            @PathVariable Long memberId) {
+        Map<String, List<Map<String, Long>>> categoryInfoMap = new HashMap<>();
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            List<Map<String, Long>> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
 
-        List<CategoryInfoResDto> categoryInfoResDtoList = memberService.makeCategoryInfoResDto(memberId, categoryId);
-        if (categoryInfoResDtoList.isEmpty()) {
+            // <category.getName(), categoryInfoResDtoList>
+            categoryInfoMap.put(category.getCategoryName(), categoryInfoList);
+        }
+        if (categoryInfoMap.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(categoryInfoResDtoList, HttpStatus.OK);
+            return new ResponseEntity<>(categoryInfoMap, HttpStatus.OK);
         }
     }
 }
