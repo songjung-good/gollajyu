@@ -48,7 +48,7 @@ const LoginModal = () => {
           <input
             type="text"
             id="email"
-            className={`rounded-full bg-stone-100 w-full p-3 ${
+            className={`rounded-full bg-stone-100 w-full p-3 border border-white ${
               errors.email ? "mb-1" : "mb-7"
             }`}
             placeholder="이메일을 입력하세요"
@@ -66,7 +66,7 @@ const LoginModal = () => {
         <div>
           <input
             type="password"
-            className={`rounded-full bg-stone-100 w-full p-3 ${
+            className={`rounded-full bg-stone-100 w-full p-3 border border-white ${
               errors.pw ? "mb-1" : "mb-7"
             }`}
             id="pw"
@@ -123,15 +123,16 @@ const LoginModal = () => {
         className={`transition-colors ${
           isSignupHovered ? "text-amber-300" : ""
         }`}
+        // border -> bg 로
         style={{ cursor: "pointer" }}
         onMouseEnter={() => setIsSignupHovered(true)}
         onMouseLeave={() => setIsSignupHovered(false)}
         onClick={handleSignup}
       >
         {isSignupHovered
-          ? "      회원가입하러 가기      "
+          ? "         회원가입하러 가기         "
           : "아직 회원이 아니신가요?"}
-        {/* 회원가입하러 가기에 띄워쓰기가 있는 이유: 글자 수 차이가 나면 호버 시 글자 변동이 의도치 않게 되기 때문 */}
+        {/* 회원가입하러 가기에 띄워쓰기가 있는 이유: 글자 수 차이가 나면 호버 시 글자 변동이 의도치 않게 되기 때문 => 수정 더 해야함 */}
       </p>
     </div>
   );
