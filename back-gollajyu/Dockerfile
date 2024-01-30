@@ -26,4 +26,3 @@ RUN chmod +x ./gradlew
 EXPOSE 8080
 
 # Command to run the Spring Boot application
-CMD ["java", "-jar", "build/libs/backgollajyu.jar"]
