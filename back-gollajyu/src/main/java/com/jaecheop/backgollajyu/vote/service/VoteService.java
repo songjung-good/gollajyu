@@ -264,7 +264,7 @@ public class VoteService {
         // 나이 정보가 있다면
         if (statisticsSearchReqDto.getAge() != null) {
             resultList = resultList.stream()
-                    .filter(result -> result.getAge().equals(statisticsSearchReqDto.getAge()))
+                    .filter(result -> (result.getAge()/10) == statisticsSearchReqDto.getAge())
                     .collect(Collectors.toList());
         }
         // 성별 정보가 있다면
