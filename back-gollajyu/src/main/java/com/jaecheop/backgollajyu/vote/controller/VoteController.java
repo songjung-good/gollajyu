@@ -91,7 +91,7 @@ public class VoteController {
      */
     @GetMapping("/ranks")
     public ResponseEntity<ResponseMessage> voteRanking(){
-        ServiceResult result = voteService.getVoteRaking();
+        ServiceResult result = voteService.getVoteRanking();
         if(!result.isResult()){
             return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
         }

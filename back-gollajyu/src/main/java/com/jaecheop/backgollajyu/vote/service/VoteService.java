@@ -437,7 +437,7 @@ public class VoteService {
      * @return
      */
 
-    public ServiceResult voteDetail( VoteDetailReqDto voteDetailReqDto) {
+    public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
         System.out.println("voteDetail service~!~!~!~!~!~!~!~!~!");
         System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         // 사용자 존재 여부
@@ -742,12 +742,14 @@ public class VoteService {
         }
         System.out.println("filteredVoteList!!! = " + filteredVoteList);
         return filteredVoteList;
+    }
+
     /**
      * top 5 - 좋아요, 최신, 참여자, 박빙
      *
      * @return
      */
-    public ServiceResult getVoteRaking() {
+    public ServiceResult getVoteRanking() {
         // 최근 7일 동안 생성한 투표중에
         LocalDateTime endDate = LocalDateTime.now();
         LocalDateTime startDate = endDate.minusDays(7);
@@ -795,12 +797,13 @@ public class VoteService {
             // 아이템 가져오기
             List<VoteItemCloseInfoDto> voteItemList = voteItemRepository.findAllByVoteId(voteCloseInfoDto.getVoteId())
                     .stream()
-                    .map(vi->VoteItem.convertToVoteItemCloseInfoDto(vi, voteCloseInfoDto.getTotalChoiceCnt()))
+                    .map(vi -> VoteItem.convertToVoteItemCloseInfoDto(vi, voteCloseInfoDto.getTotalChoiceCnt()))
                     .toList();
             // 각 아이템에서 아이디와 투표 수만 뽑아서 저장
             voteCloseInfoDto.updateVoteItemList(voteItemList);
         }
         System.out.println("sortByClose added voteItem List!!!! = " + sortByClose);
+
 
         // 정렬해서 보여주기
         return ServiceResult.success(
@@ -812,4 +815,5 @@ public class VoteService {
                         .build()
         );
     }
+
 }
