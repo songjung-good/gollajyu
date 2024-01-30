@@ -12,7 +12,7 @@ const VoteControls = () => {
   };
 
   return (
-    <div className="vote-controls container mx-auto my-4 max-w-screen-md px-4">
+    <div className="vote-controls container mx-auto my-4 max-w-screen-xl px-4">
       <div className="flex justify-between mb-4">
         <div>
           <button onClick={() => handleSort('latest')} className="mr-2">최신순</button>

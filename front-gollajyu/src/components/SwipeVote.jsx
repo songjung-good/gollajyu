@@ -22,7 +22,7 @@ export default function SwipeVote() {
   }, []);
 
   return (
-    <div className="py-7 px-7" style={{ margin: '-15px' }}>
+    <div className="py-10">
       <Swiper
         effect={'coverflow'}
         grabCursor={true}
@@ -40,9 +40,9 @@ export default function SwipeVote() {
         }}
         modules={[EffectCoverflow, Navigation, HashNavigation]}
         className="mySwiper"
-        style={{ padding: '30px', height: 'calc(100% + 60px)' }}
+        style={{ padding: '30px' }}
       >
-        {['slide1', 'slide2', 'slide3'].map((hash, index) => (
+        {['slide1', 'slide2', 'slide3', 'slide4'].map((hash, index) => (
           <SwiperSlide key={hash} data-hash={hash} style={{ width: '1024px' }}>
             <div>
               <SwipeCard />
