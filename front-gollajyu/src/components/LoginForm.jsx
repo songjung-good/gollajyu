@@ -79,7 +79,7 @@ const LoginModal = () => {
         </div>
         <button
           type="submit"
-          className="rounded-full bg-amber-300 hover:bg-amber-400 hover:text-white p-3"
+          className="rounded-full bg-amber-300 hover:bg-amber-400 p-3"
         >
           로그인
         </button>
@@ -120,10 +120,8 @@ const LoginModal = () => {
         </div>
       </div>
       <p
-        className={`transition-colors ${
-          isSignupHovered ? "text-amber-300" : ""
-        }`}
-        // border -> bg 로
+        className={`transition ${isSignupHovered ? "font-bold" : ""}`}
+        // div
         style={{ cursor: "pointer" }}
         onMouseEnter={() => setIsSignupHovered(true)}
         onMouseLeave={() => setIsSignupHovered(false)}
