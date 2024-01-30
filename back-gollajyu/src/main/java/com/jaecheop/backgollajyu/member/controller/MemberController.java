@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,5 +125,16 @@ public class MemberController {
         } else {
             return new ResponseEntity<>(categoryInfoMap, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{memberId}/recommends")
+    public ResponseEntity<List<Map<String, String>>> crawling(
+            @PathVariable Long memberId) {
+
+        List<Map<String, String>> crawlingResult = memberService.crawlNaverSearchResults("기능성+신발");
+
+
+        return new ResponseEntity<>(crawlingResult, HttpStatus.OK);
+
     }
 }

@@ -1,7 +1,5 @@
 package com.jaecheop.backgollajyu.member.service;
 
-import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
-import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
 import com.jaecheop.backgollajyu.member.model.*;
@@ -14,11 +12,15 @@ import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.jsoup.select.Elements;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -157,5 +159,42 @@ public class MemberService {
         }
 
         return sortedList;
+    }
+
+
+
+    public List<Map<String, String>> crawlNaverSearchResults(String query) {
+        String url = "https://search.naver.com/search.naver?query=" + query;
+        List<Map<String, String>> resultList = new ArrayList<>();
+
+        try {
+            Document document = Jsoup.connect(url).get();
+
+            // 큰 박스 하나 지정
+            Elements linkElements = document.select("div.title_url_area");
+
+            int maxResults = Math.min(10, linkElements.size());
+            for (int i = 0; i < maxResults; i++) {
+                // 각 div.title_url_area 요소 안에서 첫번째 a.lnk_head 선택
+                Element linkElement = linkElements.get(i).selectFirst("a.lnk_head");
+
+                // 링크 URL 가져오기 lnk_head에 붙어있는 url
+                String linkUrl = (linkElement != null) ? linkElement.attr("href") : "";
+
+                // 헤드라인 텍스트 가져오기 이것도 1개만 이건 여러개 해도 가능할 듯?
+                String headlineText = (linkElement != null) ? linkElement.selectFirst("span.lnk_tit:first-child").text() : "";
+
+                // 맵 생성 및 매핑
+                Map<String, String> resultMap = new HashMap<>();
+                resultMap.put("url", linkUrl);
+                resultMap.put("text", headlineText);
+
+                // 리스트에 추가
+                resultList.add(resultMap);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultList;
     }
 }
