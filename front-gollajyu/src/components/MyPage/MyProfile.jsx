@@ -16,13 +16,8 @@ const MyProfile = () => {
   
   // ----------- 버튼 hover -----------
   const [
-    informationButtonHovered,
-    setInformationButtonHovered
-  ] = useState(false);
-
-  const [
-    testButtonHovered,
-    setTestButtonHovered
+    buttonHovered,
+    setButtonHovered
   ] = useState(false);
 
 
@@ -47,11 +42,11 @@ const MyProfile = () => {
 
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
-  // 디자인
-  marginTop: "5px",
+    // 디자인
+    marginTop: "5px",
 
-  // 글자
-  fontSize: "32px",
+    // 글자
+    fontSize: "32px",
   };
 
   // ----------- 큰 글자 스타일 -----------
@@ -82,28 +77,11 @@ const MyProfile = () => {
     border: "3px solid", // 테두리 스타일
     borderRadius: "5px", // 둥근 테두리: 5px
     borderColor: "#BEBEBE", // 테두리 색: 연한 회색
+    background: buttonHovered ? "#D9D9D9" : "#FFFFFF", // 마우스 호버 시 배경 색상 변경
     transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
 
     // 글자
     color: "#9C9C9C", // 글자 색: 회색
-  };
-
-  // ----------- 기본정보 수정하기 버튼 스타일 -----------
-  const informationButtonStyle = {
-    // 상속
-    ...buttonStyle,
-
-    // 디자인
-    background: informationButtonHovered ? "#D9D9D9" : "#FFFFFF", // 마우스 호버 시 배경 색상 변경
-  };
-
-  // ----------- 소비성향조사 다시하기 버튼 스타일 -----------
-  const testButtonStyle = {
-    // 상속
-    ...buttonStyle,
-
-    // 디자인
-    background: testButtonHovered ? "#D9D9D9" : "#FFFFFF", // 마우스 호버 시 배경 색상 변경
   };
 
   // ----------- 프로필 컨테이너 스타일 -----------
@@ -215,9 +193,9 @@ const MyProfile = () => {
         <div style={titleButtonContainerStyle}>
           <span style={titleTextStyle}>기본정보</span>
           <button
-            style={informationButtonStyle}
-            onMouseOver={() => setInformationButtonHovered(true)}
-            onMouseOut={() => setInformationButtonHovered(false)}
+            style={buttonStyle}
+            onMouseOver={() => setButtonHovered(true)}
+            onMouseOut={() => setButtonHovered(false)}
           >
             수정하기
           </button>
@@ -255,13 +233,6 @@ const MyProfile = () => {
       <div style={containerStyle}>
         <div style={titleButtonContainerStyle}>
           <span style={titleTextStyle}>소비성향</span>
-          <button
-            style={testButtonStyle}
-            onMouseOver={() => setTestButtonHovered(true)}
-            onMouseOut={() => setTestButtonHovered(false)}
-          >
-            다시하기
-          </button>
         </div>
         <div style={profileContainerStyle}>
           <div style={infoContainerStyle}>
