@@ -99,7 +99,6 @@ public class VoteService {
             String fullPath = "";
             try {
                 fullPath = saveFile(voteItemReqDto.getVoteItemImg(), fileDir);
-                System.out.println("fullPath = " + fullPath);
             } catch (IOException e) {
                 return ServiceResult.fail(e.getMessage());
             }
@@ -111,7 +110,6 @@ public class VoteService {
                     .price(voteItemReqDto.getPrice())
                     .build();
             voteItem.updateImgPath(fullPath);
-            System.out.println("voteItem = " + voteItem);
             voteItemRepository.save(voteItem);
         }
 
@@ -337,10 +335,8 @@ public class VoteService {
      * @return
      */
     public ServiceResult choiceMain(ChoiceReqDto choiceReqDto) {
-        System.out.println("11111");
         // member 존재 유무
         Optional<Member> optionalMember = memberRepository.findById(choiceReqDto.getMemberId());
-        System.out.println("222222");
         if (optionalMember.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 사용자입니다.");
         }
@@ -366,11 +362,10 @@ public class VoteService {
 
 
         // 투표 내 아이템 존재 유무
-        List<VoteItem> voteItemList = voteItemRepository.findAllByVoteId(vote.getId());
-        System.out.println(voteItemList);
+        List<VoteItemDto> voteItemList = voteItemRepository.findAllByVoteId(vote.getId()).stream().map(vi->VoteItem.convertToDto(vi)).toList();
 
         boolean isItemExist = false;
-        for (VoteItem voteItem : voteItemList) {
+        for (VoteItemDto voteItem : voteItemList) {
             if (Objects.equals(voteItem.getId(), choiceReqDto.getVoteItemId())) {
                 isItemExist = true;
                 break;
@@ -380,7 +375,9 @@ public class VoteService {
             return ServiceResult.fail("존재하지 않는 투표 아이템입니다.");
         }
 
+
         VoteItem voteItem = voteItemRepository.findById(choiceReqDto.getVoteItemId()).get();
+
 
 
         // 카테고리와 태그 매칭 여부
@@ -397,6 +394,7 @@ public class VoteService {
         }
 
         Tag tag = tagRepository.findById(choiceReqDto.getTagId()).get();
+
 
 
         // 중복 투표 여부.
@@ -420,6 +418,7 @@ public class VoteService {
                 .gender(member.getGender())
                 .tag(tag)
                 .category(vote.getCategory())
+                .createAt(LocalDateTime.now())
                 .build();
         voteResultRepository.save(voteResult);
 
@@ -438,8 +437,7 @@ public class VoteService {
      */
 
     public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
-        System.out.println("voteDetail service~!~!~!~!~!~!~!~!~!");
-        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
+
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
         if (optionalMember.isEmpty()) {
@@ -560,7 +558,6 @@ public class VoteService {
         } else {
             filterByTypeAndAgeAndGender = filterByTypeAndAge;
         }
-        System.out.println(filterByTypeAndAgeAndGender);
 
         return filterByTypeAndAgeAndGender;
 
@@ -740,7 +737,6 @@ public class VoteService {
                 filteredVoteList.add(vote);
             }
         }
-        System.out.println("filteredVoteList!!! = " + filteredVoteList);
         return filteredVoteList;
     }
 
@@ -757,7 +753,6 @@ public class VoteService {
                 .stream()
                 .map(v -> Vote.convertToVoteInfoDto(v))
                 .toList());
-        System.out.println("voteList = " + voteList);
         // voteinfodto로 변환해서
         // 각 기준에 맞게 가공하자
 
@@ -765,20 +760,17 @@ public class VoteService {
         List<VoteInfoDto> sortByLikes = voteList.stream()
                 .sorted(Comparator.comparingLong(VoteInfoDto::getLikesCnt).reversed())
                 .collect(Collectors.toList());
-        System.out.println("sortByLikes = " + sortByLikes);
 
 
         // 최신
         List<VoteInfoDto> sortByNew = voteList.stream()
                 .sorted(Comparator.comparing(VoteInfoDto::getCreateAt).reversed())
                 .collect(Collectors.toList());
-        System.out.println("sortByNew = " + sortByNew);
 
         // 참여자
         List<VoteInfoDto> sortByVoter = voteList.stream()
                 .sorted(Comparator.comparing(VoteInfoDto::getTotalChoiceCnt).reversed())
                 .collect(Collectors.toList());
-        System.out.println("sortByVoter = " + sortByVoter);
 
         // 박빙
         // 투표 아이템이 2개인거 고르기
@@ -786,23 +778,31 @@ public class VoteService {
         List<VoteInfoDto> twoList = voteList.stream().filter(v -> v.getItemCnt() == 2 && v.getTotalChoiceCnt() > 0).collect(Collectors.toList());
 
         // 결과로 반환할 박빙 투표 리스트로 변경
-        List<VoteCloseInfoDto> sortByClose = twoList
+        List<VoteCloseInfoDto> closeVoteList = twoList
                 .stream()
                 .map(v -> VoteInfoDto.convertToVoteCloseDto(v))
                 .toList();
-        System.out.println("dto로 바꾼 2개짜리 투표 = " + sortByClose);
+
 
         // 각 투표의 item 정보를 저장하기
-        for (VoteCloseInfoDto voteCloseInfoDto : sortByClose) {
-            // 아이템 가져오기
+        for (VoteCloseInfoDto voteCloseInfoDto : closeVoteList) {
+
+            // 단일 투표의 아이템리스트 가져오기
+            // 각 아이템에서 아이디와 투표 수만 뽑아서 저장
             List<VoteItemCloseInfoDto> voteItemList = voteItemRepository.findAllByVoteId(voteCloseInfoDto.getVoteId())
                     .stream()
                     .map(vi -> VoteItem.convertToVoteItemCloseInfoDto(vi, voteCloseInfoDto.getTotalChoiceCnt()))
                     .toList();
-            // 각 아이템에서 아이디와 투표 수만 뽑아서 저장
             voteCloseInfoDto.updateVoteItemList(voteItemList);
+
+            voteCloseInfoDto.updatePercentDiff();
         }
-        System.out.println("sortByClose added voteItem List!!!! = " + sortByClose);
+        
+
+        // 투표아이템의 비율 차에 따라 정렬
+        List<VoteCloseInfoDto> sortByClose = closeVoteList.stream()
+                .sorted(Comparator.comparing(VoteCloseInfoDto::getPercentDiff))
+                .collect(Collectors.toList());
 
 
         // 정렬해서 보여주기

@@ -22,10 +22,15 @@ public class VoteCloseInfoDto {
 
     private List<VoteItemCloseInfoDto> voteItemList = new ArrayList<>();
 
+    private Float percentDiff;
 
     // voteItemList update하는 메소드
-    public void updateVoteItemList(List<VoteItemCloseInfoDto> voteItemCloseInfoDto){
+    public void updateVoteItemList(List<VoteItemCloseInfoDto> voteItemCloseInfoDto) {
         this.voteItemList = voteItemCloseInfoDto;
+    }
+
+    public void updatePercentDiff() {
+        this.percentDiff = Math.abs(voteItemList.get(0).getPercent() - voteItemList.get(1).getPercent());
     }
 
 
