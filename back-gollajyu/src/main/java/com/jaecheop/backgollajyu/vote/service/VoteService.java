@@ -816,4 +816,52 @@ public class VoteService {
         );
     }
 
+    /**
+     * 투표 좋아요
+     * @param likesReqDto
+     * @return
+     */
+    public ServiceResult toggleLikes(LikesReqDto likesReqDto) {
+
+        // 멤버 존재 유무
+        Optional<Member> optionalMember = memberRepository.findById(likesReqDto.getMemberId());
+        if(optionalMember.isEmpty()){
+            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+        }
+        Member member = optionalMember.get();
+
+        // 투표 존재 유무
+        Optional<Vote> optionalVote = voteRepository.findById(likesReqDto.getVoteId());
+        if(optionalVote.isEmpty()){
+            return ServiceResult.fail("존재하지 않는 투표입니다.");
+        }
+        Vote vote = optionalVote.get();
+
+        // 좋아요 존재 유무
+        Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(likesReqDto.getMemberId(), likesReqDto.getVoteId());
+
+        LikesResDto likesResDto = LikesResDto.builder()
+                .memberId(member.getId())
+                .voteId(vote.getId())
+                .build();
+        // 존재하지 않을 떄,
+        if(optionalLikes.isEmpty()){
+            likeRepository.save(
+                    Likes.builder()
+                            .member(member)
+                            .vote(vote)
+                            .createAt(LocalDateTime.now())
+                            .build()
+            );
+            likesResDto.updateIsLiked(true);
+            return ServiceResult.success(likesResDto);
+        }
+        // 존재할 때
+        else{
+            Likes likes = optionalLikes.get();
+            likeRepository.deleteById(likes.getId());
+            likesResDto.updateIsLiked(false);
+            return ServiceResult.success(likesResDto);
+        }
+    }
 }
