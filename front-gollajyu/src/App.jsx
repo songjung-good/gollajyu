@@ -16,6 +16,7 @@ import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
 import VideoComponent from "./components/openvidu/VideoComponent";
 import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
+import LoginForm from "./components/LoginForm";
 import "./App.css";
 
 // 추후 적용
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/CreateVideoRoom" element={<CreateVideoRoom />} />
         <Route element={<Navbar />}>
           <Route path="/" element={<MainPage />} />
+          <Route path="/Login" element={<LoginForm />} />
           <Route path="/VotePage" element={<VotePage />} />
           <Route path="/BroadcastPage" element={<BroadcastPage />} />
           <Route path="/StatisticPage" element={<StatisticPage />} />
