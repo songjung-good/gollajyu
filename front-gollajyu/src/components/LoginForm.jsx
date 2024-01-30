@@ -34,7 +34,7 @@ const LoginModal = () => {
   };
 
   return (
-    <div className="mx-auto container bg-white w-[500px] h-[620px] flex flex-col items-center rounded-lg shadow-md">
+    <div className="mx-auto container bg-white w-[500px] h-[620px] flex flex-col items-center rounded-3xl shadow-md">
       <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">
         로그인해쥬
       </h1>
@@ -128,7 +128,10 @@ const LoginModal = () => {
         onMouseLeave={() => setIsSignupHovered(false)}
         onClick={handleSignup}
       >
-        {isSignupHovered ? "회원가입하러 가기" : "아직 회원이 아니신가요?"}
+        {isSignupHovered
+          ? "      회원가입하러 가기      "
+          : "아직 회원이 아니신가요?"}
+        {/* 회원가입하러 가기에 띄워쓰기가 있는 이유: 글자 수 차이가 나면 호버 시 글자 변동이 의도치 않게 되기 때문 */}
       </p>
     </div>
   );
