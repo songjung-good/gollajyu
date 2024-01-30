@@ -7,7 +7,7 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 
-const MainPage = () => {
+const TestPage = () => {
   const navigate = useNavigate();
 
   const questions = [
