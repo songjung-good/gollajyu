@@ -79,7 +79,7 @@ const MyActivities = () => {
     marginBottom: "50px",
   };
 
-  // ----------- 제목 및 버튼 컨테이너 스타일 -----------
+  // ----------- 제목 컨테이너 스타일 -----------
   const titleContainerStyle = {
     // 디자인
     marginBottom: "20px",
@@ -110,6 +110,7 @@ const MyActivities = () => {
   const contentsContainerStyle = {
     // 디자인
     padding: "40px",
+    minHeight: "1000px", // 최소 높이
     borderRadius: "50px",
     background: "#FFFFFF",
   };
@@ -264,6 +265,7 @@ const MyActivities = () => {
     color: "#000000",
   };
 
+  // ----------- 활동기록 컨테이너 스타일 -----------
   const hitoryContainerStyle = {
     // 상속
     ...contentsContainerStyle,
@@ -292,20 +294,23 @@ const MyActivities = () => {
     { 
       to: "/Mypage/MyActivities", 
       label: "작성한 투표", 
+      smallLabel: "작성투표",
       hovered: CreatedHovered, 
       mouseEnter: CreatedMouseEnter, 
       mouseLeave: CreatedMouseLeave 
     },
     { 
       to: "/Mypage/MyActivities/MyActivitiesParticipated", 
-      label: "참여한 투표", 
+      label: "참여한 투표",
+      smallLabel: "참여투표",
       hovered: ParticipatedPageHovered, 
       mouseEnter: ParticipatedPageMouseEnter,
       mouseLeave: ParticipatedPageMouseLeave 
     },
     { 
       to: "/Mypage/MyActivities/MyActivitiesLikded", 
-      label: "좋아요 한 투표", 
+      label: "좋아요 한 투표",
+      smallLabel: "좋아요",
       hovered: LikdedPageHovered, 
       mouseEnter: LikdedPageMouseEnter, 
       mouseLeave: LikdedPageMouseLeave 
@@ -313,6 +318,7 @@ const MyActivities = () => {
     { 
       to: "/Mypage/MyActivities/MyActivitiesCommented", 
       label: "댓글 보관함", 
+      smallLabel: "댓글",
       hovered: CommentedPageHovered, 
       mouseEnter: CommentedPageMouseEnter, 
       mouseLeave: CommentedPageMouseLeave 
@@ -377,15 +383,25 @@ const MyActivities = () => {
             <MenuItem
               key={index}
               to={item.to}
-              style={(item.hovered ? linkItemHoverStyle : linkItemStyle)}
-              activeStyle={linkItemActiveStyle}
+              style={{
+                ...(item.hovered ? linkItemHoverStyle : linkItemStyle),
+                ...(index === 3 ? { marginRight:"0" } : undefined), // 마지막 요소는 오른쪽 여백 삭제
+              }}
+              activeStyle={{
+                ...linkItemActiveStyle,
+                ...(index === 3 ? { marginRight:"0" } : undefined), // 마지막 요소는 오른쪽 여백 삭제
+              }}
               hoverState={{
                 hovered: item.hovered,
                 handleMouseEnter: item.mouseEnter,
                 handleMouseLeave: item.mouseLeave
               }}
             >
-              <div>{item.label}</div>
+              {isSmall ? (
+                <div>{item.smallLabel}</div> // 작은 화면에서 축약된 텍스트로 표시
+              ) : (
+                <div>{item.label}</div>
+              )}
             </MenuItem>
           ))}
         </div>

@@ -1,10 +1,14 @@
 import React from "react";
+import MyActivitiesHistory from "./MyActivitiesHistory";
 
 const MyActivitiesCreated = () => {
   return (
-    <div>
-      <h1>작성한 투표</h1>
-    </div>
+    <>
+      <MyActivitiesHistory />
+      <MyActivitiesHistory />
+      <MyActivitiesHistory />
+      <MyActivitiesHistory />
+    </>
   );
 };
 
