@@ -100,6 +100,13 @@ public class VoteController {
 
     }
 
+    /**
+     * main에서 투표 목록 리스트 조회 - category 별
+     * @param categoryId
+     * @param session
+     * @return
+     */
+
     @GetMapping("")
     public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam int categoryId, HttpSession session){
 
@@ -115,4 +122,13 @@ public class VoteController {
         return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
     }
 
+
+    @PostMapping("/likes")
+    public ResponseEntity<ResponseMessage> toggleLikes(@RequestBody LikesReqDto likesReqDto){
+        ServiceResult result = voteService.toggleLikes(likesReqDto);
+        if(!result.isResult()){
+            return ResponseEntity.ok(ResponseMessage.fail(result.getMessage()));
+        }
+        return ResponseEntity.ok(ResponseMessage.success(result.getData()));
+    }
 }
