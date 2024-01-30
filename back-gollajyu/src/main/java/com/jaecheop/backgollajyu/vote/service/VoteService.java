@@ -618,6 +618,9 @@ public class VoteService {
         }
 //         로그인 한 사용자
         else {
+            // 로그인 한 사용자
+            long memberId = memberSession.getMemberId();
+
             // 결과에 담을 투표 리스트 기본 정보
             // 카테고리가 전체일때
             if (categoryId == 0) {
@@ -635,6 +638,13 @@ public class VoteService {
 
                 List<ListVoteDto> filteredVoteList = filterJoinedVote(allVoteList, voteResultList);
 
+                // 걸러진 투표 사용자의 좋아요 유무 체크
+                filteredVoteList.stream().forEach(lvd ->{
+                    Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
+                    if(optionalLikes.isPresent()){
+                        lvd.updateIsLiked();
+                    }
+                });
 
                 // 기본 정보
                 voteListResDto = VoteListResDto.builder()
@@ -681,6 +691,13 @@ public class VoteService {
                         .toList();
                 List<ListVoteDto> filteredVoteList = filterJoinedVote(allVoteList, voteResultList);
 
+                // 걸러진 투표 사용자의 좋아요 유무 체크
+                filteredVoteList.stream().forEach(lvd ->{
+                    Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
+                    if(optionalLikes.isPresent()){
+                        lvd.updateIsLiked();
+                    }
+                });
 
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(filteredVoteList);

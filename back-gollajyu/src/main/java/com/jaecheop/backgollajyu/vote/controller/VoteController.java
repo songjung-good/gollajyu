@@ -108,7 +108,7 @@ public class VoteController {
      */
 
     @GetMapping("")
-    public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam int categoryId, HttpSession session){
+    public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session){
 
         System.out.println("categoryId = " + categoryId);
         System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto)session.getAttribute("memberInfo"));
