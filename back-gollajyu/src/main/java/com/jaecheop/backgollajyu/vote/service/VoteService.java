@@ -17,6 +17,7 @@ import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -126,7 +127,6 @@ public class VoteService {
     }
 
 
-
     // 투표 리스트를 Dto 형태로 변환 ( 기준을 통해서 넘어온 리스트로 )
     public List<VoteResDto> makeVoteResDtoList(List<Vote> votes, Long currentMemberId) {
         List<VoteResDto> voteResDtoList = new ArrayList<>();
@@ -179,6 +179,7 @@ public class VoteService {
                 .map(this::mapVoteItemToDto)
                 .collect(Collectors.toList());
     }
+
     // 위의 voteItems 리스트를 Dto 리스트로 바꾸는 과정에서 Dto 형태로 바꾸기
     public VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
         return VoteItemResDto.builder()
@@ -193,13 +194,13 @@ public class VoteService {
     }
 
 
-
     // Like 엔터티를 LikeDto->LikeDtoList 로 변환하는 메서드
     public List<LikeDto> mapLikesToDto(List<Likes> likes) {
         return likes.stream()
                 .map(this::mapLikeToDto)
                 .collect(Collectors.toList());
     }
+
     public LikeDto mapLikeToDto(Likes likes) {
         if (likes != null) {
             // Implement mapping logic from Like entity to LikeDto using builder
@@ -211,7 +212,6 @@ public class VoteService {
             return null;
         }
     }
-
 
 
     // CategoryDto 빌더
@@ -277,7 +277,6 @@ public class VoteService {
     }
 
 
-
     // 투표 작성자 Id로 투표 리스트 생성..
     public List<VoteResDto> getVotesByMemberId(Long memberId) {
 //        List<Vote> votes = voteRepository.findByMemberId(memberId);
@@ -322,7 +321,6 @@ public class VoteService {
     }
 
 
-
     /**
      * 메인에서 투표하기
      * - 멤버 존재 유무
@@ -337,8 +335,10 @@ public class VoteService {
      * @return
      */
     public ServiceResult choiceMain(ChoiceReqDto choiceReqDto) {
+        System.out.println("11111");
         // member 존재 유무
         Optional<Member> optionalMember = memberRepository.findById(choiceReqDto.getMemberId());
+        System.out.println("222222");
         if (optionalMember.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 사용자입니다.");
         }
@@ -347,6 +347,7 @@ public class VoteService {
 
         // 투표 존재 유무
         Optional<Vote> optionalVote = voteRepository.findById(choiceReqDto.getVoteId());
+
         if (optionalVote.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 투표입니다.");
         }
@@ -433,7 +434,8 @@ public class VoteService {
      * @return
      */
 
-    public ServiceResult voteDetail(VoteDetailReqDto voteDetailReqDto) {
+    public ServiceResult voteDetail( VoteDetailReqDto voteDetailReqDto) {
+        System.out.println("voteDetail service~!~!~!~!~!~!~!~!~!");
         System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
@@ -574,5 +576,76 @@ public class VoteService {
         String fullPath = saveFile(file, fileDir);
         return fullPath;
 
+    }
+
+    /**
+     * top 5 - 좋아요, 최신, 참여자, 박빙
+     *
+     * @return
+     */
+    public ServiceResult getVoteRaking() {
+        // 최근 7일 동안 생성한 투표중에
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(7);
+        List<VoteInfoDto> voteList = new ArrayList<>(voteRepository.findAllByCreateAtBetweenOrderByCreateAtDesc(startDate, endDate)
+                .stream()
+                .map(v -> Vote.convertToVoteInfoDto(v))
+                .toList());
+        System.out.println("voteList = " + voteList);
+        // voteinfodto로 변환해서
+        // 각 기준에 맞게 가공하자
+
+        // 좋아요
+        List<VoteInfoDto> sortByLikes = voteList.stream()
+                .sorted(Comparator.comparingLong(VoteInfoDto::getLikesCnt).reversed())
+                .collect(Collectors.toList());
+        System.out.println("sortByLikes = " + sortByLikes);
+
+
+        // 최신
+        List<VoteInfoDto> sortByNew = voteList.stream()
+                .sorted(Comparator.comparing(VoteInfoDto::getCreateAt).reversed())
+                .collect(Collectors.toList());
+        System.out.println("sortByNew = " + sortByNew);
+
+        // 참여자
+        List<VoteInfoDto> sortByVoter = voteList.stream()
+                .sorted(Comparator.comparing(VoteInfoDto::getTotalChoiceCnt).reversed())
+                .collect(Collectors.toList());
+        System.out.println("sortByVoter = " + sortByVoter);
+
+        // 박빙
+        // 투표 아이템이 2개인거 고르기
+        // TODO:: total count가 0이 아닌거만 뽑기
+        List<VoteInfoDto> twoList = voteList.stream().filter(v -> v.getItemCnt() == 2 && v.getTotalChoiceCnt() > 0).collect(Collectors.toList());
+
+        // 결과로 반환할 박빙 투표 리스트로 변경
+        List<VoteCloseInfoDto> sortByClose = twoList
+                .stream()
+                .map(v -> VoteInfoDto.convertToVoteCloseDto(v))
+                .toList();
+        System.out.println("dto로 바꾼 2개짜리 투표 = " + sortByClose);
+
+        // 각 투표의 item 정보를 저장하기
+        for (VoteCloseInfoDto voteCloseInfoDto : sortByClose) {
+            // 아이템 가져오기
+            List<VoteItemCloseInfoDto> voteItemList = voteItemRepository.findAllByVoteId(voteCloseInfoDto.getVoteId())
+                    .stream()
+                    .map(vi->VoteItem.convertToVoteItemCloseInfoDto(vi, voteCloseInfoDto.getTotalChoiceCnt()))
+                    .toList();
+            // 각 아이템에서 아이디와 투표 수만 뽑아서 저장
+            voteCloseInfoDto.updateVoteItemList(voteItemList);
+        }
+        System.out.println("sortByClose added voteItem List!!!! = " + sortByClose);
+
+        // 정렬해서 보여주기
+        return ServiceResult.success(
+                RankDto.builder()
+                        .sortByLikes(sortByLikes)
+                        .sortByNew(sortByNew)
+                        .sortByVoter(sortByVoter)
+                        .sortByClose(sortByClose)
+                        .build()
+        );
     }
 }
