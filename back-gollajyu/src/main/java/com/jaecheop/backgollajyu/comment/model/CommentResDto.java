@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentResDto {
 
-    private Long commentId;
+    private int commentId;
     private LocalDateTime commentCreateAt;
     private String commentDescription;
     private VoteResDto voteResDto;

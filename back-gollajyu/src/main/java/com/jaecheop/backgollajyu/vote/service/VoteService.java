@@ -46,6 +46,7 @@ public class VoteService {
     private final TagRepository tagRepository;
     private final CommentRepository commentRepository;
 
+    private final CommentRepository commentRepository;
 
     /**
      * 투표 생성
@@ -343,8 +344,8 @@ public class VoteService {
             List<Vote> votes = voteRepository.findVoteByCommentId(comment.getId());
             CommentResDto commentResDto = CommentResDto.builder()
                     .commentId(comment.getId())
-                    .commentCreateAt(comment.getCreateAt())
-                    .commentDescription(comment.getCommentDesc())
+                    .commentCreateAt(comment.getCommentCreateAt().toLocalDateTime())
+                    .commentDescription(comment.getCommentDescription())
                     .voteResDto(makeVoteResDtoList(votes, memberId).get(0))
                     .build();
 
@@ -544,7 +545,7 @@ public class VoteService {
             voteItemInfoDtoList.add(voteItemInfoDto);
         }
         // 3. 댓글
-        List<Comment> commentList = commentRepository.findByVoteId(vote.getId());
+        List<Comment> commentList = commentRepository.findAllByVoteId(vote.getId());
 
         VoteDetailResDto voteDetailResDto = VoteDetailResDto.builder()
                 .chosenItem(voteResult.getId())
