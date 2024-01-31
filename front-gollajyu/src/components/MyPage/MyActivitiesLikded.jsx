@@ -1,9 +1,13 @@
 import React from "react";
+import MyActivitiesHistory from "./MyActivitiesHistory";
 
 const MyActivitiesLikded = () => {
   return (
     <>
-      <h1>좋아요 한 투표</h1>
+      <MyActivitiesHistory />
+      <MyActivitiesHistory />
+      <MyActivitiesHistory />
+      <MyActivitiesHistory />
     </>
   );
 };
