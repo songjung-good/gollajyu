@@ -20,7 +20,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/votes")
+@RequestMapping("/api/votes")
 public class VoteController {
 
     private final VoteService voteService;
