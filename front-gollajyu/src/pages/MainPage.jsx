@@ -1,4 +1,6 @@
 import React from "react";
+import MainVoteList from "../components/MainVoteList"
+import MainWord from "../components/MainWord";
 import SwipeVote from "../components/SwipeVote";
 import PostsGrid from "../components/MainVoteList";
 import useModalStore from "../stores/modalState";
@@ -21,6 +23,13 @@ const MainPage = () => {
   };
   return (
     <>
+    <div>
+      <div className="bg-gradient-to-tl from-blue-400 to-red-400">
+        <MainWord />
+        <SwipeVote />
+      </div>
+      <MainVoteList />
+    </div>
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}
       <div>
