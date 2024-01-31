@@ -40,7 +40,7 @@ const MyActivitiesHistory = () => {
     marginBottom: "30px",
     padding: "20px 30px",
     width: "100%",
-    height: "200px",
+    height: isSmall? "360px" : "200px",
     borderRadius: "20px", // 둥근 테두리
     boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.3)", // 그림자 효과
 
@@ -53,7 +53,7 @@ const MyActivitiesHistory = () => {
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
     // 디자인  
-    height: "40px",
+    height: isSmall? "80px" : "40px",
     width: "100%",
 
     // 글자
@@ -61,13 +61,14 @@ const MyActivitiesHistory = () => {
 
     // 컨텐츠 정렬
     display: "flex",
-    justifyContent: "space-between", // 항목 균일 간격으로 정렬
+    flexDirection: isSmall ? "column" : "row",
+    justifyContent: isSmall ? "flex-start" : "space-between", // !isSaml일 때 항목 간격 균일하게
   }
 
   // ----------- 정보 첫 번째 컨테이너 스타일 -----------
-  const infoFirtstContainerStyle = {
+  const infoSubContainerStyle = {
     // 디자인
-    width: "49%",
+    width: isSmall ? "100%" : "49%",
 
     // 컨텐츠 정렬
     display: "flex",
@@ -76,31 +77,24 @@ const MyActivitiesHistory = () => {
   }
 
   // ----------- 정보 두 번째 컨테이너 스타일 -----------
-  const infoSecondContainerStyle = {
+  const infoBarContainerStyle = {
     // 상속
-    ...infoFirtstContainerStyle,
+    ...infoSubContainerStyle,
 
     // 디자인
     width: "2%",
 
     // 컨텐츠 정렬
+    display: isSmall ? "none" : "flex", // 작은 화면에서 렌더링 하지 않음
     justifyContent: "center",
   }
 
-  // ----------- 정보 세 번째 컨테이너 스타일 -----------
-  const infoThirdContainerStyle = {
-    // 상속
-    ...infoFirtstContainerStyle,
+  // ----------- 제목 스타일 -----------
+  const titleStyle = {
+    // 디자인
+    marginRight: "10px",
 
-    // 컨텐츠 정렬
-    justifyContent: "end",
-    justifyContent: "space-between",
-  }
-
-  // ----------- 텍스트 스타일 -----------
-  const textStyle = {
-    // 글자
-    // fontSize: "20px",
+    // 길이가 일정 이상일 경우 ... 되는 기능 필요
   }
 
   // ----------- 댓글 수 스타일 -----------
@@ -126,12 +120,14 @@ const MyActivitiesHistory = () => {
     // 컨텐츠 정렬
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
+    flexWrap: isSmall ? "wrap" : "nowrap", // isSmall일 때 줄 바꿈 허용
   }
 
   // ----------- 투표 아이템 스타일 -----------
   const voteItemStyle = {
     // 디자인
-    margin: "0 15px",
+    margin: "0 15px 14px 15px",
     padding: "10px",
     width: isLarge ? "150px" : "120px",
     border: "5px solid", 
@@ -151,7 +147,6 @@ const MyActivitiesHistory = () => {
   }
 
 
-
   // --------------------------------- css 끝 ---------------------------------
 
   // ----------- VoteItem 컴포넌트 정의 -----------
@@ -164,7 +159,8 @@ const MyActivitiesHistory = () => {
     // ----------- myPick 스타일 -----------
     const myPickStyle = {
       marginLeft: "15px", 
-      color: isMyChoice ? "#FF6D6D" : "#FFFFFF",
+      color: "#FF6D6D",
+      visibility: isMyChoice ? "visible" : "hidden",
     };
 
     // ----------- 투표 아이템 스타일 -----------
@@ -229,22 +225,22 @@ const MyActivitiesHistory = () => {
       <NavLink>
         <div style={containerStyle}>
           <div style={infoContainerStyle}>
-            <div style={infoFirtstContainerStyle}>
-              <div style={textStyle}>[제목]</div>
-              <div style={commentNumberStyle}>[[댓글]]</div>
-              <div style={textStyle}>[카테고리]</div>
+            <div style={infoSubContainerStyle}>
+              <div style={voteContainerStyle}>
+                <div style={titleStyle}>[제목]</div>
+                <div style={commentNumberStyle}>[[댓글]]</div>
+              </div>
+              <div>[카테고리]</div>
             </div>
-            <div style={infoSecondContainerStyle}>
-              <div style={textStyle}>|</div>
+            <div style={infoBarContainerStyle}>
+              <div>|</div>
             </div>
-            <div style={infoThirdContainerStyle}>
-            <div style={likeNumberStyle}>❤ [좋아요]</div>
+            <div style={infoSubContainerStyle}>
+              <div style={likeNumberStyle}>❤ [좋아요]</div>
               <div style={timeStyle}>[작성 시간]</div>
             </div>
           </div>
-          <div style={voteContainerStyle}>
-            <Vote voteOptions={voteOptions} />
-          </div>
+          <Vote voteOptions={voteOptions} />
         </div>
       </NavLink>
     </>
