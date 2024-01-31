@@ -8,19 +8,22 @@ function VoteCardItem(props) {
   const [clicked, setClicked] = useState(null);
   
   // 투표선택지의 내용
+  const categoryIndex = props.category === 'a' || props.category === 'b' ? 0 : props.category === 'c' || props.category === 'd' ? 1 : 2;
   const selection = [
     ['가성비', '소재', '색감', '모양', '브랜드'],
-    // ['가성비', '디자인', '브랜드', '기능성', '내구성']
-]
+    ['가성비', '디자인', '브랜드', '기능성', '내구성'],
+    [''],
+  ]
 
   return (
     // 카드 하나의 사이즈
-    <div className='flex flex-col' style={{ width: '200px', height: '400px' }}> {/* 높이를 조정했습니다. */}
+    <div className='flex flex-col' style={{ width: '250px', height: '450px' }}> {/* 높이를 조정했습니다. */}
     {/* 이미지를 띄워지는 배경 */}
       <Container
-        className='h-4/5 w-full bg-gray-100 p-4 relative rounded-xl' 
+        className='h-4/5 w-full p-4 relative rounded-xl' 
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
+        style={{ maxWidth: '100%' }}
       >
         {/* 투표 이미지 */}
         <img
@@ -37,11 +40,11 @@ function VoteCardItem(props) {
             {Array(5).fill(null).map((_, index) => (
               <button 
                 key={index} 
-                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white' : 'text-black'}`}
+                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white' : 'text-black'} border-t-2 border-white text-xl`}
                 onClick={() => setClicked(index)}
                 disabled={clicked !== null && clicked !== index}
               >
-                {selection[0][index]}
+                {selection[categoryIndex][index]}
               </button>
             ))}
           </div>
