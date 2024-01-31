@@ -110,7 +110,6 @@ const MyActivities = () => {
   const contentsContainerStyle = {
     // 디자인
     padding: "40px",
-    minHeight: "1000px", // 최소 높이
     borderRadius: "50px",
     background: "#FFFFFF",
   };
@@ -271,6 +270,7 @@ const MyActivities = () => {
     ...contentsContainerStyle,
 
     // 디자인
+    minHeight: "1000px", // 최소 높이
     borderTopLeftRadius: "0",
     borderTopRightRadius: isSmall ? "0" : "50px",
   };
