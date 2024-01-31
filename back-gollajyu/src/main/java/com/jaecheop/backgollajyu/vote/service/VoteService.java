@@ -229,25 +229,60 @@ public class VoteService {
     }
 
 
-    // 태그별 투표수 첨부 해주기 For ItemResDto
-    public Map<String, Long> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
-        Map<String, Long> statistics = new HashMap<>();
-
+    // 태그별 투표수 첨부 해주기 For ItemResDto 결과랑 sSReq(null true)
+    public List<CategoryTagDto> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
+        List<CategoryTagDto> statisticsList = new ArrayList<>();
 
         // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
         List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
                 : voteResults;
-        // 반복문을 돌면서 all:전체 사이즈 및 각 태그의 사이즈를 Map으로 만들어 줌.
+
+        // Going through the loop, all: creates a list of the overall size and the size of each tag.
         for (VoteResult voteResult : voteResultList) {
             // Assuming VoteResult has a method to retrieve associated Tag
             Tag tag = voteResult.getTag();
+            CategoryTagDto categoryTagDto = CategoryTagDto.builder()
+                    .category(tag.getCategory().getCategoryName())
+                    .tag(tag.getName())
+                    .tagId(tag.getId()) // Unique identifier for the tag
+                    .build();
 
-            // Update count for the tag
-            statistics.put(tag.getName(), statistics.getOrDefault(tag.getName(), 0L) + 1);
-            statistics.put("all", statistics.getOrDefault("all", 0L) + 1);
+            // Check if the categoryTagDto already exists in the list
+            boolean existingDtoFound = false;
+            for (CategoryTagDto existingDto : statisticsList) {
+                if (existingDto.equals(categoryTagDto)) {
+                    // If the categoryTagDto exists, update its count
+                    existingDto.setCount(existingDto.getCount() + 1);
+                    existingDtoFound = true;
+                    break;
+                }
+            }
+
+            if (!existingDtoFound) {
+                // If the categoryTagDto doesn't exist, add it to the list
+                categoryTagDto.setCount(1L);
+                statisticsList.add(categoryTagDto);
+            }
+
+            // Update count for the 'all' categoryTagDto
+            CategoryTagDto allCategoryTagDto = new CategoryTagDto(0, "all", "all", 0L);
+            boolean allDtoFound = statisticsList.stream().anyMatch(allCategoryTagDto::equals);
+
+            if (allDtoFound) {
+                // If the 'all' categoryTagDto exists, update its count
+                statisticsList.stream()
+                        .filter(allCategoryTagDto::equals)
+                        .findFirst()
+                        .ifPresent(dto -> dto.setCount(dto.getCount() + 1));
+            } else {
+                // If the 'all' categoryTagDto doesn't exist, add it to the list
+                allCategoryTagDto.setCount(1L);
+                statisticsList.add(allCategoryTagDto);
+            }
         }
-        return statistics;
+
+        return statisticsList;
     }
 
 

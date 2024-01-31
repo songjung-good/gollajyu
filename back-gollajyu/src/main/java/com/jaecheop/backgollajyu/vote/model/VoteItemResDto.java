@@ -18,5 +18,5 @@ public class VoteItemResDto {
     private String voteItemDesc;
     private Long price; // tag1 = 30
     private Long resultSize;
-    private Map<String, Long> voteResultCountResDtoList;
+    private List<CategoryTagDto> voteResultCountResDtoList;
 }
