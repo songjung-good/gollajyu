@@ -4,22 +4,52 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
-import SwipeCard from "./SwipeCard";
+import VoteCard from './vote/VoteCard';
 
 export default function SwipeVote() {
+  // 슬라이드 기능
   const [activeSlide, setActiveSlide] = useState(0);
-
   useEffect(() => {
     const swiperInstance = document.querySelector('.mySwiper').swiper;
 
     swiperInstance.on('slideChange', () => {
       setActiveSlide(swiperInstance.activeIndex);
     });
-
+  
     return () => {
       swiperInstance.off('slideChange');
     };
   }, []);
+
+  // 임시데이터
+  const votes = [
+    {
+      id: 1,
+      options: [
+        { id: 'a1', image: 'image1.png', title: '옵션 1' },
+        { id: 'a2', image: 'image2.png', title: '옵션 2' },
+        { id: 'a3', image: 'image3.png', title: '옵션 3' },
+      ],
+    },
+    {
+        id: 2,
+        options: [
+          { id: 'a1', image: 'image1.png', title: '옵션 1' },
+          { id: 'a2', image: 'image2.png', title: '옵션 2' },
+          { id: 'a3', image: 'image3.png', title: '옵션 3' },
+          { id: 'a3', image: 'image3.png', title: '옵션 3' },
+        ],
+      },
+    {
+      id: 3,
+      options: [
+        { id: 'a1', image: 'image1.png', title: '옵션 1' },
+        { id: 'a3', image: 'image3.png', title: '옵션 3' },
+      ],
+    },
+    // 추가 투표 데이터
+    // ...
+  ];
 
   return (
     <div className="py-10">
@@ -42,10 +72,13 @@ export default function SwipeVote() {
         className="mySwiper"
         style={{ padding: '30px' }}
       >
-        {['slide1', 'slide2', 'slide3', 'slide4'].map((hash, index) => (
-          <SwiperSlide key={hash} data-hash={hash} style={{ width: '1024px' }}>
+        {votes.map((vote) => (
+          <SwiperSlide key={vote.id} data-hash={vote.id} style={{ width: '1024px' }}>
             <div>
-              <SwipeCard />
+              <VoteCard 
+                key={vote.id}
+                options={vote.options}
+              />
             </div>
           </SwiperSlide>
         ))}

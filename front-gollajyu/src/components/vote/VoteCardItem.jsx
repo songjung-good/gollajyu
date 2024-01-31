@@ -17,10 +17,10 @@ function VoteCardItem(props) {
 
   return (
     // 카드 하나의 사이즈
-    <div className='flex flex-col' style={{ width: '250px', height: '450px' }}> {/* 높이를 조정했습니다. */}
+    <div className='flex flex-col w-full h-full' style={{ width: '280px', height: '450px' }}> {/* 높이를 조정했습니다. */}
     {/* 이미지를 띄워지는 배경 */}
       <Container
-        className='h-4/5 w-full p-4 relative rounded-xl' 
+        className='h-4/5 w-full p-2 relative rounded-xl' 
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         style={{ maxWidth: '100%' }}
@@ -52,12 +52,8 @@ function VoteCardItem(props) {
       </Container>
       {/* 버튼을 누르면 생기는 상세페이지 */}
       <div className='h-1/3 w-full flex flex-col justify-center items-center'>
-        <h2 className='text-lg font-bold mb-2'>{props.title}</h2>
-        {clicked !== null ? (
-          <Link className='text-blue-500' to={props.path}>Go to Details</Link>
-        ) : (
-          <p>{props.detail}</p>
-        )}
+        <h2 className='text-lg font-bold mb-2'>{props.product}</h2>
+        <p>{props.detail}</p>
       </div>
     </div>
   );
