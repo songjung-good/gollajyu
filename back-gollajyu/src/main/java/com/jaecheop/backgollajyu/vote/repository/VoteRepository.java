@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,8 +28,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     // 댓글 쓴 투표 시간 순
     @Query("SELECT cm.vote FROM Comment cm WHERE cm.id = :commentId " +
-            "ORDER BY cm.createAt DESC")
-    List<Vote> findVoteByCommentId(@Param("commentId") Long commentId);
+            "ORDER BY cm.commentCreateAt DESC")
+    List<Vote> findVoteByCommentId(@Param("commentId") int commentId);
 
 
     // 좋아요한 투표 시간순 정렬
@@ -40,5 +41,10 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId);
 
+    List<Vote> findAllByCreateAtBetweenOrderByCreateAtDesc(LocalDateTime startDate, LocalDateTime endDate);
+
+    List<Vote> findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(int categoryId, String keyword1, String keyword2);
+
+    List<Vote> findAllByTitleContainingOrDescriptionContainingOrderByCreateAtDesc(String keyword1, String keyword2);
 
 }

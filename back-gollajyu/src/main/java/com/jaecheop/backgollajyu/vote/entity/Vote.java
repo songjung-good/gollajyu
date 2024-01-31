@@ -1,6 +1,8 @@
 package com.jaecheop.backgollajyu.vote.entity;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.vote.model.VoteCloseInfoDto;
+import com.jaecheop.backgollajyu.vote.model.VoteInfoDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,4 +46,18 @@ public class Vote {
 
     @OneToMany(mappedBy = "vote")
     List<VoteResult> voteResultList = new ArrayList<>();
+
+    public static VoteInfoDto convertToVoteInfoDto(Vote vote){
+        return VoteInfoDto.builder()
+                .voteId(vote.getId())
+                .memberId(vote.getMember().getId())
+                .title(vote.getTitle())
+                .description(vote.getDescription())
+                .createAt(vote.getCreateAt())
+                .likesCnt((long)vote.getLikesList().size())
+                .totalChoiceCnt((long)vote.getVoteResultList().size())
+                .itemCnt(vote.getVoteItemList().size())
+                .build();
+    }
+
 }

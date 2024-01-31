@@ -21,6 +21,9 @@ public class ListVoteDto {
     private Long likesCnt;
     private List<ListVoteItemDto> voteItemList;
 
+    // 멤버의 해당 투표 좋아요 여부
+    private boolean isLiked;
+
     public void updateVoteItemList(List<ListVoteItemDto> voteItemList) {
         this.voteItemList = voteItemList;
     }
@@ -36,6 +39,10 @@ public class ListVoteDto {
                 .categoryName(vote.getCategory().getCategoryName())
                 .likesCnt((long)vote.getLikesList().size())
                 .build();
-
     }
+
+    public void updateIsLiked(){
+        this.isLiked = true;
+    }
+
 }
