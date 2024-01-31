@@ -881,4 +881,125 @@ public class VoteService {
             return ServiceResult.success(likesResDto);
         }
     }
+
+
+    /**
+     * 투표 검색 결과 - category + 키워드
+     * @param searchReqDto
+     * @param memberInfo
+     * @return
+     */
+    public ServiceResult searchVoteList(SearchReqDto searchReqDto, LoginResDto memberInfo) {
+
+        // 결과 DTO
+        SearchResDto searchResDto =null;
+        // voteList categoryById 참조해서 짜기
+
+
+        // 카테고리별 투표 거르기
+        List<ListVoteDto> allVoteList = new ArrayList<>();
+        String keyword = searchReqDto.getKeyword();
+
+
+        // 로그인 했을 때,
+        if(memberInfo != null) {
+            System.out.println("memberInfo!!!!!!!! = " + memberInfo);
+            Long memberId = memberInfo.getMemberId();
+
+            //  카테고리가 전체일 때, 카테고리가 전체가 아닐 때 키워드로 거르기
+            if (searchReqDto.getCategoryId() == 0) {
+                searchResDto = SearchResDto.builder()
+                        .categoryName("All")
+                        .build();
+                allVoteList = voteRepository.findAllByTitleContainingOrDescriptionContainingOrderByCreateAtDesc(keyword, keyword)
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+
+                // 걸러진 투표 사용자의 좋아요 유무 체크
+                allVoteList.stream().forEach(lvd -> {
+                    Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
+                    if (optionalLikes.isPresent()) {
+                        lvd.updateIsLiked();
+                    }
+                });
+
+                makeVoteDetail(allVoteList);
+
+
+            } else {
+                // 카테고리 존재 유무
+                Optional<Category> optionalCategory = categoryRepository.findById(searchReqDto.getCategoryId());
+                if (optionalCategory.isEmpty()) {
+                    return ServiceResult.fail("존재하지 않는 카테고리입니다");
+                }
+                Category category = optionalCategory.get();
+
+                searchResDto = SearchResDto.builder()
+                        .categoryName(category.getCategoryName())
+                        .build();
+
+                allVoteList = voteRepository
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+
+                // 걸러진 투표 사용자의 좋아요 유무 체크
+                allVoteList.stream().forEach(lvd -> {
+                    Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
+                    if (optionalLikes.isPresent()) {
+                        lvd.updateIsLiked();
+                    }
+                });
+
+                makeVoteDetail(allVoteList);
+
+            }
+            searchResDto.updateTotalCnt((long) allVoteList.size());
+            searchResDto.updateVoteList(allVoteList);
+        }
+
+        // 로그인 안했을 때,
+        else {
+            //  카테고리가 전체일 때, 카테고리가 전체가 아닐 때 키워드로 거르기
+            if (searchReqDto.getCategoryId() == 0) {
+                searchResDto = SearchResDto.builder()
+                        .categoryName("All")
+                        .build();
+                allVoteList = voteRepository.findAllByTitleContainingOrDescriptionContainingOrderByCreateAtDesc(keyword, keyword)
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+
+                makeVoteDetail(allVoteList);
+
+
+            } else {
+                // 카테고리 존재 유무
+                Optional<Category> optionalCategory = categoryRepository.findById(searchReqDto.getCategoryId());
+                if (optionalCategory.isEmpty()) {
+                    return ServiceResult.fail("존재하지 않는 카테고리입니다");
+                }
+                Category category = optionalCategory.get();
+
+                searchResDto = SearchResDto.builder()
+                        .categoryName(category.getCategoryName())
+                        .build();
+
+                allVoteList = voteRepository
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .stream()
+                        .map(v -> ListVoteDto.convertToDto(v))
+                        .toList();
+
+                makeVoteDetail(allVoteList);
+
+            }
+            searchResDto.updateTotalCnt((long) allVoteList.size());
+            searchResDto.updateVoteList(allVoteList);
+        }
+
+        return ServiceResult.success(searchResDto);
+    }
 }
