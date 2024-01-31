@@ -120,17 +120,15 @@ const LoginModal = () => {
         </div>
       </div>
       <p
-        className={`transition ${isSignupHovered ? "font-bold" : ""}`}
-        // div
+        className={`box-content w-1/2 text-center transition ${
+          isSignupHovered ? "text-amber-500" : ""
+        }`}
         style={{ cursor: "pointer" }}
         onMouseEnter={() => setIsSignupHovered(true)}
         onMouseLeave={() => setIsSignupHovered(false)}
         onClick={handleSignup}
       >
-        {isSignupHovered
-          ? "         회원가입하러 가기         "
-          : "아직 회원이 아니신가요?"}
-        {/* 회원가입하러 가기에 띄워쓰기가 있는 이유: 글자 수 차이가 나면 호버 시 글자 변동이 의도치 않게 되기 때문 => 수정 더 해야함 */}
+        {isSignupHovered ? "회원가입하러 가기" : "아직 회원이 아니신가요?"}
       </p>
     </div>
   );
