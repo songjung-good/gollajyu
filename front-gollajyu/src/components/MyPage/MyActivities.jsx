@@ -6,7 +6,7 @@ import MyActivitiesCreated from "./MyActivitiesCreated";
 import MyActivitiesParticipated from "./MyActivitiesParticipated";
 import MyActivitiesLikded from "./MyActivitiesLikded";
 import MyActivitiesCommented from "./MyActivitiesCommented";
-import PointImage from "../../assets/images/point_img.png";
+import PointImage from "/assets/images/point_img.png";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
