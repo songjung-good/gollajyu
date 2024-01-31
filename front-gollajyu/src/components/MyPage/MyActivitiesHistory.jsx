@@ -40,53 +40,36 @@ const MyActivitiesHistory = () => {
     marginBottom: "30px",
     padding: "20px 30px",
     width: "100%",
-    height: isSmall? "360px" : "200px",
-    borderRadius: "20px", // 둥근 테두리
+    border: ItemHovered ? "5px solid #4A4A4A" : "5px solid #FFFFFF", 
+    borderRadius: "10px", // 둥근 테두리
     boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.3)", // 그림자 효과
+  };
 
+  // ----------- 제목 컨테이너 스타일 -----------
+  const titleContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
-  };
+  }
 
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
     // 디자인  
-    height: isSmall? "80px" : "40px",
     width: "100%",
 
     // 글자
     fontSize: "20px",
+    color: "#4A4A4A",
 
     // 컨텐츠 정렬
     display: "flex",
-    flexDirection: isSmall ? "column" : "row",
-    justifyContent: isSmall ? "flex-start" : "space-between", // !isSaml일 때 항목 간격 균일하게
-  }
-
-  // ----------- 정보 첫 번째 컨테이너 스타일 -----------
-  const infoSubContainerStyle = {
-    // 디자인
-    width: isSmall ? "100%" : "49%",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
   }
 
-  // ----------- 정보 두 번째 컨테이너 스타일 -----------
-  const infoBarContainerStyle = {
-    // 상속
-    ...infoSubContainerStyle,
-
-    // 디자인
-    width: "2%",
-
+  // ----------- 정보 서브 컨테이너 스타일 -----------
+  const infoSubContainerStyle = {
     // 컨텐츠 정렬
-    display: isSmall ? "none" : "flex", // 작은 화면에서 렌더링 하지 않음
-    justifyContent: "center",
+    display: "flex",
   }
 
   // ----------- 제목 스타일 -----------
@@ -94,13 +77,22 @@ const MyActivitiesHistory = () => {
     // 디자인
     marginRight: "10px",
 
+    // 글자
+    fontSize: "28px",
     // 길이가 일정 이상일 경우 ... 되는 기능 필요
   }
 
   // ----------- 댓글 수 스타일 -----------
   const commentNumberStyle = {
     // 글자
+    fontSize: "20px",
     color: "#868FF4",
+  }
+
+  // ----------- 구분 선 스타일 -----------
+  const barStyle = {
+    // 디자인
+    margin: "0 5px",
   }
 
   // ----------- 좋아요 수 스타일 -----------
@@ -109,17 +101,10 @@ const MyActivitiesHistory = () => {
     color: "#FF6D6D",
   }
 
-  // ----------- 작성 시간 스타일 -----------
-  const timeStyle = {
-    // 글자
-    color: "#4A4A4A",
-  }
-
   // ----------- 투표 컨테이너 스타일 -----------
   const voteContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
     flexWrap: isSmall ? "wrap" : "nowrap", // isSmall일 때 줄 바꿈 허용
   }
@@ -127,8 +112,8 @@ const MyActivitiesHistory = () => {
   // ----------- 투표 아이템 스타일 -----------
   const voteItemStyle = {
     // 디자인
-    margin: "0 15px 14px 15px",
-    padding: "10px",
+    margin: "0 10px 10px 10px",
+    padding: "5px",
     width: isLarge ? "150px" : "120px",
     border: "5px solid", 
 
@@ -146,9 +131,9 @@ const MyActivitiesHistory = () => {
     fontSize: "16px",
   }
 
-
   // --------------------------------- css 끝 ---------------------------------
 
+  
   // ----------- VoteItem 컴포넌트 정의 -----------
   const VoteItem = ({ label, ratio, isMyChoice }) => {
     // 가장 높은 비율의 선택지 찾기
@@ -222,23 +207,22 @@ const MyActivitiesHistory = () => {
 
   return (
     <>
-      <NavLink>
+      <NavLink
+        onMouseOver={ItemMouseEnter}
+        onMouseOut={ItemMouseLeave}
+      >
         <div style={containerStyle}>
+          <div style={titleContainerStyle}>
+            <div style={titleStyle}>[제목]</div>
+            <div style={commentNumberStyle}>[[댓글]]</div>
+          </div>
           <div style={infoContainerStyle}>
             <div style={infoSubContainerStyle}>
-              <div style={voteContainerStyle}>
-                <div style={titleStyle}>[제목]</div>
-                <div style={commentNumberStyle}>[[댓글]]</div>
-              </div>
               <div>[카테고리]</div>
-            </div>
-            <div style={infoBarContainerStyle}>
-              <div>|</div>
-            </div>
-            <div style={infoSubContainerStyle}>
+              <div style={barStyle}>|</div>
               <div style={likeNumberStyle}>❤ [좋아요]</div>
-              <div style={timeStyle}>[작성 시간]</div>
             </div>
+            <div>[작성 시간]</div>
           </div>
           <Vote voteOptions={voteOptions} />
         </div>
