@@ -223,13 +223,14 @@ const NavigationBar = () => {
     // 디자인
     width: "100%", // 가로 길이
     height: "5px", // 세로 길이
+    background: "#FFD257",
     transition: "background 0.2s ease", // 나타날 때 애니메이션
   }
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
     // 디자인
-    width: isLarge ? "280px" : "200px", // (반응형) 버튼 리스트 넓이
+    width: "280px", // 버튼 리스트 넓이
     height: "100px", // 높이
 
     // 컨텐츠 정렬
@@ -534,7 +535,7 @@ const NavigationBar = () => {
                     <div>{item.label}</div>
                     <div style={{
                       ...itemHoverStyle,
-                      background: item.hovered ? "#FFD257" : "#FFFFFF"
+                      visibility: item.hovered ? "visible" : "hidden",
                     }}></div>
                   </div>
                 </MenuItem>
@@ -575,7 +576,7 @@ const NavigationBar = () => {
                         <div>{item.label}</div>
                         <div style={{
                           ...itemHoverStyle,
-                          background: item.hovered ? "#FFD257" : "#FFFFFF"
+                          visibility: item.hovered ? "visible" : "hidden",
                         }}></div>
                       </div>
                     </MenuItem>
@@ -642,7 +643,7 @@ const NavigationBar = () => {
                         <div>{item.label}</div>
                         <div style={{
                           ...itemHoverStyle,
-                          background: item.hovered ? "#FFD257" : "#FFFFFF"
+                          visibility: item.hovered ? "visible" : "hidden",
                         }}></div>
                       </div>
                     </MenuItem>
