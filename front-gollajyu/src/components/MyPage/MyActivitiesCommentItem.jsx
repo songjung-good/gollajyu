@@ -12,7 +12,7 @@ const useHoverState = () => {
   return [hovered, handleMouseEnter, handleMouseLeave];
 };
 
-const MyActivitiesHistory = () => {
+const MyActivitiesCommentItem = () => {
   // ----------- 반응형 웹페이지 구현 -----------
   const isLarge = useMediaQuery({
     query: "(min-width:1024px)",
@@ -72,21 +72,14 @@ const MyActivitiesHistory = () => {
     display: "flex",
   }
 
-  // ----------- 제목 스타일 -----------
-  const titleStyle = {
+  // ----------- 댓글 내용 스타일 -----------
+  const commentStyle = {
     // 디자인
     marginRight: "10px",
 
     // 글자
     fontSize: "28px",
     // 길이가 일정 이상일 경우 ... 되는 기능 필요
-  }
-
-  // ----------- 댓글 수 스타일 -----------
-  const commentNumberStyle = {
-    // 글자
-    fontSize: "20px",
-    color: "#868FF4",
   }
 
   // ----------- 구분 선 스타일 -----------
@@ -213,8 +206,7 @@ const MyActivitiesHistory = () => {
       >
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
-            <div style={titleStyle}>[제목]</div>
-            <div style={commentNumberStyle}>[[댓글]]</div>
+            <div style={commentStyle}>[댓글 내용]</div>
           </div>
           <div style={infoContainerStyle}>
             <div style={infoSubContainerStyle}>
@@ -231,4 +223,4 @@ const MyActivitiesHistory = () => {
   );
 };
 
-export default MyActivitiesHistory;
+export default MyActivitiesCommentItem;
