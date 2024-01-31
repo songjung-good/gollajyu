@@ -43,38 +43,53 @@ const LoginModal = () => {
         onSubmit={handleSubmit(submitForm)}
         className="flex flex-col w-3/5"
       >
-        <div>
+        <div className="h-[80px]">
           {/* 이메일 => 형식: (대소문자 구분 없이 알파벳 + 숫자) + @ + (대소문자 구분 없이 알파벳 + 숫자) + . + (알파벳) */}
           <input
             type="text"
             id="email"
-            className={`rounded-full bg-stone-100 w-full p-3 border border-white ${
-              errors.email ? "mb-1" : "mb-7"
-            }`}
+            className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
             placeholder="이메일을 입력하세요"
             {...register("email", {
               required: true,
-              pattern: /^[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
+              pattern: {
+                value: /^[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
+                message: "올바른 형식의 이메일을 입력하세요",
+              },
             })}
           />
-          {errors.email && (
-            <p className="px-3 text-red-500 mb-3">
-              올바른 형식의 이메일을 입력하세요
-            </p>
+          {errors.email ? (
+            <p className="px-3 text-red-500 text-sm">{errors.email.message}</p>
+          ) : (
+            <p className="invisible text-sm">nothing</p>
           )}
         </div>
-        <div>
+        <div className="h-[80px]">
           <input
             type="password"
-            className={`rounded-full bg-stone-100 w-full p-3 border border-white ${
-              errors.pw ? "mb-1" : "mb-7"
-            }`}
+            className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
             id="pw"
             placeholder="비밀번호를 입력하세요"
-            {...register("pw", { required: true, minLength: 8 })}
+            {...register("pw", {
+              required: true,
+              minLength: {
+                value: 8,
+                message: "비밀번호는 8자 이상 15자 미만 입니다",
+              },
+              maxLength: {
+                value: 15,
+                message: "비밀번호는 15자 미만 입니다",
+              },
+              pattern: {
+                value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
+                message: "영문, 숫자, 특수문자를 1가지 이상 포함",
+              },
+            })}
           />
-          {errors.pw && (
-            <p className="px-3 text-red-500 mb-3">비밀번호는 8자 이상입니다</p>
+          {errors.pw ? (
+            <p className="px-3 text-red-500 text-sm">{errors.pw.message}</p>
+          ) : (
+            <p className="invisible text-sm">nothing</p>
           )}
         </div>
         <button

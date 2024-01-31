@@ -56,12 +56,6 @@ const SignupModal = () => {
     console.log("구글로그인 시도");
   };
 
-  // 회원가입으로 가는 함수
-  const handleSignup = () => {
-    // 로그인 모달이 닫히고 회원가입 모달이 열리는 동작 필요함
-    console.log("회원가입으로 갑니다");
-  };
-
   return (
     <div className="mx-auto container bg-white w-[600px] h-[670px] flex flex-col items-center rounded-3xl shadow-md">
       <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">

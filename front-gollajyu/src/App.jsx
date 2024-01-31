@@ -14,6 +14,7 @@ import StatisticPage from "./pages/StatisticPage";
 import TestPage from "./pages/TestPage";
 import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
+import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import VideoComponent from "./components/openvidu/VideoComponent";
 import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
@@ -45,6 +46,7 @@ const App = () => {
         <Route element={<Navbar />}>
           <Route path="/" element={<MainPage />} />
           <Route path="/Signup" element={<SignupForm />} />
+          <Route path="/Login" element={<LoginForm />} />
           <Route path="/VotePage" element={<VotePage />} />
           <Route path="/BroadcastPage" element={<BroadcastPage />} />
           <Route path="/StatisticPage" element={<StatisticPage />} />
