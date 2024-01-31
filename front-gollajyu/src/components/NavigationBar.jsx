@@ -102,8 +102,24 @@ const NavigationBar = () => {
     query: "(max-width:768px)",
   });
 
-  const isLoggedIn = true; // 로그인 상태
-  // const isLoggedIn = false;  // 비로그인 상태
+  // const isLoggedIn = true; // 로그인 상태
+  const isLoggedIn = false; // 비로그인 상태
+
+  // 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [isSignupModalOpen, setSignupModalOpen] = useState(false);
+  // 위의 상태를 전역 상태로 관리해야겠다. => 지금이 바로 상태관리 툴이 필요한 타이밍..!
+
+  const handleLogin = () => {
+    // isLoginModalOpen을 true로
+  };
+  const handleLogout = () => {
+    // 로그아웃 로직
+  };
+  const handleSignup = () => {
+    // isSignupModalOpen을 true로
+  };
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -417,6 +433,7 @@ const NavigationBar = () => {
       mouseEnter: logoutButtonMouseEnter,
       mouseLeave: logoutButtonMouseLeave,
       hoverStyle: logoutButtonHoverStyle,
+      handleClick: handleLogout(),
     },
     {
       label: "로그인",
@@ -425,6 +442,7 @@ const NavigationBar = () => {
       mouseEnter: loginButtonMouseEnter,
       mouseLeave: loginButtonMouseLeave,
       hoverStyle: loginButtonHoverStyle,
+      handleClick: handleLogin(),
     },
     {
       label: "회원가입",
@@ -433,6 +451,7 @@ const NavigationBar = () => {
       mouseEnter: signupButtonMouseEnter,
       mouseLeave: signupButtonMouseLeave,
       hoverStyle: signupButtonHoverStyle,
+      handleClick: handleSignup(),
     },
   ];
 
@@ -554,6 +573,7 @@ const NavigationBar = () => {
                   handleMouseLeave: buttonItems[0].mouseLeave,
                   hoverStyle: buttonItems[0].hoverStyle,
                 }}
+                onClick={buttonItems[0].handleClick}
               />
             </>
           ) : (
@@ -570,6 +590,7 @@ const NavigationBar = () => {
                     handleMouseLeave: item.mouseLeave,
                     hoverStyle: item.hoverStyle,
                   }}
+                  onClick={item.handleClick}
                 />
               ))}
             </>

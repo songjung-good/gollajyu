@@ -76,6 +76,8 @@ const MainPage = () => {
     ],
   ];
 
+  // question, answer를 "" 표시에서 자르거나 글자 길이로 자르거나 보기 편하게 수정하는 과정 필요함
+
   const [response, setResponse] = useState([]);
   const [questionNumber, setQuestionNumber] = useState(-1);
 
@@ -111,8 +113,8 @@ const MainPage = () => {
 
   return (
     <div className="p-5 h-screen">
-      <div className="container mx-auto my-5 p-10 bg-white rounded-lg w-2/3 lg:w-1/2">
-        <div>
+      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl w-2/3 lg:w-1/2 min-h-[600px]">
+        <div className="min-h-[600px]">
           {questionNumber === -1 ? (
             <div className="flex flex-col items-center space-y-24">
               <h1 className="text-4xl text-center">
@@ -135,11 +137,13 @@ const MainPage = () => {
             <>
               <div className="mx-auto mb-5 max-w-lg">
                 <div className="flex justify-between">
+                  {/* 소비성향 테스트 문구 변경 고민 */}
                   <p>소비성향 테스트</p> <p>{questionNumber + 1} /12</p>
                 </div>
                 <BorderLinearProgress
                   variant="determinate"
-                  value={(questionNumber / 12) * 100}
+                  value={((questionNumber + 1) / 12) * 100}
+                  // 애니메이션 적용 (후순위)
                 />
               </div>
               <TestItem
