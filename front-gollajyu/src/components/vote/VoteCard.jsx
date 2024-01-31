@@ -11,7 +11,7 @@ export default function VoteCard(props) {
 
   // 여기서 정보를 받아온다
   return (
-    <div className="mx-auto my-10 max-w-screen-xl py-2 px-2 bg-white rounded-xl" style={{ height: '500px'}}>
+    <div className="mx-auto my-10 max-w-screen-xl py-2 px-2 bg-white rounded-xl" style={{ height: '450px'}}>
       <div className="dotted-black rounded-xl">
         카테고리
       </div>
@@ -19,7 +19,7 @@ export default function VoteCard(props) {
         {Array(props.options.length).fill(null).map((_, index) => (
           <VoteCardItem 
             key={index}
-            src={`/favicon`}
+            src={props.options.image}
             product={`Title ${index + 1}`}
             detail={`detail ${index + 1}`}
             category={`a`}

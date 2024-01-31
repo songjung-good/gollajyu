@@ -1,4 +1,3 @@
-// VotePage.jsx
 import React from 'react';
 import VoteCard from './VoteCard';
 
@@ -34,7 +33,7 @@ const VotePageList = () => {
   ];
 
   return (
-    <div className="vote-page-container">
+    <div>
       {votes.map((vote) => (
         <VoteCard
           key={vote.id}

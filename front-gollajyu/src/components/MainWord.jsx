@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
-const phrases = [
-  '전자제품에서 디자인을 선호하는 30대 여성은 의류에서 브랜드를 선호해요',
-  '가구에서 가성비를 선호하는 40대 남성은 신발에서 소재를 중요하게 생각해요',
-  '신발에서 기능성을 선호하는 20대 여성은 가전제품에서 가성비를 중요하게 생각해요',
-  // 여기에 더 많은 문구를 추가하세요
-];
+const categories = ['가구', '의류', '신발', '전자제품']
+const tags1 = ['소재', '가성비', '색감', '모양', '브랜드']
+const tags2 = ['소재', '기능성', '내구성', '디자인', '브랜드']
+const userInfo1 = ['남성', '여성']
+const userInfo2 =['20대', '30대', '40대', '50대']
+const userInfo3 = ['우유식빵', '붕어빵', '단팥빵', '초코파이']
+
+const getRandomItem = (array) => {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
+}
+
+const generateSentence = () => {
+  const categoriesIndex = Math.floor(Math.random() * categories.length);
+  const tags = categoriesIndex < 2 ? tags1 : tags2;
+  const userInfo = [userInfo1, userInfo2, userInfo3].map(getRandomItem);
+
+  const words = `${categories[categoriesIndex]}에서 ${getRandomItem(tags)}을 선호하는 ${userInfo[0]} ${userInfo[1]} ${userInfo[2]}은/는 ${getRandomItem(categories)}에서 ${getRandomItem(tags)}을 선호해요`;
+  
+  return words;
+}
 
 const MainWord = () => {
   const [phrase, setPhrase] = useState('');
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * phrases.length);
-    setPhrase(phrases[randomIndex]);
+    setPhrase(generateSentence());
   }, []);
 
   return (
-    // 문구 위치 수정
     <div className="px-20 pt-20 w-auto h-auto relative text-center flex justify-center items-center">
       <div className="flex-grow md:flex-grow-4">
-        <div className="text-white text-2xl sm-3xl md:text-4xl lg:text-5xl font-medium tracking-wider">
+        <div className="text-white text-1xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium tracking-wider">
         “{phrase}”
         </div>
       </div>

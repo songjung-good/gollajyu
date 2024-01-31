@@ -1,5 +1,6 @@
 import React from 'react';
 import VoteCardItem from './VoteCardItem';
+import VoteDetailHeader from './VoteDetailHeader';
 
 // 임시 데이터
 const voteDetail = {
@@ -33,23 +34,7 @@ const voteDetail = {
 const VoteDetail = () => {
   return (
     <div className="bg-white shadow-md rounded-md overflow-hidden max-w-xxl mx-auto mt-16">
-      <div className="bg-gray-100 py-2 px-4 flex justify-between">
-        <h2 className="text-xl font-semibold text-gray-800">{voteDetail.category}</h2>
-        <button>X</button>
-      </div>
-      <div className="py-4 px-6 flex justify-between items-center">
-        <div>
-          <h3 className="text-lg font-medium text-gray-800">{voteDetail.author}</h3>
-          <p className="text-gray-600 text-base">생성일: {voteDetail.createdAt}</p>
-        </div>
-        <div>
-          <p className="text-gray-600 text-base">좋아요: {voteDetail.likes}</p>
-          <p className="text-gray-600 text-base">참여자 수: {voteDetail.participants}</p>
-        </div>
-      </div>
-      <div className="py-4 px-6">
-        <h2 className="text-2xl font-semibold text-gray-800">{voteDetail.title}</h2>
-      </div>
+      <VoteDetailHeader {...voteDetail} />
       <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-5">
         {voteDetail.options.map((option, index) => (
           <div className="relative w-full flex items-end justify-start text-left bg-cover bg-center" 

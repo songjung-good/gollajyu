@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Container } from '@mui/system';
 
 // 각 투표카드 내의 아이템
@@ -28,8 +27,8 @@ function VoteCardItem(props) {
         {/* 투표 이미지 */}
         <img
           className='h-full w-full object-cover'
-          // alt='Vote Image'
-          src={props.src}
+          alt='Vote Image'
+          href={props.src}
         />
         {/* 호버 시 */}
         {hover && (
