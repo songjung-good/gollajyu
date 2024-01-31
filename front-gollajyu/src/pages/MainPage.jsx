@@ -2,7 +2,6 @@ import React from "react";
 import MainVoteList from "../components/MainVoteList"
 import MainWord from "../components/MainWord";
 import SwipeVote from "../components/SwipeVote";
-import PostsGrid from "../components/MainVoteList";
 import useModalStore from "../stores/modalState";
 import useAuthStore from "../stores/userState";
 import LoginModal from "../components/LoginForm";
@@ -32,12 +31,6 @@ const MainPage = () => {
     </div>
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}
-      <div>
-        <h1>This is the Main Page</h1>
-        <p>이 곳은 메인 페이지 입니다.</p>
-        <SwipeVote />
-        <PostsGrid />
-      </div>
     </>
   );
 };
