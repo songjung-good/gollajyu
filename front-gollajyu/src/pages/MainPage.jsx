@@ -1,5 +1,4 @@
 import React from "react";
-import SwipeVote from "../components/SwipeVote"
 import MainVoteList from "../components/MainVoteList"
 import MainWord from "../components/MainWord";
 import SwipeVote from "../components/SwipeVote";
