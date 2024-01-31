@@ -11,7 +11,7 @@ export default function VoteCard(props) {
 
   // 여기서 정보를 받아온다
   return (
-    <div className="mx-auto my-10 max-w-screen-xl py-2 px-2 bg-white rounded-xl" style={{ height: '450px'}}>
+    <div className="mx-auto my-10 max-w-screen-xl py-2 px-2 bg-white rounded-xl" style={{ height: '500px'}}>
       <div className="dotted-black rounded-xl">
         카테고리
       </div>

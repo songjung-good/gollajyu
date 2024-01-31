@@ -17,7 +17,7 @@ const MainWord = () => {
 
   return (
     // 문구 위치 수정
-    <div className="px-20 py-10 w-auto h-auto relative text-center flex justify-center items-center">
+    <div className="px-20 pt-20 w-auto h-auto relative text-center flex justify-center items-center">
       <div className="flex-grow md:flex-grow-4">
         <div className="text-white text-2xl sm-3xl md:text-4xl lg:text-5xl font-medium tracking-wider">
         “{phrase}”
