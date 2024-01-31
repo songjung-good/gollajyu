@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import VoteCardItem from './Vote/VoteCardItem';
+import React, { useState } from "react";
+import VoteCardItem from "./vote/VoteCardItem";
 import NowGollajyuImage from "/assets/images/vote-button/now_gollajyu_img.png";
 
 export default function VoteCard() {
@@ -11,18 +11,23 @@ export default function VoteCard() {
   };
 
   return (
-    <div className="mx-auto max-w-screen-lg bg-white" style={{ height: '500px' }}>
+    <div
+      className="mx-auto max-w-screen-lg bg-white"
+      style={{ height: "500px" }}
+    >
       <div className="flex justify-around items-center h-full">
-        {Array(4).fill(null).map((_, index) => (
-          <VoteCardItem 
-            key={index}
-            src={NowGollajyuImage}
-            title={`Title ${index + 1}`}
-            path="/VotePage"
-            clicked={clicked[index]}
-            onClick={() => handleClick(index)}
-          />
-        ))}
+        {Array(4)
+          .fill(null)
+          .map((_, index) => (
+            <VoteCardItem
+              key={index}
+              src={NowGollajyuImage}
+              title={`Title ${index + 1}`}
+              path="/VotePage"
+              clicked={clicked[index]}
+              onClick={() => handleClick(index)}
+            />
+          ))}
       </div>
     </div>
   );
