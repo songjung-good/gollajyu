@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
+import useAuthStore from "../stores/userState";
+import useModalStore from "../stores/modalState";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -27,7 +29,7 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
 );
 
 // ----------- 버튼 아이템 함수형 컴포넌트 -----------
-const ButtonItem = ({ label, style, hoverState }) => (
+const ButtonItem = ({ label, style, hoverState, onClick }) => (
   <button
     style={{
       ...style,
@@ -35,6 +37,7 @@ const ButtonItem = ({ label, style, hoverState }) => (
     }}
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
+    onClick={onClick}
   >
     {label}
   </button>
@@ -103,22 +106,31 @@ const NavigationBar = () => {
   });
 
   // const isLoggedIn = true; // 로그인 상태
-  const isLoggedIn = false; // 비로그인 상태
+  // const isLoggedIn = false; // 비로그인 상태
 
   // 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [isSignupModalOpen, setSignupModalOpen] = useState(false);
-  // 위의 상태를 전역 상태로 관리해야겠다. => 지금이 바로 상태관리 툴이 필요한 타이밍..!
+  const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
+  const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
 
   const handleLogin = () => {
     // isLoginModalOpen을 true로
+    setLoginModalOpen();
   };
-  const handleLogout = () => {
-    // 로그아웃 로직
-  };
+
   const handleSignup = () => {
     // isSignupModalOpen을 true로
+    setSignupModalOpen();
+  };
+
+  const checkLoggedIn = (event) => {
+    // TODO :: 비로그인 사용자의 네비게이션 바 이용 막아야함
+    if (!isLoggedIn) {
+      console.log(event.target);
+      // console.log(isLoggedIn);
+      setLoginModalOpen();
+    }
   };
 
   // --------------------------------- css 시작 ---------------------------------
@@ -128,7 +140,7 @@ const NavigationBar = () => {
     // 위치
     position: "fixed", // 내비게이션 바 상단에 고정
     top: "0px", // 내비게이션 바 고정 위치: 0px
-    zIndex: 9999, // 내비게이션 바를 가장 위의 레이어에 고정
+    zIndex: 49, // 내비게이션 바를 가장 위의 레이어에 고정
 
     // 디자인
     width: "100%", // 내비게이션 바 배경 넓이
@@ -433,7 +445,7 @@ const NavigationBar = () => {
       mouseEnter: logoutButtonMouseEnter,
       mouseLeave: logoutButtonMouseLeave,
       hoverStyle: logoutButtonHoverStyle,
-      handleClick: handleLogout(),
+      onClick: setLoggedOut,
     },
     {
       label: "로그인",
@@ -442,7 +454,7 @@ const NavigationBar = () => {
       mouseEnter: loginButtonMouseEnter,
       mouseLeave: loginButtonMouseLeave,
       hoverStyle: loginButtonHoverStyle,
-      handleClick: handleLogin(),
+      onClick: handleLogin,
     },
     {
       label: "회원가입",
@@ -451,7 +463,7 @@ const NavigationBar = () => {
       mouseEnter: signupButtonMouseEnter,
       mouseLeave: signupButtonMouseLeave,
       hoverStyle: signupButtonHoverStyle,
-      handleClick: handleSignup(),
+      onClick: handleSignup,
     },
   ];
 
@@ -573,7 +585,7 @@ const NavigationBar = () => {
                   handleMouseLeave: buttonItems[0].mouseLeave,
                   hoverStyle: buttonItems[0].hoverStyle,
                 }}
-                onClick={buttonItems[0].handleClick}
+                onClick={buttonItems[0].onClick}
               />
             </>
           ) : (
@@ -590,7 +602,8 @@ const NavigationBar = () => {
                     handleMouseLeave: item.mouseLeave,
                     hoverStyle: item.hoverStyle,
                   }}
-                  onClick={item.handleClick}
+                  handleClick={item.handleClick}
+                  onClick={item.onClick}
                 />
               ))}
             </>

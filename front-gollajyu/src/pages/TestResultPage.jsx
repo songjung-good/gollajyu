@@ -171,6 +171,7 @@ const TestResultPage = () => {
               </button>
             ) : (
               <button
+                className="hover:font-bold"
                 onClick={() => {
                   window.scrollTo({ top: 0 });
                 }}
