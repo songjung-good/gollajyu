@@ -1,13 +1,13 @@
 import React from "react";
-import MyActivitiesHistory from "./MyActivitiesHistory";
+import MyActivitiesVoteItem from "./MyActivitiesVoteItem";
 
 const MyActivitiesCreated = () => {
   return (
     <>
-      <MyActivitiesHistory />
-      <MyActivitiesHistory />
-      <MyActivitiesHistory />
-      <MyActivitiesHistory />
+      <MyActivitiesVoteItem />
+      <MyActivitiesVoteItem />
+      <MyActivitiesVoteItem />
+      <MyActivitiesVoteItem />
     </>
   );
 };
