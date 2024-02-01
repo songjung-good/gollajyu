@@ -62,9 +62,9 @@ const LoginModal = () => {
     >
       <div
         id="inner"
-        className="mx-auto container bg-white w-[500px] min-h-[620px] flex flex-col items-center rounded-3xl shadow-md"
+        className="mx-auto container bg-white lg:w-[500px] min-h-[620px] flex flex-col items-center rounded-3xl shadow-md"
       >
-        <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">
+        <h1 className="fontsize-lg font-bold text-gray-700 mt-12 mb-16">
           로그인해쥬
         </h1>
         <form
@@ -88,11 +88,11 @@ const LoginModal = () => {
               })}
             />
             {errors.email ? (
-              <p className="px-3 text-red-500 text-sm">
+              <p className="px-3 text-red-500 fontsize-sm">
                 {errors.email.message}
               </p>
             ) : (
-              <p className="invisible text-sm">nothing</p>
+              <p className="invisible fontsize-sm">nothing</p>
             )}
           </div>
           <div className="h-[80px]">
@@ -118,9 +118,11 @@ const LoginModal = () => {
               })}
             />
             {errors.pw ? (
-              <p className="px-3 text-red-500 text-sm">{errors.pw.message}</p>
+              <p className="px-3 text-red-500 fontsize-sm">
+                {errors.pw.message}
+              </p>
             ) : (
-              <p className="invisible text-sm">nothing</p>
+              <p className="invisible fontsize-sm">nothing</p>
             )}
           </div>
           <button
@@ -134,7 +136,7 @@ const LoginModal = () => {
           <div className="hr-sect w-1/2 mx-auto">
             <div className="flex items-center text-gray-400 my-2">
               <span className="flex-grow bg-gray-400 h-px m-1"></span>
-              <span className="text-xs">소셜 로그인</span>
+              <span className="fontsize-xm">소셜 로그인</span>
               <span className="flex-grow bg-gray-400 h-px m-1"></span>
             </div>
           </div>
