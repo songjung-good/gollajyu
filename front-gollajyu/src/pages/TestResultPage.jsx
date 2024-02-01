@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import sobiTIData from "../components/TestResultData";
+import sobiTIData from "/src/stores/TestResultData";
 
 const getMBTI = (response) => {
   const MBTI = {

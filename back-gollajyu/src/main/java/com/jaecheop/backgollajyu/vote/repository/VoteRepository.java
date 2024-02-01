@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -41,6 +40,5 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId);
 
-    List<Vote> findAllByCreateAtBetweenOrderByCreateAtDesc(LocalDateTime startDate, LocalDateTime endDate);
 
 }

@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
@@ -30,7 +29,8 @@ public class VoteController {
 
     @Value("${file.dir}")
     private String fileDir;
-
+    // TODO: 투표 생성 시 받아온 투표 아이템 이미지 저장 done
+    // TODO: 투표 상세에서 저장된 이미지 파일 전달
     // TODO: main GET들...
 
     /**
@@ -70,28 +70,15 @@ public class VoteController {
 
     /**
      * 투표 상세
-     * @param
+     * @param voteDetailReqDto
      * @return
      */
 
-    @GetMapping("/detail")
-    public ResponseEntity<VoteDetailResDto> voteDetail(@ModelAttribute VoteDetailReqDto voteDetailReqDto){
-        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
+    @GetMapping("/{voteId}")
+    public ResponseEntity<ResponseMessage> voteDetail(@PathVariable String voteId, @RequestBody VoteDetailReqDto voteDetailReqDto){
+
         ServiceResult result = voteService.voteDetail(voteDetailReqDto);
-        if(!result.isResult()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>((VoteDetailResDto) result.getData(), HttpStatus.OK);
-    }
 
-    /**
-     * top 5 - 좋아요, 최신, 참여자, 박빙
-     *
-     * @return
-     */
-    @GetMapping("/ranks")
-    public ResponseEntity<ResponseMessage> voteRanking(){
-        ServiceResult result = voteService.getVoteRanking();
         if(!result.isResult()){
             return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
         }
@@ -100,15 +87,8 @@ public class VoteController {
 
     }
 
-    /**
-     * main에서 투표 목록 리스트 조회 - category 별
-     * @param categoryId
-     * @param session
-     * @return
-     */
-
     @GetMapping("")
-    public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session){
+    public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam int categoryId, HttpSession session){
 
         System.out.println("categoryId = " + categoryId);
         System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto)session.getAttribute("memberInfo"));
@@ -122,13 +102,4 @@ public class VoteController {
         return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
     }
 
-
-    @PostMapping("/likes")
-    public ResponseEntity<ResponseMessage> toggleLikes(@RequestBody LikesReqDto likesReqDto){
-        ServiceResult result = voteService.toggleLikes(likesReqDto);
-        if(!result.isResult()){
-            return ResponseEntity.ok(ResponseMessage.fail(result.getMessage()));
-        }
-        return ResponseEntity.ok(ResponseMessage.success(result.getData()));
-    }
 }

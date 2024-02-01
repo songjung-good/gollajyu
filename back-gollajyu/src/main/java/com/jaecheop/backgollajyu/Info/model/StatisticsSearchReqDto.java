@@ -7,7 +7,7 @@ import lombok.ToString;
 @ToString
 public class StatisticsSearchReqDto {
 
-    private Long memberId;
+//    private Long memberId;
 //
 //    private Long voteItemId;
 
