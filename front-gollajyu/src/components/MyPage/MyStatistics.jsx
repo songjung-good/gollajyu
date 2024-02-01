@@ -16,15 +16,9 @@ const MyStatistics = () => {
     query : "(max-width:768px)"
   });
 
-  // ----------- 현재 선택된 카테고리를 추적하기 위한 state -----------
-  const [selectedCategory, setSelectedCategory] = useState("의류");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
   
-  // ----------- 드롭다운 값이 변경될 때 실행되는 핸들러 함수 -----------
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-  };
-
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
@@ -269,14 +263,7 @@ const MyStatistics = () => {
     flexDirection: isLarge ? "row" : "column",
   }
 
-  // ----------- 드롭다운 버튼 스타일 -----------
-  const dropdownStyle = {
-    // 디자인
-    margin: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    cursor: "pointer",
-  };
+
 
   // --------------------------------- css 끝 ---------------------------------
 
@@ -369,6 +356,22 @@ const MyStatistics = () => {
     return null; // 홀수 index는 처리하지 않음
   });
 
+  const categoryData = [
+    { id: 1, name: '카테고리1' },
+    { id: 2, name: '카테고리2' },
+    // ... 다른 카테고리 데이터
+  ];
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+    setIsOpen(false);
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+
   return (
     <>
       {/* ------------- 카테고리 선호도 ------------- */}
@@ -439,17 +442,50 @@ const MyStatistics = () => {
               <div style={subTitleStyle}>
                 나는
               </div>
-              <select
-                value={selectedCategory}
-                onChange={handleCategoryChange}
-                style={dropdownStyle}
-              >
-                {categoryData.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+
+
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <div
+                  onClick={toggleDropdown}
+                  style={{
+                    border: '1px solid #ccc',
+                    padding: '8px',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {selectedCategory ? categoryData.find((c) => c.id === parseInt(selectedCategory)).name : '카테고리 선택'}
+                </div>
+                {isOpen && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '100%',
+                      left: 0,
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                      marginTop: '4px',
+                      zIndex: 1,
+                      backgroundColor: '#fff',
+                    }}
+                  >
+                    {categoryData.map((category) => (
+                      <div
+                        key={category.id}
+                        onClick={() => handleCategoryChange({ target: { value: category.id } })}
+                        style={{
+                          padding: '8px',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {category.name}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+
               <div style={subTitleStyle}>
                 를 구매 할 때,
               </div>
