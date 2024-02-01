@@ -100,7 +100,7 @@ const TestResultPage = () => {
         )}
         {matchingData && (
           <>
-            <p className="text-xl my-2">{matchingData.subTitle}</p>
+            <p className="fontsize-lg my-2">{matchingData.subTitle}</p>
             <p className="text-3xl font-bold mb-2">{matchingData.title}</p>
             <img src={`/assets/images/sobiTest/${result}.png`} alt="" />
             <div className="flex space-x-5">

@@ -1,39 +1,89 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;            /* 요소의 크기를 padding과 border를 포함한 크기로 계산 */
-  font-family: "GmarketSansMedium";  /* 기본 폰트 설정 */
+  box-sizing: border-box; /* 요소의 크기를 padding과 border를 포함한 크기로 계산 */
+  font-family: "GmarketSansMedium"; /* 기본 폰트 설정 */
 }
 
 .body {
-  margin-top: 100px;                 /* 네비게이션 바 높이만큼 높이 설정 */
-  background-color: #F7F6F3;
+  margin-top: 100px; /* 네비게이션 바 높이만큼 높이 설정 */
+  background-color: #f7f6f3;
 }
 
 @font-face {
   /* 얇은 글씨체 */
   font-family: "GmarketSansLight";
   src: local("GmarketSansLight"),
-  url("/assets/fonts/GmarketSansLight.otf") format("truetype");
+    url("/assets/fonts/GmarketSansLight.otf") format("truetype");
 }
 
 @font-face {
   /* 기본 글씨체 */
   font-family: "GmarketSansMedium";
   src: local("GmarketSansMedium"),
-  url("/assets/fonts/GmarketSansMedium.otf") format("truetype");
+    url("/assets/fonts/GmarketSansMedium.otf") format("truetype");
 }
 
 @font-face {
   /* 굵은 글씨체 */
   font-family: "GmarketSansBold";
   src: local("GmarketSansBold"),
-  url("/assets/fonts/GmarketSansBold.otf") format("truetype");
+    url("/assets/fonts/GmarketSansBold.otf") format("truetype");
 }
 
 @font-face {
   /* 로고 글씨체 */
   font-family: "HSSantokkiRegular";
   src: local("HSSantokkiRegular"),
-  url("/assets/fonts/HSSantokkiRegular.ttf") format("truetype");
+    url("/assets/fonts/HSSantokkiRegular.ttf") format("truetype");
+}
+
+/* --------------------화면크기별 기본 폰트 사이즈 설정 ---------------------- */
+/* 가장 작은 화면 : 480px보다 작은 화면*/
+@media (max-width: 480px) {
+  * {
+    font-size: 10px;
+  }
+}
+
+/* 480 ~ 767px */
+@media (min-width: 480px) {
+  * {
+    font-size: 12px;
+  }
+}
+
+/* 768 ~ 1023px */
+@media (min-width: 768px) {
+  * {
+    font-size: 14px;
+  }
+}
+
+/* 1024px보다 큰 화면 */
+@media (min-width: 1024px) {
+  * {
+    font-size: 16px;
+  }
+}
+
+/* -----------전체 폰트사이즈 기준 클래스 별 폰트 사이즈 설정-------- */
+.fontsize-xl {
+  font-size: 2.25rem;
+}
+
+.fontsize-lg {
+  font-size: 2rem;
+}
+
+.fontsize-md {
+  font-size: 1.75rem;
+}
+
+.fontsize-sm {
+  font-size: 1.5rem;
+}
+
+.fontsize-xs {
+  font-size: 1.25rem;
 }
