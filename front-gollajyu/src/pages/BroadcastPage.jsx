@@ -137,19 +137,21 @@ const BroadcastPage = () => {
           시청자로 진입(Guest)
         </button>
       </div>
-      <div className="container mx-auto my-5 sm:w-3/5 lg:w-3/5 flex flex-col space-y-10">
+      <div className="container mx-auto my-5 flex flex-col items-center space-y-10 xl:w-[900px] lg:w-[700px] md:w-[500px]">
         <div id="page-info">
-          <p className="text-black-70 text-xl mx-4">
-            <span className="font-bold">라이브 방송</span>을 시청하며
-            <span className="font-bold"> 실시간 투표</span>를 하고
-            <span className="font-bold"> 의견을 공유</span>할 수 있어요
+          <p className="text-black-70 fontsize-sm mx-4">
+            <span className="font-bold fontsize-sm">라이브 방송</span>을
+            시청하며
+            <span className="font-bold fontsize-sm"> 실시간 투표</span>를 하고
+            <span className="font-bold fontsize-sm"> 의견을 공유</span>할 수
+            있어요
           </p>
         </div>
         <div id="hot-broadcast" className="basis-1/5">
-          <p className="px-5 py-3 text-2xl font-bold">
-            지금 <span className="text-red-300">당장</span> 골라쥬
+          <p className="px-5 py-3 fontsize-lg font-bold">
+            지금 <span className="text-red-300 fontsize-lg">당장</span> 골라쥬
           </p>
-          <div className="flex flex-row md:space-x-5 lg:space-x-20 bg-red-100 rounded-[30px] px-20 py-10">
+          <div className="flex flex-row space-x-10 bg-red-100 rounded-3xl px-20 py-10">
             {dummyData
               .sort((a, b) => b.viewerCnt - a.viewerCnt)
               .slice(0, 3)
@@ -159,7 +161,7 @@ const BroadcastPage = () => {
           </div>
         </div>
         <div id="broadcast-list" className="grow">
-          <p className="px-5 py-3 text-2xl font-bold">지금 골라쥬</p>
+          <p className="px-5 py-3 fontsize-lg font-bold">지금 골라쥬</p>
           <div className="grid grid-cols-4 bg-white rounded-[30px] p-7 gap-10">
             {dummyData
               .sort((a, b) => b.createdDate.getTime() - a.createdDate.getTime())
