@@ -14,26 +14,26 @@
   /* 얇은 글씨체 */
   font-family: "GmarketSansLight";
   src: local("GmarketSansLight"),
-  url("/assets/fonts/GmarketSansLight.otf") format("truetype");
+  url("./assets/fonts/GmarketSansLight.otf") format("truetype");
 }
 
 @font-face {
   /* 기본 글씨체 */
   font-family: "GmarketSansMedium";
   src: local("GmarketSansMedium"),
-  url("/assets/fonts/GmarketSansMedium.otf") format("truetype");
+  url("./assets/fonts/GmarketSansMedium.otf") format("truetype");
 }
 
 @font-face {
   /* 굵은 글씨체 */
   font-family: "GmarketSansBold";
   src: local("GmarketSansBold"),
-  url("/assets/fonts/GmarketSansBold.otf") format("truetype");
+  url("./assets/fonts/GmarketSansBold.otf") format("truetype");
 }
 
 @font-face {
   /* 로고 글씨체 */
   font-family: "HSSantokkiRegular";
   src: local("HSSantokkiRegular"),
-  url("/assets/fonts/HSSantokkiRegular.ttf") format("truetype");
+  url("./assets/fonts/HSSantokkiRegular.ttf") format("truetype");
 }
