@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import VoteCardItem from './VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
+import VoteDetailReselt from './VoteDetailReselt';
 
 // 임시 데이터
 const voteDetail = {
@@ -9,7 +10,7 @@ const voteDetail = {
   participants: 123,
   likes: 456,
   title: '가을 시즌에 어울리는 옷은?',
-  category: '의류',
+  category: '신발',
   options: [
     {
       image: 'https://example.com/image1.jpg',
@@ -42,13 +43,13 @@ const VoteDetail = () => {
     <div className="bg-white shadow-md rounded-md max-w-7xl mx-auto">
       <VoteDetailHeader {...voteDetail} />
       <div className="p-2 flex justify-around items-center h-full" >
-        {Array(3).fill(null).map((_, index) => (
+        {Array(voteDetail.options.length).fill(null).map((_, index) => (
           <VoteCardItem 
             key={index}
             src={`1`}
             product={`Title ${index + 1}`}
             detail={`detail ${index + 1}`}
-            category={`a`}
+            category={voteDetail.category}
             path="/VotePage"
             clicked={clicked[index]}
             onClick={() => handleClick(index)}
@@ -56,9 +57,7 @@ const VoteDetail = () => {
         ))}
       </div>
       {voteDetail.hasVoted && (
-        <div className="py-4 px-6">
-          <h3 className="text-lg font-medium text-gray-800">투표 결과</h3>
-        </div>
+        <VoteDetailReselt />
       )}
     </div>
   );
