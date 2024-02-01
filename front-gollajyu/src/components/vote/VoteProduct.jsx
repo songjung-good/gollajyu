@@ -95,4 +95,3 @@ const VoteProduct = () => {
 };
 
 export default VoteProduct;
-``

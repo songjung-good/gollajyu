@@ -15,18 +15,17 @@ const VoteDetailReselt = () => {
       {voteResults.map((result, index) => (
         <div key={index}>
           <h2>{result.option}: {result.percentage}%</h2>
-          <button onClick={() => setSelectedOption(index)}>자세히 보기</button>
-          {selectedOption === index && (
-            <div>
-              {Object.entries(result.reasons).map(([reason, percentage]) => (
-                <p key={reason}>{reason}: {percentage}%</p>
-              ))}
-            </div>
+          <button onClick={() => setSelectedOption(selectedOption === index ? null : index)}>▼</button>
+            {selectedOption === index && (
+              <div>
+                {Object.entries(result.reasons).map(([reason, percentage]) => (
+                  <p key={reason}>{reason}: {percentage}%</p>
+                ))}
+              </div>
           )}
         </div>
       ))}
-      {/* 사용자 유형 필터링 부분 */}
-      {/* 이 부분은 필요에 따라 구현하세요 */}
+      {/* 사용자 유형 필터링 부분 구현필요 */}
     </div>
   );
 };
