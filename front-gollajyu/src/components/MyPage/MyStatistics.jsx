@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import MyStatisticsChart from "./MyStatisticsChart";
+import categoryData from '/src/stores/categoryData';
 
 const MyStatistics = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -13,6 +14,16 @@ const MyStatistics = () => {
   const isSmall = useMediaQuery({
     query : "(max-width:768px)"
   });
+
+  // ----------- 현재 선택된 카테고리를 추적하기 위한 state -----------
+  const [selectedCategory, setSelectedCategory] = useState("의류");
+  const [isActive, setIsActive] = useState(false);
+
+  // ----------- 드롭다운 값이 변경될 때 실행되는 핸들러 함수 -----------
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+  
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -223,7 +234,7 @@ const MyStatistics = () => {
   // ----------- 멘트 컨테이너 스타일 -----------
   const mentContainerStyle = {
     // 글자
-    fontSize: isLarge ? "34px" : (isMedium ? "24px" : "20px"),
+    fontSize: isLarge ? "34px" : (isMedium ? "28px" : "20px"),
 
     // 컨텐츠 정렬
     display: "flex",
@@ -249,8 +260,28 @@ const MyStatistics = () => {
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
   };
+
+  // ----------- 드롭다운 컨테이너 스타일 -----------
+  const dropdownContainerStyle = {
+    // 디자인
+    width: "100%",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: isLarge? "center" : "flex-start",
+    flexDirection: isLarge ? "row" : "column",
+  }
+
+  // ----------- 드롭다운 버튼 스타일 -----------
+  const dropdownStyle = {
+    // 디자인
+    margin: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    cursor: "pointer",
+  };
+
   // --------------------------------- css 끝 ---------------------------------
 
 
@@ -293,7 +324,7 @@ const MyStatistics = () => {
       내구성: 0,
     },
     {
-      category: '가전',
+      category: '전자제품',
       가성비: 0,
       브랜드: 10,
       디자인: 20,
@@ -384,14 +415,6 @@ const MyStatistics = () => {
               <div>카테고리에 속해있어요!</div>
             </div>
           </div>
-          <div style={barStyle}></div>
-          <div style={subTitleStyle}>카테고리별 선호 태그 TOP 3</div>
-          <div style={{
-            ...infoContainerStyle,
-            flexDirection: "column"
-          }}>
-            {renderTop3Categories}
-          </div>
         </div>
       </div>
 
@@ -424,7 +447,51 @@ const MyStatistics = () => {
           <span style={titleTextStyle}>태그 선호도</span>
         </div>
         <div style={chartContainerStyle}>
-          <MyStatisticsChart />
+          {/* ------------- 드롭다운 버튼 ------------- */}
+          <div style={dropdownContainerStyle}>
+            <div style={infoContainerStyle}>
+              <div style={subTitleStyle}>
+                나는
+              </div>
+              <select
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+                style={dropdownStyle}
+              >
+                {categoryData.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+              <div style={subTitleStyle}>
+                를 구매 할 때,
+              </div>
+            </div>
+            <div style={subTitleStyle}>
+              어떤 요소를 중요하게 생각할까?
+            </div>
+          </div>
+
+          {/* ------------- 차트 그래프 ------------- */}
+          <div style={{
+            ...infoContainerStyle,
+            justifyContent: "center",
+            marginTop: "20px",
+          }}>
+            <MyStatisticsChart />
+          </div>
+
+          <div style={barStyle}></div>
+
+          {/* ------------- 카테고리별 선호 태그 ------------- */}
+          <div style={subTitleStyle}>카테고리별 선호 태그 TOP 3</div>
+          <div style={{
+            ...infoContainerStyle,
+            flexDirection: "column"
+          }}>
+            {renderTop3Categories}
+          </div>
         </div>
       </div>
     </>
