@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import VoteCardItem from './VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
+import VoteDetailReselt from './VoteDetailReselt';
 
 // 임시 데이터
 const voteDetail = {
@@ -9,7 +10,7 @@ const voteDetail = {
   participants: 123,
   likes: 456,
   title: '가을 시즌에 어울리는 옷은?',
-  category: '의류',
+  category: '신발',
   options: [
     {
       image: 'https://example.com/image1.jpg',
@@ -32,27 +33,31 @@ const voteDetail = {
 };
 
 const VoteDetail = () => {
+  const [clicked, setClicked] = useState([false, false, false, false]);
+
+  const handleClick = (index) => {
+    const newClicked = clicked.map((item, i) => (i === index ? !item : item));
+    setClicked(newClicked);
+  };
   return (
-    <div className="bg-white shadow-md rounded-md overflow-hidden max-w-xxl mx-auto mt-16">
+    <div className="bg-white shadow-md rounded-md max-w-7xl mx-auto">
       <VoteDetailHeader {...voteDetail} />
-      <div className="grid grid-cols-1 md:grid-cols-4 sm:grid-cols-2 gap-5">
-        {voteDetail.options.map((option, index) => (
-          <div className="relative w-full flex items-end justify-start text-left bg-cover bg-center" 
-            style={{ height: 450, backgroundImage: `url(${option.image})` }} 
-            key={index}>
-            <div className="absolute top-0 mt-20 right-0 bottom-0 left-0 bg-gradient-to-b from-transparent to-gray-900" />
-            <main className="p-5 z-10">
-              <button className="text-md tracking-tight font-medium leading-7 font-regular text-white hover:underline">
-                {option.text}
-              </button>
-            </main>
-          </div>
+      <div className="p-2 flex justify-around items-center h-full" >
+        {Array(voteDetail.options.length).fill(null).map((_, index) => (
+          <VoteCardItem 
+            key={index}
+            src={`1`}
+            product={`Title ${index + 1}`}
+            detail={`detail ${index + 1}`}
+            category={voteDetail.category}
+            path="/VotePage"
+            clicked={clicked[index]}
+            onClick={() => handleClick(index)}
+          />
         ))}
       </div>
       {voteDetail.hasVoted && (
-        <div className="py-4 px-6">
-          <h3 className="text-lg font-medium text-gray-800">투표 결과</h3>
-        </div>
+        <VoteDetailReselt />
       )}
     </div>
   );
