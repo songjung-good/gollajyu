@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
-import useAuthStore from "../stores/userState";
-import useModalStore from "../stores/modalState";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -29,7 +27,7 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
 );
 
 // ----------- 버튼 아이템 함수형 컴포넌트 -----------
-const ButtonItem = ({ label, style, hoverState, onClick }) => (
+const ButtonItem = ({ label, style, hoverState }) => (
   <button
     style={{
       ...style,
@@ -37,7 +35,6 @@ const ButtonItem = ({ label, style, hoverState, onClick }) => (
     }}
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
-    onClick={onClick}
   >
     {label}
   </button>
@@ -105,33 +102,8 @@ const NavigationBar = () => {
     query: "(max-width:768px)",
   });
 
-  // const isLoggedIn = true; // 로그인 상태
-  // const isLoggedIn = false; // 비로그인 상태
-
-  // 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수
-  const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
-  const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
-
-  const handleLogin = () => {
-    // isLoginModalOpen을 true로
-    setLoginModalOpen();
-  };
-
-  const handleSignup = () => {
-    // isSignupModalOpen을 true로
-    setSignupModalOpen();
-  };
-
-  const checkLoggedIn = (event) => {
-    // TODO :: 비로그인 사용자의 네비게이션 바 이용 막아야함
-    if (!isLoggedIn) {
-      console.log(event.target);
-      // console.log(isLoggedIn);
-      setLoginModalOpen();
-    }
-  };
+  const isLoggedIn = true; // 로그인 상태
+  // const isLoggedIn = false;  // 비로그인 상태
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -140,11 +112,11 @@ const NavigationBar = () => {
     // 위치
     position: "fixed", // 내비게이션 바 상단에 고정
     top: "0px", // 내비게이션 바 고정 위치: 0px
-    zIndex: 49, // 내비게이션 바를 가장 위의 레이어에 고정
+    zIndex: 9999, // 내비게이션 바를 가장 위의 레이어에 고정
 
     // 디자인
     width: "100%", // 내비게이션 바 배경 넓이
-    height: "100px", // 내비게이션 바 높이
+    height: "100px", // 내비게이션 바 높이: 100px
     background: "#FFFFFF", // 배경 색상: 흰색
   };
 
@@ -158,7 +130,7 @@ const NavigationBar = () => {
     transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "95%" : (isMedium ? "740px" : "480px"), // (반응형) 내비게이션 바 넓이
+    width: isLarge ? "90%" : isMedium ? "740px" : "480px", // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
     display: "flex", // 항목 수평 정렬
@@ -169,24 +141,24 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: "200px"
+    width: isSmall ? "200px" : "240px", // (반응형) 로고 넓이
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
-    fontSize: "48px", // 로고 글자 크기
-    color: "#FFD257", // 로고 글자 색: 노란색
+    fontSize: "48px", // 글자 크기: 48px
+    color: "#FFD257", // 글자 색: 노란색
   };
 
   // ----------- 링크 컨테이너 스타일 -----------
   const linkContainerStyle = {
     // 디자인
-    width: "50%", // 가로 넓이
-    
+    width: "50%", // 가로 넓이: 50%
+
     // 컨텐츠 정렬
-    display: "flex",
+    display: "flex", // 리스트 수평 정렬
     alignItems: "center", // 리스트 수직 정렬
     justifyContent: "space-between", // 항목 균일 간격으로 정렬
   };
@@ -194,15 +166,15 @@ const NavigationBar = () => {
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
     // 디자인
-    padding: !isLarge ? "0 15px" : "0px", // (반응형) 항목 좌우 padding
-    height: "100px", // 항목 높이
+    padding: !isLarge ? "0 15px" : "0px", // (반응형) 항목 좌우 padding: 15px
+    height: "100px", // 항목 높이: 100px
 
     // 글자
     fontSize: isLarge ? "20px" : "18px", // (반응형) 글자 크기
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
-    display: "flex",
+    display: "flex", // 링크 수평 정렬
     alignItems: "center", // 링크 수직 정렬
   };
 
@@ -219,20 +191,19 @@ const NavigationBar = () => {
   // ----------- 아이템 hover 스타일 -----------
   const itemHoverStyle = {
     // 디자인
-    width: "100%", // 가로 길이
-    height: "5px", // 세로 길이
-    background: "#FFD257",
+    width: "100%", // 가로 길이: 100%
+    height: "5px", // 세로 길이: 5px
     transition: "background 0.2s ease", // 나타날 때 애니메이션
   };
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
     // 디자인
-    width: "280px", // 버튼 리스트 넓이
-    height: "100px", // 높이
+    width: !isLarge ? "360px" : "240px", // (반응형) 버튼 리스트 넓이
+    height: "100px", // 높이: 100px
 
     // 컨텐츠 정렬
-    display: "flex",
+    display: "flex", // 링크 수평 정렬
     alignItems: "center", // 링크 수직 정렬
     justifyContent: "flex-end", // 내부 버튼 오른쪽 정렬
   };
@@ -246,44 +217,33 @@ const NavigationBar = () => {
   // ----------- 프로필 버튼 스타일 -----------
   const myPageStyle = {
     // 디자인
-    margin: "0 10px", // 버튼 좌우 margin
-    height: "100px", // 버튼 높이
+    margin: "0 5px", // 버튼 좌우 margin: 5px
+    height: "100px", // 버튼 높이: 100px
 
     // 컨텐츠 정렬
-    display: "flex",
+    display: "flex", // 버튼 수평 정렬
     alignItems: "center", // 버튼 수직 정렬
   };
 
   // ----------- 프로필 이미지 스타일 -----------
   const profileImageStyle = {
     // 디자인
-    marginRight: isLarge ? "10px" : "0", // (반응형) 오른쪽 여백
-    width: "35px", // 이미지 가로 길이
-    height: "35px", // 이미지 세로 길이
+    marginRight: "10px", // 오른쪽 여백: 10px
+    width: "35px", // 이미지 가로 길이: 35px
+    height: "35px", // 이미지 세로 길이: 35px
     borderRadius: "50%", // 둥근 테두리: 50% (원)
   };
-
-  // ----------- 프로필 닉네임 스타일 -----------
-  const nickNameStyle = {
-    // 디자인
-    marginTop: "5px",
-
-    // 글자
-    fontSize: "20px", // 닉네임 글자 크기
-
-    display: !isLarge ? "none" : undefined, // (반응형) 작은 화면에서 닉네임 렌더링 하지 않음
-  }
 
   // ----------- 공통 메뉴 스타일 -----------
   const commonMenuStyle = {
     // 위치
     position: "absolute", // 메뉴 위치 기준
-    top: "90px", // 상단 여백
-    right: "0px", // 오른쪽 여백
+    top: "90px", // 상단 여백: 100px
+    right: "0px", // 오른쪽 여백: 0px
 
     // 디자인
-    padding: "10px", // 메뉴 내부 여백
-    width: "180px", // 가로 길이
+    padding: "10px", // 메뉴 내부 여백: 10px
+    width: "180px", // 가로 길이: 180px
     background: "#FFFFFF", // 메뉴 배경 색: 흰색
     boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
 
@@ -304,11 +264,11 @@ const NavigationBar = () => {
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
     // 디자인
-    padding: "0 15px", // 항목 좌우 padding
-    height: "60px", // 항목 높이
+    padding: "0 15px", // 항목 좌우 padding: 15px
+    height: "60px", // 항목 높이: 60px
 
     // 글자
-    fontSize: "18px", // 글자 크기
+    fontSize: "18px", // 글자 크기: 18px
     color: "#4A4A4A", // 글자 색: 회색
 
     // 컨텐츠 정렬
@@ -329,10 +289,10 @@ const NavigationBar = () => {
   // ----------- 버튼 공통 스타일 -----------
   const buttonStyle = {
     // 디자인
-    margin: "0 10px", // 버튼 좌우 margin
-    width: "70px", // 버튼 넓이
-    height: "35px", // 버튼 높이
-    borderRadius: "5px", // 둥근 테두리
+    margin: "0 5px", // 버튼 좌우 margin: 5px
+    width: "70px", // 버튼 넓이: 70px
+    height: "35px", // 버튼 높이: 35px
+    borderRadius: "5px", // 둥근 테두리: 5px
     transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
 
     // 글자
@@ -396,9 +356,9 @@ const NavigationBar = () => {
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerStyle = {
     // 디자인
-    marginTop: "5px", // 상단 margin
-    width: "50px", // 버튼 가로 길이
-    height: "95px", // 버튼 세로 길이
+    marginTop: "5px", // 상단 margin: 5px
+    width: "50px", // 버튼 가로 길이: 50px
+    height: "95px", // 버튼 세로 길이: 95px
 
     // 글자
     fontSize: "28px", // 햄버거 버튼 사이즈
@@ -457,7 +417,6 @@ const NavigationBar = () => {
       mouseEnter: logoutButtonMouseEnter,
       mouseLeave: logoutButtonMouseLeave,
       hoverStyle: logoutButtonHoverStyle,
-      onClick: setLoggedOut,
     },
     {
       label: "로그인",
@@ -466,7 +425,6 @@ const NavigationBar = () => {
       mouseEnter: loginButtonMouseEnter,
       mouseLeave: loginButtonMouseLeave,
       hoverStyle: loginButtonHoverStyle,
-      onClick: handleLogin,
     },
     {
       label: "회원가입",
@@ -475,7 +433,6 @@ const NavigationBar = () => {
       mouseEnter: signupButtonMouseEnter,
       mouseLeave: signupButtonMouseLeave,
       hoverStyle: signupButtonHoverStyle,
-      onClick: handleSignup,
     },
   ];
 
@@ -533,10 +490,12 @@ const NavigationBar = () => {
                 >
                   <div>
                     <div>{item.label}</div>
-                    <div style={{
-                      ...itemHoverStyle,
-                      visibility: item.hovered ? "visible" : "hidden",
-                    }}></div>
+                    <div
+                      style={{
+                        ...itemHoverStyle,
+                        background: item.hovered ? "#FFD257" : "#FFFFFF",
+                      }}
+                    ></div>
                   </div>
                 </MenuItem>
               ))}
@@ -552,12 +511,13 @@ const NavigationBar = () => {
                 style={profileContainerStyle}
                 onMouseLeave={profileMouseLeave}
               >
-                <button
-                  style={myPageStyle}
-                  onMouseEnter={profileMouseEnter}
-                >
-                  <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
-                  <p style={nickNameStyle}>[닉네임]</p>
+                <button style={myPageStyle} onMouseEnter={profileMouseEnter}>
+                  <img
+                    src={DefaultProfileImage}
+                    alt="사진"
+                    style={profileImageStyle}
+                  />
+                  <p>[닉네임]</p>
                 </button>
                 <div style={profileMenuStyle}>
                   {profileItems.map((item, index) => (
@@ -574,10 +534,12 @@ const NavigationBar = () => {
                     >
                       <div>
                         <div>{item.label}</div>
-                        <div style={{
-                          ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
-                        }}></div>
+                        <div
+                          style={{
+                            ...itemHoverStyle,
+                            background: item.hovered ? "#FFD257" : "#FFFFFF",
+                          }}
+                        ></div>
                       </div>
                     </MenuItem>
                   ))}
@@ -592,7 +554,6 @@ const NavigationBar = () => {
                   handleMouseLeave: buttonItems[0].mouseLeave,
                   hoverStyle: buttonItems[0].hoverStyle,
                 }}
-                onClick={buttonItems[0].onClick}
               />
             </>
           ) : (
@@ -609,8 +570,6 @@ const NavigationBar = () => {
                     handleMouseLeave: item.mouseLeave,
                     hoverStyle: item.hoverStyle,
                   }}
-                  handleClick={item.handleClick}
-                  onClick={item.onClick}
                 />
               ))}
             </>
@@ -644,10 +603,12 @@ const NavigationBar = () => {
                     >
                       <div>
                         <div>{item.label}</div>
-                        <div style={{
-                          ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
-                        }}></div>
+                        <div
+                          style={{
+                            ...itemHoverStyle,
+                            background: item.hovered ? "#FFD257" : "#FFFFFF",
+                          }}
+                        ></div>
                       </div>
                     </MenuItem>
                   ))}

@@ -18,8 +18,6 @@ import VideoComponent from "./components/openvidu/VideoComponent";
 import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
 import "./App.css";
 
-import VoteDetail from "./components/vote/VoteDetail";
-
 // 추후 적용
 // NavigationBar가 나타나지 않아야하는 곳: EnterVideoRoom, CreateVideoRoom => 적용 완료
 // VoteButton이 나타나야하는 곳: VotePage, BroadcastPage, MainPage => 추후에 컴포넌트 내부로 넣기
@@ -51,7 +49,6 @@ const App = () => {
           <Route path="/TestPage" element={<TestPage />} />
           <Route path="/TestResultPage" element={<TestResultPage />} />
           <Route path="/MyPage/*" element={<MyPage />} />
-          <Route path="/VoteDetail" element={<VoteDetail />} />
         </Route>
       </Routes>
     </Router>

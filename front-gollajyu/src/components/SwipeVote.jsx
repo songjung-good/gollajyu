@@ -1,65 +1,36 @@
 import React, { useState, useEffect } from 'react';
+// Import Swiper React components and styles
 import { Swiper, SwiperSlide } from 'swiper/react';
+// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
+// 투표 받아오기
+import SwipeCard from "./SwipeCard";
+// import required modules
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
-import VoteCard from './vote/VoteCard';
-
-// 임시 사진
-import image1 from '/favicon1.png';
 
 export default function SwipeVote() {
-  // 슬라이드 기능
   const [activeSlide, setActiveSlide] = useState(0);
+
   useEffect(() => {
     const swiperInstance = document.querySelector('.mySwiper').swiper;
 
     swiperInstance.on('slideChange', () => {
       setActiveSlide(swiperInstance.activeIndex);
     });
-  
+
     return () => {
       swiperInstance.off('slideChange');
     };
   }, []);
 
-  // 임시데이터
-  const votes = [
-    {
-      id: 1,
-      options: [
-        { id: 'a1', image: image1, title: '옵션 1' },
-        { id: 'a2', image: 'image2.png', title: '옵션 2' },
-        { id: 'a3', image: 'image3.png', title: '옵션 3' },
-      ],
-    },
-    {
-        id: 2,
-        options: [
-          { id: 'a1', image: 'image1.png', title: '옵션 1' },
-          { id: 'a2', image: 'image2.png', title: '옵션 2' },
-          { id: 'a3', image: 'image3.png', title: '옵션 3' },
-          { id: 'a3', image: 'image3.png', title: '옵션 3' },
-        ],
-      },
-    {
-      id: 3,
-      options: [
-        { id: 'a1', image: 'image1.png', title: '옵션 1' },
-        { id: 'a3', image: 'image3.png', title: '옵션 3' },
-      ],
-    },
-    // 추가 투표 데이터
-    // ...
-  ];
-
   return (
-    <div className="py-10">
+    <div className="py-7 px-7">
       <Swiper
         effect={'coverflow'}
         grabCursor={true}
-        spaceBetween={50} // 여기를 조절하여 좌우 여백을 변경
+        spaceBetween={30}
         centeredSlides={true}
         navigation={true}
         slidesPerView={'auto'}
@@ -69,19 +40,16 @@ export default function SwipeVote() {
           stretch: 0,
           depth: 100,
           modifier: 1,
-          slideShadows: false,
+          slideShadows: true,
         }}
         modules={[EffectCoverflow, Navigation, HashNavigation]}
         className="mySwiper"
-        style={{ padding: '30px' }}
+        style={{ padding: '30px', height: 'calc(100% + 60px)' }}
       >
-        {votes.map((vote) => (
-          <SwiperSlide key={vote.id} data-hash={vote.id} style={{ width: '1024px' }}>
+        {['slide1', 'slide2', 'slide3'].map((hash, index) => (
+          <SwiperSlide key={hash} data-hash={hash}>
             <div>
-              <VoteCard 
-                key={vote.id}
-                options={vote.options}
-              />
+              <SwipeCard />
             </div>
           </SwiperSlide>
         ))}

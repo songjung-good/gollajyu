@@ -1,7 +1,6 @@
 import React from "react";
 
-
-const StatisticPage = () => {
+const MainPage = () => {
   return (
     <div>
       <h1>통계보여쥬</h1>
@@ -9,4 +8,4 @@ const StatisticPage = () => {
   );
 };
 
-export default StatisticPage;
+export default MainPage;
