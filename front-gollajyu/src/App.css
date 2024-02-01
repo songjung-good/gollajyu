@@ -69,21 +69,21 @@
 
 /* -----------전체 폰트사이즈 기준 클래스 별 폰트 사이즈 설정-------- */
 .fontsize-xl {
-  font-size: 2.25rem;
+  font-size: 2.125rem;
 }
 
 .fontsize-lg {
-  font-size: 2rem;
+  font-size: 1.8125rem;
 }
 
 .fontsize-md {
-  font-size: 1.75rem;
-}
-
-.fontsize-sm {
   font-size: 1.5rem;
 }
 
+.fontsize-sm {
+  font-size: 1.1875rem;
+}
+
 .fontsize-xs {
-  font-size: 1.25rem;
+  font-size: 0.875rem;
 }
