@@ -45,7 +45,7 @@ public class Comment {
 
     private Long commentMentionId;
 
-    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLikes> commentLikes = new ArrayList<>();
 
     public void addCommentLike(Member member) {

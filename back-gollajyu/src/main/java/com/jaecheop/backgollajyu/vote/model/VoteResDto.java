@@ -24,8 +24,9 @@ public class VoteResDto {
     private LocalDateTime createAt;
     private Long selectedItemId;
 
-    private List<LikeDto> likes;
-    private CategoryDto categoryDto; // 참조 어케 해야되지?
+    private Boolean isLiked;
+    private Long likesCount;
+    private CategoryDto categoryDto; //
     private List<VoteItemResDto> voteItems;  // Include List of VoteItemDto
 
 
