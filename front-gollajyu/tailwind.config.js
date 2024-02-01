@@ -4,20 +4,10 @@ export default {
   theme: {
     extend: {},
     screens: {
-      sm: "480px",
-      // => @media (min-width: 480px) { ... }
-
-      md: "768px",
-      // => @media (min-width: 768px) { ... }
-
-      lg: "1024px",
-      // => @media (min-width: 1024px) { ... }
-
-      xl: "1280px",
-      // => @media (min-width: 1280px) { ... }
-
-      "2xl": "1536px",
-      // => @media (min-width: 1536px) { ... }
+      sm: { min: "0px", max: "479px" },
+      md: { min: "480px", max: "767px" },
+      lg: { min: "768px", max: "1023px" },
+      xl: { min: "1024px" },
     },
   },
   corePlugins: {
