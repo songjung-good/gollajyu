@@ -5,7 +5,11 @@ import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.model.SignUpReqDto;
 import com.jaecheop.backgollajyu.member.service.MemberService;
+import com.jaecheop.backgollajyu.vote.entity.Category;
+import com.jaecheop.backgollajyu.vote.entity.VoteResult;
 import com.jaecheop.backgollajyu.vote.model.*;
+import com.jaecheop.backgollajyu.vote.repository.CategoryRepository;
+import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +25,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +34,8 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     private final VoteService voteService;
+    private final CategoryRepository categoryRepository;
+    private final VoteResultRepository voteResultRepository;
 
     /**
      * 회원가입
@@ -70,6 +77,7 @@ public class MemberController {
         }
     }
 
+    // 내가 참여한 투표
     @GetMapping("/{memberId}/votes/participation")
     public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(
             @PathVariable Long memberId) {
@@ -81,6 +89,7 @@ public class MemberController {
         }
     }
 
+    // 내가 좋아요한 투표
     @GetMapping("/{memberId}/votes/likes")
     public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(
             @PathVariable Long memberId) {
@@ -92,6 +101,8 @@ public class MemberController {
             return new ResponseEntity<>(voteResDtoList, HttpStatus.OK);
         }
     }
+
+    // 내가 댓글쓴 투표
     @GetMapping("/{memberId}/comments")
     public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(
             @PathVariable Long memberId) {
@@ -103,16 +114,53 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/{memberId}/votes/statistics")
-    public ResponseEntity<List<CategoryInfoResDto>> statisticMemberResult(
-            @PathVariable Long memberId,
-            @RequestParam(required = false) Integer categoryId) {
 
-        List<CategoryInfoResDto> categoryInfoResDtoList = memberService.makeCategoryInfoResDto(memberId, categoryId);
-        if (categoryInfoResDtoList.isEmpty()) {
+    // 카테고리별 통계?
+    @GetMapping("/{memberId}/votes/statistics")
+    public ResponseEntity<Map<String, List<List<CategoryTagDto>>>> statisticMemberResult(
+            @PathVariable Long memberId) {
+        Map<String, List<List<CategoryTagDto>>> categoryInfoMap = new HashMap<>();
+        List<Category> categories = categoryRepository.findAll();
+        for (Category category : categories) {
+            List<List<CategoryTagDto>> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
+
+            // <category.getName(), categoryInfoResDtoList>
+            categoryInfoMap.put(category.getCategoryName(), categoryInfoList);
+        }
+        if (categoryInfoMap.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(categoryInfoResDtoList, HttpStatus.OK);
+            return new ResponseEntity<>(categoryInfoMap, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{memberId}/recommends")
+    public ResponseEntity<List<Map<String, String>>> crawling(
+            @PathVariable Long memberId) {
+
+        List<CategoryTagDto> categoryTagDtoList = voteService.generateStatistics(voteResultRepository.findAllByMemberId(memberId), null);
+        // Ensure there are at least two elements in the list
+        CategoryTagDto secondLargestDto = new CategoryTagDto();
+        if (categoryTagDtoList.size() >= 2) {
+            // Sort the list in descending order based on the count
+            List<CategoryTagDto> sortedList = categoryTagDtoList.stream()
+                    .sorted(Comparator.comparing(CategoryTagDto::getCount).reversed())
+                    .toList();
+
+            // Get the second element from the sorted list
+            secondLargestDto = sortedList.get(1);
+
+        } else {
+            // Handle the case where there are fewer than two elements in the list
+            // You might want to throw an exception or handle it according to your requirements
+        }
+        String categoryNameAndTag = secondLargestDto.getCategory() + " " + secondLargestDto.getTag();
+
+        System.out.println(categoryNameAndTag);
+        List<Map<String, String>> crawlingResult = memberService.crawlNaverSearchResults(categoryNameAndTag);
+
+
+        return new ResponseEntity<>(crawlingResult, HttpStatus.OK);
+
     }
 }

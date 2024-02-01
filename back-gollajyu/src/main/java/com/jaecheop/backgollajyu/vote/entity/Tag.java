@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Tag {
 
     @Id
@@ -20,4 +22,8 @@ public class Tag {
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category;
+
+    public String getCategoryTagName() {
+        return category.getCategoryName() + " " + name;
+    }
 }

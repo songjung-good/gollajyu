@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
-
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
   const [hovered, setHovered] = useState(false);
@@ -19,14 +18,12 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
   <NavLink
     to={to}
     end
-    style={({ isActive }) =>
-      isActive ? activeStyle : style
-    }
+    style={({ isActive }) => (isActive ? activeStyle : style)}
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
   >
     {children}
-  </NavLink>  
+  </NavLink>
 );
 
 // ----------- 버튼 아이템 함수형 컴포넌트 -----------
@@ -45,98 +42,71 @@ const ButtonItem = ({ label, style, hoverState }) => (
 
 const NavigationBar = () => {
   // ----------- 메인 메뉴 hover -----------
-  const [
-    votePageHovered,
-    votePageMouseEnter,
-    votePageMouseLeave
-  ] = useHoverState();
+  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
+    useHoverState();
 
   const [
     broadcastPageHovered,
     broadcastPageMouseEnter,
-    broadcastPageMouseLeave
+    broadcastPageMouseLeave,
   ] = useHoverState();
 
   const [
     statisticPageHovered,
     statisticPageMouseEnter,
-    statisticPageMouseLeave
+    statisticPageMouseLeave,
   ] = useHoverState();
 
   const [
-    testPageHovered,
-    testPageMouseEnter,
-    testPageMouseLeave
+    testResultPageHovered,
+    testResultPageMouseEnter,
+    testResultPageMouseLeave,
   ] = useHoverState();
 
   // ----------- 프로필 버튼 hover -----------
-  const [
-    profileHovered,
-    profileMouseEnter,
-    profileMouseLeave
-  ] = useHoverState();
+  const [profileHovered, profileMouseEnter, profileMouseLeave] =
+    useHoverState();
 
   // ----------- 프로필 아이템 hover -----------
-  const [
-    myProfileHovered,
-    myProfileMouseEnter,
-    myProfileMouseLeave
-  ] = useHoverState();
+  const [myProfileHovered, myProfileMouseEnter, myProfileMouseLeave] =
+    useHoverState();
 
-  const [
-    myActivitiesHovered,
-    myActivitiesMouseEnter,
-    myActivitiesMouseLeave
-  ] = useHoverState();
+  const [myActivitiesHovered, myActivitiesMouseEnter, myActivitiesMouseLeave] =
+    useHoverState();
 
-  const [
-    myStatisticsHovered,
-    myStatisticsMouseEnter,
-    myStatisticsMouseLeave
-  ] = useHoverState();
+  const [myStatisticsHovered, myStatisticsMouseEnter, myStatisticsMouseLeave] =
+    useHoverState();
 
   // ----------- 로그아웃, 로그인, 회원가입 버튼 hover -----------
-  const [
-    logoutButtonHovered,
-    logoutButtonMouseEnter,
-    logoutButtonMouseLeave
-  ] = useHoverState();
+  const [logoutButtonHovered, logoutButtonMouseEnter, logoutButtonMouseLeave] =
+    useHoverState();
 
-  const [
-    loginButtonHovered,
-    loginButtonMouseEnter,
-    loginButtonMouseLeave
-  ] = useHoverState();
+  const [loginButtonHovered, loginButtonMouseEnter, loginButtonMouseLeave] =
+    useHoverState();
 
-  const [
-    signupButtonHovered,
-    signupButtonMouseEnter,
-    signupButtonMouseLeave
-  ] = useHoverState();
+  const [signupButtonHovered, signupButtonMouseEnter, signupButtonMouseLeave] =
+    useHoverState();
 
   // ----------- 햄버거 버튼 hover -----------
-  const [
-    hamburgerHovered,
-    hamburgerMouseEnter,
-    hamburgerMouseLeave
-  ] = useHoverState();
+  const [hamburgerHovered, hamburgerMouseEnter, hamburgerMouseLeave] =
+    useHoverState();
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isLarge = useMediaQuery({
     query: "(min-width:1024px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1024px)"
+    query: "(min-width:768px) and (max-width:1024px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:768px)"
+    query: "(max-width:768px)",
   });
 
-  const isLoggedIn = true;  // 로그인 상태
+  const isLoggedIn = true; // 로그인 상태
   // const isLoggedIn = false;  // 비로그인 상태
 
   // --------------------------------- css 시작 ---------------------------------
-  
+
   // ----------- 내비게이션 배경 스타일 -----------
   const navigationBarBackgroundStyle = {
     // 위치
@@ -148,7 +118,7 @@ const NavigationBar = () => {
     width: "100%", // 내비게이션 바 배경 넓이
     height: "100px", // 내비게이션 바 높이: 100px
     background: "#FFFFFF", // 배경 색상: 흰색
-  }
+  };
 
   // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
@@ -160,7 +130,7 @@ const NavigationBar = () => {
     transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "90%" : (isMedium ? "740px" : "480px"), // (반응형) 내비게이션 바 넓이
+    width: isLarge ? "90%" : isMedium ? "740px" : "480px", // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
     display: "flex", // 항목 수평 정렬
@@ -186,12 +156,12 @@ const NavigationBar = () => {
   const linkContainerStyle = {
     // 디자인
     width: "50%", // 가로 넓이: 50%
-    
+
     // 컨텐츠 정렬
     display: "flex", // 리스트 수평 정렬
     alignItems: "center", // 리스트 수직 정렬
     justifyContent: "space-between", // 항목 균일 간격으로 정렬
-  }
+  };
 
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
@@ -216,7 +186,7 @@ const NavigationBar = () => {
     // 글자
     fontWeight: "bold", // 활성화 시 글자 두껍게
     color: "#000000", // 활성화 시 글자 색: 검정
-  }
+  };
 
   // ----------- 아이템 hover 스타일 -----------
   const itemHoverStyle = {
@@ -224,7 +194,7 @@ const NavigationBar = () => {
     width: "100%", // 가로 길이: 100%
     height: "5px", // 세로 길이: 5px
     transition: "background 0.2s ease", // 나타날 때 애니메이션
-  }
+  };
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
@@ -236,13 +206,13 @@ const NavigationBar = () => {
     display: "flex", // 링크 수평 정렬
     alignItems: "center", // 링크 수직 정렬
     justifyContent: "flex-end", // 내부 버튼 오른쪽 정렬
-  }
+  };
 
   // ----------- 프로필 컨테이너 스타일 -----------
   const profileContainerStyle = {
     // 위치
     position: "relative", // 기준 위치
-  }
+  };
 
   // ----------- 프로필 버튼 스타일 -----------
   const myPageStyle = {
@@ -314,7 +284,7 @@ const NavigationBar = () => {
     // 글자
     fontWeight: "bold", // 글자 두껍게
     color: "#000000", // 글자 색: 검정
-  }
+  };
 
   // ----------- 버튼 공통 스타일 -----------
   const buttonStyle = {
@@ -335,7 +305,7 @@ const NavigationBar = () => {
     ...buttonStyle, // 버튼 공통 스타일 상속
 
     // 디자인
-    border: "3px solid", // 테두리 스타일        
+    border: "3px solid", // 테두리 스타일
     borderColor: "#BEBEBE", // 테두리 색: 연한 회색
 
     // 글자
@@ -346,7 +316,7 @@ const NavigationBar = () => {
   const logoutButtonHoverStyle = {
     // 디자인
     background: "#D9D9D9", // 마우스 호버 시 배경 색상 변경
-  }
+  };
 
   // ----------- 로그인 버튼 스타일 -----------
   const loginButtonStyle = {
@@ -361,8 +331,8 @@ const NavigationBar = () => {
   const loginButtonHoverStyle = {
     // 디자인
     background: "#ACD145", // 마우스 호버 시 배경 색상 변경
-  }
-  
+  };
+
   // ----------- 회원가입 버튼 스타일 -----------
   const signupButtonStyle = {
     // 상속
@@ -376,13 +346,12 @@ const NavigationBar = () => {
   const signupButtonHoverStyle = {
     // 디자인
     background: "#E6BE3D", // 마우스 호버 시 배경 색상 변경
-  }
+  };
 
   // ----------- 햄버거 컨테이너 스타일 -----------
   const hamburgerContainerStyle = {
     position: "relative", // 기준 위치
-  }
-
+  };
 
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerStyle = {
@@ -409,86 +378,86 @@ const NavigationBar = () => {
 
   // ----------- 링크 아이템 목록 -----------
   const linkItems = [
-    { 
-      to: "/VotePage", 
-      label: "투표모아쥬", 
-      hovered: votePageHovered, 
-      mouseEnter: votePageMouseEnter, 
-      mouseLeave: votePageMouseLeave 
+    {
+      to: "/VotePage",
+      label: "투표모아쥬",
+      hovered: votePageHovered,
+      mouseEnter: votePageMouseEnter,
+      mouseLeave: votePageMouseLeave,
     },
-    { 
-      to: "/BroadcastPage", 
-      label: "지금골라쥬", 
-      hovered: broadcastPageHovered, 
-      mouseEnter: broadcastPageMouseEnter, 
-      mouseLeave: broadcastPageMouseLeave 
+    {
+      to: "/BroadcastPage",
+      label: "지금골라쥬",
+      hovered: broadcastPageHovered,
+      mouseEnter: broadcastPageMouseEnter,
+      mouseLeave: broadcastPageMouseLeave,
     },
-    { 
-      to: "/StatisticPage", 
-      label: "통계보여쥬", 
-      hovered: statisticPageHovered, 
-      mouseEnter: statisticPageMouseEnter, 
-      mouseLeave: statisticPageMouseLeave 
+    {
+      to: "/StatisticPage",
+      label: "통계보여쥬",
+      hovered: statisticPageHovered,
+      mouseEnter: statisticPageMouseEnter,
+      mouseLeave: statisticPageMouseLeave,
     },
-    { 
-      to: "/TestPage", 
-      label: "소비성향알려쥬", 
-      hovered: testPageHovered, 
-      mouseEnter: testPageMouseEnter, 
-      mouseLeave: testPageMouseLeave 
+    {
+      to: "/TestResultPage",
+      label: "소비성향알려쥬",
+      hovered: testResultPageHovered,
+      mouseEnter: testResultPageMouseEnter,
+      mouseLeave: testResultPageMouseLeave,
     },
   ];
 
   // ----------- 버튼 아이템 목록 -----------
   const buttonItems = [
-    { 
+    {
       label: "로그아웃",
       style: logoutButtonStyle,
-      hovered: logoutButtonHovered, 
-      mouseEnter: logoutButtonMouseEnter, 
+      hovered: logoutButtonHovered,
+      mouseEnter: logoutButtonMouseEnter,
       mouseLeave: logoutButtonMouseLeave,
-      hoverStyle: logoutButtonHoverStyle
+      hoverStyle: logoutButtonHoverStyle,
     },
-    { 
+    {
       label: "로그인",
       style: loginButtonStyle,
-      hovered: loginButtonHovered, 
-      mouseEnter: loginButtonMouseEnter, 
+      hovered: loginButtonHovered,
+      mouseEnter: loginButtonMouseEnter,
       mouseLeave: loginButtonMouseLeave,
-      hoverStyle: loginButtonHoverStyle
+      hoverStyle: loginButtonHoverStyle,
     },
-    { 
+    {
       label: "회원가입",
       style: signupButtonStyle,
-      hovered: signupButtonHovered, 
-      mouseEnter: signupButtonMouseEnter, 
+      hovered: signupButtonHovered,
+      mouseEnter: signupButtonMouseEnter,
       mouseLeave: signupButtonMouseLeave,
-      hoverStyle: signupButtonHoverStyle
+      hoverStyle: signupButtonHoverStyle,
     },
   ];
 
   // ----------- 프로필 아이템 목록 -----------
   const profileItems = [
-    { 
-      to: "/Mypage", 
-      label: "내 프로필 요약", 
-      hovered: myProfileHovered, 
-      mouseEnter: myProfileMouseEnter, 
-      mouseLeave: myProfileMouseLeave 
+    {
+      to: "/Mypage",
+      label: "내 프로필 요약",
+      hovered: myProfileHovered,
+      mouseEnter: myProfileMouseEnter,
+      mouseLeave: myProfileMouseLeave,
     },
-    { 
-      to: "/Mypage/MyActivities", 
-      label: "내 활동 요약", 
-      hovered: myActivitiesHovered, 
-      mouseEnter: myActivitiesMouseEnter, 
-      mouseLeave: myActivitiesMouseLeave 
+    {
+      to: "/Mypage/MyActivities",
+      label: "내 활동 요약",
+      hovered: myActivitiesHovered,
+      mouseEnter: myActivitiesMouseEnter,
+      mouseLeave: myActivitiesMouseLeave,
     },
-    { 
-      to: "/Mypage/MyStatistics", 
-      label: "내 통계 요약", 
-      hovered: myStatisticsHovered, 
-      mouseEnter: myStatisticsMouseEnter, 
-      mouseLeave: myStatisticsMouseLeave 
+    {
+      to: "/Mypage/MyStatistics",
+      label: "내 통계 요약",
+      hovered: myStatisticsHovered,
+      mouseEnter: myStatisticsMouseEnter,
+      mouseLeave: myStatisticsMouseLeave,
     },
   ];
 
@@ -516,15 +485,17 @@ const NavigationBar = () => {
                   hoverState={{
                     hovered: item.hovered,
                     handleMouseEnter: item.mouseEnter,
-                    handleMouseLeave: item.mouseLeave
+                    handleMouseLeave: item.mouseLeave,
                   }}
                 >
                   <div>
                     <div>{item.label}</div>
-                    <div style={{
-                      ...itemHoverStyle,
-                      background: item.hovered ? "#FFD257" : "#FFFFFF"
-                    }}></div>
+                    <div
+                      style={{
+                        ...itemHoverStyle,
+                        background: item.hovered ? "#FFD257" : "#FFFFFF",
+                      }}
+                    ></div>
                   </div>
                 </MenuItem>
               ))}
@@ -540,11 +511,12 @@ const NavigationBar = () => {
                 style={profileContainerStyle}
                 onMouseLeave={profileMouseLeave}
               >
-                <button
-                  style={myPageStyle}
-                  onMouseEnter={profileMouseEnter}
-                >
-                  <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
+                <button style={myPageStyle} onMouseEnter={profileMouseEnter}>
+                  <img
+                    src={DefaultProfileImage}
+                    alt="사진"
+                    style={profileImageStyle}
+                  />
                   <p>[닉네임]</p>
                 </button>
                 <div style={profileMenuStyle}>
@@ -557,15 +529,17 @@ const NavigationBar = () => {
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
-                        handleMouseLeave: item.mouseLeave
+                        handleMouseLeave: item.mouseLeave,
                       }}
                     >
                       <div>
                         <div>{item.label}</div>
-                        <div style={{
-                          ...itemHoverStyle,
-                          background: item.hovered ? "#FFD257" : "#FFFFFF"
-                        }}></div>
+                        <div
+                          style={{
+                            ...itemHoverStyle,
+                            background: item.hovered ? "#FFD257" : "#FFFFFF",
+                          }}
+                        ></div>
                       </div>
                     </MenuItem>
                   ))}
@@ -578,7 +552,7 @@ const NavigationBar = () => {
                   hovered: buttonItems[0].hovered,
                   handleMouseEnter: buttonItems[0].mouseEnter,
                   handleMouseLeave: buttonItems[0].mouseLeave,
-                  hoverStyle: buttonItems[0].hoverStyle
+                  hoverStyle: buttonItems[0].hoverStyle,
                 }}
               />
             </>
@@ -594,7 +568,7 @@ const NavigationBar = () => {
                     hovered: item.hovered,
                     handleMouseEnter: item.mouseEnter,
                     handleMouseLeave: item.mouseLeave,
-                    hoverStyle: item.hoverStyle
+                    hoverStyle: item.hoverStyle,
                   }}
                 />
               ))}
@@ -624,15 +598,17 @@ const NavigationBar = () => {
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
-                        handleMouseLeave: item.mouseLeave
+                        handleMouseLeave: item.mouseLeave,
                       }}
                     >
                       <div>
                         <div>{item.label}</div>
-                        <div style={{
-                          ...itemHoverStyle,
-                          background: item.hovered ? "#FFD257" : "#FFFFFF"
-                        }}></div>
+                        <div
+                          style={{
+                            ...itemHoverStyle,
+                            background: item.hovered ? "#FFD257" : "#FFFFFF",
+                          }}
+                        ></div>
                       </div>
                     </MenuItem>
                   ))}

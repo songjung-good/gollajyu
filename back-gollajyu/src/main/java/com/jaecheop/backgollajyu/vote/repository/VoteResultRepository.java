@@ -23,7 +23,11 @@ public interface VoteResultRepository extends JpaRepository<VoteResult, Long> {
     @Query("SELECT vr FROM VoteResult vr")
     List<VoteResult> findByAll();
 
+    List<VoteResult> findAllByMemberId(Long memberId);
+
+    List<VoteResult> findAllByMemberIdAndCategoryId(Long memberId, int categoryId);
+
     List<VoteResult> findByCategoryId(Integer categoryId);
 
-    List<VoteResult> findByMemberIdAndCategoryId(Long memberId, Integer categoryId);
+    List<VoteResult> findByCategoryIdAndMemberId(Integer categoryId, Long memberId);
 }
