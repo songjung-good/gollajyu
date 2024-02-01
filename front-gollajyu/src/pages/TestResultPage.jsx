@@ -74,7 +74,7 @@ const TestResultPage = () => {
   // console.log("isMyResult", isMyResult);
   return (
     <div className="p-5">
-      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl min-w-[400px] sm:w-[550px] flex flex-col items-center relative">
+      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] md:w-[330px] lg:w-[380px] xl:w-[550px] flex flex-col items-center relative">
         {isMyResult ? (
           <div className="font-bold w-full text-start absolute top-3 left-3">
             나의 결과
@@ -100,23 +100,28 @@ const TestResultPage = () => {
         )}
         {matchingData && (
           <>
-            <p className="fontsize-lg my-2">{matchingData.subTitle}</p>
-            <p className="text-3xl font-bold mb-2">{matchingData.title}</p>
+            <p className="fontsize-md">{matchingData.subTitle}</p>
+            <p className="fontsize-xl font-bold mb-2">{matchingData.title}</p>
             <img src={`/assets/images/sobiTest/${result}.png`} alt="" />
-            <div className="flex space-x-5">
+            <div className="flex justify-around sm:flex-col sm:space-x-0">
               {matchingData.tag?.map((item, index) => (
-                <p className="bg-amber-100 px-3 py-1 rounded-lg" key={index}>
+                <p
+                  className="bg-amber-100 px-3 py-1 m-1 text-center rounded-lg fontsize-sm"
+                  key={index}
+                >
                   {item}
                 </p>
               ))}
             </div>
-            <p className="my-10 text-xl">{matchingData.characteristic}</p>
+            <p className="my-10 fontsize-md break-keep">
+              {matchingData.characteristic}
+            </p>
             <div
               id="description"
               className="bg-stone-100 p-10 rounded-lg break-keep"
             >
               {matchingData.description?.map((item, index) => (
-                <li className="p-2 text-lg" key={index}>
+                <li className="p-2 fontsize-sm" key={index}>
                   {item}
                 </li>
               ))}
@@ -125,16 +130,17 @@ const TestResultPage = () => {
               id="good_chemi"
               className="my-5 p-3 bg-stone-50 w-full flex flex-col border rounded-lg"
             >
-              <p className="text-xl my-4 px-2">
-                <span className="text-red-400 font-bold">환상</span>의 조합
+              <p className="fontsize-md my-4 px-2">
+                <span className="fontsize-md text-red-400 font-bold">환상</span>
+                의 조합
               </p>
               <div className="p-3">
-                <p>
+                <p className="fontsize-sm">
                   {sobiTIData.find(
                     (data) => data.id === matchingData.good_chemi
                   )?.subTitle || null}
                 </p>
-                <p className="text-xl font-bold">
+                <p className="fontsize-md font-bold">
                   {sobiTIData.find(
                     (data) => data.id === matchingData.good_chemi
                   )?.title || null}
@@ -145,15 +151,18 @@ const TestResultPage = () => {
               id="bad_chemi"
               className="mb-5 p-3 bg-stone-50 w-full flex flex-col border rounded-lg"
             >
-              <p className="text-xl my-4 px-2">
-                <span className="text-blue-600 font-bold">환장</span>의 조합
+              <p className="fontsize-md my-4 px-2">
+                <span className="fontsize-md text-blue-600 font-bold">
+                  환장
+                </span>
+                의 조합
               </p>
               <div className="p-3">
-                <p>
+                <p className="fontsize-sm">
                   {sobiTIData.find((data) => data.id === matchingData.bad_chemi)
                     ?.subTitle || null}
                 </p>
-                <p className="text-xl font-bold">
+                <p className="fontsize-md font-bold">
                   {sobiTIData.find((data) => data.id === matchingData.bad_chemi)
                     ?.title || null}
                 </p>
