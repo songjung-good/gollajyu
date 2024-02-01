@@ -1,13 +1,13 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; /* 요소의 크기를 padding과 border를 포함한 크기로 계산 */
-  font-family: "GmarketSansMedium"; /* 기본 폰트 설정 */
+  box-sizing: border-box;            /* 요소의 크기를 padding과 border를 포함한 크기로 계산 */
+  font-family: "GmarketSansMedium";  /* 기본 폰트 설정 */
 }
 
 .body {
-  margin-top: 100px; /* 네비게이션 바 높이만큼 높이 설정 */
-  background-color: #f7f6f3;
+  margin-top: 100px;                 /* 네비게이션 바 높이만큼 높이 설정 */
+  background-color: #F7F6F3;
 }
 
 @font-face {

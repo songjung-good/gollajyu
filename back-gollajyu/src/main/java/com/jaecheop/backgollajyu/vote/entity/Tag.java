@@ -22,4 +22,8 @@ public class Tag {
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category;
+
+    public String getCategoryTagName() {
+        return category.getCategoryName() + " " + name;
+    }
 }
