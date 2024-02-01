@@ -62,7 +62,7 @@ const LoginModal = () => {
     >
       <div
         id="inner"
-        className="mx-auto container bg-white lg:w-[500px] min-h-[620px] flex flex-col items-center rounded-3xl shadow-md"
+        className="mx-auto container bg-white xl:w-[420px] xl:h-[620px] lg:w-[380px] lg:h-[560px] md:w-[330px] md:h-[500px] sm:w-[250px] sm:h-[400px] flex flex-col items-center rounded-3xl shadow-md"
       >
         <h1 className="fontsize-lg font-bold text-gray-700 mt-12 mb-16">
           로그인해쥬
@@ -72,7 +72,7 @@ const LoginModal = () => {
           onSubmit={handleSubmit(submitForm)}
           className="flex flex-col w-3/5"
         >
-          <div className="h-[80px]">
+          <div className="h-20">
             {/* 이메일 => 형식: (대소문자 구분 없이 알파벳 + 숫자) + @ + (대소문자 구분 없이 알파벳 + 숫자) + . + (알파벳) */}
             <input
               type="text"
@@ -88,14 +88,14 @@ const LoginModal = () => {
               })}
             />
             {errors.email ? (
-              <p className="px-3 text-red-500 fontsize-sm">
+              <p className="px-3 text-red-500 fontsize-sx">
                 {errors.email.message}
               </p>
             ) : (
-              <p className="invisible fontsize-sm">nothing</p>
+              <p className="invisible fontsize-sx">nothing</p>
             )}
           </div>
-          <div className="h-[80px]">
+          <div className="h-26">
             <input
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
@@ -105,7 +105,7 @@ const LoginModal = () => {
                 required: true,
                 minLength: {
                   value: 8,
-                  message: "비밀번호는 8자 이상 15자 미만 입니다",
+                  message: `비밀번호는 8자 이상 15자 미만 입니다`,
                 },
                 maxLength: {
                   value: 15,
@@ -118,11 +118,11 @@ const LoginModal = () => {
               })}
             />
             {errors.pw ? (
-              <p className="px-3 text-red-500 fontsize-sm">
+              <p className="px-3 text-red-500 fontsize-sx break-keep">
                 {errors.pw.message}
               </p>
             ) : (
-              <p className="invisible fontsize-sm">nothing</p>
+              <p className="invisible fontsize-sx">nothing</p>
             )}
           </div>
           <button
