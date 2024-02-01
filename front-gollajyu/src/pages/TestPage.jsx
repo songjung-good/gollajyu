@@ -97,7 +97,6 @@ const TestPage = () => {
   };
 
   const goResultPage = () => {
-    // 테스트 결과 페이지로 경로 설정 필요함
     navigate("/TestResultPage", {
       state: {
         isFirstTime: true,
@@ -146,7 +145,6 @@ const TestPage = () => {
             <>
               <div className="mx-auto mb-5 max-w-lg transition ease-in duration-300">
                 <div className="flex justify-between">
-                  {/* 소비성향 테스트 문구 변경 고민 */}
                   <p>{cheeringPhrase[Math.floor(questionNumber / 3)]}</p>{" "}
                   <p>{questionNumber + 1} /12</p>
                 </div>
@@ -154,7 +152,7 @@ const TestPage = () => {
                   className=""
                   variant="determinate"
                   value={((questionNumber + 1) / 12) * 100}
-                  // 애니메이션 적용 (후순위)
+                  // 애니메이션 적용 (후순위) -> 쉽지 않음
                 />
               </div>
               <TestItem
