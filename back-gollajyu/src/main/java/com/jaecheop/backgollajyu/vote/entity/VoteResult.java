@@ -4,7 +4,10 @@ import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
 import com.jaecheop.backgollajyu.member.model.Gender;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +16,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class VoteResult {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +29,6 @@ public class VoteResult {
     @ManyToOne
     @JoinColumn(name="vote_item_id")
     private VoteItem voteItem;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
 
     @ManyToOne
     @JoinColumn(name="member_id")
@@ -49,6 +47,10 @@ public class VoteResult {
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private LocalDateTime createAt;
 

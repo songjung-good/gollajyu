@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -36,11 +34,4 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     @Query("SELECT li.vote FROM Likes li WHERE li.member.id = :memberId " +
             "ORDER BY li.createAt DESC")
     List<Vote> findVoteLikesByMemberId(@Param("memberId") Long memberId);
-
-    List<Vote> findAllByOrderByCreateAtDesc();
-
-    List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId);
-
-    List<Vote> findAllByCreateAtBetweenOrderByCreateAtDesc(LocalDateTime startDate, LocalDateTime endDate);
-
 }
