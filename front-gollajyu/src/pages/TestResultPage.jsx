@@ -74,7 +74,7 @@ const TestResultPage = () => {
   // console.log("isMyResult", isMyResult);
   return (
     <div className="p-5">
-      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl min-w-44 md:w-2/3 lg:w-2/5 flex flex-col items-center relative">
+      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl min-w-[400px] sm:w-[550px] flex flex-col items-center relative">
         {isMyResult ? (
           <div className="font-bold w-full text-start absolute top-3 left-3">
             나의 결과

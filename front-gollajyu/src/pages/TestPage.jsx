@@ -76,7 +76,14 @@ const TestPage = () => {
     ],
   ];
 
-  // question, answer를 "" 표시에서 자르거나 글자 길이로 자르거나 보기 편하게 수정하는 과정 필요함
+  const cheeringPhrase = [
+    "나의 소비성향 알아보기 시-작",
+    "영-차! 영-차!",
+    "절반이 넘었어요!!",
+    "곧 끝나요!!!",
+  ];
+
+  // question, answer를 "" 표시에서 자르거나 글자 길이로 자르거나 보기 편하게 수정하는 과정 필요함 => width 픽셀 고정으로 어느 정도 해결, 완전히는 아님
 
   const [response, setResponse] = useState([]);
   const [questionNumber, setQuestionNumber] = useState(-1);
@@ -102,18 +109,20 @@ const TestPage = () => {
   const BorderLinearProgress = styled(LinearProgress)(() => ({
     height: 6,
     borderRadius: 5,
+    // transition: "all 2s",
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor: "lightgrey",
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 5,
       backgroundColor: "#FFD257",
+      animationDuration: "10s",
     },
   }));
 
   return (
     <div className="p-5 h-screen">
-      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl w-2/3 lg:w-1/2 min-h-[600px]">
+      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl min-w-[400px] sm:w-[600px] min-h-[600px]">
         <div className="min-h-[600px]">
           {questionNumber === -1 ? (
             <div className="flex flex-col items-center space-y-24">
@@ -135,12 +144,14 @@ const TestPage = () => {
           ) : null}
           {questionNumber >= 0 && questionNumber <= 11 ? (
             <>
-              <div className="mx-auto mb-5 max-w-lg">
+              <div className="mx-auto mb-5 max-w-lg transition ease-in duration-300">
                 <div className="flex justify-between">
                   {/* 소비성향 테스트 문구 변경 고민 */}
-                  <p>소비성향 테스트</p> <p>{questionNumber + 1} /12</p>
+                  <p>{cheeringPhrase[Math.floor(questionNumber / 3)]}</p>{" "}
+                  <p>{questionNumber + 1} /12</p>
                 </div>
                 <BorderLinearProgress
+                  className=""
                   variant="determinate"
                   value={((questionNumber + 1) / 12) * 100}
                   // 애니메이션 적용 (후순위)
