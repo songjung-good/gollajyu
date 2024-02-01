@@ -1,12 +1,10 @@
 package com.jaecheop.backgollajyu.vote.model;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @ToString
-@Setter
 public class VoteDetailReqDto {
 
     private Long memberId;
