@@ -1,10 +1,9 @@
 package com.jaecheop.backgollajyu.vote.entity;
 
+import com.jaecheop.backgollajyu.vote.model.VoteItemCloseInfoDto;
+import com.jaecheop.backgollajyu.vote.model.VoteItemDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class VoteItem {
 
     @Id
@@ -39,5 +39,25 @@ public class VoteItem {
         this.voteItemImgUrl = imgPath;
     }
 
+    public static VoteItemDto convertToDto(VoteItem vi){
+        return VoteItemDto.builder()
+                .id(vi.getId())
+                .voteId(vi.getVote().getId())
+                .voteItemImgUrl(vi.getVoteItemImgUrl())
+                .voteItemDesc(vi.getVoteItemDesc())
+                .price(vi.getPrice())
+                .build();
+    }
+
+
+    public static VoteItemCloseInfoDto convertToVoteItemCloseInfoDto(VoteItem voteItem, Long voteTotalCnt){
+        long itemTotalCnt = (long)voteItem.getVoteResultList().size();
+
+        return VoteItemCloseInfoDto.builder()
+                .voteItemId(voteItem.getId())
+                .voteItemChoiceCnt(itemTotalCnt)
+                .percent(((float)itemTotalCnt / voteTotalCnt) * 100)
+                .build();
+    }
 
 }
