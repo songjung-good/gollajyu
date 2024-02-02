@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13757e7a-1601-4fbd-b4c9-0ac0bd448c08" name="Changes" comment="" />
+    <list default="true" id="13757e7a-1601-4fbd-b4c9-0ac0bd448c08" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../back-gollajyu/src/main/java/com/jaecheop/backgollajyu/socialLogin/CustomOAuth2UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../back-gollajyu/src/main/java/com/jaecheop/backgollajyu/socialLogin/OAuthAccount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../back-gollajyu/src/main/java/com/jaecheop/backgollajyu/socialLogin/OAuthAccountRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../back-gollajyu/src/main/java/com/jaecheop/backgollajyu/socialLogin/OAuthAttributes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../back-gollajyu/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../back-gollajyu/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../back-gollajyu/src/main/java/com/jaecheop/backgollajyu/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../back-gollajyu/src/main/java/com/jaecheop/backgollajyu/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../back-gollajyu/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../back-gollajyu/src/main/resources/application.properties" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,9 +50,9 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -70,7 +78,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "Spring Boot.BackGollajyuApplication.executor": "Run",
-    "git-widget-placeholder": "infra",
+    "git-widget-placeholder": "OAuth-back",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -109,13 +117,6 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -126,6 +127,7 @@
       <updated>1705890821406</updated>
       <workItem from="1706486582063" duration="4842000" />
       <workItem from="1706496443350" duration="7158000" />
+      <workItem from="1706714730182" duration="599000" />
     </task>
     <servers />
   </component>
