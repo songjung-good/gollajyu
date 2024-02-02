@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import TestResultHeader from "../TestResultHeader";
+import sobiTIData from "/src/stores/TestResultData";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
@@ -18,11 +21,39 @@ const MyProfile = () => {
     query : "(max-width:479px)"
   });
   
-  // ----------- 버튼 hover -----------
+  // ----------- 기본정보 수정하기 버튼 hover -----------
   const [
     buttonHovered,
     setButtonHovered
   ] = useState(false);
+
+  // ----------- 소비성향 자세히 알아보기 버튼 hover -----------
+  const [
+    testButtonHovered,
+    setTestButtonHovered
+  ] = useState(false);
+
+  // ----------- 이전 페이지에서 전달된 state에서 값 가져옴 -----------
+  const isFirstTime = location.state?.isFirstTime || false;
+  const response = location.state?.response || [];
+
+  // ----------- state 정의 -----------
+  const [result, setResult] = useState(0);
+  const [matchingData, setMatchingData] = useState({});
+
+  // ----------- isFirstTime 또는 response가 변경될 때마다 실행되는 함수 -----------
+  useEffect(() => {
+    if (isFirstTime) {
+      setResult(getMBTI(response));
+      // 결과를 서버로 보내는 과정이 필요함
+    }
+  }, [isFirstTime, response]);
+
+  // ----------- result가 변경될 때마다 실행되는 함수 -----------
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    setMatchingData(sobiTIData.find((data) => data.id === result));
+  }, [result]);
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -189,6 +220,39 @@ const MyProfile = () => {
     color: "#4A4A4A",
   };
 
+  // ----------- 컨텐츠 컨테이너 스타일 -----------
+  const testContainerStyle = {
+    // 상속
+    ...contentContainerStyle,
+
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  };
+
+  // ----------- 소비성향 자세히 알아보기 버튼 스타일 -----------
+  const testButtonStyle = {
+    // 디자인
+    marginTop: "10px",
+    width:
+      isXLarge ? "300px" :
+      isLarge ? "270px" :
+      isMedium ? "240px" : "210px",
+    height:
+      isXLarge ? "70px" :
+      isLarge ? "60px" :
+      isMedium ? "50px" : "40px",
+    borderRadius: "50px",
+    background: testButtonHovered ? "#E6BE3D" : "#FFD257", // 마우스 호버 시 배경 색상 변경
+    transition: "background 0.5s ease",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }
+
   // --------------------------------- css 끝 ---------------------------------
 
 
@@ -238,9 +302,18 @@ const MyProfile = () => {
         <div style={titleContainerStyle}>
           <span style={titleStyle} className="fontsize-xl">소비성향</span>
         </div>
-        <div style={contentContainerStyle}>
-          <div style={contentHeaderContainerStyle}>
-          </div>
+        <div style={testContainerStyle}>
+          <TestResultHeader data={matchingData} result={result} />
+          <NavLink
+            to="/TestResultPage"
+            end
+            style={testButtonStyle}
+            className="fontsize-md"
+            onMouseOver={() => setTestButtonHovered(true)}
+            onMouseOut={() => setTestButtonHovered(false)}
+          >
+            자세히 알아보기
+          </NavLink>
         </div>
       </div>
     </>
