@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import sobiTIData from "/src/stores/TestResultData";
+import TestResultHeader from "../components/TestResultHeader";
 
 const getMBTI = (response) => {
   const MBTI = {
@@ -100,22 +101,7 @@ const TestResultPage = () => {
         )}
         {matchingData && (
           <>
-            <p className="fontsize-md">{matchingData.subTitle}</p>
-            <p className="fontsize-xl font-bold mb-2">{matchingData.title}</p>
-            <img src={`/assets/images/sobiTest/${result}.png`} alt="" />
-            <div className="flex justify-around sm:flex-col sm:space-x-0">
-              {matchingData.tag?.map((item, index) => (
-                <p
-                  className="bg-amber-100 px-3 py-1 m-1 text-center rounded-lg fontsize-sm"
-                  key={index}
-                >
-                  {item}
-                </p>
-              ))}
-            </div>
-            <p className="my-10 fontsize-md break-keep">
-              {matchingData.characteristic}
-            </p>
+            <TestResultHeader data={matchingData} result={result} />
             <div
               id="description"
               className="bg-stone-100 p-10 rounded-lg break-keep"
