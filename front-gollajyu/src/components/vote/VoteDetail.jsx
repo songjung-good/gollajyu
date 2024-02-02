@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import VoteCardItem from './VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
+import VoteDetailChat from './VoteDetailChat';
 
 // 임시 데이터
 const voteDetail = {
@@ -32,6 +33,7 @@ const voteDetail = {
   hasVoted: true  // 사용자가 투표에 참여했는지 여부
 };
 
+// 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
   const [clicked, setClicked] = useState([false, false, false, false]);
 
@@ -40,7 +42,7 @@ const VoteDetail = () => {
     setClicked(newClicked);
   };
   return (
-    <div className="bg-white shadow-md rounded-md max-w-7xl mx-auto">
+    <div className="bg-white shadow-md rounded-md max-w-5xl mx-auto">
       <VoteDetailHeader {...voteDetail} />
       <div className="p-2 flex justify-around items-center h-full" >
         {Array(voteDetail.options.length).fill(null).map((_, index) => (
@@ -57,7 +59,10 @@ const VoteDetail = () => {
         ))}
       </div>
       {voteDetail.hasVoted && (
+        <>
         <VoteDetailReselt />
+        <VoteDetailChat />
+      </>
       )}
     </div>
   );

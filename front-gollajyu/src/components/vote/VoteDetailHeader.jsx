@@ -1,5 +1,6 @@
 import React from 'react';
 
+// 투표모아쥬의 정렬 및 검색 기능의 공간입니다~
 const VoteDetailHeader = ( props ) => {
   return (
     <div className="w-auto h-auto relative bg-white rounded-md overflow-hidden max-w-xxl mx-auto mt-16">
