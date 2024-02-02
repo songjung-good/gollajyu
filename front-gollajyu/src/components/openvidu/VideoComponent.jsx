@@ -254,6 +254,7 @@ export default function VideoComponent() {
     // }
   }, [session]);
 
+  // 사용 X
   const mute = () => {
     // publishAudio(true) 도 되고 publishVideo(false)도 되는데 publishAudio(false) 하면 openvidu-browser.js 에서 에러나고 멈춤
     if (audioState) {
@@ -416,14 +417,14 @@ export default function VideoComponent() {
                   >
                     화면 공유
                   </button>
-                  <button
+                  {/* <button
                     className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
                     onClick={mute}
                   >
                     {audioState
                       ? "마이크 음소거 (안됨)"
                       : "마이크 음소거 해제 (안됨)"}
-                  </button>
+                  </button> */}
                 </div>
                 <button
                   className={`bg-red-500 hover:bg-red-700 ${settingButton}`}

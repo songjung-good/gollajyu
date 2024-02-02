@@ -8,8 +8,6 @@ import viewerIcon from "/assets/images/viewer_icon.png";
 const medalImg = {
   position: "absolute",
   padding: "5px",
-  width: "50px",
-  hight: "50px",
 };
 
 const BroadcastItem = ({ index, item }) => {
@@ -30,11 +28,29 @@ const BroadcastItem = ({ index, item }) => {
   return (
     <div onClick={enterRoom}>
       <div id="thumbnail">
-        {index === 0 ? <img style={medalImg} src={firstMedal}></img> : null}
-        {index === 1 ? <img style={medalImg} src={secondMedal}></img> : null}
-        {index === 2 ? <img style={medalImg} src={thirdMedal}></img> : null}
+        {index === 0 ? (
+          <img
+            style={medalImg}
+            className="w-[50px] h-[50px] sm:w-[30px] sm:h-[30px] md:w-[40px] md:h-[40px]"
+            src={firstMedal}
+          ></img>
+        ) : null}
+        {index === 1 ? (
+          <img
+            style={medalImg}
+            className="w-[50px] h-[50px] sm:w-[30px] sm:h-[30px] md:w-[40px] md:h-[40px]"
+            src={secondMedal}
+          ></img>
+        ) : null}
+        {index === 2 ? (
+          <img
+            style={medalImg}
+            className="w-[50px] h-[50px] sm:w-[30px] sm:h-[30px] md:w-[40px] md:h-[40px]"
+            src={thirdMedal}
+          ></img>
+        ) : null}
         <img
-          className="rounded-[30px] mb-2"
+          className="rounded-3xl mb-2"
           src={item.thumbnail}
           alt="지금골라쥬 썸네일"
         />

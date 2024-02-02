@@ -57,6 +57,7 @@ export default function SwipeVote() {
   return (
     <div className="py-10">
       <Swiper
+        // width={1280}
         effect={'coverflow'}
         grabCursor={true}
         spaceBetween={50} // 여기를 조절하여 좌우 여백을 변경
@@ -64,6 +65,8 @@ export default function SwipeVote() {
         navigation={true}
         slidesPerView={'auto'}
         loop={true}
+        // breakpoints-480={spaceBetween=20}
+        // breakpoints-640={spaceBetween=30}
         coverflowEffect={{
           rotate: 50,
           stretch: 0,
@@ -75,6 +78,7 @@ export default function SwipeVote() {
         className="mySwiper"
         style={{ padding: '30px' }}
       >
+
         {votes.map((vote) => (
           <SwiperSlide key={vote.id} data-hash={vote.id} style={{ width: '1024px' }}>
             <div>

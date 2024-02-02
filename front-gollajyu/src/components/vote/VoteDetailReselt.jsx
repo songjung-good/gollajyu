@@ -7,6 +7,7 @@ const voteResults = [
   { option: '선택지 3', percentage: 20, reasons: { 가성비: 50, 디자인: 20, 브랜드: 10, 편의성: 20, 기능성: 0 } },
 ];
 
+// 투표결과에 대한 내용을 출력하는 공간
 const VoteDetailReselt = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   
@@ -15,7 +16,7 @@ const VoteDetailReselt = () => {
       {voteResults.map((result, index) => (
         <div key={index}>
           <h2>{result.option}: {result.percentage}%</h2>
-          <button onClick={() => setSelectedOption(index)}>자세히 보기</button>
+          <button onClick={() => setSelectedOption(selectedOption === index ? null : index)}>▼</button>
           {selectedOption === index && (
             <div>
               {Object.entries(result.reasons).map(([reason, percentage]) => (
@@ -25,8 +26,7 @@ const VoteDetailReselt = () => {
           )}
         </div>
       ))}
-      {/* 사용자 유형 필터링 부분 */}
-      {/* 이 부분은 필요에 따라 구현하세요 */}
+      {/* 사용자 유형 필터링 부분 구현필요 */}
     </div>
   );
 };
