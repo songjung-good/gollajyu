@@ -31,7 +31,7 @@ public class VoteController {
     private VoteItemRepository voteItemRepository;
 
     // TODO: main GET들...
- 
+  
     /**
      * 투표 생성 - create
      *
