@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.socialLogin;
 
 import com.jaecheop.backgollajyu.member.entity.Member;
+import jakarta.servlet.http.Cookie;
 import lombok.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ import java.util.Map;
 public class PrincipalDetails implements UserDetails, OAuth2User, Authentication {
     private Member member;
     private Map<String, Object> attributes;
+
     @Override
     public String getName() {
         return null;

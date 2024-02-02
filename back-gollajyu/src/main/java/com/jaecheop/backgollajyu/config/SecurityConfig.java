@@ -2,6 +2,7 @@ package com.jaecheop.backgollajyu.config;
 
 import com.jaecheop.backgollajyu.socialLogin.CustomOAuth2UserService;
 import com.jaecheop.backgollajyu.socialLogin.Oauth2LoginSuccessHandler;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +38,27 @@ public class SecurityConfig {
                                 userInfoEndpoint
                                         .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("/members/addInfo")// 리다이렉트 할 URL
+//                        .defaultSuccessUrl("/members/addInfo")// 리다이렉트 할 URL
         );
+
+        // 여기서부터 로그아웃 API 내용~!
+        http.logout(logout ->
+                logout.logoutUrl("/members/logout")   // 로그아웃 처리 URL (= form action url)
+                //.logoutSuccessUrl("/login") // 로그아웃 성공 후 targetUrl,
+                // logoutSuccessHandler 가 있다면 효과 없으므로 주석처리.
+                .addLogoutHandler((request, response, authentication) -> {
+                    // 사실 굳이 내가 세션 무효화하지 않아도 됨.
+                    // LogoutFilter가 내부적으로 해줌.
+                    HttpSession session = request.getSession();
+                    if (session != null) {
+                        session.invalidate();
+                    }
+                })  // 로그아웃 핸들러 추가
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.sendRedirect("/members/login");
+                }) // 로그아웃 성공 핸들러
+                .deleteCookies("gollajyu-cookie")
+        ); // 로그아웃 후 삭제할 쿠키 지정
 
 
 

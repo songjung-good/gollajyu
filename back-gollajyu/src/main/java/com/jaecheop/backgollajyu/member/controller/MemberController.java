@@ -84,6 +84,7 @@ public class MemberController {
     @GetMapping("/addInfo")
     public ResponseEntity<ResponseMessage> addInfo(HttpServletRequest request) {
         // 쿠키에서 string을 쪼개서 providerId를 가져옴
+        System.out.println("4444444444444444444444444444444");
         Cookie[] cookieList = request.getCookies();
         String providerId = "";
         for (Cookie cookie : cookieList) {
@@ -105,6 +106,17 @@ public class MemberController {
 
         // 이 응답을 가지고 POST 컨트롤러를 하나 만들어서 비어있는 정보를 넣어 멤버 정보 업데이트 시킴(axios요청을 두번 보내야 한다는 뜻)
         return ResponseEntity.ok().body(ResponseMessage.success(addInfoResDto));
+    }
+
+    // TODO: 로그아웃
+    // getmapping - security context 에서 정보 인증 정보 삭제, 쿠키 삭제
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication = " + authentication);
+
+
+        return "로그아웃";
     }
 
     /**

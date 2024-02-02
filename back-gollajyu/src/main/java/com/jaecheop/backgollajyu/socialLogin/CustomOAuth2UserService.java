@@ -1,7 +1,10 @@
 package com.jaecheop.backgollajyu.socialLogin;
 
+import com.jaecheop.backgollajyu.cookieUtils.CookieUtils;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -46,6 +49,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String password = getEncryptedPassword("소셜 구글 로그인");
 
         Member member = null;
+
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         if (optionalMember.isEmpty()) {
             member = Member.builder()
@@ -59,10 +63,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .point(0L)
                     .build();
             memberRepository.save(member);
+            System.out.println("111111111111111111111");
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(member.getEmail(), "google");
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("2222222222222222222222");
 
         } else {
             // 예외 던져주기
-            System.out.println("구글 로그인을 이미 한 사용자 입니다");
+            System.out.println("구글 회원가입을 한 사용자 입니다");
             // 바로 로그인이 됨!
             // TODO:: 로그인 시켜주기!!!!
             member = optionalMember.get();
@@ -71,13 +80,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //            Authentication result = SecurityContextHolder.getContext().getAuthentication();
 //            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 //            System.out.println("result = " + result);
+
         }
 
-        PrincipalDetails principalDetails = new PrincipalDetails(member, oAuth2User.getAttributes());
-//        System.out.println("================================customoauth2userService2=======================");
+        //        System.out.println("================================customoauth2userService2=======================");
 //        System.out.println("oAuth2User = " + oAuth2User.getAttributes());
 //        System.out.println(principalDetails);
 //        System.out.println(" ============================================================================ ");
+        PrincipalDetails principalDetails = new PrincipalDetails(member, oAuth2User.getAttributes());
+        System.out.println("3333333333333333333333333333333333");
         return principalDetails;
     }
 
