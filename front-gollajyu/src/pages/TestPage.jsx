@@ -126,8 +126,8 @@ const TestPage = () => {
           {questionNumber === -1 ? (
             <div className="flex flex-col items-center space-y-10 sm:space-y-16">
               <h1 className="text-center fontsize-lg">
-                <span className="text-sky-600 fontsize-lg">선택</span>으로
-                알아보는
+                <span className="text-sky-600 fontsize-lg">선택</span>
+                으로 알아보는
                 <br />
                 <span className="text-lime-500 fontsize-lg">소비성향</span>{" "}
                 테스트
