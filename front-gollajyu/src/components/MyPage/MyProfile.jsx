@@ -21,25 +21,17 @@ const MyProfile = () => {
     query : "(max-width:479px)"
   });
   
-  // ----------- 기본정보 수정하기 버튼 hover -----------
-  const [
-    buttonHovered,
-    setButtonHovered
-  ] = useState(false);
-
-  // ----------- 소비성향 자세히 알아보기 버튼 hover -----------
-  const [
-    testButtonHovered,
-    setTestButtonHovered
-  ] = useState(false);
-
-  // ----------- 이전 페이지에서 전달된 state에서 값 가져옴 -----------
-  const isFirstTime = location.state?.isFirstTime || false;
-  const response = location.state?.response || [];
+  // ----------- 버튼 hover -----------
+  const [buttonHovered, setButtonHovered] = useState(false);
+  const [testButtonHovered, setTestButtonHovered] = useState(false);
 
   // ----------- state 정의 -----------
   const [result, setResult] = useState(0);
   const [matchingData, setMatchingData] = useState({});
+
+  // ----------- 이전 페이지에서 전달된 state에서 값 가져옴 -----------
+  const isFirstTime = location.state?.isFirstTime || false;
+  const response = location.state?.response || [];
 
   // ----------- isFirstTime 또는 response가 변경될 때마다 실행되는 함수 -----------
   useEffect(() => {
@@ -171,7 +163,7 @@ const MyProfile = () => {
   // ----------- 정보 아이템 스타일 -----------
   const infoItemStyle = {
     // 디자인
-    margin: "10px 0",
+    margin: isXLarge || isLarge ? "10px 0" : "5px 0",
     padding:
       isXLarge ? "10px 20px" :
       isLarge ? "8px 18px" :
