@@ -62,9 +62,9 @@ const LoginModal = () => {
     >
       <div
         id="inner"
-        className="mx-auto container bg-white w-[500px] min-h-[620px] flex flex-col items-center rounded-3xl shadow-md"
+        className="mx-auto container bg-white xl:w-[420px] xl:h-[620px] lg:w-[380px] lg:h-[560px] md:w-[330px] md:h-[500px] sm:w-[250px] sm:h-[400px] flex flex-col items-center rounded-3xl shadow-md"
       >
-        <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">
+        <h1 className="fontsize-lg font-bold text-gray-700 mt-12 mb-16">
           로그인해쥬
         </h1>
         <form
@@ -72,7 +72,7 @@ const LoginModal = () => {
           onSubmit={handleSubmit(submitForm)}
           className="flex flex-col w-3/5"
         >
-          <div className="h-[80px]">
+          <div className="h-20">
             {/* 이메일 => 형식: (대소문자 구분 없이 알파벳 + 숫자) + @ + (대소문자 구분 없이 알파벳 + 숫자) + . + (알파벳) */}
             <input
               type="text"
@@ -88,14 +88,14 @@ const LoginModal = () => {
               })}
             />
             {errors.email ? (
-              <p className="px-3 text-red-500 text-sm">
+              <p className="px-3 text-red-500 fontsize-xs sm:w-[150px]">
                 {errors.email.message}
               </p>
             ) : (
-              <p className="invisible text-sm">nothing</p>
+              <p className="invisible fontsize-xs">nothing</p>
             )}
           </div>
-          <div className="h-[80px]">
+          <div className="h-24">
             <input
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
@@ -105,7 +105,7 @@ const LoginModal = () => {
                 required: true,
                 minLength: {
                   value: 8,
-                  message: "비밀번호는 8자 이상 15자 미만 입니다",
+                  message: `비밀번호는 8자 이상 15자 미만 입니다`,
                 },
                 maxLength: {
                   value: 15,
@@ -118,9 +118,11 @@ const LoginModal = () => {
               })}
             />
             {errors.pw ? (
-              <p className="px-3 text-red-500 text-sm">{errors.pw.message}</p>
+              <p className="px-3 text-red-500 fontsize-xs break-keep xl:w-[300px] lg:w-[250px] md:w-[210px] sm:w-[170px]">
+                {errors.pw.message}
+              </p>
             ) : (
-              <p className="invisible text-sm">nothing</p>
+              <p className="invisible fontsize-xs">nothing</p>
             )}
           </div>
           <button
@@ -134,7 +136,7 @@ const LoginModal = () => {
           <div className="hr-sect w-1/2 mx-auto">
             <div className="flex items-center text-gray-400 my-2">
               <span className="flex-grow bg-gray-400 h-px m-1"></span>
-              <span className="text-xs">소셜 로그인</span>
+              <span className="fontsize-xm">소셜 로그인</span>
               <span className="flex-grow bg-gray-400 h-px m-1"></span>
             </div>
           </div>

@@ -121,14 +121,16 @@ const TestPage = () => {
 
   return (
     <div className="p-5 h-screen">
-      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl min-w-[400px] sm:w-[600px] min-h-[600px]">
-        <div className="min-h-[600px]">
+      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] sm:h-[330px] md:w-[330px] md:h-[390px] lg:w-[380px] lg:h-[450px] xl:w-[450px] xl:h-[530px]">
+        <div>
           {questionNumber === -1 ? (
-            <div className="flex flex-col items-center space-y-24">
-              <h1 className="text-4xl text-center">
-                <span className="text-sky-600">선택</span>으로 알아보는
+            <div className="flex flex-col items-center space-y-10 sm:space-y-16">
+              <h1 className="text-center fontsize-lg">
+                <span className="text-sky-600 fontsize-lg">선택</span>
+                으로 알아보는
                 <br />
-                <span className="text-lime-500">소비성향</span> 테스트
+                <span className="text-lime-500 fontsize-lg">소비성향</span>{" "}
+                테스트
               </h1>
               <img className="w-2/3 h-2/3" src={mainImg} alt="" />
               <button
@@ -145,8 +147,10 @@ const TestPage = () => {
             <>
               <div className="mx-auto mb-5 max-w-lg transition ease-in duration-300">
                 <div className="flex justify-between">
-                  <p>{cheeringPhrase[Math.floor(questionNumber / 3)]}</p>{" "}
-                  <p>{questionNumber + 1} /12</p>
+                  <p className="fontsize-xs">
+                    {cheeringPhrase[Math.floor(questionNumber / 3)]}
+                  </p>
+                  <p className="fontsize-xs">{questionNumber + 1} /12</p>
                 </div>
                 <BorderLinearProgress
                   className=""
@@ -165,11 +169,12 @@ const TestPage = () => {
             </>
           ) : null}
           {questionNumber === 12 ? (
-            <div className="flex flex-col items-center space-y-24">
-              <p className="text-4xl text-center">
-                <span className="text-rose-500">두근두근</span>
+            <div className="flex flex-col items-center space-y-10 sm:space-y-16">
+              <p className="text-center fontsize-lg">
+                <span className="text-rose-500 fontsize-lg">두근두근</span>
                 <br />
-                당신의 <span className="text-lime-500">소비성향</span>은?
+                당신의{" "}
+                <span className="text-lime-500 fontsize-lg">소비성향</span>은?
               </p>
               <img className="w-2/3 h-2/3" src={mainImg} alt="" />
               <button

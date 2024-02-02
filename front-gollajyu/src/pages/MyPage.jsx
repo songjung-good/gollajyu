@@ -1,20 +1,24 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { Routes, Route } from "react-router-dom";
 import MyProfile from "../components/MyPage/MyProfile";
 import MyActivities from "../components/MyPage/MyActivities";
 import MyStatistics from "../components/MyPage/MyStatistics";
 
 const MyPage = () => {
+
   // ----------- 반응형 웹페이지 구현 -----------
-  const isLarge = useMediaQuery({
+  const isXLarge = useMediaQuery({
     query: "(min-width:1024px)",
   });
+  const isLarge = useMediaQuery({
+    query : "(min-width:768px) and (max-width:1023px)"
+  });
   const isMedium = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1024px)"
+    query : "(min-width:480px) and (max-width:767px)"
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:768px)"
+    query : "(max-width:479px)"
   });
 
 
@@ -25,7 +29,10 @@ const MyPage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "50px 0", // 상하단 여백: 50px
-    width: isLarge ? "1000px" : isMedium ? "740px" : "480px", // (반응형) 컨텐츠 가로 길이
+    width: // (반응형) 컨텐츠 가로 길이
+      isXLarge ? "1000px" :
+      isLarge ? "740px" :
+      isMedium ? "560px" : "375px",
   };
 
   // --------------------------------- css 끝 ---------------------------------

@@ -77,7 +77,7 @@ const SignupModal = () => {
     >
       <div
         id="inner"
-        className="mx-auto container bg-white w-[550px] min-h-[670px] flex flex-col items-center rounded-3xl shadow-md"
+        className="mx-auto container bg-white xl:w-[500px] xl:h-[680px] lg:w-[430px] lg:h-[600px] md:w-[370px] md:h-[520px] sm:w-[300px] sm:h-[440px] flex flex-col items-center rounded-3xl shadow-md"
       >
         <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">
           회원가입해쥬
@@ -85,9 +85,9 @@ const SignupModal = () => {
         <form
           autoComplete="off"
           onSubmit={handleSubmit(submitForm)}
-          className="flex flex-col w-3/5"
+          className="flex flex-col w-2/3"
         >
-          <div className="h-[80px]">
+          <div className="h-20">
             {/* 이메일 => 형식: (대소문자 구분 없이 알파벳 + 숫자) + @ + (대소문자 구분 없이 알파벳 + 숫자) + . + (알파벳) */}
             <input
               type="text"
@@ -110,7 +110,7 @@ const SignupModal = () => {
               <p className="invisible text-sm">nothing</p>
             )}
           </div>
-          <div className="h-[80px]">
+          <div className="h-20">
             <input
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
@@ -138,7 +138,7 @@ const SignupModal = () => {
               <p className="invisible text-sm">nothing</p>
             )}
           </div>
-          <div className="h-[80px]">
+          <div className="h-24">
             <input
               id="pwConfirm"
               type="password"
@@ -165,7 +165,7 @@ const SignupModal = () => {
           </div>
 
           <div className="flex justify-between items-center mt-1 mb-4 mx-2">
-            <p>
+            <p className="sm:w-[30px]">
               생년
               <br />
               월일
