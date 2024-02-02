@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/votes")
+@RequestMapping("/api/votes")
 public class VoteController {
 
     private final VoteService voteService;
