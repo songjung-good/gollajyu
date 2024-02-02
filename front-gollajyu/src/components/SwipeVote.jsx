@@ -78,7 +78,6 @@ export default function SwipeVote() {
         className="mySwiper"
         style={{ padding: '30px' }}
       >
-
         {votes.map((vote) => (
           <SwiperSlide key={vote.id} data-hash={vote.id} style={{ width: '1024px' }}>
             <div>
