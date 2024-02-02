@@ -1,11 +1,11 @@
 import React from "react";
 import VotePageList from "../components/vote/VotePageList";
-import VoteControls from "../components/vote/VoteControls";
+import VotePageHeader from "../components/vote/VotePageHeader";
 
 const VotePage = () => {
   return (
     <div>
-      <VoteControls />
+      <VotePageHeader />
       <VotePageList />
     </div>
   );

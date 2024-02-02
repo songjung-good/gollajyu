@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container } from '@mui/system';
 
-// 각 투표카드 내의 아이템
+// 각 투표에 관한 정보를 받아서 출력하는 곳
 function VoteCardItem(props) {
   const [hover, setHover] = useState(false);
   const [clicked, setClicked] = useState(null);
