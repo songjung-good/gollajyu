@@ -88,14 +88,14 @@ const LoginModal = () => {
               })}
             />
             {errors.email ? (
-              <p className="px-3 text-red-500 fontsize-sx">
+              <p className="px-3 text-red-500 fontsize-xs sm:w-[150px]">
                 {errors.email.message}
               </p>
             ) : (
-              <p className="invisible fontsize-sx">nothing</p>
+              <p className="invisible fontsize-xs">nothing</p>
             )}
           </div>
-          <div className="h-26">
+          <div className="h-24">
             <input
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
@@ -118,11 +118,11 @@ const LoginModal = () => {
               })}
             />
             {errors.pw ? (
-              <p className="px-3 text-red-500 fontsize-sx break-keep">
+              <p className="px-3 text-red-500 fontsize-xs break-keep xl:w-[300px] lg:w-[250px] md:w-[210px] sm:w-[170px]">
                 {errors.pw.message}
               </p>
             ) : (
-              <p className="invisible fontsize-sx">nothing</p>
+              <p className="invisible fontsize-xs">nothing</p>
             )}
           </div>
           <button

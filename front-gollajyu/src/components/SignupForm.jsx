@@ -165,7 +165,7 @@ const SignupModal = () => {
           </div>
 
           <div className="flex justify-between items-center mt-1 mb-4 mx-2">
-            <p>
+            <p className="sm:w-[30px]">
               생년
               <br />
               월일
