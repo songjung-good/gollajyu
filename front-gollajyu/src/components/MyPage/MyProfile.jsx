@@ -107,8 +107,14 @@ const MyProfile = () => {
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentContainerStyle = {
     // 디자인
-    padding: "40px",
-    borderRadius: "50px",
+    padding:
+      isXLarge ? "40px" :
+      isLarge ? "35px" :
+      isMedium ? "30px" : "25px",
+    borderRadius:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "20px",
     background: "#FFFFFF",
   };
 

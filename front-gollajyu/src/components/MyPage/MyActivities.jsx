@@ -158,8 +158,14 @@ const MyActivities = () => {
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
     // 디자인
-    padding: "40px",
-    borderRadius: "50px",
+    padding:
+      isXLarge ? "40px" :
+      isLarge ? "35px" :
+      isMedium ? "30px" : "25px",
+    borderRadius:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "20px",
     background: "#FFFFFF",
   };
 
@@ -233,7 +239,7 @@ const MyActivities = () => {
     flexDirection: isXLarge || isLarge ? "row" : "column",
   }
 
-  // ----------- 내 정보 아이템 스타일 -----------
+  // ----------- 정보 아이템 스타일 -----------
   const infoItemStyle = {
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
@@ -348,16 +354,22 @@ const MyActivities = () => {
 
   // ----------- 활동기록 컨테이너 스타일 -----------
   const hitoryContainerStyle = {
-    // 상속
-    ...contentsContainerStyle,
-
     // 디자인
+    padding:
+      isXLarge ? "40px" :
+      isLarge ? "35px" :
+      isMedium ? "30px" : "25px",
     minHeight: // 최소 높이
       isXLarge ? "1000px" :
       isLarge ? "740px" :
       isMedium ? "560px" : "375px",
+    borderBottomRadius:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "20px",
     borderTopLeftRadius: "0",
     borderTopRightRadius: !isSmall ? "50px" : "0",
+    background: "#FFFFFF",
   };
 
   // --------------------------------- css 끝 ---------------------------------
