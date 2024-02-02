@@ -112,6 +112,7 @@ const BroadcastPage = () => {
     },
   ];
 
+  // 반응형 컨테이너 크기 = xl:w-[1000px] lg:w-[740px] md:w-[560px] sm:w-[375px]
   return (
     <>
       <button
@@ -137,7 +138,7 @@ const BroadcastPage = () => {
           시청자로 진입(Guest)
         </button>
       </div>
-      <div className="container mx-auto my-5 flex flex-col items-center space-y-10 xl:w-[900px] lg:w-[700px] md:w-[500px]">
+      <div className="container mx-auto my-5 flex flex-col items-center space-y-10 xl:w-[1000px] lg:w-[740px] md:w-[560px] sm:w-[375px]">
         <div id="page-info">
           <p className="text-black-70 fontsize-sm mx-4">
             <span className="font-bold fontsize-sm">라이브 방송</span>을
@@ -147,11 +148,14 @@ const BroadcastPage = () => {
             있어요
           </p>
         </div>
-        <div id="hot-broadcast" className="basis-1/5">
+        <div
+          id="hot-broadcast"
+          className="basis-1/5 xl:w-[1000px] lg:w-[740px] md:w-[560px] sm:w-[375px]"
+        >
           <p className="px-5 py-3 fontsize-lg font-bold">
             지금 <span className="text-red-300 fontsize-lg">당장</span> 골라쥬
           </p>
-          <div className="flex flex-row space-x-10 bg-red-100 rounded-3xl px-20 py-10">
+          <div className="flex flex-row space-x-10 sm:space-x-5 bg-red-100 rounded-3xl px-24 py-10 sm:px-10 sm:py-5">
             {dummyData
               .sort((a, b) => b.viewerCnt - a.viewerCnt)
               .slice(0, 3)
@@ -160,9 +164,12 @@ const BroadcastPage = () => {
               })}
           </div>
         </div>
-        <div id="broadcast-list" className="grow">
+        <div
+          id="broadcast-list"
+          className="grow xl:w-[1000px] lg:w-[740px] md:w-[560px] sm:w-[375px]"
+        >
           <p className="px-5 py-3 fontsize-lg font-bold">지금 골라쥬</p>
-          <div className="grid grid-cols-4 bg-white rounded-[30px] p-7 gap-10">
+          <div className="grid grid-cols-4 sm:grid-cols-3 bg-white rounded-3xl p-7 gap-10">
             {dummyData
               .sort((a, b) => b.createdDate.getTime() - a.createdDate.getTime())
               .map((item, index) => {
