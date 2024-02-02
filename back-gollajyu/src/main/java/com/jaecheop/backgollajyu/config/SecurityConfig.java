@@ -1,7 +1,6 @@
 package com.jaecheop.backgollajyu.config;
 
 import com.jaecheop.backgollajyu.socialLogin.CustomOAuth2UserService;
-import com.jaecheop.backgollajyu.socialLogin.CustomOAuth2UserService2;
 import com.jaecheop.backgollajyu.socialLogin.Oauth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomOAuth2UserService2 customOAuth2UserService2;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable); // csrf
@@ -37,7 +35,7 @@ public class SecurityConfig {
                         })
                         .userInfoEndpoint(userInfoEndpoint ->
                                 userInfoEndpoint
-                                        .userService(customOAuth2UserService2)
+                                        .userService(customOAuth2UserService)
                         )
                         .defaultSuccessUrl("/members/addInfo")// 리다이렉트 할 URL
         );

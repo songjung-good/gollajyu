@@ -75,24 +75,12 @@ public class MemberController {
         return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
     }
 
-    @GetMapping("/socialLogin")
-    public ResponseEntity<ResponseMessage> socialLogin(Authentication authentication) {
-        System.out.println("111111111111111111111111111111");
-        System.out.println("authentication = " + authentication);
-        System.out.println("222222222222222222222222222222");
-//        PrincipalDetails principalDetails = (PrincipalDetails) authentication;
-        System.out.println("333333333333333333333333333333");
-//        System.out.println("principalDetails.getAttributes() = " + principalDetails.getAttributes());
-        System.out.println("authentication.getPrincipal() = " + authentication.getPrincipal());
-        Object principal = authentication.getPrincipal();
-        System.out.println("principal = " + principal);
-        System.out.println("4444444444444444444444444444444444");
-//        System.out.println("principalDetails.getMember() = " + principalDetails.getMember());
-        System.out.println("5555555555555555555555555555555555");
-        return ResponseEntity.ok().body(ResponseMessage.success());
 
-    }
-
+    /**
+     * 소셜 로그인 유저가 구글에서 받은 정보를 입력폼에 보여주기위해 요청하는  api
+     * @param request
+     * @return
+     */
     @GetMapping("/addInfo")
     public ResponseEntity<ResponseMessage> addInfo(HttpServletRequest request) {
         // 쿠키에서 string을 쪼개서 providerId를 가져옴
@@ -115,13 +103,18 @@ public class MemberController {
                 .nickname(member.getNickname())
                 .build();
 
-        // TODO::  POST 컨트롤러를 하나 만들어서 비어있는 정보를 넣어 멤버 정보 업데이트 시킴
+        // 이 응답을 가지고 POST 컨트롤러를 하나 만들어서 비어있는 정보를 넣어 멤버 정보 업데이트 시킴(axios요청을 두번 보내야 한다는 뜻)
         return ResponseEntity.ok().body(ResponseMessage.success(addInfoResDto));
     }
 
+    /**
+     * 소셜 로그인 후 추가 정보 받기
+     * @param addInfoReqDto
+     * @return
+     */
     @PutMapping("")
     public ResponseEntity<ResponseMessage> updateMember(@RequestBody AddInfoReqDto addInfoReqDto){
-        // TODO: Member Service에서 업데이트
+        // 소셜 로그인 추가 정보 저장
         ServiceResult result = memberService.updateMember(addInfoReqDto);
 
         if(!result.isResult()){
