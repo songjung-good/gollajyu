@@ -15,8 +15,8 @@ const VoteButton = () => {
     setButtonHovered(true);
   };
 
-  const buttonCloseClick = () => {
-    setButtonHovered(false);  // 클릭 시 떠남 상태로 설정
+  const buttonClick = () => {
+    setButtonHovered(!buttonHovered);  // 클릭 시 버튼 열고 닫음
   };
   
   // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
@@ -228,7 +228,7 @@ const VoteButton = () => {
     <div
       style={voteButtonContainerStyle}
       onMouseEnter={buttonHover}
-      onClick={buttonCloseClick}  // 클릭 시 세부 버튼 닫기
+      onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
     >
       {/* ------------- 투표 버튼 ------------- */}
       <button style={voteButtonStyle}>
