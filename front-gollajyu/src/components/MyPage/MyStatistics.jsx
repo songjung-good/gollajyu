@@ -38,7 +38,7 @@ const MyStatistics = () => {
     setIsOpen(!isOpen);
   };
 
-  // ----------- 카테고리 아이템 목록 -----------
+  // ----------- 카테고리 아이템 목록 (임시) -----------
   const categoryItems = [
     {
       category: '의류',
@@ -298,25 +298,36 @@ const MyStatistics = () => {
   // ----------- 드롭다운 메뉴 스타일 -----------
   const dropdownMenuStyle = {
     // 위치
-    position: 'absolute',
+    position: "absolute",
     left: 0,
     zIndex: 1,
 
     // 디자인
-    marginTop: '4px',
+    marginTop: "4px",
+    padding:
+      isXLarge ? "0 8px" :
+      isLarge ? "0 7px" :
+      isMedium ? "0 6px" : "0 5px",
     width:
-      isXLarge ? "100px" :
-      isLarge ? "90px" :
-      isMedium ? "80px" : "70px",
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    backgroundColor: '#FFFFFF',
+      isXLarge ? "120px" :
+      isLarge ? "110px" :
+      isMedium ? "100px" : "90px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    backgroundColor: "#FFFFFF",
   }
 
   // ----------- 드롭다운 아이템 스타일 -----------
   const dropdownItemStyle = {
     // 디자인
-    padding: "8px",
+    margin:
+      isXLarge ? "8px 0" :
+      isLarge ? "7px 0" :
+      isMedium ? "6px 0" : "5px 0", 
+    padding:
+      isXLarge ? "8px" :
+      isLarge ? "7px" :
+      isMedium ? "6px" : "5px",
     cursor: "pointer",
   }
 
@@ -401,7 +412,7 @@ const MyStatistics = () => {
     return top3Tags.map(([key, value]) => ({ key, value }));
   };
 
-  // ----------- 각 객체에서 가장 높은 세 값을 찾아 렌더링 -----------
+  // ----------- 각 객체에서 가장 높은 세 값을 찾아 렌더링 하는 함수 -----------
   const renderTop3Categories = categoryItems.map((item, index) => {
     if (index % 2 === 0) {
       const top3Left = findTop3Tags(item);
@@ -522,7 +533,10 @@ const MyStatistics = () => {
             <div style={flexContainerStyle}>
               <div style={subTitleStyle} className="fontsize-md">나는</div>
               <div style={relativeContainerStyle}>
-                <div onClick={toggleDropdown} style={dropdownButtonStyle}>
+                <div
+                  onClick={toggleDropdown}
+                  style={dropdownButtonStyle}
+                >
                   {selectedCategory !== null
                     ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
                     : '카테고리 선택'}
@@ -533,6 +547,8 @@ const MyStatistics = () => {
                       <div
                         key={category.id}
                         onClick={() => handleCategoryChange({ target: { value: category.id } })}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
+                        onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
                         style={dropdownItemStyle}
                       >
                         {category.name}
