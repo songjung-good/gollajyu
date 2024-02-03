@@ -249,7 +249,6 @@ const MyStatistics = () => {
       isMedium ? "0 4px" : "0",
   }
 
-
   // ----------- 차트 컨테이너 스타일 -----------
   const chartContainerStyle = {
     // 상속
