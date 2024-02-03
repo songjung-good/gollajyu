@@ -449,12 +449,14 @@ const MyStatistics = () => {
 
   return (
     <>
-      {/* ------------- 카테고리 선호도 ------------- */}
+      {/* -------------------------- 카테고리 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">카테고리 선호도</span>
         </div>
         <div style={contentsContainerStyle}>
+
+          {/* ------------- 관심있는 카테고리 ------------- */}
           <div style={subTitleContainerStyle}>
             <div style={subTitleStyle} className="fontsize-lg">가장 관심있는 카테고리 :</div>
             <div style={categoryTextStyle} className="fontsize-xl">" 의류 "</div>
@@ -477,6 +479,7 @@ const MyStatistics = () => {
               <div className="fontsize-sm">카테고리에 속해있어요!</div>
             </div>
           </div>
+          {/* --------------------------------------- */}
 
           <div style={barStyle}></div>
 
@@ -502,15 +505,18 @@ const MyStatistics = () => {
             </div>
             <div style={quotesStyle} className="fontsize-xl">"</div>
           </div>
+          {/* --------------------------------------- */}
+
         </div>
       </div>
 
-      {/* ------------- 태그 선호도 ------------- */}
+      {/* -------------------------- 태그 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">태그 선호도</span>
         </div>
         <div style={chartContainerStyle}>
+
           {/* ------------- 드롭다운 버튼 ------------- */}
           <div style={dropdownContainerStyle}>
             <div style={flexContainerStyle}>
@@ -540,6 +546,7 @@ const MyStatistics = () => {
             </div>
             <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
           </div>
+          {/* --------------------------------------- */}
 
           {/* ------------- 차트 그래프 ------------- */}
           <div style={{
@@ -549,6 +556,7 @@ const MyStatistics = () => {
           }}>
             <MyStatisticsChart />
           </div>
+          {/* --------------------------------------- */}
 
           <div style={barStyle}></div>
 
@@ -560,6 +568,8 @@ const MyStatistics = () => {
           }}>
             {renderTop3Categories}
           </div>
+          {/* --------------------------------------- */}
+
         </div>
       </div>
     </>
