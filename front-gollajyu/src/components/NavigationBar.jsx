@@ -5,22 +5,24 @@ import DefaultProfileImage from "/assets/images/default_profile_img.png";
 import useAuthStore from "../stores/userState";
 import useModalStore from "../stores/modalState";
 
-// ----------- Hover 커스텀 훅 -----------
+// ----------- 커스텀 훅 -----------
 const useHoverState = () => {
   const [hovered, setHovered] = useState(false);
 
   const handleMouseEnter = () => setHovered(true);
   const handleMouseLeave = () => setHovered(false);
+  const handleClick = () => setHovered(!hovered);
 
-  return [hovered, handleMouseEnter, handleMouseLeave];
+  return [hovered, handleMouseEnter, handleMouseLeave, handleClick];
 };
 
 // ----------- 메뉴 아이템 함수형 컴포넌트 -----------
-const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
+const MenuItem = ({ to, style, activeStyle, onClick, hoverState, children }) => (
   <NavLink
     to={to}
     end
     style={({ isActive }) => (isActive ? activeStyle : style)}
+    onClick={onClick}
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
   >
@@ -69,7 +71,7 @@ const NavigationBar = () => {
   ] = useHoverState();
 
   // ----------- 프로필 버튼 hover -----------
-  const [profileHovered, profileMouseEnter, profileMouseLeave] =
+  const [profileHovered, profileMouseEnter, profileMouseLeave, profileClick] =
     useHoverState();
 
   // ----------- 프로필 아이템 hover -----------
@@ -93,7 +95,7 @@ const NavigationBar = () => {
     useHoverState();
 
   // ----------- 햄버거 버튼 hover -----------
-  const [hamburgerHovered, hamburgerMouseEnter, hamburgerMouseLeave] =
+  const [hamburgerHovered, hamburgerMouseEnter, hamburgerMouseLeave, hamburgerClick] =
     useHoverState();
 
   // ----------- 반응형 웹페이지 구현 -----------
@@ -107,10 +109,7 @@ const NavigationBar = () => {
     query: "(max-width:768px)",
   });
 
-  // const isLoggedIn = true; // 로그인 상태
-  // const isLoggedIn = false; // 비로그인 상태
-
-  // 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수
+  // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
   const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
@@ -134,6 +133,7 @@ const NavigationBar = () => {
       setLoginModalOpen();
     }
   };
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -557,6 +557,7 @@ const NavigationBar = () => {
                 <button
                   style={myPageStyle}
                   onMouseEnter={profileMouseEnter}
+                  onClick={profileClick}
                 >
                   <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
                   <p style={nickNameStyle}>[닉네임]</p>
@@ -568,6 +569,7 @@ const NavigationBar = () => {
                       to={item.to}
                       style={menuItemStyle}
                       activeStyle={menuItemActiveStyle}
+                      onClick={profileClick}
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
@@ -628,6 +630,7 @@ const NavigationBar = () => {
                 <button
                   style={hamburgerStyle}
                   onMouseEnter={hamburgerMouseEnter}
+                  onClick={hamburgerClick}
                 >
                   &#9776;
                 </button>
@@ -638,6 +641,7 @@ const NavigationBar = () => {
                       to={item.to}
                       style={menuItemStyle}
                       activeStyle={menuItemActiveStyle}
+                      onClick={hamburgerClick}
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
