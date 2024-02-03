@@ -14,8 +14,8 @@ import StatisticPage from "./pages/StatisticPage";
 import TestPage from "./pages/TestPage";
 import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
-import VideoComponent from "./components/openvidu/VideoComponent";
-import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
+import VideoComponent from "./components/OpenVidu/VideoComponent";
+import CreateVideoRoom from "./components/OpenVidu/CreateVideoRoom";
 import "./App.css";
 
 // 추후 삭제될 페이지입니다.
@@ -47,17 +47,17 @@ const App = () => {
         <Route path="/EnterVideoRoom" element={<VideoComponent />} />
         <Route path="/CreateVideoRoom" element={<CreateVideoRoom />} />
         <Route element={<Navbar />}>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/VotePage" element={<VotePage />} />
-        <Route path="/BroadcastPage" element={<BroadcastPage />} />
-        <Route path="/StatisticPage" element={<StatisticPage />} />
-        <Route path="/TestPage" element={<TestPage />} />
-        <Route path="/TestResultPage" element={<TestResultPage />} />
-        <Route path="/MyPage/*" element={<MyPage />} />
-        {/* 추후 삭제될 링크입니다. */}
-        <Route path="/VoteDetail" element={<VoteDetail />} />
-        <Route path="/VoteSimple" element={<VoteSimple />} />
-        <Route path="/VoteProduct" element={<VoteProduct />} />
+          <Route path="/" element={<MainPage />} />
+          <Route path="/VotePage" element={<VotePage />} />
+          <Route path="/BroadcastPage" element={<BroadcastPage />} />
+          <Route path="/StatisticPage" element={<StatisticPage />} />
+          <Route path="/TestPage" element={<TestPage />} />
+          <Route path="/TestResultPage" element={<TestResultPage />} />
+          <Route path="/MyPage/*" element={<MyPage />} />
+          {/* 추후 삭제될 링크입니다. */}
+          <Route path="/VoteDetail" element={<VoteDetail />} />
+          <Route path="/VoteSimple" element={<VoteSimple />} />
+          <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
       </Routes>
     </Router>

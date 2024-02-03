@@ -4,13 +4,19 @@ import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
-import ChattingForm from "./chat/ChattingForm";
-import ChattingList from "./chat/ChattingList";
+import ChattingForm from "./Chat/ChattingForm.jsx";
+import ChattingList from "./Chat/ChattingList.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
 
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+// const APPLICATION_SERVER_URL =
+//   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+
+// TODO: 오픈비두 로컬 URL, 배포서버 URL 적기, OPENVIDU SECRET KEY 적기, createSession, createConnection 수정하기
+
+// const OPENVIDU_SERVER_URL = "https://i10e107.p.ssafy.io:8443/";
+const OPENVIDU_SERVER_URL = "http://localhost:4443/";
+const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 const settingButton = "text-white py-2 px-4 rounded-xl";
 
@@ -310,31 +316,44 @@ export default function VideoComponent() {
    * more about the integration of OpenVidu in your application server.
    */
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then((sessionId) =>
-      createToken(sessionId)
-    );
+    if (isHost) {
+      return createSession(mySessionId).then((sessionId) =>
+        createToken(sessionId)
+      );
+    } else {
+      return createToken(mySessionId);
+    }
   }, [mySessionId]);
 
   const createSession = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
+      OPENVIDU_SERVER_URL + "openvidu/api/sessions",
       { customSessionId: sessionId },
       {
-        headers: { "Content-Type": "application/json" },
+        Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+        "Content-Type": "application/json",
       }
     );
-    return response.data; // The sessionId
+    return response.data.sessionId; // The sessionId
   };
 
   const createToken = async (sessionId) => {
+    let myRole = isHost ? "PUBLISHER" : "SUBSCRIBER";
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-      {},
+      OPENVIDU_SERVER_URL +
+        "openvidu/api/sessions" +
+        sessionId +
+        "/connections",
+      { role: myRole },
       {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization:
+            "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+          "Content-Type": "application/json",
+        },
       }
     );
-    return response.data; // The token
+    return response.data.token; // The token
   };
 
   // 로딩 페이지를 통한 방 입장
