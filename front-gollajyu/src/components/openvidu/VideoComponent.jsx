@@ -12,8 +12,6 @@ import tmpProfileImg from "/assets/images/tmp_profile.png";
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-// TODO: 오픈비두 로컬 URL, 배포서버 URL 적기, OPENVIDU SECRET KEY 적기, createSession, createConnection 수정하기
-
 // const OPENVIDU_SERVER_URL = "https://i10e107.p.ssafy.io:8443/";
 const OPENVIDU_SERVER_URL = "http://localhost:4443/";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -40,12 +38,14 @@ export default function VideoComponent() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
-  const [chatDisplay, setChatDisplay] = useState(true); // 채팅창 보이기(초깃값: true)
   const [audioState, setAudioSate] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0); // 총 유저수
   const voteItem = location.state.voteItem
     ? location.state.voteItem
     : ["임시", "임시", "임시", "임시"];
+  const [isVoteHoveredArr, setIsVoteHoveredArr] = useState(
+    Array(voteItem.length).fill(false)
+  ); // 각 투표 선택지 위에 마우스가 올라가 있는지
   const title = location.state.title ? location.state.title : "임시 제목";
   const hostNickName = location.state.hostNickName
     ? location.state.hostNickName
@@ -361,6 +361,10 @@ export default function VideoComponent() {
     joinSession();
   };
 
+  const handleVote = () => {
+    // TODO 클릭하면, 해당 item 투표수 1 증가, 투표한 상태로 변경한 후 투표율 표출
+  };
+
   return (
     <>
       <div id="logo" className="m-2 text-center">
@@ -477,7 +481,7 @@ export default function VideoComponent() {
                 {isHost && (
                   <div
                     id="main-video"
-                    className="basis-3/5 w-full h-full rounded-md"
+                    className="basis-4/5 w-full h-full rounded-md"
                   >
                     <UserVideoComponent streamManager={publisher} />
                   </div>
@@ -485,7 +489,7 @@ export default function VideoComponent() {
                 {!isHost && (
                   <div
                     id="main-video"
-                    className="basis-3/5 w-full h-full rounded-md"
+                    className="basis-4/5 w-full h-full rounded-md"
                     style={{ transform: "scaleX(-1)" }}
                   >
                     <UserVideoComponent streamManager={subscribers[0]} />
@@ -493,7 +497,7 @@ export default function VideoComponent() {
                 )}
                 <div
                   id="detail"
-                  className="basis-2/5 rounded-md p-3 space-y-3 bg-gray-100"
+                  className="basis-1/5 rounded-md p-3 space-y-3 bg-gray-100"
                 >
                   {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
                   <div className="flex flex-row justify-between">
@@ -519,7 +523,7 @@ export default function VideoComponent() {
               >
                 <div
                   id="vote"
-                  className="mb-3 basis-1/3 border-2 rounded-md bg-gray-100"
+                  className="mb-3 basis-1/4 border-2 rounded-md bg-gray-100"
                 >
                   <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
                     {voteItem &&
@@ -527,23 +531,61 @@ export default function VideoComponent() {
                         if (item.slice(0, 10) === "data:image") {
                           return (
                             <div
-                              className="flex border justify-center items-center w-1/2 h-[90px]"
+                              className="flex border justify-center items-center w-1/2 h-[90px] cursor-pointer"
                               key={index}
+                              onMouseEnter={(index) =>
+                                setIsVoteHoveredArr((prevArr) => {
+                                  prevArr[index] = true;
+                                  return prevArr;
+                                })
+                              }
+                              onMouseLeave={(index) =>
+                                setIsVoteHoveredArr((prevArr) => {
+                                  prevArr[index] = false;
+                                  return prevArr;
+                                })
+                              }
+                              onClick={handleVote(item)}
                             >
-                              <img
-                                src={item}
-                                className="size-2/3"
-                                alt="이미지 미리보기"
-                              />
+                              {isVoteHoveredArr[index] ? (
+                                <p className="fontsize-sm font-bold text-center">
+                                  한 표 주기
+                                </p>
+                              ) : (
+                                <img
+                                  src={item}
+                                  className="size-2/3"
+                                  alt="이미지 미리보기"
+                                />
+                              )}
                             </div>
                           );
                         } else {
                           return (
                             <div
-                              className="border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px]"
+                              className="border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px] cursor-pointer"
                               key={index}
+                              onMouseEnter={() =>
+                                setIsVoteHoveredArr((prevArr) => {
+                                  prevArr[index] = true;
+                                  return [...prevArr];
+                                })
+                              }
+                              onMouseLeave={() =>
+                                setIsVoteHoveredArr((prevArr) => {
+                                  prevArr[index] = false;
+                                  return [...prevArr];
+                                })
+                              }
+                              onClick={handleVote(item)}
                             >
-                              {item}
+                              {isVoteHoveredArr[index] ? (
+                                <p className="fontsize-sm font-bold text-amber-300">
+                                  투표하기
+                                </p>
+                              ) : (
+                                item
+                              )}
                             </div>
                           );
                         }
