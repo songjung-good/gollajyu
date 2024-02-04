@@ -134,7 +134,7 @@ const TestPage = () => {
               </h1>
               <img className="w-2/3 h-2/3" src={mainImg} alt="" />
               <button
-                className="border rounded-full p-5 w-2/3 bg-amber-300"
+                className="border rounded-full p-4 w-2/3 bg-amber-300 hover:bg-amber-400"
                 onClick={() => {
                   setQuestionNumber(questionNumber + 1);
                 }}
@@ -178,7 +178,7 @@ const TestPage = () => {
               </p>
               <img className="w-2/3 h-2/3" src={mainImg} alt="" />
               <button
-                className="border rounded-full p-5 w-2/3 bg-amber-300 text-lg"
+                className="border rounded-full p-4 w-2/3 bg-amber-300 hover:bg-amber-400"
                 onClick={() => {
                   goResultPage();
                 }}

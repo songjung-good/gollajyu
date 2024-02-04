@@ -156,7 +156,7 @@ const TestResultPage = () => {
             </div>
             {isMyResult ? (
               <button
-                className="w-2/3 p-5 rounded-full bg-amber-300"
+                className="w-2/3 p-5 rounded-full bg-amber-300 hover:bg-amber-400"
                 onClick={() => {
                   setIsMyResult(false);
                   window.scrollTo({ top: 0 });
