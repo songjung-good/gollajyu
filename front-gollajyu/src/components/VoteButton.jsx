@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import NowGollajyuImage from "/assets/images/vote-button/now_gollajyu_img.png";
 import SimpleGollajyuImage from "/assets/images/vote-button/simple_gollajyu_img.png";
 import PurchaseGollajyuImage from "/assets/images/vote-button/purchase_gollajyu_img.png";
+import useAuthStore from "../stores/userState";
+import useModalStore from "../stores/modalState";
 
 const VoteButton = () => {
   const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // 로그인 여부
 
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
@@ -57,6 +60,7 @@ const VoteButton = () => {
     position: "fixed", // 버튼 하단에 고정
     bottom: "50px", // 버튼 고정 위치
     right: "100px", // 버튼 고정 위치
+    zIndex: 49, // 모달 바로 아래 레이어에 위치 (모달은 50)
   };
 
   // ----------- 투표 생성 버튼 스타일 -----------
@@ -163,6 +167,15 @@ const VoteButton = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
+  // 모달 상태 변경 함수
+  const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
+  const setVoteSimpleCreateModalOpen = useModalStore(
+    (state) => state.setVoteSimpleCreateModalOpen
+  );
+  const setVoteProductCreateModalOpen = useModalStore(
+    (state) => state.setVoteProductCreateModalOpen
+  );
+
   // ----------- 버튼 아이템 목록 -----------
   const buttonItems = [
     {
@@ -175,10 +188,13 @@ const VoteButton = () => {
       mouseEnter: nowGollajyuHover,
       mouseLeave: nowGollajyuLeave,
       handleClick: () => {
-        // TODO
-        // 로그인 사용자 -> 생성페이지로 이동
-        navigate("/CreateVideoRoom");
-        // 비로그인 사용자 -> 로그인창 띄움
+        if (isLoggedIn) {
+          // 로그인 사용자 -> 지금골라쥬 생성 페이지로 이동
+          navigate("/CreateVideoRoom");
+        } else {
+          // 비로그인 사용자 -> 로그인창 띄움
+          setLoginModalOpen();
+        }
       },
     },
     {
@@ -191,10 +207,14 @@ const VoteButton = () => {
       mouseEnter: simpleGollajyuHover,
       mouseLeave: simpleGollajyuLeave,
       handleClick: () => {
-        // TODO
         console.log("간단골라쥬 클릭");
-        // 로그인 사용자 -> 생성 모달 띄움
-        // 비로그인 사용자 -> 로그인창 띄움
+        if (isLoggedIn) {
+          // 로그인 사용자 -> 생성 모달 띄움
+          setVoteSimpleCreateModalOpen();
+        } else {
+          // 비로그인 사용자 -> 로그인창 띄움
+          setLoginModalOpen();
+        }
       },
     },
     {
@@ -207,10 +227,14 @@ const VoteButton = () => {
       mouseEnter: purchaseGollajyHover,
       mouseLeave: purchaseGollajyLeave,
       handleClick: () => {
-        // TODO
         console.log("구매골라쥬 클릭");
-        // 로그인 사용자 -> 생성 모달 띄움
-        // 비로그인 사용자 -> 로그인창 띄움
+        if (isLoggedIn) {
+          // 로그인 사용자 -> 생성 모달 띄움
+          setVoteProductCreateModalOpen();
+        } else {
+          // 비로그인 사용자 -> 로그인창 띄움
+          setLoginModalOpen();
+        }
       },
     },
   ];

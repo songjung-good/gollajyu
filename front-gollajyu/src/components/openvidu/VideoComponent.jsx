@@ -13,7 +13,11 @@ import tmpProfileImg from "/assets/images/tmp_profile.png";
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 // const OPENVIDU_SERVER_URL = "https://i10e107.p.ssafy.io:8443/";
-const OPENVIDU_SERVER_URL = "http://localhost:4443/";
+// npm run dev 이면 localhost, npm run build 면 배포 서버
+const OPENVIDU_SERVER_URL =
+  process.env.NODE_ENV !== "production"
+    ? "http://localhost:4443/"
+    : "https://i10e107.p.ssafy.io:8443/";
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 const settingButton = "text-white py-2 px-4 rounded-xl";

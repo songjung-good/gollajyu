@@ -28,11 +28,11 @@ const LoginModal = () => {
     // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음(추가 필요)
     setLoggedIn(data);
 
-    const response = await axios.post(
-      "https://i10e107.p.ssafy.io/api/members/login",
-      data
-    );
-    console.log(response.data);
+    // const response = await axios.post(
+    //   "https://i10e107.p.ssafy.io/api/members/login",
+    //   data
+    // );
+    // console.log(response.data);
     reset();
     setLoginModalClose();
   };
@@ -88,7 +88,7 @@ const LoginModal = () => {
               {...register("email", {
                 required: true,
                 pattern: {
-                  value: /^[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
+                  value: /^[A-Za-z_\-\.0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
                   message: "올바른 형식의 이메일을 입력하세요",
                 },
               })}
@@ -123,9 +123,9 @@ const LoginModal = () => {
                 },
               })}
             />
-            {errors.pw ? (
+            {errors.password ? (
               <p className="px-3 text-red-500 fontsize-xs break-keep xl:w-[300px] lg:w-[250px] md:w-[210px] sm:w-[170px]">
-                {errors.pw.message}
+                {errors.password.message}
               </p>
             ) : (
               <p className="invisible fontsize-xs">nothing</p>
