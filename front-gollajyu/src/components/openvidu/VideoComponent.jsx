@@ -46,6 +46,11 @@ export default function VideoComponent() {
   const [isVoteHoveredArr, setIsVoteHoveredArr] = useState(
     Array(voteItem.length).fill(false)
   ); // 각 투표 선택지 위에 마우스가 올라가 있는지
+  const [isVotedArr, setIsVotedArr] = useState(
+    Array(voteItem.length).fill(false)
+  ); // 각 투표 선택지가 선택되었는지 여부
+  const [isVoted, setIsVoted] = useState(false); // 투표를 했는지 여부
+  const [voteCounts, setVoteCounts] = useState([]); // 투표 아이템 별 표 수
   const title = location.state.title ? location.state.title : "임시 제목";
   const hostNickName = location.state.hostNickName
     ? location.state.hostNickName
@@ -136,13 +141,13 @@ export default function VideoComponent() {
               .getMediaStream()
               .getVideoTracks()[0]
               .getSettings().deviceId;
-            const currentVideoDevice = videoDevices.find(
-              (device) => device.deviceId === currentVideoDeviceId
-            );
+            // const currentVideoDevice = videoDevices.find(
+            //   (device) => device.deviceId === currentVideoDeviceId
+            // );
 
             console.log("publisher:", publisher);
             setPublisher(publisher);
-            setCurrentVideoDevice(currentVideoDevice);
+            // setCurrentVideoDevice(currentVideoDevice);
           }
         } catch (error) {
           console.log(
@@ -193,41 +198,6 @@ export default function VideoComponent() {
         console.error(error);
       });
   };
-
-  // 전면, 후면 카메라 변경 함수 => 현재 사용 X, 화면 공유 함수 작성 시 참고할 수 있을 듯
-  // const switchCamera = useCallback(async () => {
-  //   try {
-  //     const devices = await OV.current.getDevices();
-  //     const videoDevices = devices.filter(
-  //       (device) => device.kind === "videoinput"
-  //     );
-
-  //     if (videoDevices && videoDevices.length > 1) {
-  //       const newVideoDevice = videoDevices.filter(
-  //         (device) => device.deviceId !== currentVideoDevice.deviceId
-  //       );
-
-  //       if (newVideoDevice.length > 0) {
-  //         const newPublisher = OV.current.initPublisher(undefined, {
-  //           videoSource: newVideoDevice[0].deviceId,
-  //           publishAudio: true,
-  //           publishVideo: true,
-  //           mirror: true,
-  //         });
-
-  //         if (session) {
-  //           await session.unpublish(mainStreamManager);
-  //           await session.publish(newPublisher);
-  //           setCurrentVideoDevice(newVideoDevice[0]);
-  //           setMainStreamManager(newPublisher);
-  //           setPublisher(newPublisher);
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // }, [currentVideoDevice, session, mainStreamManager]);
 
   const screenShare = useCallback(async () => {
     // try {
@@ -296,10 +266,6 @@ export default function VideoComponent() {
     };
   }, [leaveSession]);
 
-  // 현재 화면에서 벗어나는 동작(navbar 눌러서 이동)하면 막는 알림 한번 띄워주기
-  // 추가해야되는 기능
-  // 단순히 useEffect(() => {return leaveSession()}) 을 하면, 방송화면 들어가기 전 화면에서 계속 실행됨(왜...)
-
   /**
    * --------------------------------------------
    * GETTING A TOKEN FROM YOUR APPLICATION SERVER
@@ -361,9 +327,31 @@ export default function VideoComponent() {
     joinSession();
   };
 
-  const handleVote = () => {
-    // TODO 클릭하면, 해당 item 투표수 1 증가, 투표한 상태로 변경한 후 투표율 표출
+  const handleVote = (index, item) => {
+    // TODO 클릭하면, 해당 item 투표수 1 증가시키는 요청을 서버로 보내기
+    // 투표한 상태로 변경
+    setIsVoted(true);
+    setIsVotedArr(() => {
+      const arr = Array(voteItem.length).fill(false);
+      arr[index] = true;
+      // console.log("선택:", arr);
+      return [...arr];
+    });
+    console.log(index, item);
   };
+
+  const getVoteRate = async () => {
+    // TODO 서버에서 투표 아이템별 표 수에 대한 정보를 받아오기 -> 투표 아이템별 표 수 상태 업데이트, 일정 시간마다 동작하도록 작성
+    // const response = await axios.get(
+    //url 기타 등등
+    // )
+    setVoteCounts(); // 서버에서 받은 투표 아이템별 표 수 넣기 -> id, count 또는 name, count + 총 참여자 수
+  };
+
+  // 투표를 하면 -> 서버에서 투표 아이템별 표 수에 대한 정보 받아오기
+  useEffect(() => {
+    getVoteRate();
+  }, [isVoted]);
 
   return (
     <>
@@ -525,45 +513,18 @@ export default function VideoComponent() {
                   id="vote"
                   className="mb-3 basis-1/4 border-2 rounded-md bg-gray-100"
                 >
+                  {/* TODO 투표 결과 다시 받아오기 (새로고침) 버튼 추가 */}
                   <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
                     {voteItem &&
                       voteItem.map((item, index) => {
                         if (item.slice(0, 10) === "data:image") {
                           return (
                             <div
-                              className="flex border justify-center items-center w-1/2 h-[90px] cursor-pointer"
-                              key={index}
-                              onMouseEnter={(index) =>
-                                setIsVoteHoveredArr((prevArr) => {
-                                  prevArr[index] = true;
-                                  return prevArr;
-                                })
-                              }
-                              onMouseLeave={(index) =>
-                                setIsVoteHoveredArr((prevArr) => {
-                                  prevArr[index] = false;
-                                  return prevArr;
-                                })
-                              }
-                              onClick={handleVote(item)}
-                            >
-                              {isVoteHoveredArr[index] ? (
-                                <p className="fontsize-sm font-bold text-center">
-                                  한 표 주기
-                                </p>
-                              ) : (
-                                <img
-                                  src={item}
-                                  className="size-2/3"
-                                  alt="이미지 미리보기"
-                                />
-                              )}
-                            </div>
-                          );
-                        } else {
-                          return (
-                            <div
-                              className="border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px] cursor-pointer"
+                              className={`relative border flex justify-center items-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
+                                isVotedArr[index]
+                                  ? "border-red-400 border-4"
+                                  : ""
+                              }`}
                               key={index}
                               onMouseEnter={() =>
                                 setIsVoteHoveredArr((prevArr) => {
@@ -577,7 +538,48 @@ export default function VideoComponent() {
                                   return [...prevArr];
                                 })
                               }
-                              onClick={handleVote(item)}
+                              onClick={() => handleVote(index, item)}
+                            >
+                              {isVoteHoveredArr[index] ? (
+                                <p className="fontsize-sm font-bold text-center text-amber-300">
+                                  투표하기
+                                </p>
+                              ) : (
+                                <img
+                                  src={item}
+                                  className="size-2/3"
+                                  alt="이미지 미리보기"
+                                />
+                              )}
+                              {isVoted && (
+                                <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
+                                  100표
+                                </p>
+                              )}
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div
+                              className={`relative border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
+                                isVotedArr[index]
+                                  ? "border-red-400 border-4"
+                                  : ""
+                              }`}
+                              key={index}
+                              onMouseEnter={() =>
+                                setIsVoteHoveredArr((prevArr) => {
+                                  prevArr[index] = true;
+                                  return [...prevArr];
+                                })
+                              }
+                              onMouseLeave={() =>
+                                setIsVoteHoveredArr((prevArr) => {
+                                  prevArr[index] = false;
+                                  return [...prevArr];
+                                })
+                              }
+                              onClick={() => handleVote(index, item)}
                             >
                               {isVoteHoveredArr[index] ? (
                                 <p className="fontsize-sm font-bold text-amber-300">
@@ -585,6 +587,11 @@ export default function VideoComponent() {
                                 </p>
                               ) : (
                                 item
+                              )}
+                              {isVoted && (
+                                <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
+                                  100표
+                                </p>
                               )}
                             </div>
                           );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import sobiTIData from "/src/stores/TestResultData";
+import sobiTIData from "/src/stores/testResultData";
 import TestResultHeader from "../components/TestResultHeader";
 
 const getMBTI = (response) => {
@@ -63,7 +63,7 @@ const TestResultPage = () => {
   useEffect(() => {
     if (isFirstTime) {
       setResult(getMBTI(response));
-      // 결과를 서버로 보내는 과정이 필요함
+      // TODO 결과를 서버로 보내는 과정이 필요함
     }
   }, [isFirstTime, response]);
 

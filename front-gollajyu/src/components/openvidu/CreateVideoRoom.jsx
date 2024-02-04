@@ -52,7 +52,7 @@ const CreateVideoRoom = () => {
 
   const startBroadcast = async () => {
     //sessionId 생성
-    //title, hostNickName, voteItem, thumbnail, sessionId, isHost 담아서 VideoRoom으로 진입 + 서버로 데이터 전송
+    // TODO title, hostNickName, voteItem, thumbnail, sessionId, isHost 담아서 VideoRoom으로 진입 + 서버로 데이터 전송
 
     if ((title.length < 1) | (voteItem.length < 2) | thumbnail) {
       window.alert("제목, 투표 항목(2개 이상), 썸네일을 모두 등록하세요!");
