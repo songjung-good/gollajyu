@@ -3,7 +3,6 @@ import VoteCardItem from './VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
 import VoteDetailChat from './VoteDetailChat';
-import ChatList from './ChatList';
 
 // const VoteDetail = ({ voteId }) => {
 //   const [voteDetail, setVoteDetail] = useState(null);
@@ -80,7 +79,6 @@ const VoteDetail = () => {
           voteResults={voteDetail.items}
         />
         <VoteDetailChat />
-        <ChatList />
       </>
       )}
     </div>
