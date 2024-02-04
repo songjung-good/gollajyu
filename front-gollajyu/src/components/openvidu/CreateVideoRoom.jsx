@@ -54,7 +54,7 @@ const CreateVideoRoom = () => {
     //sessionId 생성
     //title, hostNickName, voteItem, thumbnail, sessionId, isHost 담아서 VideoRoom으로 진입 + 서버로 데이터 전송
 
-    if (title | (voteItem.length < 2) | thumbnail) {
+    if ((title.length < 1) | (voteItem.length < 2) | thumbnail) {
       window.alert("제목, 투표 항목(2개 이상), 썸네일을 모두 등록하세요!");
     } else {
       const sessionId = "Session" + uuidv4();
@@ -68,7 +68,7 @@ const CreateVideoRoom = () => {
       );
       if (roomIs !== false) {
         console.log("방송 생성 성공");
-        navigate("/enterVideoRoom", {
+        navigate("/EnterVideoRoom", {
           state: {
             sessionId: sessionId,
             title: title,
@@ -156,7 +156,7 @@ const CreateVideoRoom = () => {
   const closeModal = (item) => {
     setModalOpen(false);
     if (item) {
-      console.log(item);
+      // console.log(item);
       addVoteItem(item);
     }
   };
@@ -167,12 +167,12 @@ const CreateVideoRoom = () => {
 
   return (
     <>
-      <div id="logo" className="m-5 text-center">
+      <div id="logo" className="m-2 text-center">
         <p style={logoStyle}>골라쥬</p>
       </div>
-      <div className="container my-7 mx-5 md:mx-auto space-y-3">
+      <div className="container mx-auto space-y-3">
         <div id="header" className="flex justify-between m-1">
-          <p className="text-2xl font-bold my-auto text-gray-900">
+          <p className="fontsize-md font-bold my-auto text-gray-900">
             지금 골라쥬 생성
           </p>
           <div id="button" className="space-x-2">
@@ -215,7 +215,7 @@ const CreateVideoRoom = () => {
                   src={tmpProfileImg}
                   alt=""
                 />
-                <p className="text-lg">{nickName}</p>
+                <p className="fontsize-sm">{nickName}</p>
               </div>
               <form>
                 <input
@@ -246,7 +246,10 @@ const CreateVideoRoom = () => {
                   voteItem.map((item, index) => {
                     if (item.slice(0, 10) === "data:image") {
                       return (
-                        <div className="flex border justify-center items-center w-1/2 h-1/2">
+                        <div
+                          className="flex border justify-center items-center w-1/2 h-1/2"
+                          key={index}
+                        >
                           <img
                             src={item}
                             className="size-2/3"
@@ -257,7 +260,7 @@ const CreateVideoRoom = () => {
                     } else {
                       return (
                         <div
-                          className="border flex text-2xl justify-center items-center text-center bg-gray-50 w-1/2 h-1/2"
+                          className="border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-1/2"
                           key={index}
                         >
                           {item}
@@ -273,7 +276,7 @@ const CreateVideoRoom = () => {
               id="thumbnail"
               className="basis-2/3 rounded-md text-center flex flex-col justify-around items-center p-10 bg-gray-100"
             >
-              <p className="text-lg font-bold">방송 썸네일 추가</p>
+              <p className="fontsize-sm font-bold">방송 썸네일 추가</p>
               {thumbnail && (
                 <img
                   src={thumbnail}

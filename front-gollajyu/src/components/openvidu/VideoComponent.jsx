@@ -363,7 +363,7 @@ export default function VideoComponent() {
 
   return (
     <>
-      <div id="logo" className="m-5 text-center">
+      <div id="logo" className="m-2 text-center">
         <p style={logoStyle}>골라쥬</p>
       </div>
       {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
@@ -372,7 +372,7 @@ export default function VideoComponent() {
           id="join"
           className="container my-24 mx-auto flex flex-col justify-center items-center space-y-10"
         >
-          <h1 className="text-2xl text-center">
+          <h1 className="fontsize-md text-center">
             글씨를 클릭하면, 방송으로 입장합니다.
           </h1>
           <div
@@ -411,7 +411,7 @@ export default function VideoComponent() {
             </button>
           </div>
           <button
-            className={`bg-gray-400 hover:bg-gray-500 ${settingButton}`}
+            className={`bg-gray-400 hover:bg-gray-500 fontsize-sm ${settingButton}`}
             onClick={() => {
               leaveSession();
               navigate("/");
@@ -422,7 +422,7 @@ export default function VideoComponent() {
         </div>
       ) : null}
 
-      <div className="container my-7 mx-auto space-y-3">
+      <div className="container mx-auto space-y-3">
         {/* 방송 화면으로 진입 후 */}
         {session !== undefined ? (
           // 방송자의 영상 송출 부분
@@ -468,7 +468,7 @@ export default function VideoComponent() {
             )}
             <div
               id="sub-container"
-              className="flex flex-row justify-between gap-7"
+              className="flex flex-row justify-between gap-7 h-[625px]"
             >
               <div
                 id="video+detail"
@@ -521,29 +521,43 @@ export default function VideoComponent() {
                   id="vote"
                   className="mb-3 basis-1/3 border-2 rounded-md bg-gray-100"
                 >
-                  {voteItem && (
-                    <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
-                      {voteItem.map((item) => (
-                        <div className="flex border justify-center items-center w-1/2 h-1/2 text-center text-2xl">
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                {chatDisplay && (
-                  <div
-                    id="chatting"
-                    className="basis-2/3 rounded-md bg-gray-100 p-1"
-                  >
-                    <ChattingList messageList={messageList}></ChattingList>
-                    <ChattingForm
-                      myUserName={myUserName}
-                      onMessage={sendMsg}
-                      currentSession={session}
-                    ></ChattingForm>
+                  <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
+                    {voteItem &&
+                      voteItem.map((item, index) => {
+                        if (item.slice(0, 10) === "data:image") {
+                          return (
+                            <div
+                              className="flex border justify-center items-center w-1/2 h-[90px]"
+                              key={index}
+                            >
+                              <img
+                                src={item}
+                                className="size-2/3"
+                                alt="이미지 미리보기"
+                              />
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div
+                              className="border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px]"
+                              key={index}
+                            >
+                              {item}
+                            </div>
+                          );
+                        }
+                      })}
                   </div>
-                )}
+                </div>
+                <div id="chatting" className="grow rounded-md bg-gray-100 p-1">
+                  <ChattingList messageList={messageList}></ChattingList>
+                  <ChattingForm
+                    myUserName={myUserName}
+                    onMessage={sendMsg}
+                    currentSession={session}
+                  ></ChattingForm>
+                </div>
               </div>
             </div>
           </div>
