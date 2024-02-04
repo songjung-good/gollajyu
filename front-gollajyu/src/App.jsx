@@ -14,8 +14,8 @@ import StatisticPage from "./pages/StatisticPage";
 import TestPage from "./pages/TestPage";
 import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
-import VideoComponent from "./components/Openvidu/VideoComponent";
-import CreateVideoRoom from "./components/Openvidu/CreateVideoRoom";
+import VideoComponent from "./components/OpenVidu/VideoComponent";
+import CreateVideoRoom from "./components/OpenVidu/CreateVideoRoom";
 import "./App.css";
 
 // 추후 삭제될 페이지입니다.
