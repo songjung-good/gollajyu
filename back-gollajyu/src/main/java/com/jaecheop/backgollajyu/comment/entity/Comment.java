@@ -10,8 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Builder
@@ -45,31 +43,6 @@ public class Comment {
 
     private Long commentMentionId;
 
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentLikes> commentLikes = new ArrayList<>();
 
-    public void addCommentLike(Member member) {
-        CommentLikes commentLike = CommentLikes.builder()
-                .member(member)
-                .comment(this)
-                .createAt(LocalDateTime.now())
-                .build();
-        commentLikes.add(commentLike);
-    }
-
-    public void removeCommentLike(Member member) {
-        commentLikes.removeIf(commentLike -> commentLike.getMember().equals(member));
-    }
-
-    public static Comment createNewComment(Vote vote, Member member, VoteItem voteItem, String commentDesc, Long commentMentionId) {
-        Comment comment = new Comment();
-        comment.setVote(vote);
-        comment.setMember(member);
-        comment.setVoteItem(voteItem);
-        comment.setCommentDesc(commentDesc);
-        comment.setCreateAt(LocalDateTime.now());
-        comment.setDeleted(false);
-        comment.setCommentMentionId(commentMentionId);
-        return comment;
-    }
+    
 }
