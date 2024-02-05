@@ -25,7 +25,6 @@ const LoginModal = () => {
   // handleSubmit의 인자가 되는 Submit 함수
   const submitForm = async (data) => {
     console.log(data);
-    // TODO: 서버로 로그인 요청
     // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음
 
     const response = await axios.post(API_URL + "/members/login", data, {
@@ -36,6 +35,7 @@ const LoginModal = () => {
       window.alert("이메일 또는 비밀번호가 틀렸습니다");
     } else {
       console.log("로그인 완료");
+      console.log(response);
       setLoggedIn(response.data.body);
       setLoginModalClose();
     }

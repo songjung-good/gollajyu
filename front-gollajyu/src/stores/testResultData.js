@@ -290,7 +290,7 @@ const sobiTIData = [
       "그렇다고 자기관리를 안 하진 않아요. 내가 운동 열심히 하는 이유를 묻는다면 술 먹고 죄책감 안 느끼려고 그런 거에요.",
     ],
     good_chemi: 7,
-    bad_chemi: ,
+    bad_chemi: 6,
   },
 ];
 
