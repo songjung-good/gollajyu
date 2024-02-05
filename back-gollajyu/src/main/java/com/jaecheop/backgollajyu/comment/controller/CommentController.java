@@ -11,6 +11,7 @@ import com.jaecheop.backgollajyu.vote.entity.Vote;
 import com.jaecheop.backgollajyu.vote.entity.VoteItem;
 import com.jaecheop.backgollajyu.vote.repository.VoteItemRepository;
 import com.jaecheop.backgollajyu.vote.repository.VoteRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ public class CommentController {
 
 
     @PostMapping("/details/comments")
+    @Operation(summary = "댓글 생성", description = "returns String")
+
     public ResponseEntity<String> createComment(@RequestBody CommentReqDto commentReqDto) {
         // Retrieve related entities
         Optional<Member> memberOptional = memberRepository.findById(commentReqDto.getMemberId());
@@ -59,6 +62,8 @@ public class CommentController {
 
 
     @PostMapping("/details/comments/{commentId}")
+    @Operation(summary = "투표 삭제", description = "returns String")
+
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
         // Check if the comment exists
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
@@ -75,6 +80,8 @@ public class CommentController {
 
     }
     @PostMapping("/details/comments/likes")
+    @Operation(summary = "댓글 좋아요", description = "returns Comment")
+
     public ResponseEntity<String> addCommentLike(@RequestBody CommentLikesReqDto commentLikesReqDto) {
         Optional<Comment> commentOptional = commentRepository.findById(commentLikesReqDto.getCommentId());
 
@@ -94,6 +101,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/details/comments/likes")
+    @Operation(summary = "댓글 좋아요 삭제", description = "returns Comment")
+
     public ResponseEntity<String> removeCommentLike(@RequestBody CommentLikesReqDto commentLikesReqDto) {
         Optional<Comment> commentOptional = commentRepository.findById(commentLikesReqDto.getCommentId());
 

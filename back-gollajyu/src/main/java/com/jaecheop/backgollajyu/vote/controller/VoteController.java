@@ -6,6 +6,7 @@ import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.VoteItemRepository;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,16 +39,19 @@ public class VoteController {
      * @return
      */
     @PostMapping("")
+    @Operation(summary = "투표 생성", description = "No body")
     public ResponseEntity<ResponseMessage> addVote(VoteReqDto voteReqDto) {
 
         // 서비스단으로 넘겨서 로직 처리 -> ServiceResult(result, message, object-data)로 반환
         ServiceResult result = voteService.addVote(voteReqDto, fileDir);
 
+
+
         // 받아온 결과에 따라 에러 메세지 출력하거나 return 하거나
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(new ResponseMessage<>().fail(result.getMessage()));
         }
-        return ResponseEntity.ok().body(ResponseMessage.success());
+        return ResponseEntity.ok().body(new ResponseMessage<>().success());
     }
 
     /**
@@ -57,14 +61,15 @@ public class VoteController {
      * @return
      */
     @PostMapping("/choices")
+    @Operation(summary = "투표하기", description = "No body")
     public ResponseEntity<ResponseMessage> choiceMain(@RequestBody ChoiceReqDto choiceReqDto) {
 
         ServiceResult result = voteService.choiceMain(choiceReqDto);
 
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(new ResponseMessage().fail(result.getMessage()));
         }
-        return ResponseEntity.ok().body(ResponseMessage.success());
+        return ResponseEntity.ok().body(new ResponseMessage().success());
 
     }
 
@@ -76,6 +81,7 @@ public class VoteController {
      */
 
     @GetMapping("/detail")
+    @Operation(summary = "투표 상세", description = "returns VoteDetailResDto")
     public ResponseEntity<VoteDetailResDto> voteDetail(@ModelAttribute VoteDetailReqDto voteDetailReqDto) {
         System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         ServiceResult result = voteService.voteDetail(voteDetailReqDto);
@@ -91,13 +97,15 @@ public class VoteController {
      * @return
      */
     @GetMapping("/ranks")
-    public ResponseEntity<ResponseMessage> voteRanking() {
-        ServiceResult result = voteService.getVoteRanking();
+    @Operation(summary = "top 5 ranking: 좋아요, 최신, 참여자, 박빙", description = "returns RankDto")
+    public ResponseEntity<ResponseMessage<RankDto>> voteRanking() {
+        ServiceResult<RankDto> result = voteService.getVoteRanking();
+        ResponseMessage<RankDto> responseMessage = new ResponseMessage<>();
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
+        return ResponseEntity.ok().body(responseMessage.success(result.getData()));
 
     }
 
@@ -110,7 +118,8 @@ public class VoteController {
      */
 
     @GetMapping("")
-    public ResponseEntity<ResponseMessage> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session) {
+    @Operation(summary = "카테고리별 투표 목록 리스트 조회", description = "returns VoteListResDto")
+    public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session) {
 
         System.out.println("categoryId = " + categoryId);
         System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto) session.getAttribute("memberInfo"));
@@ -118,25 +127,27 @@ public class VoteController {
         ServiceResult result = voteService.getVoteListByCategory(categoryId, sessionInfo);
 
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
+        return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().success((VoteListResDto) result.getData()));
     }
 
 
     @PostMapping("/likes")
-    public ResponseEntity<ResponseMessage> toggleLikes(@RequestBody LikesReqDto likesReqDto) {
-        ServiceResult result = voteService.toggleLikes(likesReqDto);
+    @Operation(summary = "투표 좋아요 토글", description = "returns LikesResDto : 좋아요 한 투표라면 좋아요 취소, 좋아요 하지 않았다면 좋아요 추가")
+    public ResponseEntity<ResponseMessage<LikesResDto>> toggleLikes(@RequestBody LikesReqDto likesReqDto) {
+        ServiceResult<LikesResDto> result = voteService.toggleLikes(likesReqDto);
         if (!result.isResult()) {
-            return ResponseEntity.ok(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok(new ResponseMessage<LikesResDto>().fail(result.getMessage()));
         }
-        return ResponseEntity.ok(ResponseMessage.success(result.getData()));
+        return ResponseEntity.ok(new ResponseMessage<LikesResDto>().success(result.getData()));
     }
 
 
     @GetMapping("/search")
-    public ResponseEntity<ResponseMessage> searchVoteList(
+    @Operation(summary = "검색(카테고리 + 키워드)", description = "returns SearchReqDto")
+    public ResponseEntity<ResponseMessage<SearchResDto>> searchVoteList(
             @RequestParam(name = "categoryId", defaultValue = "0") String categoryId
             , @RequestParam(name = "keyword", defaultValue = "") String keyword
             , HttpSession session) {
@@ -148,14 +159,15 @@ public class VoteController {
         ServiceResult result = voteService.searchVoteList(searchReqDto, (LoginResDto) session.getAttribute("memberInfo"));
 
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(new ResponseMessage<SearchResDto>().fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
+        return ResponseEntity.ok().body(new ResponseMessage<SearchResDto>().success((SearchResDto) result.getData()));
     }
 
 
     @GetMapping("/ai")
+    @Operation(summary = "투표 결과 예상", description = "returns GollaItem")
     public ResponseEntity<Long> gollAi(@RequestBody GollAiReqDto gollAiReqDto) {
 
         Long gollaItem = 0L;

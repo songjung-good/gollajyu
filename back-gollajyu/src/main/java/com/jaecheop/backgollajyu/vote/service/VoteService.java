@@ -63,7 +63,7 @@ public class VoteService {
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
 
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
         }
 
         // 사용자 존재
@@ -72,7 +72,7 @@ public class VoteService {
         // 카테고리 존재 유무 확인
         Optional<Category> optionalCategory = categoryRepository.findById(voteReqDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다.");
         }
         Category category = optionalCategory.get();
 
@@ -80,7 +80,7 @@ public class VoteService {
         try {
             member.minusPoint(10L);
         } catch (NotEnoughPointException e) {
-            return ServiceResult.fail(e.getMessage());
+            return new ServiceResult().fail(e.getMessage());
         }
 
         // 단일 투표 기본 정보 디비에 저장
@@ -100,7 +100,7 @@ public class VoteService {
             try {
                 fullPath = saveFile(voteItemReqDto.getVoteItemImg(), fileDir);
             } catch (IOException e) {
-                return ServiceResult.fail(e.getMessage());
+                return  new ServiceResult<>().fail(e.getMessage());
             }
             // 저장한 경로 반환
             // VoteItem 저장시 이미지가 저장된 경로를 DB에 저장
@@ -113,7 +113,7 @@ public class VoteService {
             voteItemRepository.save(voteItem);
         }
 
-        return ServiceResult.success();
+        return  new ServiceResult<>().success();
     }
 
     private String saveFile(MultipartFile file, String fileDir) throws IOException {
@@ -380,7 +380,7 @@ public class VoteService {
         // member 존재 유무
         Optional<Member> optionalMember = memberRepository.findById(choiceReqDto.getMemberId());
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
         }
 
         Member member = optionalMember.get();
@@ -389,7 +389,7 @@ public class VoteService {
         Optional<Vote> optionalVote = voteRepository.findById(choiceReqDto.getVoteId());
 
         if (optionalVote.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 투표입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 투표입니다.");
         }
 
         Vote vote = optionalVote.get();
@@ -397,7 +397,7 @@ public class VoteService {
         // 카테고리 존재 여부
         Optional<Category> optionalCategory = categoryRepository.findById(choiceReqDto.getCategoryId());
         if (optionalCategory.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다.");
         }
 
         Category category = optionalCategory.get();
@@ -414,7 +414,7 @@ public class VoteService {
             }
         }
         if (!isItemExist) {
-            return ServiceResult.fail("존재하지 않는 투표 아이템입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 투표 아이템입니다.");
         }
 
 
@@ -432,7 +432,7 @@ public class VoteService {
             }
         }
         if (!isTagExist) {
-            return ServiceResult.fail("카테고리에 존재하지 않는 태그입니다.");
+            return  new ServiceResult<>().fail("카테고리에 존재하지 않는 태그입니다.");
         }
 
         Tag tag = tagRepository.findById(choiceReqDto.getTagId()).get();
@@ -442,7 +442,7 @@ public class VoteService {
         // 중복 투표 여부.
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(choiceReqDto.getMemberId(), choiceReqDto.getVoteId());
         if (optionalVoteResult.isPresent()) {
-            return ServiceResult.fail("이미 참여한 투표입니다.");
+            return  new ServiceResult<>().fail("이미 참여한 투표입니다.");
         }
 
         int memberYear = member.getBirthDay().getYear();
@@ -468,7 +468,7 @@ public class VoteService {
         member.plusPoint(2L);
         memberRepository.save(member);
 
-        return ServiceResult.success();
+        return  new ServiceResult<>().success();
     }
 
     /**
@@ -483,21 +483,21 @@ public class VoteService {
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findById(voteDetailReqDto.getMemberId());
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 사용자입니다");
+            return  new ServiceResult<>().fail("존재하지 않는 사용자입니다");
         }
         Member member = optionalMember.get();
 
         // 투표 존재 여부
         Optional<Vote> optionalVote = voteRepository.findById(voteDetailReqDto.getVoteId());
         if (optionalVote.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 투표입니다");
+            return  new ServiceResult<>().fail("존재하지 않는 투표입니다");
         }
         Vote vote = optionalVote.get();
 
         // 이 사용자의 투표 참여 여부
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(member.getId(), vote.getId());
         if (optionalVoteResult.isEmpty()) {
-            return ServiceResult.fail("투표하지 않은 사용자입니다.");
+            return  new ServiceResult<>().fail("투표하지 않은 사용자입니다.");
         }
         VoteResult voteResult = optionalVoteResult.get();
 
@@ -560,7 +560,7 @@ public class VoteService {
                 .commentList(commentList)
                 .build();
 
-        return ServiceResult.success(voteDetailResDto);
+        return  new ServiceResult<VoteDetailResDto>().success(voteDetailResDto);
     }
 
     // 필터링된 투표 결과 리스트 가져오기
@@ -632,7 +632,7 @@ public class VoteService {
                 // 카테고리 유무 확인
                 Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
                 if (optionalCategory.isEmpty()) {
-                    return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+                    return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다.");
                 }
                 Category category = optionalCategory.get();
 
@@ -706,7 +706,7 @@ public class VoteService {
                 // 카테고리 유무 확인
                 Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
                 if (optionalCategory.isEmpty()) {
-                    return ServiceResult.fail("존재하지 않는 카테고리입니다.");
+                    return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다.");
                 }
                 Category category = optionalCategory.get();
 
@@ -746,7 +746,7 @@ public class VoteService {
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-        return ServiceResult.success(voteListResDto);
+        return  new ServiceResult<>().success(voteListResDto);
 
     }
 
@@ -865,7 +865,7 @@ public class VoteService {
 
 
         // 정렬해서 보여주기
-        return ServiceResult.success(
+        return new ServiceResult<RankDto>().success(
                 RankDto.builder()
                         .sortByLikes(sortByLikes)
                         .sortByNew(sortByNew)
@@ -885,14 +885,14 @@ public class VoteService {
         // 멤버 존재 유무
         Optional<Member> optionalMember = memberRepository.findById(likesReqDto.getMemberId());
         if(optionalMember.isEmpty()){
-            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+            return new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
         }
         Member member = optionalMember.get();
 
         // 투표 존재 유무
         Optional<Vote> optionalVote = voteRepository.findById(likesReqDto.getVoteId());
         if(optionalVote.isEmpty()){
-            return ServiceResult.fail("존재하지 않는 투표입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 투표입니다.");
         }
         Vote vote = optionalVote.get();
 
@@ -913,14 +913,14 @@ public class VoteService {
                             .build()
             );
             likesResDto.updateIsLiked(true);
-            return ServiceResult.success(likesResDto);
+            return  new ServiceResult<LikesResDto>().success(likesResDto);
         }
         // 존재할 때
         else{
             Likes likes = optionalLikes.get();
             likeRepository.deleteById(likes.getId());
             likesResDto.updateIsLiked(false);
-            return ServiceResult.success(likesResDto);
+            return  new ServiceResult<LikesResDto>().success(likesResDto);
         }
     }
 
@@ -931,7 +931,7 @@ public class VoteService {
      * @param memberInfo
      * @return
      */
-    public ServiceResult searchVoteList(SearchReqDto searchReqDto, LoginResDto memberInfo) {
+    public ServiceResult<SearchResDto> searchVoteList(SearchReqDto searchReqDto, LoginResDto memberInfo) {
 
         // 결과 DTO
         SearchResDto searchResDto =null;
@@ -973,7 +973,7 @@ public class VoteService {
                 // 카테고리 존재 유무
                 Optional<Category> optionalCategory = categoryRepository.findById(searchReqDto.getCategoryId());
                 if (optionalCategory.isEmpty()) {
-                    return ServiceResult.fail("존재하지 않는 카테고리입니다");
+                    return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다");
                 }
                 Category category = optionalCategory.get();
 
@@ -1021,7 +1021,7 @@ public class VoteService {
                 // 카테고리 존재 유무
                 Optional<Category> optionalCategory = categoryRepository.findById(searchReqDto.getCategoryId());
                 if (optionalCategory.isEmpty()) {
-                    return ServiceResult.fail("존재하지 않는 카테고리입니다");
+                    return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다");
                 }
                 Category category = optionalCategory.get();
 
@@ -1042,6 +1042,6 @@ public class VoteService {
             searchResDto.updateVoteList(allVoteList);
         }
 
-        return ServiceResult.success(searchResDto);
+        return new ServiceResult<SearchResDto>().success(searchResDto);
     }
 }
