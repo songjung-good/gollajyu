@@ -28,10 +28,10 @@ const LoginModal = () => {
     // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음(추가 필요)
     setLoggedIn(data);
 
-    // const response = await axios.post(
-    //   "https://i10e107.p.ssafy.io/api/members/login",
-    //   data
-    // );
+    const response = await axios.post(
+      "https://i10e107.p.ssafy.io/api/members/login",
+      data, {withCredentials: true}
+    );
     // console.log(response.data);
     reset();
     setLoginModalClose();
@@ -83,6 +83,7 @@ const LoginModal = () => {
             <input
               type="text"
               id="email"
+              value="new@gmail.com"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               placeholder="이메일을 입력하세요"
               {...register("email", {
@@ -104,6 +105,7 @@ const LoginModal = () => {
           <div className="h-24">
             <input
               type="password"
+              password="qwer1234!@#$"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               id="password"
               placeholder="비밀번호를 입력하세요"
