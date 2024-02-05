@@ -47,12 +47,12 @@ public class MemberService {
         // 사용자 중복 여부
         Optional<Member> optionalMember = memberRepository.findByEmail(signUpReqDto.getEmail());
         if (optionalMember.isPresent()) {
-            return ServiceResult.fail("이미 존재하는 이메일입니다");
+            return  new ServiceResult<>().fail("이미 존재하는 이메일입니다");
         }
 
         // 패스워드 일치 확인
         if (!signUpReqDto.getPassword().equals(signUpReqDto.getVerifyPassword())) {
-            return ServiceResult.fail("비밀번호가 일치하지 않습니다.");
+            return new ServiceResult().fail("비밀번호가 일치하지 않습니다.");
         }
 
         // 일치할 경우 비밀번호 암호화
@@ -61,7 +61,7 @@ public class MemberService {
         // 소비성향 존재 확인
         Optional<Type> optionalType = typeRepository.findById(signUpReqDto.getTypeId());
         if (optionalType.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 소비성향입니다.");
+            return new ServiceResult().fail("존재하지 않는 소비성향입니다.");
         }
 
         Type type = optionalType.get();
@@ -94,20 +94,20 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
-        return ServiceResult.success();
+        return  new ServiceResult<>().success();
     }
 
-    public ServiceResult login(LoginReqDto loginReqDto, HttpSession session) {
+    public ServiceResult<LoginResDto> login(LoginReqDto loginReqDto, HttpSession session) {
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findByEmail(loginReqDto.getEmail());
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
         }
         Member member = optionalMember.get();
 
         // 비밀번호 암호화 및 일치 여부 - Bcrypt
         if (!BCrypt.checkpw(loginReqDto.getPassword(), member.getPassword())) {
-            return ServiceResult.fail("틀린 비밀번호입니다");
+            return new ServiceResult<>().fail("틀린 비밀번호입니다");
         }
 
         // 로그인 완료 - LoginResponseDto
@@ -131,7 +131,7 @@ public class MemberService {
         // 1. 세션에 값 담아주기
         session.setAttribute("memberInfo", loginResDto);
         // 4. loginResDto에 멤버정보와 세션정보를 담아 반환하기
-        return ServiceResult.success(loginResDto);
+        return new ServiceResult<LoginResDto>().success(loginResDto);
     }
 
 
@@ -201,17 +201,17 @@ public class MemberService {
 
         Optional<Member> optionalMember = memberRepository.findByEmail(addInfoReqDto.getEmail());
         if (optionalMember.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
         }
         Member member = optionalMember.get();
 
         Optional<Type> optionalType = typeRepository.findById(addInfoReqDto.getTypeId());
         if (optionalType.isEmpty()) {
-            return ServiceResult.fail("존재하지 않는 소비성향입니다.");
+            return  new ServiceResult<>().fail("존재하지 않는 소비성향입니다.");
         }
         Type type = optionalType.get();
         member.update(addInfoReqDto, type);
         memberRepository.save(member);
-        return ServiceResult.success();
+        return  new ServiceResult<>().success();
     }
 }
