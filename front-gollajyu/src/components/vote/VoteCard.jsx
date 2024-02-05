@@ -22,7 +22,7 @@ export default function VoteCard(props) {
             src={props.options.image}
             product={`Title ${index + 1}`}
             detail={`detail ${index + 1}`}
-            category={`a`}
+            category={`1`}
             path="/VotePage"
             clicked={clicked[index]}
             onClick={() => handleClick(index)}
@@ -31,4 +31,4 @@ export default function VoteCard(props) {
       </div>
     </div>
   );
-}
+} 
