@@ -6,15 +6,19 @@ import TmpModal from "../components/TmpModal"; // 임시 모달
 import useModalStore from "../stores/modalState";
 
 const StatisticPage = () => {
+  
   // ----------- 반응형 웹페이지 구현 -----------
-  const isLarge = useMediaQuery({
+  const isXLarge = useMediaQuery({
     query: "(min-width:1024px)",
   });
+  const isLarge = useMediaQuery({
+    query : "(min-width:768px) and (max-width:1023.98px)"
+  });
   const isMedium = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1024px)",
+    query : "(min-width:480px) and (max-width:767.98px)"
   });
   const isSmall = useMediaQuery({
-    query: "(max-width:768px)",
+    query : "(max-width:479.98px)"
   });
 
   // ----------- 현재 선택된 카테고리를 추적하기 위한 state -----------
