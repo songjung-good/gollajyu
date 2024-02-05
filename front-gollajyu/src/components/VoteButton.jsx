@@ -332,25 +332,29 @@ const VoteButton = () => {
   };
 
   return (
-    <div
-      style={voteButtonContainerStyle}
-      onMouseEnter={buttonHover}
-      onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
-    >
-      {/* ------------- 투표 버튼 ------------- */}
-      <button style={voteButtonStyle} className="fontsize-sm">
-        {buttonHovered ? "X" : (
-          <>
-            투표
-            <br />
-            생성
-          </>
-        )}
+    <>
+      {!isSmall && ( // 모바일 화면에서 투표 생성 버튼 렌더링 하지 않음
+        <div
+          style={voteButtonContainerStyle}
+          onMouseEnter={buttonHover}
+          onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
+        >
+          {/* ------------- 투표 버튼 ------------- */}
+          <button style={voteButtonStyle} className="fontsize-sm">
+            {buttonHovered ? "X" : (
+              <>
+                투표
+                <br />
+                생성
+              </>
+            )}
 
-        {/* ------------- 버튼 렌더링 함수 호출 ------------- */}
-        {renderButtons()}
-      </button>
-    </div>
+            {/* ------------- 버튼 렌더링 함수 호출 ------------- */}
+            {renderButtons()}
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
