@@ -4,7 +4,7 @@ import _ from "lodash";
 import tmp_profile from "/assets/images/tmp_profile.png";
 
 const StyledChattingList = styled.div`
-  height: 32rem;
+  height: 87%;
   background: white;
   text-align: left;
   overflow: scroll;

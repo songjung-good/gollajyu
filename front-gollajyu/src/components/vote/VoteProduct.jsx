@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 const VoteProduct = () => {
   const [items, setItems] = useState([{}, {}]);
+  const [category, setCategory] = useState('');  // 카테고리 상태 변수 추가
+
 
   const handleAddItem = () => {
     if (items.length < 4) {
@@ -23,6 +25,25 @@ const VoteProduct = () => {
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md" />
           </div>
           <div className="mb-5">
+            <label htmlFor="category" className="mb-3 block text-base font-medium text-[#FF7F50]">
+                카테고리:
+            </label>
+            <select 
+              name="category" 
+              id="category" 
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
+            >
+              <option value="">카테고리를 선택하세요</option>
+              <option value="category1">의류</option>
+              <option value="category2">신발</option>
+              <option value="category3">가구</option>
+              <option value="category4">전자제품</option>
+              <option value="category5">기타</option>
+            </select>
+          </div>
+          <div className="mb-5">
             <label htmlFor="description" className="mb-3 block text-base font-medium text-[#FF7F50]">
               투표 내용:
             </label>
@@ -32,7 +53,7 @@ const VoteProduct = () => {
           
           {/* 투표 항목 추가 부분 */}
           {items.map((item, index) => (
-            <div key={index} className="mb-6 pt-4">
+            <div key={index} className="mb-6 pt-4 border-t">
               <label className="mb-5 block text-xl font-semibold text-[#FF7F50]">
                 투표 항목 추가
               </label>

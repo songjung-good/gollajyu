@@ -21,7 +21,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -91,10 +90,5 @@ public class SecurityConfig {
 //                //OAuth 2.0 인증이 처리되는데 사용될 사용자 서비스를 지정하는 메서드
 //                .userService(oAuthService);
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler oauth2LoginSuccessHandler() {
-        return new Oauth2LoginSuccessHandler();
     }
 }

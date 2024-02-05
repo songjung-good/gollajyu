@@ -1,34 +1,28 @@
 import React, { useState } from 'react';
 
-// 임의의 데이터
-const voteResults = [
-  { option: '선택지 1', percentage: 50, reasons: { 가성비: 30, 디자인: 40, 브랜드: 0, 편의성: 30, 기능성: 0 } },
-  { option: '선택지 2', percentage: 30, reasons: { 가성비: 20, 디자인: 60, 브랜드: 10, 편의성: 10, 기능성: 0 } },
-  { option: '선택지 3', percentage: 20, reasons: { 가성비: 50, 디자인: 20, 브랜드: 10, 편의성: 20, 기능성: 0 } },
-];
-
-// 투표결과에 대한 내용을 출력하는 공간
-const VoteDetailReselt = () => {
+// 임시 데이터를 상위 컴포넌트로부터 받아오는 props로 변경
+const VoteDetailResult = ({voteResults}) => {
+  console.log('voteResults:', voteResults);  // props 확인용
   const [selectedOption, setSelectedOption] = useState(null);
   
   return (
     <div>
       {voteResults.map((result, index) => (
-        <div key={index}>
-          <h2>{result.option}: {result.percentage}%</h2>
+        <div key={index} style={{border: "1px solid black", margin: "10px", padding: "10px"}}>
+          <h2>{result.voteResults}: %</h2>
           <button onClick={() => setSelectedOption(selectedOption === index ? null : index)}>▼</button>
           {selectedOption === index && (
             <div>
-              {Object.entries(result.reasons).map(([reason, percentage]) => (
+              {Object.entries(result.voteResults).map(([reason, percentage]) => (
                 <p key={reason}>{reason}: {percentage}%</p>
               ))}
             </div>
           )}
         </div>
       ))}
-      {/* 사용자 유형 필터링 부분 구현필요 */}
+      {/* 사용자 유형 필터링 핑료 */}
     </div>
   );
 };
 
-export default VoteDetailReselt;
+export default VoteDetailResult;

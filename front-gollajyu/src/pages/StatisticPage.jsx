@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import categoryData from '/src/stores/categoryData';
-import tagColorData from '/src/stores/tagColorData';
+import categoryData from "/src/stores/categoryData";
+import tagColorData from "/src/stores/tagColorData";
+import TmpModal from "../components/TmpModal"; // 임시 모달
+import useModalStore from "../stores/modalState";
 
 const StatisticPage = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -9,10 +11,10 @@ const StatisticPage = () => {
     query: "(min-width:1024px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1024px)"
+    query: "(min-width:768px) and (max-width:1024px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:768px)"
+    query: "(max-width:768px)",
   });
 
   // ----------- 현재 선택된 카테고리를 추적하기 위한 state -----------
@@ -23,8 +25,6 @@ const StatisticPage = () => {
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
   };
-  
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -57,7 +57,7 @@ const StatisticPage = () => {
   const titleTextStyle = {
     // 디자인
     marginTop: "5px",
-  
+
     // 글자
     fontSize: "32px",
   };
@@ -101,14 +101,14 @@ const StatisticPage = () => {
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: isLarge ? "row" : "column",
-  }
+  };
 
   // ----------- 설명 첫 번째 컨테이너 스타일 -----------
   const descriptionFirstContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: isSmall ? "column" : "row",
-  }
+  };
 
   // ----------- 설명 서브 컨테이너 스타일 -----------
   const descriptionSubContainerStyle = {
@@ -121,7 +121,7 @@ const StatisticPage = () => {
     // 글자
     fontSize: "24px",
     color: "#4A4A4A",
-  }
+  };
 
   // ----------- 설명 데이터 글자 스타일 -----------
   const descriptionDataStyle = {
@@ -130,13 +130,13 @@ const StatisticPage = () => {
 
     // 글자
     color: "#FF595E",
-  }
+  };
 
   // ----------- 쉼표 스타일 -----------
   const restStyle = {
     // 디자인
     marginRight: "5px",
-  }
+  };
 
   // ----------- 구분선 스타일 -----------
   const barStyle = {
@@ -156,13 +156,13 @@ const StatisticPage = () => {
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: !isSmall ? "row" : "column",
-  }
+  };
 
   // ----------- 내 정보 아이템 스타일 -----------
   const infoItemStyle = {
     // 디자인
     padding: isMedium ? "10px 10px" : "10px 20px",
-    width: isSmall? "100%" : "50%",
+    width: isSmall ? "100%" : "50%",
     height: "60px",
     backgroundColor: "#F0F0F0",
 
@@ -202,7 +202,7 @@ const StatisticPage = () => {
   // ----------- 태그 컨테이너 스타일 -----------
   const tagContainerStyle = {
     display: "flex",
-  }
+  };
 
   // ----------- 태그 아이템 스타일 -----------
   const tagItemStyle = {
@@ -225,28 +225,28 @@ const StatisticPage = () => {
     // 컨텐츠 정렬
     display: "flex",
     justifyContent: "space-between", // 동일 간격으로 정렬
-  }
+  };
 
   // ----------- 따옴표 스타일 -----------
   const quotesStyle = {
     // 디자인
-    margin: isLarge ? "0 30px" : (isMedium ? "0 15px" : "0 5px"),
+    margin: isLarge ? "0 30px" : isMedium ? "0 15px" : "0 5px",
 
     // 글자
-    fontSize: isLarge ? "80px" : (isMedium ? "60px" : "30px"),
-  }
+    fontSize: isLarge ? "80px" : isMedium ? "60px" : "30px",
+  };
 
   // ----------- 멘트 컨테이너 스타일 -----------
   const mentContainerStyle = {
     // 글자
-    fontSize: isLarge ? "34px" : (isMedium ? "24px" : "16px"),
+    fontSize: isLarge ? "34px" : isMedium ? "24px" : "16px",
 
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-  }
+  };
 
   // ----------- 멘트 데이터 스타일 -----------
   const mentDataStyle = {
@@ -255,7 +255,7 @@ const StatisticPage = () => {
 
     // 글자
     color: "#FF595E",
-  }
+  };
 
   // ----------- 차트 컨테이너 스타일 -----------
   const chartContainerStyle = {
@@ -274,9 +274,9 @@ const StatisticPage = () => {
 
     // 컨텐츠 정렬
     display: "flex",
-    alignItems: isLarge? "center" : "flex-start",
+    alignItems: isLarge ? "center" : "flex-start",
     flexDirection: isLarge ? "row" : "column",
-  }
+  };
 
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownStyle = {
@@ -289,11 +289,10 @@ const StatisticPage = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-
   // ----------- 카테고리 아이템 목록 -----------
   const categoryItems = [
     {
-      category: '의류',
+      category: "의류",
       0: 30,
       1: 20,
       2: 20,
@@ -301,7 +300,7 @@ const StatisticPage = () => {
       4: 15,
     },
     {
-      category: '신발',
+      category: "신발",
       0: 45,
       1: 35,
       5: 30,
@@ -309,7 +308,7 @@ const StatisticPage = () => {
       7: 10,
     },
     {
-      category: '가구',
+      category: "가구",
       0: 40,
       1: 30,
       2: 60,
@@ -317,7 +316,7 @@ const StatisticPage = () => {
       4: 80,
     },
     {
-      category: '전자제품',
+      category: "전자제품",
       0: 0,
       1: 10,
       5: 20,
@@ -325,7 +324,7 @@ const StatisticPage = () => {
       7: 40,
     },
   ];
-  
+
   // 배열에서 가장 높은 세 Tag를 찾는 함수
   const findTop3Tags = (obj) => {
     const sortedTags = Object.entries(obj).sort((a, b) => b[1] - a[1]);
@@ -338,7 +337,9 @@ const StatisticPage = () => {
   const renderTop3Categories = categoryItems.map((item, index) => {
     if (index % 2 === 0) {
       const top3Left = findTop3Tags(item);
-      const top3Right = categoryItems[index + 1] ? findTop3Tags(categoryItems[index + 1]) : null;
+      const top3Right = categoryItems[index + 1]
+        ? findTop3Tags(categoryItems[index + 1])
+        : null;
 
       return (
         <div style={itemSubContainerStyle} key={index}>
@@ -352,13 +353,17 @@ const StatisticPage = () => {
                     backgroundColor: tagColorData[tag.key].color,
                   }}
                   key={i}
-                >{tagColorData[tag.key].name}</div>
+                >
+                  {tagColorData[tag.key].name}
+                </div>
               ))}
             </div>
           </div>
           {top3Right && (
             <div style={itemRightStyle}>
-              <div style={categoryNameStyle}>{categoryItems[index + 1].category}</div>
+              <div style={categoryNameStyle}>
+                {categoryItems[index + 1].category}
+              </div>
               <div style={tagContainerStyle}>
                 {top3Right.map((tag, i) => (
                   <div
@@ -367,7 +372,9 @@ const StatisticPage = () => {
                       backgroundColor: tagColorData[tag.key].color,
                     }}
                     key={i}
-                  >{tagColorData[tag.key].name}</div>
+                  >
+                    {tagColorData[tag.key].name}
+                  </div>
                 ))}
               </div>
             </div>
@@ -377,6 +384,14 @@ const StatisticPage = () => {
     }
     return null; // 홀수 index는 처리하지 않음
   });
+
+  // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
+  const isVoteSimpleCreateModalOpened = useModalStore(
+    (state) => state.isVoteSimpleCreateModalOpened
+  );
+  const isVoteProductCreateModalOpened = useModalStore(
+    (state) => state.isVoteProductCreateModalOpened
+  );
 
   return (
     <>
@@ -411,12 +426,11 @@ const StatisticPage = () => {
             </div>
 
             <div style={barStyle}></div>
-
-          
           </div>
         </div>
-
       </div>
+      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
     </>
   );
 };

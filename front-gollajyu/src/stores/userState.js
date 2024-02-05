@@ -5,7 +5,7 @@ const store = persist(
   (set) => ({
     isLoggedIn: false,
     setLoggedIn: (data) => set(() => ({ isLoggedIn: true, user: data })),
-    setLoggedOut: () => set(() => ({ isLoggedIn: false, user: {} })),
+    setLogout: () => set(() => ({ isLoggedIn: false, user: {} })),
   }),
   {
     name: "userStorage",

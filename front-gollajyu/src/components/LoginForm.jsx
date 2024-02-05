@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuthStore from "../stores/userState";
 import useModalStore from "../stores/modalState";
+import axios from "axios";
 
 const LoginModal = () => {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
@@ -21,16 +22,22 @@ const LoginModal = () => {
   const [isSignupHovered, setIsSignupHovered] = useState(false);
 
   // handleSubmit의 인자가 되는 Submit 함수
-  const submitForm = (data) => {
+  const submitForm = async (data) => {
     console.log(data);
-    //서버로 로그인 요청
+    // TODO: 서버로 로그인 요청
     // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음(추가 필요)
     setLoggedIn(data);
+
+    // const response = await axios.post(
+    //   "https://i10e107.p.ssafy.io/api/members/login",
+    //   data
+    // );
+    // console.log(response.data);
     reset();
     setLoginModalClose();
   };
 
-  // 소셜로그인 핸들링 함수
+  // TODO: 소셜로그인 핸들링 함수
   const handleKakaoLogin = () => {
     console.log("카카오로그인 시도");
   };
@@ -42,9 +49,8 @@ const LoginModal = () => {
     console.log("구글로그인 시도");
   };
 
-  // 회원가입으로 가는 함수
+  // TODO: 회원가입으로 가는 함수
   const handleSignup = () => {
-    // 로그인 모달이 닫히고 회원가입 모달이 열리는 동작 필요함
     console.log("회원가입으로 갑니다");
     setLoginModalClose();
     setSignupModalOpen();
@@ -82,7 +88,7 @@ const LoginModal = () => {
               {...register("email", {
                 required: true,
                 pattern: {
-                  value: /^[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
+                  value: /^[A-Za-z_\-\.0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
                   message: "올바른 형식의 이메일을 입력하세요",
                 },
               })}
@@ -99,9 +105,9 @@ const LoginModal = () => {
             <input
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
-              id="pw"
+              id="password"
               placeholder="비밀번호를 입력하세요"
-              {...register("pw", {
+              {...register("password", {
                 required: true,
                 minLength: {
                   value: 8,
@@ -117,9 +123,9 @@ const LoginModal = () => {
                 },
               })}
             />
-            {errors.pw ? (
+            {errors.password ? (
               <p className="px-3 text-red-500 fontsize-xs break-keep xl:w-[300px] lg:w-[250px] md:w-[210px] sm:w-[170px]">
-                {errors.pw.message}
+                {errors.password.message}
               </p>
             ) : (
               <p className="invisible fontsize-xs">nothing</p>
