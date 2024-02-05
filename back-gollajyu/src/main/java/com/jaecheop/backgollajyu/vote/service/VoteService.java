@@ -145,13 +145,7 @@ public class VoteService {
             } else {
                 selectedItemId = -1L;
             }
-
             List<Likes> likes = likeRepository.findByVote(vote);
-            // 투표를 좋아요 했다면 true
-
-            boolean isLikedVote = likes.stream()
-                    .anyMatch(like -> like.getMember().getId().equals(currentMemberId));
-
 
             VoteResDto voteResDto = VoteResDto.builder()
                     .voteId(vote.getId())
@@ -163,8 +157,7 @@ public class VoteService {
                     .description(vote.getDescription())
                     .createAt(vote.getCreateAt())
                     .selectedItemId(selectedItemId) // 투표 참여한게 있다면 투표아이템 id를 준다.
-                    .isLiked(isLikedVote)
-                    .likesCount((long) likes.size())
+                    .likes(mapLikesToDto(likes)) // 좋아요 리스트 매핑
                     .categoryDto(mapCategoryEntityToDto(vote)) // 카테고리 매핑
                     //TODO 위까지 하나의 Dto로 메서드로 붙이기 메서드 다른 곳에서 활용하기(메인 페이지)
                     .voteItems(voteItemResDtoList)
