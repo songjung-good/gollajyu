@@ -1,7 +1,7 @@
 import React from 'react';
 import VoteCard from './VoteCard';
 
-const VotePageList = () => {
+const VotePageList = ({ sortType, searchTerm }) => {
   // 임시 데이터
   const votes = [
     {
@@ -32,9 +32,24 @@ const VotePageList = () => {
     // ...
   ];
 
+  // 검색어에 따라 투표를 필터링
+  const filteredVotes = votes.filter(vote =>
+    vote.options.some(option => option.title.includes(searchTerm))
+  );
+
+  // 정렬 로직
+  let sortedVotes = filteredVotes;
+  if (sortType === 'latest') {
+    // 최신순으로 정렬
+    sortedVotes = filteredVotes.sort((a, b) => b.createdAt - a.createdAt);
+  } else if (sortType === 'popular') {
+    // 인기순으로 정렬
+    sortedVotes = filteredVotes.sort((a, b) => b.likes - a.likes);
+  }
+
   return (
     <div>
-      {votes.map((vote) => (
+      {sortedVotes.map((vote) => (
         <VoteCard
           key={vote.id}
           options={vote.options} />

@@ -33,7 +33,7 @@ function VoteCardItem(props) {
             {Array(5).fill(null).map((_, index) => (
               <button 
                 key={index} 
-                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white bg-blue-500' : 'text-black'} border-t-2 border-white text-xl`}
+                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white bg-blue-500' : 'text-black'} border-t-2 border-white text-max-xl`}
                 onClick={() => {
                   if(clicked === null) {
                     setClicked(index);
