@@ -37,13 +37,9 @@ const SignupModal = () => {
     } else {
       const date = new Date(birthday);
       data.gender = selectedGender;
-      data.year = String(date.getFullYear());
-      data.month =
-        date.getMonth() >= 9
-          ? String(date.getMonth() + 1)
-          : "0" + (date.getMonth() + 1);
-      data.day =
-        date.getDate() >= 10 ? String(date.getDate()) : "0" + date.getDate();
+      data.year = date.getFullYear();
+      data.month = date.getMonth();
+      data.day = date.getDate();
       console.log(data);
       // TODO 서버로 회원가입 요청 후, 회원가입 완료 시 로그인 요청
       // 로그인하고 소비성향테스트로 이동
@@ -77,7 +73,7 @@ const SignupModal = () => {
     >
       <div
         id="inner"
-        className="mx-auto container bg-white xl:w-[500px] xl:h-[680px] lg:w-[430px] lg:h-[600px] md:w-[370px] md:h-[520px] sm:w-[300px] sm:h-[440px] flex flex-col items-center rounded-3xl shadow-md"
+        className="container mx-auto bg-white xl:w-[500px] xl:h-[740px] lg:w-[430px] lg:h-[645px] md:w-[370px] md:h-[555px] sm:w-[300px] sm:h-[465px] min-w-[300px] flex flex-col items-center rounded-3xl shadow-md"
       >
         <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">
           회원가입해쥬
@@ -114,9 +110,9 @@ const SignupModal = () => {
             <input
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
-              id="pw"
+              id="password"
               placeholder="비밀번호"
-              {...register("pw", {
+              {...register("password", {
                 required: "필수 입력사항입니다",
                 minLength: {
                   value: 8,
@@ -138,26 +134,52 @@ const SignupModal = () => {
               <p className="invisible text-sm">nothing</p>
             )}
           </div>
-          <div className="h-24">
+          <div className="h-20">
             <input
-              id="pwConfirm"
+              id="verifyPassword"
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               placeholder="비밀번호 확인"
-              {...register("pwConfirm", {
+              {...register("verifyPassword", {
                 required: "필수 입력사항입니다",
                 validate: {
                   check: (val) => {
-                    if (getValues("pw") !== val) {
+                    if (getValues("password") !== val) {
                       return "비밀번호가 일치하지 않습니다.";
                     }
                   },
                 },
               })}
             />
-            {errors.pwConfirm ? (
+            {errors.verifyPassword ? (
               <p className="px-3 text-red-500 text-sm">
-                {errors.pwConfirm.message}
+                {errors.verifyPassword.message}
+              </p>
+            ) : (
+              <p className="invisible text-sm">nothing</p>
+            )}
+          </div>
+          <div className="h-24">
+            <input
+              id="nickname"
+              type="nickname"
+              className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
+              placeholder="닉네임"
+              {...register("nickname", {
+                required: "필수 입력사항입니다",
+                minLength: {
+                  value: 2,
+                  message: "닉네임은 2자 이상 이어야 합니다",
+                },
+                maxLength: {
+                  value: 6,
+                  message: "닉네임은 6자 미만 이어야 합니다",
+                },
+              })}
+            />
+            {errors.nickname ? (
+              <p className="px-3 text-red-500 text-sm">
+                {errors.nickname.message}
               </p>
             ) : (
               <p className="invisible text-sm">nothing</p>
