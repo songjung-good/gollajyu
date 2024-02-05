@@ -141,7 +141,7 @@ const NavigationBar = () => {
   ] = useHoverState();
 
   // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
-  const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
+  const setLogout = useAuthStore((state) => state.setLogout);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
