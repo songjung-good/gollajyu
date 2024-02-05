@@ -33,16 +33,7 @@ export default class ChatComponent extends Component {
           nickname: data.nickname,
           message: data.message,
         });
-        // const document = window.document;
-        // setTimeout(() => {
-        //   // const userImg = document.getElementById(
-        //   //   "userImg-" + (this.state.messageList.length - 1)
-        //   // );
-        //   // const video = document.getElementById("video-" + data.streamId);
-        //   // const avatar = userImg.getContext("2d");
-        //   // avatar.drawImage(video, 200, 120, 285, 285, 0, 0, 60, 60);
-        //   this.props.messageReceived();
-        // }, 50);
+
         this.setState({ messageList: messageList });
         console.log(messageList);
         this.scrollToBottom();
@@ -98,15 +89,12 @@ export default class ChatComponent extends Component {
         <div id="chatComponent" style={styleChat}>
           <div id="chatToolbar">
             <span>채팅창</span>
-            {/* <IconButton id="closeButton" onClick={this.close}>
-              <HighlightOff color="secondary" />
-            </IconButton> */}
           </div>
           <div className="message-wrap" ref={this.chatScroll}>
             {this.state.messageList.map((data, i) => (
               <div
                 key={i}
-                id="remoteUserss"
+                id="remoteUsers"
                 className={
                   "message" +
                   (data.connectionId !== this.props.user.getConnectionId()
@@ -129,7 +117,7 @@ export default class ChatComponent extends Component {
 
           <div id="messageInput">
             <input
-              placeholder="Send a messge"
+              placeholder="Send a message"
               id="chatInput"
               value={this.state.message}
               onChange={this.handleChange}

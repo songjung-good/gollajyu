@@ -45,7 +45,7 @@ const SignupModal = () => {
       data.day =
         date.getDate() >= 10 ? String(date.getDate()) : "0" + date.getDate();
       console.log(data);
-      // 서버로 회원가입 요청
+      // TODO 서버로 회원가입 요청 후, 회원가입 완료 시 로그인 요청
       // 로그인하고 소비성향테스트로 이동
       reset();
       setSignupModalClose();
