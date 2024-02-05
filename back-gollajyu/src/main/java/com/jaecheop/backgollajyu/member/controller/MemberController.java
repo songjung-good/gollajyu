@@ -14,6 +14,7 @@ import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.CategoryRepository;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,30 +54,34 @@ public class MemberController {
      * @return
      */
     @PostMapping("")
+    @Operation(summary = "Sign up method", description = "No body")
     public ResponseEntity<ResponseMessage> signUp(@RequestBody SignUpReqDto signUpReqDto) {
         ServiceResult result = memberService.signUp(signUpReqDto);
 
+        ResponseMessage responseMessage = new ResponseMessage();
+
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(ResponseMessage.success());
+        return ResponseEntity.ok().body(responseMessage.success());
     }
 
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseMessage> login(@RequestBody(required = false) LoginReqDto loginReqDto, HttpSession session,
+    @Operation(summary = "Login method", description = "returns LoginResDto")
+    public ResponseEntity<ResponseMessage<LoginResDto>> login(@RequestBody(required = false) LoginReqDto loginReqDto, HttpSession session,
                                                  @AuthenticationPrincipal Object info) {
         System.out.println("###############################################");
         System.out.println("info = " + info);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("email:::::::::::authentication.getPrincipal() = " + authentication.getPrincipal());
 
-        ServiceResult result = memberService.login(loginReqDto, session);
+        ServiceResult<LoginResDto> result = memberService.login(loginReqDto, session);
         if (!result.isResult()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(new ResponseMessage<LoginResDto>().fail(result.getMessage()));
         }
-        return ResponseEntity.ok().body(ResponseMessage.success(result.getData()));
+        return ResponseEntity.ok().body(new ResponseMessage<LoginResDto>().success(result.getData()));
     }
 
 
@@ -86,7 +91,8 @@ public class MemberController {
      * @return
      */
     @GetMapping("/addInfo")
-    public ResponseEntity<ResponseMessage> addInfo(HttpServletRequest request) {
+    @Operation(summary = " 추가정보 입력 폼", description = "returns AddInfoResDto : 소셜로그인으로 받아온 정보를 입력해서 넣어주고(AddInfoResDto) 추가 정보를 입력받는 폼을 반환합니다.")
+    public ResponseEntity<ResponseMessage<AddInfoResDto>> addInfo(HttpServletRequest request) {
         // 쿠키에서 string을 쪼개서 providerId를 가져옴
         System.out.println("4444444444444444444444444444444");
         Cookie[] cookieList = request.getCookies();
@@ -99,7 +105,7 @@ public class MemberController {
         // provider ID로 멤버 레포지토리에서 멤버 정보 찾아옴
         Optional<Member> optionalMember = memberRepository.findByProviderId(providerId);
         if (optionalMember.isEmpty()) {
-            return ResponseEntity.ok().body(ResponseMessage.fail("없는 사용자의 쿠키 정보 입니다."));
+            return ResponseEntity.ok().body(new ResponseMessage<AddInfoResDto>().fail("없는 사용자의 쿠키 정보 입니다."));
         }
         Member member = optionalMember.get();
         // 회원가입 폼에 가진 정보를 채워즘 - 채워진 값(이메일, 닉네임)은 수정 불가 했으면 합니다!
@@ -109,18 +115,17 @@ public class MemberController {
                 .build();
 
         // 이 응답을 가지고 POST 컨트롤러를 하나 만들어서 비어있는 정보를 넣어 멤버 정보 업데이트 시킴(axios요청을 두번 보내야 한다는 뜻)
-        return ResponseEntity.ok().body(ResponseMessage.success(addInfoResDto));
+        return ResponseEntity.ok().body(new ResponseMessage<AddInfoResDto>().success(addInfoResDto));
     }
 
     // TODO: 로그아웃
     // getmapping - security context 에서 정보 인증 정보 삭제, 쿠키 삭제
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request){
+    @Operation(summary = "logout", description = "로그아웃에 성공하면 로그아웃 성공이라는 문자열을 반환합니다")
+    public ResponseEntity<ResponseMessage<String>> logout(HttpServletRequest request){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("authentication = " + authentication);
-
-
-        return "로그아웃";
+        return ResponseEntity.ok().body(new ResponseMessage<String>().success("로그아웃 성공"));
     }
 
     /**
@@ -129,15 +134,16 @@ public class MemberController {
      * @return
      */
     @PutMapping("")
+    @Operation(summary = "멤버 정보 업데이트", description = "No body")
     public ResponseEntity<ResponseMessage> updateMember(@RequestBody AddInfoReqDto addInfoReqDto){
         // 소셜 로그인 추가 정보 저장
         ServiceResult result = memberService.updateMember(addInfoReqDto);
 
         if(!result.isResult()){
-            return ResponseEntity.ok().body(ResponseMessage.fail(result.getMessage()));
+            return ResponseEntity.ok().body(new ResponseMessage<>().fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(ResponseMessage.success());
+        return ResponseEntity.ok().body(new ResponseMessage<>().success());
 
 
     }
@@ -146,6 +152,7 @@ public class MemberController {
 
     // 내가 작성한 투표 모아보기
     @GetMapping("/{memberId}/votes")
+    @Operation(summary = "내가 작성한 투표 모아보기", description = "returns VoteResDtoList")
     public ResponseEntity<List<VoteResDto>> getVotesByMemberId(
             @PathVariable Long memberId) {
         List<VoteResDto> voteResDtoList = voteService.getVotesByMemberId(memberId);
@@ -159,6 +166,7 @@ public class MemberController {
 
     // 내가 참여한 투표
     @GetMapping("/{memberId}/votes/participation")
+    @Operation(summary = "내가 참여한 투표 모아보기", description = "returns VoteREsDtoList")
     public ResponseEntity<List<VoteResDto>> getVotesByResultMemberId(
             @PathVariable Long memberId) {
         List<VoteResDto> voteResDtoList = voteService.findVotesByResultMemberId(memberId);
@@ -171,6 +179,7 @@ public class MemberController {
 
     // 내가 좋아요한 투표
     @GetMapping("/{memberId}/votes/likes")
+    @Operation(summary = "내가 좋아요한 투표 보여주기", description = "returns VoteResDtoList")
     public ResponseEntity<List<VoteResDto>> getLikedVotesByMemberId(
             @PathVariable Long memberId) {
         List<VoteResDto> voteResDtoList = voteService.getLikedVotesByMemberId(memberId);
@@ -184,6 +193,7 @@ public class MemberController {
 
     // 내가 댓글쓴 투표
     @GetMapping("/{memberId}/comments")
+    @Operation(summary = "내가 댓글 쓴 투표 모아보기", description = "returns VoteResDtoList")
     public ResponseEntity<List<CommentResDto>> getVotesByCommentMemberId(
             @PathVariable Long memberId) {
         List<CommentResDto> voteResDtoList = voteService.findVotesByCommentMemberId(memberId);
@@ -197,6 +207,7 @@ public class MemberController {
 
     // 카테고리별 통계?
     @GetMapping("/{memberId}/votes/statistics")
+    @Operation(summary = "카테고리별 통계", description = "returns CategoryInfoMap")
     public ResponseEntity<Map<String, List<List<CategoryTagDto>>>> statisticMemberResult(
             @PathVariable Long memberId) {
         Map<String, List<List<CategoryTagDto>>> categoryInfoMap = new HashMap<>();
@@ -215,6 +226,7 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}/recommends")
+    @Operation(summary = "크롤링", description = "returns crawlingResult : 멤버 아이디 기반 추천 사이트 크롤링")
     public ResponseEntity<List<Map<String, String>>> crawling(
             @PathVariable Long memberId) {
 
