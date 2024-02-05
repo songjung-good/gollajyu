@@ -24,12 +24,6 @@ function VoteCardItem(props) {
         onMouseLeave={() => setHover(false)}
         style={{ maxWidth: '100%' }}
       >
-        {/* 투표 이미지 */}
-        <img
-          className='h-full w-full object-cover'
-          alt='Vote Image'
-          href={props.src}
-        />
         {/* 호버 시 */}
         {hover && (
           <div className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl ${clicked !== null ? 'hidden' : 'flex'} flex-col justify-between`}
@@ -39,15 +33,26 @@ function VoteCardItem(props) {
             {Array(5).fill(null).map((_, index) => (
               <button 
                 key={index} 
-                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white' : 'text-black'} border-t-2 border-white text-xl`}
-                onClick={() => setClicked(index)}
-                disabled={clicked !== null && clicked !== index}
+                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white bg-blue-500' : 'text-black'} border-t-2 border-white text-xl`}
+                onClick={() => {
+                  if(clicked === null) {
+                    setClicked(index);
+                    props.onClick(index, selection[categoryIndex][index]);
+                  }
+                }}
+                disabled={clicked !== null}
               >
                 {selection[categoryIndex][index]}
               </button>
             ))}
           </div>
         )}
+        {/* 투표 이미지 */}
+        <img
+          className='h-full w-full object-cover'
+          alt='Vote Image'
+          href={props.src}
+        />
       </Container>
       {/* 버튼을 누르면 생기는 상세페이지 */}
       <div className='h-1/3 w-full flex flex-col justify-center items-center'>
