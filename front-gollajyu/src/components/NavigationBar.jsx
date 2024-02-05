@@ -185,10 +185,18 @@ const NavigationBar = () => {
     background: "#FFFFFF",
   };
 
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
   // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
     // 상속
     ...navigationBarBackgroundStyle,
+    ...flexContainerStyle,
 
     // 위치
     left: "50%", // 화면 가로 중앙으로 이동
@@ -201,9 +209,7 @@ const NavigationBar = () => {
       isMedium ? "600px" : "375px",
 
     // 컨텐츠 정렬
-    display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
   };
 
   // ----------- 로고 컨테이너 스타일 -----------
@@ -227,27 +233,27 @@ const NavigationBar = () => {
 
   // ----------- 링크 컨테이너 스타일 -----------
   const linkContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     width: "50%",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
   };
 
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     paddingTop: "8px",
     height: "100px",
 
     // 글자
     color: "#4A4A4A",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
 
   // ----------- 링크 아이템 active 스타일 -----------
@@ -272,12 +278,13 @@ const NavigationBar = () => {
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     height: "100px",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     justifyContent: "flex-end",
   };
 
@@ -289,13 +296,12 @@ const NavigationBar = () => {
 
   // ----------- 프로필 버튼 스타일 -----------
   const myPageStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     marginRight: "10px",
     height: "100px",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
 
   // ----------- 프로필 이미지 스타일 -----------
@@ -358,6 +364,9 @@ const NavigationBar = () => {
 
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     paddingRight:
       isXLarge ? "15px" :
@@ -376,8 +385,6 @@ const NavigationBar = () => {
     color: "#4A4A4A", // 글자 색: 회색
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     justifyContent: "flex-end",
   };
 

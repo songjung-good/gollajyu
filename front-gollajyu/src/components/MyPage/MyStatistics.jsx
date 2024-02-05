@@ -86,18 +86,24 @@ const MyStatistics = () => {
       isMedium ? "40px" : "35px",
   };
 
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
   // ----------- 제목 컨테이너 스타일 -----------
   const titleContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
     height:
       isXLarge ? "60px" :
       isLarge ? "50px" :
       isMedium ? "45px" : "40px",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
 
   // ----------- 제목 스타일 -----------
@@ -123,24 +129,13 @@ const MyStatistics = () => {
     background: "#FFFFFF",
   };
 
-  // ----------- flex 컨테이너 스타일 -----------
-  const flexContainerStyle = {
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
-  };
-
-  // ----------- 제목 컨테이너 스타일 -----------
+  // ----------- 서브 제목 컨테이너 스타일 -----------
   const subTitleContainerStyle = {
     // 상속
     ...flexContainerStyle,
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "10px",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
   
   // ----------- 서브 제목 스타일 -----------
@@ -330,20 +325,23 @@ const MyStatistics = () => {
     cursor: "pointer",
   }
 
-
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     width: "100%",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     flexDirection: isXLarge || isLarge ? "row" : "column",
   }
 
   // ----------- 정보 아이템 스타일 -----------
   const infoItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
     padding:
@@ -358,9 +356,7 @@ const MyStatistics = () => {
     backgroundColor: "#F0F0F0",
 
     // 컨텐츠 정렬
-    display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
   };
 
   // ----------- 왼쪽 아이템 스타일 -----------
@@ -535,6 +531,7 @@ const MyStatistics = () => {
                 <div
                   onClick={toggleDropdown}
                   style={dropdownButtonStyle}
+                  className="fontsize-sm"
                 >
                   {selectedCategory !== null
                     ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name

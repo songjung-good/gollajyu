@@ -59,18 +59,24 @@ const MyProfile = () => {
       isMedium ? "40px" : "35px",
   };
 
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
   // ----------- 제목 컨테이너 스타일 -----------
   const titleContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
     height:
       isXLarge ? "60px" :
       isLarge ? "50px" :
       isMedium ? "45px" : "40px",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
 
   // ----------- 제목 스타일 -----------
@@ -118,13 +124,6 @@ const MyProfile = () => {
     background: "#FFFFFF",
   };
 
-  // ----------- 컨텐츠 헤더 컨테이너 스타일 -----------
-  const contentHeaderContainerStyle = {
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
-  };
-
   // ----------- 프로필 이미지 스타일 -----------
   const profileImageStyle = {
     // 디자인
@@ -160,14 +159,18 @@ const MyProfile = () => {
 
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     flexDirection: isXLarge || isLarge ? "row" : "column",
   };
 
   // ----------- 정보 아이템 스타일 -----------
   const infoItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
     padding:
@@ -182,9 +185,7 @@ const MyProfile = () => {
     backgroundColor: "#F0F0F0",
 
     // 컨텐츠 정렬
-    display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
   };
 
   // ----------- 왼쪽 아이템 스타일 -----------
@@ -218,19 +219,21 @@ const MyProfile = () => {
     color: "#4A4A4A",
   };
 
-  // ----------- 컨텐츠 컨테이너 스타일 -----------
+  // ----------- 쇠비성향 컨텐츠 컨테이너 스타일 -----------
   const testContainerStyle = {
     // 상속
     ...contentContainerStyle,
+    ...flexContainerStyle,
 
     // 컨텐츠 정렬
-    display: "flex",
     flexDirection: "column",
-    alignItems: "center",
   };
 
   // ----------- 소비성향 자세히 알아보기 버튼 스타일 -----------
   const testButtonStyle = {
+    // 상속
+    ...flexContainerStyle,
+    
     // 디자인
     marginTop: "10px",
     width:
@@ -246,8 +249,6 @@ const MyProfile = () => {
     transition: "background 0.5s ease",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     justifyContent: "center",
   }
 
@@ -270,7 +271,7 @@ const MyProfile = () => {
           </button>
         </div>
         <div style={contentContainerStyle}>
-          <div style={contentHeaderContainerStyle}>
+          <div style={flexContainerStyle}>
             <img
               src={DefaultProfileImage}
               alt="프로필 이미지"
