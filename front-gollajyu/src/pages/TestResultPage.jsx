@@ -4,25 +4,26 @@ import sobiTIData from "../stores/testResultData.js";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import useModalStore from "../stores/modalState";
+import axios from "axios";
 
 const getMBTI = (response) => {
   const MBTI = {
-    ISTP: 0,
-    ISFP: 1,
-    ESTP: 2,
-    ESFP: 3,
-    ISTJ: 4,
-    ISFJ: 5,
-    ESFJ: 6,
-    ESTJ: 7,
-    INTJ: 8,
-    INTP: 9,
-    ENTJ: 10,
-    ENTP: 11,
-    INFJ: 12,
-    INFP: 13,
-    ENFJ: 14,
-    ENFP: 15,
+    ISTP: 1,
+    ISFP: 2,
+    ESTP: 3,
+    ESFP: 4,
+    ISTJ: 5,
+    ISFJ: 6,
+    ESFJ: 7,
+    ESTJ: 8,
+    INTJ: 9,
+    INTP: 10,
+    ENTJ: 11,
+    ENTP: 12,
+    INFJ: 13,
+    INFP: 14,
+    ENFJ: 15,
+    ENFP: 16,
   };
 
   const EI = response[1] + response[2] + response[5] < 2 ? "E" : "I",
@@ -66,21 +67,45 @@ const TestResultPage = () => {
 
   const [isMyResult, setIsMyResult] = useState(true);
   const isFirstTime = location.state?.isFirstTime || false;
+  const memberInfo = location.state?.memberInfo || undefined;
   const response = location.state?.response || [];
-  const [result, setResult] = useState(0);
+  const [result, setResult] = useState(1);
   const [matchingData, setMatchingData] = useState({});
 
-  useEffect(() => {
-    if (isFirstTime) {
-      setResult(getMBTI(response));
-      // TODO 결과를 서버로 보내는 과정이 필요함
-    }
-  }, [isFirstTime, response]);
+  // useEffect(() => {
+  //   if (isFirstTime) {
+  //     setResult(getMBTI(response));
+  //   }
+  // }, [isFirstTime, response]);
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
-    setMatchingData(sobiTIData.find((data) => data.id === result));
-  }, [result]);
+    // TestPage에서 넘어왔으면, getMBTI 함수를 통해서 결과를 구함 -> 회원정보에 테스트 결과를 담아서 서버로 보냄 (회원가입)
+    if (isFirstTime) {
+      setResult(getMBTI(response));
+      setMatchingData(sobiTIData.find((data) => data.id === result));
+      const typeId = getMBTI(response);
+      memberInfo.typeId = result;
+      console.log(memberInfo);
+      axios
+        .post("http://localhost:8080/api/members", memberInfo)
+        .then((response) => {
+          console.log(response);
+          if (response.data.header.message == "이미 존재하는 이메일입니다") {
+            navigate("/");
+            window.alert(
+              "이미 존재하는 이메일이라 회원가입이 되지 않았습니다!!! 회원가입부터 다시 하세요."
+            );
+          } else {
+            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
+            // TODO 로그인 요청
+          }
+        })
+        .catch((err) => console.log(err));
+    } else {
+      window.scrollTo({ top: 0 });
+      setMatchingData(sobiTIData.find((data) => data.id === result));
+    }
+  }, [isFirstTime, result]);
 
   // console.log("isMyResult", isMyResult);
   return (
@@ -98,10 +123,10 @@ const TestResultPage = () => {
                   <button
                     key={index}
                     className={`m-1 px-3 py-2 border border-amber-200 rounded-lg ${
-                      result === index ? `bg-amber-300` : ""
+                      result === index + 1 ? `bg-amber-300` : ""
                     }`}
                     onClick={() => {
-                      setResult(index);
+                      setResult(index + 1);
                     }}
                   >
                     {item}

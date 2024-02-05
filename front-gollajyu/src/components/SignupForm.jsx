@@ -41,11 +41,11 @@ const SignupModal = () => {
       data.month = date.getMonth();
       data.day = date.getDate();
       console.log(data);
-      // TODO 서버로 회원가입 요청 후, 회원가입 완료 시 로그인 요청
       // 로그인하고 소비성향테스트로 이동
       reset();
+      window.alert("소비성향테스트까지 완료해야 회원가입이 됩니다^_^");
       setSignupModalClose();
-      navigate("/TestPage");
+      navigate("/TestPage", { state: { memberInfo: data } });
     }
   };
 

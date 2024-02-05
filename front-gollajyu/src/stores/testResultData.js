@@ -1,6 +1,6 @@
 const sobiTIData = [
   {
-    id: 0,
+    id: 1,
     subTitle: "이왕이면 다홍치마",
     title: "프렌치 마카롱",
     postfix: "은",
@@ -20,7 +20,7 @@ const sobiTIData = [
     bad_chemi: 8,
   },
   {
-    id: 1,
+    id: 2,
     subTitle: "부드럽고 고급진",
     title: "티라미수",
     postfix: "는",
@@ -37,7 +37,7 @@ const sobiTIData = [
     bad_chemi: 9,
   },
   {
-    id: 2,
+    id: 3,
     subTitle: "오늘은 운이 좋군",
     title: "포춘쿠키",
     postfix: "는",
@@ -56,7 +56,7 @@ const sobiTIData = [
     bad_chemi: 15,
   },
   {
-    id: 3,
+    id: 4,
     subTitle: "냄새로 유혹하는",
     title: "지하철 만쥬",
     postfix: "는",
@@ -74,7 +74,7 @@ const sobiTIData = [
     bad_chemi: 4,
   },
   {
-    id: 4,
+    id: 5,
     subTitle: "간식도 철저하게",
     title: "곤약젤리",
     postfix: "는",
@@ -91,7 +91,7 @@ const sobiTIData = [
     bad_chemi: 2,
   },
   {
-    id: 5,
+    id: 6,
     subTitle: "고소하고 배부른",
     title: "오곡라떼",
     postfix: "는",
@@ -109,7 +109,7 @@ const sobiTIData = [
     bad_chemi: 11,
   },
   {
-    id: 6,
+    id: 7,
     subTitle: "톡! 쏘는 시원함",
     title: "콜라",
     postfix: "는",
@@ -127,7 +127,7 @@ const sobiTIData = [
     bad_chemi: 7,
   },
   {
-    id: 7,
+    id: 8,
     subTitle: "쫄깃하게 말린",
     title: "고구마 말랭이",
     postfix: "는",
@@ -144,7 +144,7 @@ const sobiTIData = [
     bad_chemi: 3,
   },
   {
-    id: 8,
+    id: 9,
     subTitle: "겨울이면 생각나는",
     title: "붕어빵",
     postfix: "은",
@@ -164,7 +164,7 @@ const sobiTIData = [
     bad_chemi: 6,
   },
   {
-    id: 9,
+    id: 10,
     subTitle: "소스와 함께면 기쁨이 배가 되는",
     title: "나초",
     postfix: "는",
@@ -182,7 +182,7 @@ const sobiTIData = [
     bad_chemi: 13,
   },
   {
-    id: 10,
+    id: 11,
     subTitle: "과자야 건강식품이야?",
     title: "에너지바",
     postfix: "는",
@@ -200,7 +200,7 @@ const sobiTIData = [
     bad_chemi: 0,
   },
   {
-    id: 11,
+    id: 12,
     subTitle: "내 안의 다른 나",
     title: "슈크림",
     postfix: "은",
@@ -219,7 +219,7 @@ const sobiTIData = [
     bad_chemi: 14,
   },
   {
-    id: 12,
+    id: 13,
     subTitle: "담백하고 부드러운",
     title: "우유식빵",
     postfix: "은",
@@ -238,7 +238,7 @@ const sobiTIData = [
     bad_chemi: 10,
   },
   {
-    id: 13,
+    id: 14,
     subTitle: "호불호 갈리는",
     title: "민트초코",
     postfix: "는",
@@ -258,7 +258,7 @@ const sobiTIData = [
     bad_chemi: 1,
   },
   {
-    id: 14,
+    id: 15,
     subTitle: "말하지 않아도 알아요",
     title: "초코파이",
     postfix: "는",
@@ -276,7 +276,7 @@ const sobiTIData = [
     bad_chemi: 12,
   },
   {
-    id: 15,
+    id: 16,
     subTitle: "너무달아도맛있으면0칼로리",
     title: "초코잼",
     postfix: "은",
