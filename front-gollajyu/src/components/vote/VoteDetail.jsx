@@ -48,6 +48,8 @@ const voteDetail = {
   hasVoted: true  // 사용자가 투표에 참여했는지 여부
 };
 
+
+
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
   const [clicked, setClicked] = useState([false, false, false, false]);

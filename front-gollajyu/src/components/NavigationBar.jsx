@@ -52,13 +52,13 @@ const NavigationBar = () => {
     query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023px)"
+    query : "(min-width:768px) and (max-width:1023.98px)"
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767px)"
+    query : "(min-width:480px) and (max-width:767.98px)"
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479px)"
+    query : "(max-width:479.98px)"
   });
   
   // ----------- 메인 메뉴 hover -----------
@@ -141,7 +141,7 @@ const NavigationBar = () => {
   ] = useHoverState();
 
   // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
-  const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
+  const setLogout = useAuthStore((state) => state.setLogout);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -185,10 +185,18 @@ const NavigationBar = () => {
     background: "#FFFFFF",
   };
 
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
   // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
     // 상속
     ...navigationBarBackgroundStyle,
+    ...flexContainerStyle,
 
     // 위치
     left: "50%", // 화면 가로 중앙으로 이동
@@ -197,13 +205,11 @@ const NavigationBar = () => {
     // 디자인
     width:
       isXLarge ? "95%" :
-      isLarge ? "740px" :
-      isMedium ? "560px" : "375px",
+      isLarge ? "850px" :
+      isMedium ? "600px" : "375px",
 
     // 컨텐츠 정렬
-    display: "flex", // 항목 수평 정렬
-    justifyContent: "space-between", // 항목 균일 간격으로 정렬
-    alignItems: "center", // 항목 수직 정렬
+    justifyContent: "space-between",
   };
 
   // ----------- 로고 컨테이너 스타일 -----------
@@ -227,33 +233,33 @@ const NavigationBar = () => {
 
   // ----------- 링크 컨테이너 스타일 -----------
   const linkContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
-    width: "50%", // 가로 넓이
+    width: "50%",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center", // 리스트 수직 정렬
-    justifyContent: "space-between", // 항목 균일 간격으로 정렬
+    justifyContent: "space-between",
   };
 
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     paddingTop: "8px",
-    height: "100px", // 항목 높이
+    height: "100px",
 
     // 글자
     color: "#4A4A4A",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center", // 링크 수직 정렬
   };
 
   // ----------- 링크 아이템 active 스타일 -----------
   const linkItemActiveStyle = {
     // 상속
-    ...linkItemStyle, // 링크 아이템 스타일 상속
+    ...linkItemStyle,
 
     // 글자
     fontWeight: "bold", // 활성화 시 글자 두껍게
@@ -263,7 +269,7 @@ const NavigationBar = () => {
   // ----------- 아이템 hover 스타일 -----------
   const itemHoverStyle = {
     // 디자인
-    width: "100%", // 가로 길이
+    width: "100%",
     height:
       isXLarge ? "4.5px" :
       isLarge ? "4px" : "3.5px",
@@ -272,14 +278,14 @@ const NavigationBar = () => {
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
-    width: "280px", // 버튼 리스트 넓이
-    height: "100px", // 높이
+    height: "100px",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center", // 링크 수직 정렬
-    justifyContent: "flex-end", // 내부 버튼 오른쪽 정렬
+    justifyContent: "flex-end",
   };
 
   // ----------- 프로필 컨테이너 스타일 -----------
@@ -290,45 +296,55 @@ const NavigationBar = () => {
 
   // ----------- 프로필 버튼 스타일 -----------
   const myPageStyle = {
-    // 디자인
-    margin: "0 10px", // 버튼 좌우 margin
-    height: "100px", // 버튼 높이
+    // 상속
+    ...flexContainerStyle,
 
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center", // 버튼 수직 정렬
+    // 디자인
+    marginRight: "10px",
+    height: "100px",
   };
 
   // ----------- 프로필 이미지 스타일 -----------
   const profileImageStyle = {
     // 디자인
-    marginRight: isLarge ? "10px" : "0", // (반응형) 오른쪽 여백
     width: "35px", // 이미지 가로 길이
     height: "35px", // 이미지 세로 길이
     borderRadius: "50%", // 둥근 테두리: 50% (원)
   };
 
+  // ----------- 프로필 정보 컨테이너 스타일 -----------
+  const infoContainerStyle = {
+    // 디자인
+    paddingTop: isXLarge ? "9px" : "7px",
+
+    // (반응형) 작은 화면에서 닉네임 렌더링 하지 않음
+    display: isXLarge || isLarge ? undefined : "none",
+  }
+
   // ----------- 프로필 닉네임 스타일 -----------
   const nickNameStyle = {
     // 디자인
-    marginTop: "5px",
-
-    // 글자
-    fontSize: "20px", // 닉네임 글자 크기
-
-    display: !isLarge ? "none" : undefined, // (반응형) 작은 화면에서 닉네임 렌더링 하지 않음
+    width: isXLarge ? "100px" : "85px",
   };
+
+  // ----------- 포인트 스타일 -----------
+  const pointStyle = {
+    // 글자
+    color: "#FFA500", // 글자 색: 주황
+  }
 
   // ----------- 공통 메뉴 스타일 -----------
   const commonMenuStyle = {
     // 위치
     position: "absolute", // 메뉴 위치 기준
-    top: "90px", // 상단 여백
+    top: "100px", // 상단 여백
     right: "0px", // 오른쪽 여백
+    paddingTop:
+      isXLarge ? "4px" :
+      isLarge ? "3px" :
+      isMedium ? "2px" : "1px",
 
     // 디자인
-    padding: "10px", // 메뉴 내부 여백
-    width: "180px", // 가로 길이
     background: "#FFFFFF", // 메뉴 배경 색: 흰색
     boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
 
@@ -348,17 +364,28 @@ const NavigationBar = () => {
 
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
-    padding: "0 15px", // 항목 좌우 padding
-    height: "60px", // 항목 높이
+    paddingRight:
+      isXLarge ? "15px" :
+      isLarge ? "13px" :
+      isMedium ? "11px" : "9px",
+    width:
+      isXLarge ? "150px" :
+      isLarge ? "130px" :
+      isMedium ? "110px" : "90px",
+    height:
+      isXLarge ? "50px" :
+      isLarge ? "46px" :
+      isMedium ? "42px" : "38px",
 
     // 글자
-    fontSize: "18px", // 글자 크기
     color: "#4A4A4A", // 글자 색: 회색
 
     // 컨텐츠 정렬
-    display: "flex", // 링크 수평 정렬
-    alignItems: "center", // 링크 수직 정렬
+    justifyContent: "flex-end",
   };
 
   // ----------- 메뉴 아이템 active 스타일 -----------
@@ -374,13 +401,14 @@ const NavigationBar = () => {
   // ----------- 버튼 공통 스타일 -----------
   const buttonStyle = {
     // 디자인
-    margin: "0 10px", // 버튼 좌우 margin
+    marginRight: "10px", // 버튼 오른쪽 margin
     width: "70px", // 버튼 넓이
     height: "35px", // 버튼 높이
     borderRadius: "5px", // 둥근 테두리
     transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
 
     // 글자
+    fontSize: "14px", // 버튼 안 글자 크기 고정
     color: "#4A4A4A", // 글자 색: 회색
   };
 
@@ -441,9 +469,9 @@ const NavigationBar = () => {
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerStyle = {
     // 디자인
-    marginTop: "5px", // 상단 margin
-    width: "50px", // 버튼 가로 길이
-    height: "95px", // 버튼 세로 길이
+    paddingTop: "5px",
+    width: "30px", // 버튼 가로 길이
+    height: "100px", // 버튼 세로 길이
 
     // 글자
     fontSize: "28px", // 햄버거 버튼 사이즈
@@ -561,7 +589,7 @@ const NavigationBar = () => {
         </div>
 
         {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
-        {(isXLarge || isLarge) && ( // (반응형) min-width:1024px 이상일 경우
+        {(isXLarge || isLarge) && ( // (반응형) isLarge 크기 이상일 경우
           <>
             <div style={linkContainerStyle}>
               {linkItems.map((item, index) => (
@@ -577,7 +605,7 @@ const NavigationBar = () => {
                   }}
                 >
                   <div>
-                    <div>{item.label}</div>
+                    <div className="fontsize-sm">{item.label}</div>
                     <div
                       style={{
                         ...itemHoverStyle,
@@ -605,7 +633,10 @@ const NavigationBar = () => {
                   onClick={profileClick}
                 >
                   <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
-                  <p style={nickNameStyle}>[닉네임]</p>
+                  <div style={infoContainerStyle}>
+                    <p style={nickNameStyle} className="fontsize-xs">[닉네임] 님</p>
+                    <p style={pointStyle} className="fontsize-xs">[512] P</p>
+                  </div>
                 </button>
                 <div style={profileMenuStyle}>
                   {profileItems.map((item, index) => (
@@ -622,7 +653,7 @@ const NavigationBar = () => {
                       }}
                     >
                       <div>
-                        <div>{item.label}</div>
+                        <div className="fontsize-xs">{item.label}</div>
                         <div
                           style={{
                             ...itemHoverStyle,
@@ -668,11 +699,11 @@ const NavigationBar = () => {
           )}
 
           {/* ------------- 내비게이션 메뉴 -------------  */}
-          {!(isXLarge || isLarge) && ( // (반응형) min-width:1024px 미만일 경우 링크를 햄버거 버튼으로 대체
+          {!(isXLarge || isLarge) && ( // (반응형) isLarge 크기 아래에서 링크를 햄버거 버튼으로 대체
             <>
               <div
                 style={hamburgerContainerStyle}
-                // onMouseLeave={hamburgerMouseLeave}
+                onMouseLeave={hamburgerMouseLeave}
               >
                 <button
                   style={hamburgerStyle}
@@ -696,7 +727,7 @@ const NavigationBar = () => {
                       }}
                     >
                       <div>
-                        <div>{item.label}</div>
+                        <div className="fontsize-xs">{item.label}</div>
                         <div
                           style={{
                             ...itemHoverStyle,

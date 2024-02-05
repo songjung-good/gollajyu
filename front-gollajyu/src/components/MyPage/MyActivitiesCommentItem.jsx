@@ -19,13 +19,13 @@ const MyActivitiesCommentItem = () => {
     query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023px)"
+    query : "(min-width:768px) and (max-width:1023.98px)"
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767px)"
+    query : "(min-width:480px) and (max-width:767.98px)"
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479px)"
+    query : "(max-width:479.98px)"
   });
 
   // ----------- 내 활동 아이템 hover -----------
@@ -60,12 +60,12 @@ const MyActivitiesCommentItem = () => {
     boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.3)", // 그림자 효과
   };
 
-  // ----------- 제목 컨테이너 스타일 -----------
-  const titleContainerStyle = {
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
     alignItems: "center",
-  }
+  };
 
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
@@ -122,6 +122,9 @@ const MyActivitiesCommentItem = () => {
 
   // ----------- 투표 아이템 스타일 -----------
   const voteItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     margin:
       isXLarge ? "10px" :
@@ -136,9 +139,7 @@ const MyActivitiesCommentItem = () => {
     border: "5px solid", 
 
     // 컨텐츠 정렬
-    display: "flex",
     flexDirection: "column",
-    alignItems: "center",
   }
 
 

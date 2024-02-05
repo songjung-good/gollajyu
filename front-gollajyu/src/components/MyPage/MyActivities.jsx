@@ -40,13 +40,13 @@ const MyActivities = () => {
     query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023px)"
+    query : "(min-width:768px) and (max-width:1023.98px)"
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767px)"
+    query : "(min-width:480px) and (max-width:767.98px)"
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479px)"
+    query : "(max-width:479.98px)"
   });
 
   // ----------- 링크 메뉴 hover -----------
@@ -95,7 +95,7 @@ const MyActivities = () => {
       mouseLeave: CreatedMouseLeave 
     },
     { 
-      to: "/Mypage/MyActivities/MyActivitiesParticipated", 
+      to: "/Mypage/MyActivities/0", 
       label: "참여한 투표",
       smallLabel: "참여투표",
       hovered: ParticipatedPageHovered, 
@@ -103,7 +103,7 @@ const MyActivities = () => {
       mouseLeave: ParticipatedPageMouseLeave 
     },
     { 
-      to: "/Mypage/MyActivities/MyActivitiesLikded", 
+      to: "/Mypage/MyActivities/1", 
       label: "좋아요 한 투표",
       smallLabel: "좋아요",
       hovered: LikdedPageHovered, 
@@ -111,7 +111,7 @@ const MyActivities = () => {
       mouseLeave: LikdedPageMouseLeave 
     },
     { 
-      to: "/Mypage/MyActivities/MyActivitiesCommented", 
+      to: "/Mypage/MyActivities/2", 
       label: "댓글 보관함", 
       smallLabel: "댓글",
       hovered: CommentedPageHovered, 
@@ -132,18 +132,24 @@ const MyActivities = () => {
       isMedium ? "40px" : "35px",
   };
 
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
   // ----------- 제목 컨테이너 스타일 -----------
   const titleContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
     height:
       isXLarge ? "60px" :
       isLarge ? "50px" :
       isMedium ? "45px" : "40px",
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
 
   // ----------- 제목 스타일 -----------
@@ -167,13 +173,6 @@ const MyActivities = () => {
       isLarge ? "40px" :
       isMedium ? "30px" : "20px",
     background: "#FFFFFF",
-  };
-
-  // ----------- 컨텐츠 헤더 컨테이너 스타일 -----------
-  const contentHeaderContainerStyle = {
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
   };
 
   // ----------- 포인트 이미지 스타일 -----------
@@ -213,7 +212,7 @@ const MyActivities = () => {
     marginLeft: "10px",
 
     // 글자
-    color: "#FFD257",
+    color: "#FFA500",
   };
 
   // ----------- 구분선 스타일 -----------
@@ -230,17 +229,21 @@ const MyActivities = () => {
 
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     width: "100%",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     flexDirection: isXLarge || isLarge ? "row" : "column",
   }
 
   // ----------- 정보 아이템 스타일 -----------
   const infoItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
     padding:
@@ -255,9 +258,7 @@ const MyActivities = () => {
     backgroundColor: "#F0F0F0",
 
     // 컨텐츠 정렬
-    display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
   };
 
   // ----------- 왼쪽 아이템 스타일 -----------
@@ -300,6 +301,9 @@ const MyActivities = () => {
 
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
     // 디자인
     marginRight:
       isXLarge ? "10px" :
@@ -321,8 +325,6 @@ const MyActivities = () => {
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
     justifyContent: "center",
   };
 
@@ -379,18 +381,20 @@ const MyActivities = () => {
   const renderInfoItems = infoItems.map((item, index) => {
     if (index % 2 === 0) {
       return (
-        <div style={infoContainerStyle} key={index}>
-          <div style={itemLeftStyle}>
-            <div className="fontsize-md">{item.title}</div>
-            <div style={infoDataStyle} className="fontsize-sm">{item.count}</div>
-          </div>
-          {infoItems[index + 1] && (
-            <div style={itemRightStyle}>
-              <div className="fontsize-md">{infoItems[index + 1].title}</div>
-              <div style={infoDataStyle} className="fontsize-sm">{infoItems[index + 1].count}</div>
+        <>
+          <div style={infoContainerStyle} key={index}>
+            <div style={itemLeftStyle}>
+              <div className="fontsize-md">{item.title}</div>
+              <div style={infoDataStyle} className="fontsize-sm">{item.count}</div>
             </div>
-          )}
-        </div>
+            {infoItems[index + 1] && (
+              <div style={itemRightStyle}>
+                <div className="fontsize-md">{infoItems[index + 1].title}</div>
+                <div style={infoDataStyle} className="fontsize-sm">{infoItems[index + 1].count}</div>
+              </div>
+            )}
+          </div>
+        </>
       );
     }
     return null; // 홀수 index는 처리하지 않음
@@ -404,7 +408,7 @@ const MyActivities = () => {
           <span style={titleTextStyle} className="fontsize-xl">활동정보</span>
         </div>
         <div style={contentsContainerStyle}>
-          <div style={contentHeaderContainerStyle}>
+          <div style={flexContainerStyle}>
             <img
               src={PointImage}
               alt="포인트 이미지"
@@ -414,12 +418,7 @@ const MyActivities = () => {
             <div style={pointNumberStyle} className="fontsize-xl">[512]</div>
           </div>
           <div style={barStyle}></div>
-          <div style={{
-            ...contentHeaderContainerStyle,
-            flexDirection: "column"
-          }}>
-            {renderInfoItems}
-          </div>
+          {renderInfoItems}
         </div>
       </div>
 
@@ -458,9 +457,9 @@ const MyActivities = () => {
         <div style={hitoryContainerStyle}>
           <Routes>
             <Route path="/" element={<MyActivitiesCreated />} />
-            <Route path="/MyActivitiesParticipated" element={<MyActivitiesParticipated />} />
-            <Route path="/MyActivitiesLikded" element={<MyActivitiesLikded />} />
-            <Route path="/MyActivitiesCommented" element={<MyActivitiesCommented />} />
+            <Route path="/0" element={<MyActivitiesParticipated />} />
+            <Route path="/1" element={<MyActivitiesLikded />} />
+            <Route path="/2" element={<MyActivitiesCommented />} />
           </Routes>
         </div>
       </div>

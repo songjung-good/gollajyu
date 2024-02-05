@@ -30,7 +30,8 @@ const LoginModal = () => {
 
     const response = await axios.post(
       "https://i10e107.p.ssafy.io/api/members/login",
-      data, {withCredentials: true}
+      data,
+      { withCredentials: true }
     );
     // console.log(response.data);
     reset();
@@ -68,7 +69,7 @@ const LoginModal = () => {
     >
       <div
         id="inner"
-        className="mx-auto container bg-white xl:w-[420px] xl:h-[620px] lg:w-[380px] lg:h-[560px] md:w-[330px] md:h-[500px] sm:w-[250px] sm:h-[400px] flex flex-col items-center rounded-3xl shadow-md"
+        className="container mx-auto bg-white xl:w-[420px] xl:h-[620px] lg:w-[380px] lg:h-[560px] md:w-[330px] md:h-[500px] sm:w-[250px] sm:h-[400px] min-w-[300px] flex flex-col items-center rounded-3xl shadow-md"
       >
         <h1 className="fontsize-lg font-bold text-gray-700 mt-12 mb-16">
           로그인해쥬
