@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 // 임시 데이터를 상위 컴포넌트로부터 받아오는 props로 변경
 const VoteDetailResult = ({voteResults}) => {
-  console.log('voteResults:', voteResults);  // props 확인용
+  // props 확인용
+  // console.log('voteResults:', voteResults);
   const [selectedOption, setSelectedOption] = useState(null);
   
   return (

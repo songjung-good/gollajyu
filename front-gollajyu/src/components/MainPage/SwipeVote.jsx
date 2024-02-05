@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
+// 스와이퍼
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
+// 투표
 import VoteCard from '../vote/VoteCard';
 
 // 임시 사진
 import image1 from '/favicon1.png';
 
+
 export default function SwipeVote() {
+
   // 슬라이드 기능
   const [activeSlide, setActiveSlide] = useState(0);
   useEffect(() => {
@@ -24,7 +28,7 @@ export default function SwipeVote() {
     };
   }, []);
 
-  // 임시데이터
+  //임시데이터
   const votes = [
     {
       id: 1,
@@ -54,6 +58,9 @@ export default function SwipeVote() {
     // ...
   ];
 
+
+
+
   return (
     <div className="py-10">
       <Swiper
@@ -79,9 +86,13 @@ export default function SwipeVote() {
         style={{ padding: '30px' }}
       >
         {votes.map((vote) => (
-          <SwiperSlide key={vote.id} data-hash={vote.id} style={{ width: '1024px' }}>
+          <SwiperSlide 
+            key={vote.id} 
+            data-hash={vote.id} 
+            style={{ width: '1024px' }}
+          >
             <div>
-              <VoteCard 
+              <VoteCard
                 key={vote.id}
                 options={vote.options}
               />

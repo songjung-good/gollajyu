@@ -9,7 +9,8 @@ const VoteDetailChat = () => {
   // state 설정
   const [list, setList] = useState([]);
 
-  // componentDidMount와 같은 기능을 하는 useEffect
+  // componentDidMount와 같은 기능을 하는 useEffect 
+  // 기존의 댓글 데이터를 불러온다.
   useEffect(() => {
     setList([
       {userid: 'qwerty1', content:'hello111111', date:'2022-04-24'},
@@ -18,9 +19,14 @@ const VoteDetailChat = () => {
     ]);
   }, []); // 빈 배열을 넣어주면 컴포넌트가 mount될 때 한 번만 실행됩니다.
 
+    // 새로운 항목 추가 함수
+    const addList = (content) => {
+      setList([...list, { userid: 'qwerty4', content: content, date: '2022-04-24' }]);
+    }
+  
   return (
     <ul className='chat'>
-      <ChatForm />
+      <ChatForm onSubmit={addList} />
       <ChatList list={list} />
     </ul>
   );
