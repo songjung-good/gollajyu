@@ -94,12 +94,6 @@ const MyActivitiesCommentItem = () => {
     // 길이가 일정 이상일 경우 ... 되는 기능 필요
   }
 
-  // ----------- 댓글 수 스타일 -----------
-  const commentNumberStyle = {
-    // 글자
-    color: "#868FF4",
-  }
-
   // ----------- 구분 선 스타일 -----------
   const barStyle = {
     // 디자인
@@ -220,7 +214,7 @@ const MyActivitiesCommentItem = () => {
         onMouseOut={ItemMouseLeave}
       >
         <div style={containerStyle}>
-          <div style={titleContainerStyle}>
+          <div style={flexContainerStyle}>
             <div style={titleStyle} className="fontsize-lg">[댓글 내용]</div>
           </div>
           <div style={infoContainerStyle}>
