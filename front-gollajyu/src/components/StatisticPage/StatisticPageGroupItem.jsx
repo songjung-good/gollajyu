@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import sobiTIData from "../../stores/testResultData.js";
+import { Dropdown } from "@mui/base";
 
 const MyActivitiesCommentItem = () => {
 
@@ -19,7 +20,7 @@ const MyActivitiesCommentItem = () => {
   });
 
   // ----------- 예시 데이터 (임시) -----------
-  const userTypesData = [
+  const userTypes = [
     { label: "나이", options: ['전체', '10대', '20대', '30대', '40대', '50대 이상'], type: "radio" },
     { label: "성별", options: ['전체', '남자', '여자'], type: "radio" },
     { label: "소비성향", options: ['전체', ...sobiTIData.map(item => item.title)], type: "dropdown" },
@@ -31,7 +32,10 @@ const MyActivitiesCommentItem = () => {
   // ----------- 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: "30px",
+    marginBottom:
+      isXLarge ? "30px" :
+      isLarge ? "25px" :
+      isMedium ? "20px" : "15px",
     padding:
       isXLarge ? "20px 30px" :
       isLarge ? "17px 26px" :
@@ -53,51 +57,104 @@ const MyActivitiesCommentItem = () => {
     ...flexContainerStyle,
 
     // 컨텐츠 정렬
+    justifyContent: "space-between",
     flexWrap: "wrap", // 가로 길이를 넘어가면 줄바꿈
+  }
+
+  // ----------- 타입 아이템 스타일 -----------
+  const typeItemStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    marginTop:
+      isXLarge ? "20px" :
+      isLarge ? "18px" :
+      isMedium ? "16px" : "14px",
+    paddingLeft: 
+      isXLarge ? "50px" :
+      isLarge ? "30px" :
+      isMedium ? "10px" : "7px",
+    height:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "25px",
+    borderRadius: "30px",
+    backgroundColor: "#F0F0F0",
   }
 
   // ----------- 나이 컨테이너 스타일 -----------
   const ageContainerStyle = {
     // 상속
-    ...flexContainerStyle,
+    ...typeItemStyle,
 
     // 디자인
-    marginTop: "20px",
     width: "100%",
   }
 
   // ----------- 성별 컨테이너 스타일 -----------
   const genderContainerStyle = {
     // 상속
-    ...flexContainerStyle,
+    ...typeItemStyle,
 
     // 디자인
-    marginTop: "20px",
-    width: isXLarge || isLarge ? "55%" : "100%",
+    width: !isSmall ? "55%" : "100%",
   }
 
   // ----------- 소비성향 컨테이너 스타일 -----------
   const textContainerStyle = {
     // 상속
-    ...flexContainerStyle,
+    ...typeItemStyle,
 
     // 디자인
-    marginTop: "20px",
-    width: isXLarge || isLarge ? "40%" : "100%",
+    paddingRight: 
+      isXLarge ? "20px" :
+      isLarge ? "10px" : "0",
+    width: !isSmall ? "44%" : "100%",
   }
 
   // ----------- 사용자 유형 스타일 -----------
   const typeStyle = {
-
+    // 디자인
+    marginTop:
+      isXLarge ? "5px" :
+      isLarge ? "4px" :
+      isMedium ? "3px" : "2px",
+    marginRight:
+      isXLarge ? "50px" :
+      isLarge ? "30px" :
+      isMedium ? "10px" : "5px",
   }
 
   // ----------- 라디오 아이템 스타일 -----------
   const radioItemStyle = {
     // 디자인
+    width:
+      isXLarge ? "110px" :
+      isLarge ? "80px" :
+      isMedium ? "66px" : "40px",
+  }
+
+  // ----------- 라디오 옵션 스타일 -----------
+  const optionStyle = {
+    // 디자인
     marginLeft:
-      isXLarge ? "60px" :
-      isLarge ? "30px" :
-      isMedium ? "20px" : "15px",
+      isXLarge ? "10px" :
+      isLarge ? "8px" :
+      isMedium ? "6px" : "4px",
+  }
+
+  // ----------- 드롭다운 스타일 -----------
+  const dropdownStyle = {
+    // 디자인
+    border: "none",
+    backgroundColor: "#F0F0F0",
+
+    // 글자
+    fontSize:
+      isXLarge ? "16px" :
+      isLarge ? "14px" :
+      isMedium ? "12px" : "10px",
   }
 
   // --------------------------------- css 끝 ---------------------------------
@@ -106,9 +163,9 @@ const MyActivitiesCommentItem = () => {
   return (
     <>
       <div style={containerStyle}>
-        <div>사용자 유형 [1]</div>
+        <div className="fontsize-md">사용자 유형 [1]</div>
         <div style={typeContainerStyle}>
-          {userTypesData.map((type, index) => (
+          {userTypes.map((userType, index) => (
             <div
               style={{
                 ...(index === 0 ? ageContainerStyle : 
@@ -116,19 +173,19 @@ const MyActivitiesCommentItem = () => {
               }}
               key={index}
             >
-              <div style={typeStyle}>{type.label}</div>
-              {type.type === "radio" ? (
+              <div style={typeStyle} className="fontsize-sm">{userType.label}</div>
+              {userType.type === "radio" ? (
                 <div style={flexContainerStyle}>
-                  {type.options.map((option, optionIndex) => (
+                  {userType.options.map((option, optionIndex) => (
                     <div style={radioItemStyle} key={optionIndex}>
-                      <input type="radio" name={type.label} value={option} />
-                      <label>{option}</label>
+                      <input type="radio" name={userType.label} value={option} />
+                      <label style={optionStyle} className="fontsize-xs">{option}</label>
                     </div>
                   ))}
                 </div>
               ) : (
-                <select>
-                  {type.options.map((option, optionIndex) => (
+                <select style={dropdownStyle}>
+                  {userType.options.map((option, optionIndex) => (
                     <option key={optionIndex} value={option}>{option}</option>
                   ))}
                 </select>

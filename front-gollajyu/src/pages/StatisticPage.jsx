@@ -210,6 +210,40 @@ const StatisticPage = () => {
     justifyContent: "center",
   }
 
+  // ----------- 그룹 컨테이너 스타일 -----------
+  const groupContainerStyle = {
+    // 상속
+    ...subTitleStyle,
+
+    // 디자인
+    marginBottom: "20px",
+  }
+
+  // ----------- 추가 버튼 컨테이너 스타일 -----------
+  const addButtonContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 컨텐츠 정렬
+    justifyContent: "center",
+  }
+
+  // ----------- 추가 버튼 스타일 -----------
+  const addButtonStyle = {
+    width:
+      isXLarge ? "70px" :
+      isLarge ? "60px" :
+      isMedium ? "50px" : "40px",
+    height:
+      isXLarge ? "70px" :
+      isLarge ? "60px" :
+      isMedium ? "50px" : "40px",
+    fontSize:
+      isXLarge ? "44px" :
+      isLarge ? "38px" :
+      isMedium ? "32px" : "26px",
+  }
+
   // --------------------------------- css 끝 ---------------------------------
 
 
@@ -277,10 +311,13 @@ const StatisticPage = () => {
             <div style={barStyle}></div>
 
             {/* ------------- 사용자 그룹 선택 ------------- */}
-            <div style={subTitleStyle} className="fontsize-lg">사용자 그룹 선택</div>
+            <div style={groupContainerStyle} className="fontsize-lg">사용자 그룹 선택</div>
             <div>
               <StatisticPageGroupItem />
               <StatisticPageGroupItem />
+            </div>
+            <div style={addButtonContainerStyle}>
+              <button style={addButtonStyle}>+</button>
             </div>
             {/* --------------------------------------- */}
           </div>
