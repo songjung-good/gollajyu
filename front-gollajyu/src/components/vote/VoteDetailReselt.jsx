@@ -4,15 +4,21 @@ import React, { useState } from 'react';
 const VoteDetailResult = ({voteResults}) => {
   // props 확인용
   // console.log('voteResults:', voteResults);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleClick = (index) => {
+    const newSelectedOptions = [...selectedOptions];
+    newSelectedOptions[index] = !newSelectedOptions[index];
+    setSelectedOptions(newSelectedOptions);
+  };
   
   return (
     <div className='flex w-full' style={{display: "flex"}}>
       {voteResults.map((result, index) => (
         <div key={index} style={{border: "1px solid black", width: "280px", margin: "10px", padding: "10px"}}>
           <h2>{result.tagResults}: %</h2>
-          <button onClick={() => setSelectedOption(selectedOption === index ? null : index)}>▼</button>
-          {selectedOption === index && (
+          <button onClick={() => handleClick(index)}>▼</button>
+          {selectedOptions[index] && (
             <div>
               {Object.entries(result.tagResults).map(([reason, percentage]) => (
                 <p key={reason}>{reason}: {percentage}%</p>
