@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import TestResultHeader from "../TestResultHeader";
-import sobiTIData from "/src/stores/TestResultData";
+import sobiTIData from "/src/stores/testResultData";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
