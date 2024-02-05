@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 import useAuthStore from "../stores/userState";
@@ -45,10 +45,8 @@ const ButtonItem = ({ label, style, hoverState, onClick }) => (
 
 const NavigationBar = () => {
   // ----------- 메인 메뉴 hover -----------
-  const [votePageHovered,
-    votePageMouseEnter,
-    votePageMouseLeave
-  ] = useHoverState();
+  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
+    useHoverState();
 
   const [
     broadcastPageHovered,
@@ -111,7 +109,7 @@ const NavigationBar = () => {
   // const isLoggedIn = false; // 비로그인 상태
 
   // 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수
-  const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
+  const setLogout = useAuthStore((state) => state.setLogout);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -135,6 +133,11 @@ const NavigationBar = () => {
     }
   };
 
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    setLogout();
+    navigate("/");
+  };
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 내비게이션 배경 스타일 -----------
@@ -160,7 +163,7 @@ const NavigationBar = () => {
     transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "95%" : (isMedium ? "740px" : "480px"), // (반응형) 내비게이션 바 넓이
+    width: isLarge ? "95%" : isMedium ? "740px" : "480px", // (반응형) 내비게이션 바 넓이
 
     // 컨텐츠 정렬
     display: "flex", // 항목 수평 정렬
@@ -171,7 +174,7 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: "200px"
+    width: "200px",
   };
 
   // ----------- 로고 스타일 -----------
@@ -186,7 +189,7 @@ const NavigationBar = () => {
   const linkContainerStyle = {
     // 디자인
     width: "50%", // 가로 넓이
-    
+
     // 컨텐츠 정렬
     display: "flex",
     alignItems: "center", // 리스트 수직 정렬
@@ -274,7 +277,7 @@ const NavigationBar = () => {
     fontSize: "20px", // 닉네임 글자 크기
 
     display: !isLarge ? "none" : undefined, // (반응형) 작은 화면에서 닉네임 렌더링 하지 않음
-  }
+  };
 
   // ----------- 공통 메뉴 스타일 -----------
   const commonMenuStyle = {
@@ -459,7 +462,7 @@ const NavigationBar = () => {
       mouseEnter: logoutButtonMouseEnter,
       mouseLeave: logoutButtonMouseLeave,
       hoverStyle: logoutButtonHoverStyle,
-      onClick: setLoggedOut,
+      onClick: handleLogout,
     },
     {
       label: "로그인",
@@ -535,10 +538,12 @@ const NavigationBar = () => {
                 >
                   <div>
                     <div>{item.label}</div>
-                    <div style={{
-                      ...itemHoverStyle,
-                      visibility: item.hovered ? "visible" : "hidden",
-                    }}></div>
+                    <div
+                      style={{
+                        ...itemHoverStyle,
+                        visibility: item.hovered ? "visible" : "hidden",
+                      }}
+                    ></div>
                   </div>
                 </MenuItem>
               ))}
@@ -554,11 +559,12 @@ const NavigationBar = () => {
                 style={profileContainerStyle}
                 onMouseLeave={profileMouseLeave}
               >
-                <button
-                  style={myPageStyle}
-                  onMouseEnter={profileMouseEnter}
-                >
-                  <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
+                <button style={myPageStyle} onMouseEnter={profileMouseEnter}>
+                  <img
+                    src={DefaultProfileImage}
+                    alt="사진"
+                    style={profileImageStyle}
+                  />
                   <p style={nickNameStyle}>[닉네임]</p>
                 </button>
                 <div style={profileMenuStyle}>
@@ -576,10 +582,12 @@ const NavigationBar = () => {
                     >
                       <div>
                         <div>{item.label}</div>
-                        <div style={{
-                          ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
-                        }}></div>
+                        <div
+                          style={{
+                            ...itemHoverStyle,
+                            visibility: item.hovered ? "visible" : "hidden",
+                          }}
+                        ></div>
                       </div>
                     </MenuItem>
                   ))}
@@ -646,10 +654,12 @@ const NavigationBar = () => {
                     >
                       <div>
                         <div>{item.label}</div>
-                        <div style={{
-                          ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
-                        }}></div>
+                        <div
+                          style={{
+                            ...itemHoverStyle,
+                            visibility: item.hovered ? "visible" : "hidden",
+                          }}
+                        ></div>
                       </div>
                     </MenuItem>
                   ))}

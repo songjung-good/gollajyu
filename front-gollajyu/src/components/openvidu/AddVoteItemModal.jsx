@@ -37,7 +37,7 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center text-center">
-      <div className="bg-neutral-300 p-6 rounded-md w-1/3 h-1/3 relative">
+      <div className="bg-neutral-300 p-6 rounded-md w-[450px] h-[350px] relative">
         {/* <span
           className="absolute top-2 right-2 text-2xl cursor-pointer"
           onClick={onClose}

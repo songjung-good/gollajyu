@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NowGollajyuImage from "/assets/images/vote-button/now_gollajyu_img.png";
 import SimpleGollajyuImage from "/assets/images/vote-button/simple_gollajyu_img.png";
 import PurchaseGollajyuImage from "/assets/images/vote-button/purchase_gollajyu_img.png";
+import useAuthStore from "../stores/userState";
+import useModalStore from "../stores/modalState";
 
 const VoteButton = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // 로그인 여부
+
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
   const [nowGollajyuHovered, setNowGollajyuHovered] = useState(false);
@@ -16,9 +22,9 @@ const VoteButton = () => {
   };
 
   const buttonCloseClick = () => {
-    setButtonHovered(false);  // 클릭 시 떠남 상태로 설정
+    setButtonHovered(false); // 클릭 시 떠남 상태로 설정
   };
-  
+
   // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
   const nowGollajyuHover = () => {
     setNowGollajyuHovered(true);
@@ -45,7 +51,6 @@ const VoteButton = () => {
   const purchaseGollajyLeave = () => {
     setPurchaseGollajyuHovered(false);
   };
-  
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -55,6 +60,7 @@ const VoteButton = () => {
     position: "fixed", // 버튼 하단에 고정
     bottom: "50px", // 버튼 고정 위치
     right: "100px", // 버튼 고정 위치
+    zIndex: 49, // 모달 바로 아래 레이어에 위치 (모달은 50)
   };
 
   // ----------- 투표 생성 버튼 스타일 -----------
@@ -161,6 +167,14 @@ const VoteButton = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
+  // 모달 상태 변경 함수
+  const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
+  const setVoteSimpleCreateModalOpen = useModalStore(
+    (state) => state.setVoteSimpleCreateModalOpen
+  );
+  const setVoteProductCreateModalOpen = useModalStore(
+    (state) => state.setVoteProductCreateModalOpen
+  );
 
   // ----------- 버튼 아이템 목록 -----------
   const buttonItems = [
@@ -173,6 +187,15 @@ const VoteButton = () => {
       hovered: nowGollajyuHovered,
       mouseEnter: nowGollajyuHover,
       mouseLeave: nowGollajyuLeave,
+      handleClick: () => {
+        if (isLoggedIn) {
+          // 로그인 사용자 -> 지금골라쥬 생성 페이지로 이동
+          navigate("/CreateVideoRoom");
+        } else {
+          // 비로그인 사용자 -> 로그인창 띄움
+          setLoginModalOpen();
+        }
+      },
     },
     {
       label: "간단골라쥬!",
@@ -183,6 +206,16 @@ const VoteButton = () => {
       hovered: simpleGollajyuHovered,
       mouseEnter: simpleGollajyuHover,
       mouseLeave: simpleGollajyuLeave,
+      handleClick: () => {
+        console.log("간단골라쥬 클릭");
+        if (isLoggedIn) {
+          // 로그인 사용자 -> 생성 모달 띄움
+          setVoteSimpleCreateModalOpen();
+        } else {
+          // 비로그인 사용자 -> 로그인창 띄움
+          setLoginModalOpen();
+        }
+      },
     },
     {
       label: "구매골라쥬!",
@@ -193,13 +226,23 @@ const VoteButton = () => {
       hovered: purchaseGollajyuHovered,
       mouseEnter: purchaseGollajyHover,
       mouseLeave: purchaseGollajyLeave,
+      handleClick: () => {
+        console.log("구매골라쥬 클릭");
+        if (isLoggedIn) {
+          // 로그인 사용자 -> 생성 모달 띄움
+          setVoteProductCreateModalOpen();
+        } else {
+          // 비로그인 사용자 -> 로그인창 띄움
+          setLoginModalOpen();
+        }
+      },
     },
   ];
 
   // ----------- 버튼 렌더링 함수 -----------
   const renderButtons = () => {
     return buttonItems.map((button, index) => (
-      <div  // ----------- 설명란 -----------
+      <div // ----------- 설명란 -----------
         key={index}
         onMouseLeave={() => button.mouseLeave()}
       >
@@ -214,9 +257,10 @@ const VoteButton = () => {
             </div>
           </div>
         )}
-        <div  // ------------- 이미지 -------------
+        <div // ------------- 이미지 -------------
           style={{ ...circleStyle, bottom: `${button.circleBottom}px` }}
           onMouseEnter={() => button.mouseEnter()}
+          onClick={() => button.handleClick()}
         >
           <img style={imageStyle} src={button.image} alt={button.label} />
         </div>
@@ -228,11 +272,13 @@ const VoteButton = () => {
     <div
       style={voteButtonContainerStyle}
       onMouseEnter={buttonHover}
-      onClick={buttonCloseClick}  // 클릭 시 세부 버튼 닫기
+      onClick={buttonCloseClick} // 클릭 시 세부 버튼 닫기
     >
       {/* ------------- 투표 버튼 ------------- */}
       <button style={voteButtonStyle}>
-        {buttonHovered ? "X" : (
+        {buttonHovered ? (
+          "X"
+        ) : (
           <>
             투표
             <br />

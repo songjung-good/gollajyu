@@ -2,10 +2,21 @@ import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import BroadcastItem from "../components/BroadcastItem";
 import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
+import TmpModal from "../components/TmpModal"; // 임시 모달
+import useModalStore from "../stores/modalState";
 
 const BroadcastPage = () => {
   const navigate = useNavigate();
   const [userNickName, setUserNickName] = useState("");
+
+  // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
+  const isVoteSimpleCreateModalOpened = useModalStore(
+    (state) => state.isVoteSimpleCreateModalOpened
+  );
+  const isVoteProductCreateModalOpened = useModalStore(
+    (state) => state.isVoteProductCreateModalOpened
+  );
+
   const enterRoom = () => {
     navigate("/EnterVideoRoom", {
       state: {
@@ -178,6 +189,8 @@ const BroadcastPage = () => {
           </div>
         </div>
       </div>
+      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
     </>
   );
 };
