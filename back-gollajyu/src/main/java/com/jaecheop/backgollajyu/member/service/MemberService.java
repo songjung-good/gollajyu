@@ -88,7 +88,7 @@ public class MemberService {
                                 .build()
                 )
                 .gender(gender)
-                .point(0L)
+                .point(50L)
                 .profileImgUrl(type.getTypeImgUrl())
                 .createAt(LocalDateTime.now())
                 .build();
