@@ -17,6 +17,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,12 +46,12 @@ public class MemberService {
     public ServiceResult signUp(SignUpReqDto signUpReqDto) {
         // 사용자 중복 여부
         Optional<Member> optionalMember = memberRepository.findByEmail(signUpReqDto.getEmail());
-        if(optionalMember.isPresent()){
+        if (optionalMember.isPresent()) {
             return ServiceResult.fail("이미 존재하는 이메일입니다");
         }
 
         // 패스워드 일치 확인
-        if(!signUpReqDto.getPassword().equals(signUpReqDto.getVerifyPassword())){
+        if (!signUpReqDto.getPassword().equals(signUpReqDto.getVerifyPassword())) {
             return ServiceResult.fail("비밀번호가 일치하지 않습니다.");
         }
 
@@ -58,7 +60,7 @@ public class MemberService {
 
         // 소비성향 존재 확인
         Optional<Type> optionalType = typeRepository.findById(signUpReqDto.getTypeId());
-        if(optionalType.isEmpty()){
+        if (optionalType.isEmpty()) {
             return ServiceResult.fail("존재하지 않는 소비성향입니다.");
         }
 
@@ -66,9 +68,9 @@ public class MemberService {
 
         // gender 설정
         Gender gender = null;
-        if(signUpReqDto.getGender().equals("F")){
+        if (signUpReqDto.getGender().equals("F")) {
             gender = Gender.FEMALE;
-        } else{
+        } else {
             gender = Gender.MALE;
         }
 
@@ -80,10 +82,10 @@ public class MemberService {
                 .nickname(signUpReqDto.getNickname())
                 .birthDay(
                         Birthday.builder()
-                        .year(signUpReqDto.getYear())
-                        .month(signUpReqDto.getMonth())
-                        .day(signUpReqDto.getDay())
-                        .build()
+                                .year(signUpReqDto.getYear())
+                                .month(signUpReqDto.getMonth())
+                                .day(signUpReqDto.getDay())
+                                .build()
                 )
                 .gender(gender)
                 .point(0L)
@@ -94,7 +96,7 @@ public class MemberService {
         memberRepository.save(member);
         return ServiceResult.success();
     }
-    
+
     public ServiceResult login(LoginReqDto loginReqDto, HttpSession session) {
         // 사용자 존재 여부
         Optional<Member> optionalMember = memberRepository.findByEmail(loginReqDto.getEmail());
@@ -131,8 +133,6 @@ public class MemberService {
         // 4. loginResDto에 멤버정보와 세션정보를 담아 반환하기
         return ServiceResult.success(loginResDto);
     }
-
-
 
 
     // myPage 카테고리별 나의 투표 비율
@@ -196,5 +196,22 @@ public class MemberService {
             e.printStackTrace();
         }
         return resultList;
+    }
+    public ServiceResult updateMember(AddInfoReqDto addInfoReqDto) {
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(addInfoReqDto.getEmail());
+        if (optionalMember.isEmpty()) {
+            return ServiceResult.fail("존재하지 않는 사용자입니다.");
+        }
+        Member member = optionalMember.get();
+
+        Optional<Type> optionalType = typeRepository.findById(addInfoReqDto.getTypeId());
+        if (optionalType.isEmpty()) {
+            return ServiceResult.fail("존재하지 않는 소비성향입니다.");
+        }
+        Type type = optionalType.get();
+        member.update(addInfoReqDto, type);
+        memberRepository.save(member);
+        return ServiceResult.success();
     }
 }

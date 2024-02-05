@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/votes")
+@RequestMapping("/api/votes")
 public class VoteController {
 
     private final VoteService voteService;
@@ -31,7 +31,7 @@ public class VoteController {
     private VoteItemRepository voteItemRepository;
 
     // TODO: main GET들...
-
+  
     /**
      * 투표 생성 - create
      *

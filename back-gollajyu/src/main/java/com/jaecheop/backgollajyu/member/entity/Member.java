@@ -1,13 +1,11 @@
 package com.jaecheop.backgollajyu.member.entity;
 
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
+import com.jaecheop.backgollajyu.member.model.AddInfoReqDto;
 import com.jaecheop.backgollajyu.member.model.Birthday;
 import com.jaecheop.backgollajyu.member.model.Gender;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,20 +40,35 @@ public class Member {
 
     private String profileImgUrl;
 
+
+    // 소셜 로그인으로 가입한 사용자인지 여부 확인을 위한 변수
+    private String provider;
+    private String providerId;
+
+
     private LocalDateTime createAt;
 
     private LocalDateTime updateAt;
 
     public void minusPoint(Long amount) {
-        if(point < amount) {
+        if (point < amount) {
             // Exception
             throw new NotEnoughPointException("포인트가 충분하지 않습니다.");
-        }
-        else this.point -= amount;
+        } else this.point -= amount;
     }
 
-    public void plusPoint(Long amount){
+    public void plusPoint(Long amount) {
         this.point += amount;
     }
 
+    public void update(AddInfoReqDto addInfoReqDto, Type type) {
+        this.updateAt = LocalDateTime.now();
+        this.birthDay = Birthday.builder()
+                .year(addInfoReqDto.getYear())
+                .month(addInfoReqDto.getMonth())
+                .day(addInfoReqDto.getDay())
+                .build();
+        this.gender = Gender.valueOf(addInfoReqDto.getGender());
+        this.type = type;
+    }
 }
