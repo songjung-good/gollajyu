@@ -88,7 +88,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //        System.out.println(principalDetails);
 //        System.out.println(" ============================================================================ ");
         PrincipalDetails principalDetails = new PrincipalDetails(member, oAuth2User.getAttributes());
-        System.out.println("3333333333333333333333333333333333");
         return principalDetails;
     }
 

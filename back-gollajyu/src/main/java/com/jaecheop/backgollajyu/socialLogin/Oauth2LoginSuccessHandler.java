@@ -14,7 +14,6 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
         // Custom logic after successful OAuth2 login
-        System.out.println("my succcesss handelr!!!!!!!!!!!!!");
 
         PrincipalDetails principal = (PrincipalDetails)authentication.getPrincipal();
         System.out.println("principal.getMember() = " + principal.getMember());
