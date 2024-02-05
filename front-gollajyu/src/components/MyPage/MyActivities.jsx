@@ -95,7 +95,7 @@ const MyActivities = () => {
       mouseLeave: CreatedMouseLeave 
     },
     { 
-      to: "/Mypage/MyActivities/MyActivitiesParticipated", 
+      to: "/Mypage/MyActivities/0", 
       label: "참여한 투표",
       smallLabel: "참여투표",
       hovered: ParticipatedPageHovered, 
@@ -103,7 +103,7 @@ const MyActivities = () => {
       mouseLeave: ParticipatedPageMouseLeave 
     },
     { 
-      to: "/Mypage/MyActivities/MyActivitiesLikded", 
+      to: "/Mypage/MyActivities/1", 
       label: "좋아요 한 투표",
       smallLabel: "좋아요",
       hovered: LikdedPageHovered, 
@@ -111,7 +111,7 @@ const MyActivities = () => {
       mouseLeave: LikdedPageMouseLeave 
     },
     { 
-      to: "/Mypage/MyActivities/MyActivitiesCommented", 
+      to: "/Mypage/MyActivities/2", 
       label: "댓글 보관함", 
       smallLabel: "댓글",
       hovered: CommentedPageHovered, 
@@ -213,7 +213,7 @@ const MyActivities = () => {
     marginLeft: "10px",
 
     // 글자
-    color: "#FFD257",
+    color: "#FFA500",
   };
 
   // ----------- 구분선 스타일 -----------
@@ -458,9 +458,9 @@ const MyActivities = () => {
         <div style={hitoryContainerStyle}>
           <Routes>
             <Route path="/" element={<MyActivitiesCreated />} />
-            <Route path="/MyActivitiesParticipated" element={<MyActivitiesParticipated />} />
-            <Route path="/MyActivitiesLikded" element={<MyActivitiesLikded />} />
-            <Route path="/MyActivitiesCommented" element={<MyActivitiesCommented />} />
+            <Route path="/0" element={<MyActivitiesParticipated />} />
+            <Route path="/1" element={<MyActivitiesLikded />} />
+            <Route path="/2" element={<MyActivitiesCommented />} />
           </Routes>
         </div>
       </div>
