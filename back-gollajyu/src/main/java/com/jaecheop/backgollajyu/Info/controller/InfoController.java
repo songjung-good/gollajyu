@@ -7,6 +7,7 @@ import com.jaecheop.backgollajyu.vote.entity.VoteResult;
 import com.jaecheop.backgollajyu.vote.model.CategoryTagDto;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import com.jaecheop.backgollajyu.vote.service.VoteService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,8 @@ public class InfoController {
     private final InfoService infoService;
 
     @GetMapping("")
+    @Operation(summary = "통계결과", description = "returns CategoryTagDtoList")
+
     public ResponseEntity<List<CategoryTagDto>> resultStatistics(@RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
         System.out.println("statisticsSearchReqDto = " + statisticsSearchReqDto);
         if (statisticsSearchReqDto == null || statisticsSearchReqDto.getCategoryId() == null) {

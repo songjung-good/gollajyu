@@ -106,7 +106,7 @@ const LoginModal = () => {
           <div className="h-24">
             <input
               type="password"
-              password="qwer1234!@#$"
+              value="qwer1234!@#$"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               id="password"
               placeholder="비밀번호를 입력하세요"
