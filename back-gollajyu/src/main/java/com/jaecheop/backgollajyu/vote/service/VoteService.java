@@ -605,7 +605,7 @@ public class VoteService {
 
     }
 
-    public ServiceResult getVoteListByCategory(int categoryId, LoginResDto memberSession) {
+    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession) {
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
 
@@ -629,10 +629,11 @@ public class VoteService {
 
             // 카테고리가 전체가 아닐 때
             else {
+                System.out.println("33333333333");
                 // 카테고리 유무 확인
                 Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
                 if (optionalCategory.isEmpty()) {
-                    return  new ServiceResult<>().fail("존재하지 않는 카테고리입니다.");
+                    return new ServiceResult<VoteListResDto>().fail("존재하지 않는 카테고리입니다.");
                 }
                 Category category = optionalCategory.get();
 
@@ -746,7 +747,8 @@ public class VoteService {
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-        return  new ServiceResult<>().success(voteListResDto);
+        System.out.println("voteListResDto = " + voteListResDto);
+        return new ServiceResult<VoteListResDto>().success(voteListResDto);
 
     }
 

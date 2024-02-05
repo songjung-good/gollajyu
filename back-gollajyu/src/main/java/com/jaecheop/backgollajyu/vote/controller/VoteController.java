@@ -82,13 +82,15 @@ public class VoteController {
 
     @GetMapping("/detail")
     @Operation(summary = "투표 상세", description = "returns VoteDetailResDto")
-    public ResponseEntity<VoteDetailResDto> voteDetail(@ModelAttribute VoteDetailReqDto voteDetailReqDto) {
+    public ResponseEntity<ResponseMessage<VoteDetailResDto>> voteDetail(@ModelAttribute VoteDetailReqDto voteDetailReqDto) {
         System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         ServiceResult result = voteService.voteDetail(voteDetailReqDto);
+
         if (!result.isResult()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return ResponseEntity.ok().body(new ResponseMessage<VoteDetailResDto>().fail(result.getMessage()));
         }
-        return new ResponseEntity<>((VoteDetailResDto) result.getData(), HttpStatus.OK);
+
+        return ResponseEntity.ok().body(new ResponseMessage<VoteDetailResDto>().success((VoteDetailResDto) result.getData()));
     }
 
     /**
@@ -124,13 +126,15 @@ public class VoteController {
         System.out.println("categoryId = " + categoryId);
         System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto) session.getAttribute("memberInfo"));
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
-        ServiceResult result = voteService.getVoteListByCategory(categoryId, sessionInfo);
+        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo);
+        System.out.println("result = " + result);
 
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().success((VoteListResDto) result.getData()));
+        System.out.println("result.getData() = " + result.getData());
+        return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().success(result.getData()));
     }
 
 

@@ -37,7 +37,7 @@ public class ServiceResult<T> {
 //    }
 
     public ServiceResult<T> success(T data){
-        return new ServiceResult<>(result, null, data);
+        return new ServiceResult<>(true, null, data);
     }
 
     public ServiceResult<T> success(){
