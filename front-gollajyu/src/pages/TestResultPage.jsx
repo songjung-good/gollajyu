@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import sobiTIData from "../stores/testResultData.js";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import sobiTIData from "../stores/testResultData.js";
 import useModalStore from "../stores/modalState";
+import useAuthStore from "../stores/userState";
 import API_URL from "../stores/apiURL";
 import axios from "axios";
+import { debounce } from "lodash";
 
 const getMBTI = (response) => {
   const MBTI = {
@@ -57,6 +59,8 @@ const items = [
 const TestResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
+  const user = useAuthStore((state) => state.user);
 
   // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
   const isVoteSimpleCreateModalOpened = useModalStore(
@@ -67,17 +71,14 @@ const TestResultPage = () => {
   );
 
   const [isMyResult, setIsMyResult] = useState(true);
+  // const [isFirstTime, setIsFirstTime] = useState(
+  //   location.state?.isFirstTime || false
+  // );
   const isFirstTime = location.state?.isFirstTime || false;
   const memberInfo = location.state?.memberInfo || undefined;
   const response = location.state?.response || [];
   const [result, setResult] = useState(1);
   const [matchingData, setMatchingData] = useState({});
-
-  // useEffect(() => {
-  //   if (isFirstTime) {
-  //     setResult(getMBTI(response));
-  //   }
-  // }, [isFirstTime, response]);
 
   useEffect(() => {
     // TestPage에서 넘어왔으면, getMBTI 함수를 통해서 결과를 구함 -> 회원정보에 테스트 결과를 담아서 서버로 보냄 (회원가입)
@@ -85,32 +86,67 @@ const TestResultPage = () => {
       setResult(getMBTI(response));
       setMatchingData(sobiTIData.find((data) => data.id === result));
       const typeId = getMBTI(response);
-      memberInfo.typeId = result;
+      memberInfo.typeId = typeId;
       console.log(memberInfo);
-      axios
-        .post(API_URL + "/members", memberInfo)
-        .then((response) => {
-          console.log(response);
-          if (response.data.header.message == "이미 존재하는 이메일입니다") {
-            navigate("/");
-            window.alert(
-              "이미 존재하는 이메일이라 회원가입이 되지 않았습니다!!! 회원가입부터 다시 하세요."
-            );
-          } else {
-            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
-            // TODO 로그인 요청
-          }
-        })
-        .catch((err) => console.log(err));
+      signUp(memberInfo);
+    }
+
+    // 네비게이션 바 또는 마이페이지를 통해서 소비성향알려쥬로 진입했을 경우
+    if (isMyResult && !isFirstTime) {
+      setResult(user.typeId);
+      setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
     }
   }, []);
 
   useEffect(() => {
+    // 소비성향 아이템 클릭 시, 해당 결과 렌더링
     window.scrollTo({ top: 0 });
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, [result]);
 
-  // console.log("isMyResult", isMyResult);
+  // 1초 안에 호출되는 가장 마지막 api 호출만 실행 => react Strict Mode에 의해 useEffect가 두번 실행되어서 api 요청이 두번 가는 것을 방지함
+  const signUp = useCallback(
+    debounce((memberInfo) => {
+      axios
+        .post(API_URL + "/members", memberInfo)
+        .then((response) => {
+          console.log(response);
+          if (!response.data.header.result) {
+            console.log(response.data.header.message);
+            navigate("/");
+            window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
+          } else {
+            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
+            const data = {
+              email: memberInfo.email,
+              password: memberInfo.password,
+            };
+            logIn(data);
+          }
+        })
+        .catch((err) => {
+          console.log("회원가입 에러");
+          console.log(err);
+        });
+    }, 1000),
+    []
+  );
+
+  const logIn = (data) => {
+    axios
+      .post(API_URL + "/members/login", data, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("로그인 완료");
+        setLoggedIn(response.data.body);
+      })
+      .catch((err) => {
+        console.log("로그인 과정에서 에러남");
+        console.log(err);
+      });
+  };
+
   return (
     <>
       <div className="p-5">

@@ -33,8 +33,9 @@ const MyProfile = () => {
   const user = useAuthStore((state) => state.user); // local storage에 로그인 시 저장된 user 데이터를 가져옴 -> 네비게이션바에서도 이렇게 사용가능 (위의 import 참고)
   useEffect(() => {
     setResult(user.typeId);
-    setMatchingData(sobiTIData.find((data) => data.id === result));
+    setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
   }, []);
+
 
   // --------------------------------- css 시작 ---------------------------------
 
