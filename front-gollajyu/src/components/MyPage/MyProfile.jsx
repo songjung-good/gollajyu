@@ -30,7 +30,7 @@ const MyProfile = () => {
 
   // ----------- result가 변경될 때마다 실행되는 함수 -----------
   useEffect(() => {
-    // TODO 서버에서 회원의 정보를 가져오는 과정이 필요함 또는 local storage에서 가져와서 사용
+    // TODO local storage에서 가져와서 사용
     // setResult(typeId)
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, []);
