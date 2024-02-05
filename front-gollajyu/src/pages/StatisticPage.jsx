@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
+import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
 import categoryData from "/src/stores/categoryData";
 import tagColorData from "/src/stores/tagColorData";
 import TmpModal from "../components/TmpModal"; // 임시 모달
@@ -277,8 +278,10 @@ const StatisticPage = () => {
 
             {/* ------------- 사용자 그룹 선택 ------------- */}
             <div style={subTitleStyle} className="fontsize-lg">사용자 그룹 선택</div>
-
-
+            <div>
+              <StatisticPageGroupItem />
+              <StatisticPageGroupItem />
+            </div>
             {/* --------------------------------------- */}
           </div>
         </div>
