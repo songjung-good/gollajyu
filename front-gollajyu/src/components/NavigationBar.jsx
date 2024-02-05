@@ -5,24 +5,26 @@ import DefaultProfileImage from "/assets/images/default_profile_img.png";
 import useAuthStore from "../stores/userState";
 import useModalStore from "../stores/modalState";
 
-// ----------- Hover 커스텀 훅 -----------
+// ----------- 커스텀 훅 -----------
 const useHoverState = () => {
   const [hovered, setHovered] = useState(false);
 
   const handleMouseEnter = () => setHovered(true);
   const handleMouseLeave = () => setHovered(false);
+  const handleClick = () => setHovered(!hovered);
 
-  return [hovered, handleMouseEnter, handleMouseLeave];
+  return [hovered, handleMouseEnter, handleMouseLeave, handleClick];
 };
 
 // ----------- 메뉴 아이템 함수형 컴포넌트 -----------
-const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
+const MenuItem = ({ to, style, activeStyle, hoverState, onClick, children }) => (
   <NavLink
     to={to}
     end
     style={({ isActive }) => (isActive ? activeStyle : style)}
     onMouseOver={hoverState.handleMouseEnter}
     onMouseOut={hoverState.handleMouseLeave}
+    onClick={onClick}
   >
     {children}
   </NavLink>
@@ -44,9 +46,27 @@ const ButtonItem = ({ label, style, hoverState, onClick }) => (
 );
 
 const NavigationBar = () => {
+
+  // ----------- 반응형 웹페이지 구현 -----------
+  const isXLarge = useMediaQuery({
+    query: "(min-width:1024px)",
+  });
+  const isLarge = useMediaQuery({
+    query : "(min-width:768px) and (max-width:1023px)"
+  });
+  const isMedium = useMediaQuery({
+    query : "(min-width:480px) and (max-width:767px)"
+  });
+  const isSmall = useMediaQuery({
+    query : "(max-width:479px)"
+  });
+  
   // ----------- 메인 메뉴 hover -----------
-  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
-    useHoverState();
+  const [
+    votePageHovered,
+    votePageMouseEnter,
+    votePageMouseLeave
+  ] = useHoverState();
 
   const [
     broadcastPageHovered,
@@ -67,49 +87,61 @@ const NavigationBar = () => {
   ] = useHoverState();
 
   // ----------- 프로필 버튼 hover -----------
-  const [profileHovered, profileMouseEnter, profileMouseLeave] =
-    useHoverState();
+  const [
+    profileHovered,
+    profileMouseEnter,
+    profileMouseLeave,
+    profileClick
+  ] = useHoverState();
 
   // ----------- 프로필 아이템 hover -----------
-  const [myProfileHovered, myProfileMouseEnter, myProfileMouseLeave] =
-    useHoverState();
+  const [
+    myProfileHovered,
+    myProfileMouseEnter,
+    myProfileMouseLeave
+  ] = useHoverState();
 
-  const [myActivitiesHovered, myActivitiesMouseEnter, myActivitiesMouseLeave] =
-    useHoverState();
+  const [
+    myActivitiesHovered, 
+    myActivitiesMouseEnter, 
+    myActivitiesMouseLeave
+  ] = useHoverState();
 
-  const [myStatisticsHovered, myStatisticsMouseEnter, myStatisticsMouseLeave] =
-    useHoverState();
+  const [
+    myStatisticsHovered, 
+    myStatisticsMouseEnter, 
+    myStatisticsMouseLeave
+  ] = useHoverState();
 
   // ----------- 로그아웃, 로그인, 회원가입 버튼 hover -----------
-  const [logoutButtonHovered, logoutButtonMouseEnter, logoutButtonMouseLeave] =
-    useHoverState();
+  const [
+    logoutButtonHovered, 
+    logoutButtonMouseEnter, 
+    logoutButtonMouseLeave
+  ] = useHoverState();
 
-  const [loginButtonHovered, loginButtonMouseEnter, loginButtonMouseLeave] =
-    useHoverState();
+  const [
+    loginButtonHovered, 
+    loginButtonMouseEnter, 
+    loginButtonMouseLeave
+  ] = useHoverState();
 
-  const [signupButtonHovered, signupButtonMouseEnter, signupButtonMouseLeave] =
-    useHoverState();
+  const [
+    signupButtonHovered, 
+    signupButtonMouseEnter, 
+    signupButtonMouseLeave
+  ] = useHoverState();
 
   // ----------- 햄버거 버튼 hover -----------
-  const [hamburgerHovered, hamburgerMouseEnter, hamburgerMouseLeave] =
-    useHoverState();
+  const [
+    hamburgerHovered, 
+    hamburgerMouseEnter, 
+    hamburgerMouseLeave, 
+    hamburgerClick
+  ] = useHoverState();
 
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1024px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:768px)",
-  });
-
-  // const isLoggedIn = true; // 로그인 상태
-  // const isLoggedIn = false; // 비로그인 상태
-
-  // 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수
-  const setLogout = useAuthStore((state) => state.setLogout);
+  // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
+  const setLoggedOut = useAuthStore((state) => state.setLoggedOut);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -150,20 +182,23 @@ const NavigationBar = () => {
     // 디자인
     width: "100%", // 내비게이션 바 배경 넓이
     height: "100px", // 내비게이션 바 높이
-    background: "#FFFFFF", // 배경 색상: 흰색
+    background: "#FFFFFF",
   };
 
   // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
     // 상속
-    ...navigationBarBackgroundStyle, // 배경 스타일 상속
+    ...navigationBarBackgroundStyle,
 
     // 위치
     left: "50%", // 화면 가로 중앙으로 이동
     transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
 
     // 디자인
-    width: isLarge ? "95%" : isMedium ? "740px" : "480px", // (반응형) 내비게이션 바 넓이
+    width:
+      isXLarge ? "95%" :
+      isLarge ? "740px" :
+      isMedium ? "560px" : "375px",
 
     // 컨텐츠 정렬
     display: "flex", // 항목 수평 정렬
@@ -174,14 +209,19 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: "200px",
+    width:
+      isXLarge ? "200px" :
+      isLarge ? "170px" : "140px",
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
-    fontSize: "48px", // 로고 글자 크기
+    fontSize: 
+      isXLarge ? "48px" :
+      isLarge ? "44px" :
+      isMedium ? "40px" : "38px",
     color: "#FFD257", // 로고 글자 색: 노란색
   };
 
@@ -199,11 +239,10 @@ const NavigationBar = () => {
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
     // 디자인
-    padding: !isLarge ? "0 15px" : "0px", // (반응형) 항목 좌우 padding
+    paddingTop: "8px",
     height: "100px", // 항목 높이
 
     // 글자
-    fontSize: isLarge ? "20px" : "18px", // (반응형) 글자 크기
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
@@ -225,9 +264,10 @@ const NavigationBar = () => {
   const itemHoverStyle = {
     // 디자인
     width: "100%", // 가로 길이
-    height: "5px", // 세로 길이
+    height:
+      isXLarge ? "4.5px" :
+      isLarge ? "4px" : "3.5px",
     background: "#FFD257",
-    transition: "background 0.2s ease", // 나타날 때 애니메이션
   };
 
   // ----------- 버튼 컨테이너 스타일 -----------
@@ -521,7 +561,7 @@ const NavigationBar = () => {
         </div>
 
         {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
-        {isLarge && ( // (반응형) min-width:1024px 이상일 경우
+        {(isXLarge || isLarge) && ( // (반응형) min-width:1024px 이상일 경우
           <>
             <div style={linkContainerStyle}>
               {linkItems.map((item, index) => (
@@ -559,12 +599,12 @@ const NavigationBar = () => {
                 style={profileContainerStyle}
                 onMouseLeave={profileMouseLeave}
               >
-                <button style={myPageStyle} onMouseEnter={profileMouseEnter}>
-                  <img
-                    src={DefaultProfileImage}
-                    alt="사진"
-                    style={profileImageStyle}
-                  />
+                <button
+                  style={myPageStyle}
+                  onMouseEnter={profileMouseEnter}
+                  onClick={profileClick}
+                >
+                  <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
                   <p style={nickNameStyle}>[닉네임]</p>
                 </button>
                 <div style={profileMenuStyle}>
@@ -574,6 +614,7 @@ const NavigationBar = () => {
                       to={item.to}
                       style={menuItemStyle}
                       activeStyle={menuItemActiveStyle}
+                      onClick={profileClick}
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,
@@ -627,15 +668,16 @@ const NavigationBar = () => {
           )}
 
           {/* ------------- 내비게이션 메뉴 -------------  */}
-          {!isLarge && ( // (반응형) min-width:1024px 미만일 경우 링크를 햄버거 버튼으로 대체
+          {!(isXLarge || isLarge) && ( // (반응형) min-width:1024px 미만일 경우 링크를 햄버거 버튼으로 대체
             <>
               <div
                 style={hamburgerContainerStyle}
-                onMouseLeave={hamburgerMouseLeave}
+                // onMouseLeave={hamburgerMouseLeave}
               >
                 <button
                   style={hamburgerStyle}
                   onMouseEnter={hamburgerMouseEnter}
+                  onClick={hamburgerClick}
                 >
                   &#9776;
                 </button>
@@ -646,6 +688,7 @@ const NavigationBar = () => {
                       to={item.to}
                       style={menuItemStyle}
                       activeStyle={menuItemActiveStyle}
+                      onClick={hamburgerClick}
                       hoverState={{
                         hovered: item.hovered,
                         handleMouseEnter: item.mouseEnter,

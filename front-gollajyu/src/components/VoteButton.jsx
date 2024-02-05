@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import NowGollajyuImage from "/assets/images/vote-button/now_gollajyu_img.png";
 import SimpleGollajyuImage from "/assets/images/vote-button/simple_gollajyu_img.png";
 import PurchaseGollajyuImage from "/assets/images/vote-button/purchase_gollajyu_img.png";
@@ -10,6 +11,20 @@ const VoteButton = () => {
   const navigate = useNavigate();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // 로그인 여부
 
+  // ----------- 반응형 웹페이지 구현 -----------
+  const isXLarge = useMediaQuery({
+    query: "(min-width:1024px)",
+  });
+  const isLarge = useMediaQuery({
+    query : "(min-width:768px) and (max-width:1023px)"
+  });
+  const isMedium = useMediaQuery({
+    query : "(min-width:480px) and (max-width:767px)"
+  });
+  const isSmall = useMediaQuery({
+    query : "(max-width:479px)"
+  });
+  
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
   const [nowGollajyuHovered, setNowGollajyuHovered] = useState(false);
@@ -21,8 +36,8 @@ const VoteButton = () => {
     setButtonHovered(true);
   };
 
-  const buttonCloseClick = () => {
-    setButtonHovered(false); // 클릭 시 떠남 상태로 설정
+  const buttonClick = () => {
+    setButtonHovered(!buttonHovered);  // 클릭 시 버튼 열고 닫음
   };
 
   // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
@@ -58,9 +73,15 @@ const VoteButton = () => {
   const voteButtonContainerStyle = {
     // 위치
     position: "fixed", // 버튼 하단에 고정
-    bottom: "50px", // 버튼 고정 위치
-    right: "100px", // 버튼 고정 위치
     zIndex: 49, // 모달 바로 아래 레이어에 위치 (모달은 50)
+    bottom:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "20px",
+    right:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "20px",
   };
 
   // ----------- 투표 생성 버튼 스타일 -----------
@@ -69,64 +90,77 @@ const VoteButton = () => {
     position: "relative", // 자신을 기준 위치로
 
     // 디자인
-    width: "70px", // 버튼 가로 길이: 70px
-    height: "70px", // 버튼 세로 길이: 70px
+    width:
+      isXLarge ? "75px" :
+      isLarge ? "67px" :
+      isMedium ? "59px" : "51px",
+    height:
+      isXLarge ? "75px" :
+      isLarge ? "67px" :
+      isMedium ? "59px" : "51px",
     borderRadius: "50%", // 버튼 둥근 테두리: 원
-    backgroundColor: "#FF9999", // 버튼 색: 분홍
-    cursor: "pointer", // 커서: 손가락
+    backgroundColor: "#FF9999",
 
     // 글자
-    fontFamily: "GmarketSansMedium", // 중간 폰트로 설정
-    color: "#FFFFFF", // 글자 색: 검정
+    color: "#FFFFFF",
   };
 
   // ----------- 투표 상세 설명 박스 스타일 -----------
   const boxStyle = {
     // 위치
     position: "absolute", // relative를 기준 위치로
-    right: "5px", // 오른쪽 여백: 5px
+    right:
+      isXLarge ? "15px" :
+      isLarge ? "13px" :
+      isMedium ? "11px" : "9px",
 
     // 디자인
-    width: "300px", // 박스 가로 길이: 300px
-    height: "60px", // 박스 세로 길이: 60px
-    borderRadius: "50px", // 박스 둥근 테두리: 50px
-    backgroundColor: "#F0F0F0", // 배경 색: 옅은 회색
+    width:
+      isXLarge ? "300px" :
+      isLarge ? "270px" :
+      isMedium ? "240px" : "210px",
+    height:
+      isXLarge ? "60px" :
+      isLarge ? "54px" :
+      isMedium ? "48px" : "42px",
+    borderRadius: "50px",
+    backgroundColor: "#F0F0F0", 
+    boxShadow: "0 0 8px rgba(0, 0, 0, 0.5)", // 그림자 추가
 
     // 컨텐츠 정렬
-    display: "flex", // 항목 수평 정렬
-    justifyContent: "center", // 항목 수직 정렬
-    flexDirection: "column", // 주축을 수직 방향으로 설정
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
   };
 
   // ----------- 텍스트 컨테이너 스타일 -----------
   const textContainerStyle = {
     // 컨텐츠 정렬
-    display: "flex", // Flex 컨테이너로 설정
-    alignItems: "center", // 항목 수직 정렬
+    display: "flex",
+    alignItems: "baseline",
   };
 
   // ----------- 텍스트 스타일 -----------
   const textStyle = {
     // 디자인
-    marginLeft: "30px", // 왼쪽 여백: 30px
+    marginLeft:
+      isXLarge ? "30px" :
+      isLarge ? "27px" :
+      isMedium ? "24px" : "21px",
 
     // 글자
-    fontFamily: "GmarketSansMedium", // 중간 폰트로 설정
     color: "#000000", // 글자 색: 검정
   };
 
   // ----------- 포인트 텍스트 스타일 -----------
   const textPointStyle = {
-    // 상속
-    ...textStyle, // 기본 텍스트 스타일 상속
-
     // 디자인
-    marginLeft: "10px", // 왼쪽 여백: 10px
+    marginLeft: 
+      isXLarge ? "10px" :
+      isLarge ? "9px" :
+      isMedium ? "8px" : "7px",
 
     // 글자
-    fontFamily: "GmarketSansLight", // 얇은 폰트로 설정
-    fontWeight: "bold", // 굵게 표시
-    fontSize: "14px", // 글자 크기: 14px
     color: "#FFA800", // 글자 색: 주황색
   };
 
@@ -136,7 +170,6 @@ const VoteButton = () => {
     ...textStyle, // 기본 텍스트 스타일 상속
 
     // 글자
-    fontSize: "14px", // 글자 크기: 14px
     color: "#4A4A4A", // 글자 색: 회색
   };
 
@@ -148,10 +181,16 @@ const VoteButton = () => {
     transform: `translateX(+50%) translateY(${buttonHovered ? 0 : 100}%)`, // 마우스 호버 시 위치 이동
 
     // 디자인
-    width: "60px", // 원 가로 길이: 60px
-    height: "60px", // 원 세로 길이: 60px
+    width:
+      isXLarge ? "60px" :
+      isLarge ? "54px" :
+      isMedium ? "48px" : "42px",
+    height:
+      isXLarge ? "60px" :
+      isLarge ? "54px" :
+      isMedium ? "48px" : "42px",
     borderRadius: "50%", // 원형 모양으로 설정
-    backgroundColor: "#FF9999", // 배경 색: 분홍
+    backgroundColor: "#FF9999",
     opacity: buttonHovered ? 1 : 0, // 마우스 호버 시 투명도를 1로, 아닐 경우 0으로 설정
     transition: "opacity 0.5s ease, transform 0.5s ease", // 투명도와 위치 변화에 대한 애니메이션 효과 설정
   };
@@ -181,8 +220,16 @@ const VoteButton = () => {
     {
       label: "지금골라쥬!",
       image: NowGollajyuImage,
-      boxBottom: 80,
-      circleBottom: buttonHovered ? 80 : -200,
+      boxBottom:
+        isXLarge ? 85 :
+        isLarge ? 76 :
+        isMedium ? 67 : 58,
+      circleBottom:
+        buttonHovered ? (
+          isXLarge ? 85 :
+          isLarge ? 76 :
+          isMedium ? 67 : 58
+        ) : -200,
       description: "라이브 방송으로 선택을 맡겨봐요",
       hovered: nowGollajyuHovered,
       mouseEnter: nowGollajyuHover,
@@ -200,8 +247,16 @@ const VoteButton = () => {
     {
       label: "간단골라쥬!",
       image: SimpleGollajyuImage,
-      boxBottom: 150,
-      circleBottom: buttonHovered ? 150 : -200,
+      boxBottom:
+        isXLarge ? 155 :
+        isLarge ? 138 :
+        isMedium ? 121 : 104,
+      circleBottom:
+        buttonHovered ? (
+          isXLarge ? 155 :
+          isLarge ? 138 :
+          isMedium ? 121 : 104
+        ) : -200,
       description: "간단한 질문으로 선택을 맡겨봐요",
       hovered: simpleGollajyuHovered,
       mouseEnter: simpleGollajyuHover,
@@ -220,8 +275,16 @@ const VoteButton = () => {
     {
       label: "구매골라쥬!",
       image: PurchaseGollajyuImage,
-      boxBottom: 220,
-      circleBottom: buttonHovered ? 220 : -200,
+      boxBottom:
+        isXLarge ? 225 :
+        isLarge ? 200 :
+        isMedium ? 175 : 150,
+      circleBottom:
+        buttonHovered ? (
+          isXLarge ? 225 :
+          isLarge ? 200 :
+          isMedium ? 175 : 150
+        ) : -200,
       description: "상세한 질문으로 선택을 맡겨봐요",
       hovered: purchaseGollajyuHovered,
       mouseEnter: purchaseGollajyHover,
@@ -249,11 +312,11 @@ const VoteButton = () => {
         {button.hovered && buttonHovered && (
           <div style={{ ...boxStyle, bottom: `${button.boxBottom}px` }}>
             <div style={textContainerStyle}>
-              <div style={textStyle}>{button.label}</div>
-              <div style={textPointStyle}>(10P 차감됩니다)</div>
+              <div style={textStyle} className="fontsize-sm">{button.label}</div>
+              <div style={textPointStyle} className="fontsize-xs">(10P 차감됩니다)</div>
             </div>
             <div style={textContainerStyle}>
-              <div style={textDescriptionStyle}>{button.description}</div>
+              <div style={textDescriptionStyle} className="fontsize-xs">{button.description}</div>
             </div>
           </div>
         )}
@@ -272,13 +335,11 @@ const VoteButton = () => {
     <div
       style={voteButtonContainerStyle}
       onMouseEnter={buttonHover}
-      onClick={buttonCloseClick} // 클릭 시 세부 버튼 닫기
+      onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
     >
       {/* ------------- 투표 버튼 ------------- */}
-      <button style={voteButtonStyle}>
-        {buttonHovered ? (
-          "X"
-        ) : (
+      <button style={voteButtonStyle} className="fontsize-sm">
+        {buttonHovered ? "X" : (
           <>
             투표
             <br />

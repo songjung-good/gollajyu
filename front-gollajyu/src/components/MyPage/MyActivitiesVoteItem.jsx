@@ -13,15 +13,19 @@ const useHoverState = () => {
 };
 
 const MyActivitiesVoteItem = () => {
+
   // ----------- 반응형 웹페이지 구현 -----------
-  const isLarge = useMediaQuery({
+  const isXLarge = useMediaQuery({
     query: "(min-width:1024px)",
   });
+  const isLarge = useMediaQuery({
+    query : "(min-width:768px) and (max-width:1023px)"
+  });
   const isMedium = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1024px)"
+    query : "(min-width:480px) and (max-width:767px)"
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:768px)"
+    query : "(max-width:479px)"
   });
 
   // ----------- 내 활동 아이템 hover -----------
@@ -31,6 +35,14 @@ const MyActivitiesVoteItem = () => {
     ItemMouseLeave
   ] = useHoverState();
 
+  // ----------- 예시 데이터 (임시) -----------
+  const voteOptions = [
+    { label: "[선택지 1]", ratio: 10, isMyChoice: false },
+    { label: "[선택지 2]", ratio: 30, isMyChoice: true },
+    { label: "[선택지 3]", ratio: 60, isMyChoice: false },
+    { label: "[선택지 4]", ratio: 0, isMyChoice: false },
+  ];
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -38,7 +50,10 @@ const MyActivitiesVoteItem = () => {
   const containerStyle = {
     // 디자인
     marginBottom: "30px",
-    padding: "20px 30px",
+    padding:
+      isXLarge ? "20px 30px" :
+      isLarge ? "17px 26px" :
+      isMedium ? "14px 22px" : "11px 18px",
     width: "100%",
     border: ItemHovered ? "3px solid #D0D0D0" : "3px solid #FFFFFF", 
     borderRadius: "10px", // 둥근 테두리
@@ -58,7 +73,6 @@ const MyActivitiesVoteItem = () => {
     width: "100%",
 
     // 글자
-    fontSize: "20px",
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
@@ -77,15 +91,12 @@ const MyActivitiesVoteItem = () => {
     // 디자인
     marginRight: "10px",
 
-    // 글자
-    fontSize: "28px",
     // 길이가 일정 이상일 경우 ... 되는 기능 필요
   }
 
   // ----------- 댓글 수 스타일 -----------
   const commentNumberStyle = {
     // 글자
-    fontSize: "20px",
     color: "#868FF4",
   }
 
@@ -106,19 +117,23 @@ const MyActivitiesVoteItem = () => {
     // 컨텐츠 정렬
     display: "flex",
     justifyContent: "center",
-    flexWrap: isSmall ? "wrap" : "nowrap", // isSmall일 때 줄 바꿈 허용
+    flexWrap: isXLarge || isLarge ? "nowrap" : "wrap", // 화면 작을 때 줄 바꿈 허용
   }
 
   // ----------- 투표 아이템 스타일 -----------
   const voteItemStyle = {
     // 디자인
-    margin: "0 10px 10px 10px",
+    margin:
+      isXLarge ? "10px" :
+      isLarge ? "9px" :
+      isMedium ? "8px" : "7px",
+    marginTop: "0",
     padding: "5px",
-    width: isLarge ? "150px" : "120px",
+    width:
+      isXLarge ? "150px" :
+      isLarge ? "130px" :
+      isMedium ? "110px" : "90px",
     border: "5px solid", 
-
-    // 글자
-    fontSize: "20px",
 
     // 컨텐츠 정렬
     display: "flex",
@@ -126,10 +141,6 @@ const MyActivitiesVoteItem = () => {
     alignItems: "center",
   }
 
-  // ----------- 투표 비율 스타일 -----------
-  const ratioStyle = {
-    fontSize: "16px",
-  }
 
   // --------------------------------- css 끝 ---------------------------------
 
@@ -172,10 +183,10 @@ const MyActivitiesVoteItem = () => {
 
     return (
       <div>
-        <div style={myPickStyle}>My Pick</div>
+        <div style={myPickStyle} className="fontsize-xs">My Pick</div>
         <div style={itemStyle}>
-          <div>{label}</div>
-          <div style={ratioStyle}>{ratio} %</div>
+          <div className="fontsize-sm">{label}</div>
+          <div className="fontsize-xs">{ratio} %</div>
         </div>
       </div>
     );
@@ -197,14 +208,6 @@ const MyActivitiesVoteItem = () => {
     );
   };
 
-  // ----------- 예시 데이터 (임시) -----------
-  const voteOptions = [
-    { label: "[선택지 1]", ratio: 10, isMyChoice: false },
-    { label: "[선택지 2]", ratio: 30, isMyChoice: true },
-    { label: "[선택지 3]", ratio: 60, isMyChoice: false },
-    { label: "[선택지 4]", ratio: 0, isMyChoice: false },
-  ];
-
   return (
     <>
       <NavLink
@@ -213,16 +216,16 @@ const MyActivitiesVoteItem = () => {
       >
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
-            <div style={titleStyle}>[제목]</div>
-            <div style={commentNumberStyle}>[[댓글]]</div>
+            <div style={titleStyle} className="fontsize-lg">[제목]</div>
+            <div style={commentNumberStyle} className="fontsize-md">[[댓글]]</div>
           </div>
           <div style={infoContainerStyle}>
             <div style={infoSubContainerStyle}>
-              <div>[카테고리]</div>
-              <div style={barStyle}>|</div>
-              <div style={likeNumberStyle}>❤ [좋아요]</div>
+              <div className="fontsize-sm">[카테고리]</div>
+              <div style={barStyle} className="fontsize-sm">|</div>
+              <div style={likeNumberStyle} className="fontsize-sm">❤ [좋아요]</div>
             </div>
-            <div>[작성 시간]</div>
+            <div className="fontsize-sm">[작성 시간]</div>
           </div>
           <Vote voteOptions={voteOptions} />
         </div>
