@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import sobiTIData from "/src/stores/testResultData";
+import sobiTIData from "../../stores/testResultData";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import useModalStore from "../stores/modalState";

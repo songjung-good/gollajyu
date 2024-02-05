@@ -2,25 +2,24 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import TestResultHeader from "../TestResultHeader";
-import sobiTIData from "/src/stores/TestResultData";
+import sobiTIData from "../stores/testResultData";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
-  
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
     query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023px)"
+    query: "(min-width:768px) and (max-width:1023px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767px)"
+    query: "(min-width:480px) and (max-width:767px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479px)"
+    query: "(max-width:479px)",
   });
-  
+
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
   const [testButtonHovered, setTestButtonHovered] = useState(false);
@@ -47,26 +46,25 @@ const MyProfile = () => {
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, [result]);
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom:
-      isXLarge ? "50px" :
-      isLarge ? "45px" :
-      isMedium ? "40px" : "35px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "35px",
   };
 
   // ----------- 제목 컨테이너 스타일 -----------
   const titleContainerStyle = {
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height:
-      isXLarge ? "60px" :
-      isLarge ? "50px" :
-      isMedium ? "45px" : "40px",
+    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
 
     // 컨텐츠 정렬
     display: "flex",
@@ -76,24 +74,15 @@ const MyProfile = () => {
   // ----------- 제목 스타일 -----------
   const titleStyle = {
     // 디자인
-    marginTop:
-      isXLarge ? "5px" :
-      isLarge ? "3px" :
-      isMedium ? "5px" : "4px",
+    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
   };
 
   // ----------- 버튼 스타일 -----------
   const buttonStyle = {
     // 디자인
     marginLeft: "20px",
-    width:
-      isXLarge ? "100px" :
-      isLarge ? "90px" :
-      isMedium ? "80px" : "70px",
-    height:
-      isXLarge ? "40px" :
-      isLarge ? "36px" :
-      isMedium ? "32px" : "28px",
+    width: isXLarge ? "100px" : isLarge ? "90px" : isMedium ? "80px" : "70px",
+    height: isXLarge ? "40px" : isLarge ? "36px" : isMedium ? "32px" : "28px",
     border: "3px solid",
     borderRadius: "5px",
     borderColor: "#BEBEBE",
@@ -107,14 +96,14 @@ const MyProfile = () => {
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentContainerStyle = {
     // 디자인
-    padding:
-      isXLarge ? "40px" :
-      isLarge ? "35px" :
-      isMedium ? "30px" : "25px",
-    borderRadius:
-      isXLarge ? "50px" :
-      isLarge ? "40px" :
-      isMedium ? "30px" : "20px",
+    padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
@@ -129,14 +118,8 @@ const MyProfile = () => {
   const profileImageStyle = {
     // 디자인
     marginRight: "40px",
-    width:
-      isXLarge ? "100px" :
-      isLarge ? "90px" :
-      isMedium ? "80px" : "70px",
-    height:
-      isXLarge ? "100px" :
-      isLarge ? "90px" :
-      isMedium ? "80px" : "70px",
+    width: isXLarge ? "100px" : isLarge ? "90px" : isMedium ? "80px" : "70px",
+    height: isXLarge ? "100px" : isLarge ? "90px" : isMedium ? "80px" : "70px",
     borderRadius: "50%",
   };
 
@@ -149,10 +132,13 @@ const MyProfile = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: 
-      isXLarge ? "30px 0" :
-      isLarge ? "25px 0" :
-      isMedium ? "20px 0" : "15px 0",
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "25px 0"
+      : isMedium
+      ? "20px 0"
+      : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -170,15 +156,15 @@ const MyProfile = () => {
   const infoItemStyle = {
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding:
-      isXLarge ? "10px 20px" :
-      isLarge ? "8px 18px" :
-      isMedium ? "6px 16px" : "4px 14px",
+    padding: isXLarge
+      ? "10px 20px"
+      : isLarge
+      ? "8px 18px"
+      : isMedium
+      ? "6px 16px"
+      : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
-    height:
-      isXLarge ? "60px" :
-      isLarge ? "52px" :
-      isMedium ? "44px" : "36px",
+    height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
 
     // 컨텐츠 정렬
@@ -193,9 +179,7 @@ const MyProfile = () => {
     ...infoItemStyle,
 
     // 디자인
-    marginRight: 
-      isXLarge ? "16px" :
-      isLarge ? "12px" : "0px",
+    marginRight: isXLarge ? "16px" : isLarge ? "12px" : "0px",
   };
 
   // ----------- 오른쪽 아이템 스타일 -----------
@@ -204,9 +188,7 @@ const MyProfile = () => {
     ...infoItemStyle,
 
     // 디자인
-    marginLeft:
-      isXLarge ? "16px" :
-      isLarge ? "12px" : "0px",
+    marginLeft: isXLarge ? "16px" : isLarge ? "12px" : "0px",
   };
 
   // ----------- 정보 데이터 스타일 -----------
@@ -233,14 +215,14 @@ const MyProfile = () => {
   const testButtonStyle = {
     // 디자인
     marginTop: "10px",
-    width:
-      isXLarge ? "300px" :
-      isLarge ? "270px" :
-      isMedium ? "240px" : "210px",
-    height:
-      isXLarge ? "70px" :
-      isLarge ? "60px" :
-      isMedium ? "50px" : "40px",
+    width: isXLarge
+      ? "300px"
+      : isLarge
+      ? "270px"
+      : isMedium
+      ? "240px"
+      : "210px",
+    height: isXLarge ? "70px" : isLarge ? "60px" : isMedium ? "50px" : "40px",
     borderRadius: "50px",
     background: testButtonHovered ? "#E6BE3D" : "#FFD257", // 마우스 호버 시 배경 색상 변경
     transition: "background 0.5s ease",
@@ -249,17 +231,18 @@ const MyProfile = () => {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
       {/* ------------- 기본정보 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleStyle} className="fontsize-xl">기본정보</span>
+          <span style={titleStyle} className="fontsize-xl">
+            기본정보
+          </span>
           <button
             style={buttonStyle}
             className="fontsize-sm"
@@ -277,19 +260,27 @@ const MyProfile = () => {
               style={profileImageStyle}
             />
             <div>
-              <div style={profileTextStyle} className="fontsize-lg">[닉네임]</div>
-              <div style={profileTextStyle} className="fontsize-md">[이메일]</div>
+              <div style={profileTextStyle} className="fontsize-lg">
+                [닉네임]
+              </div>
+              <div style={profileTextStyle} className="fontsize-md">
+                [이메일]
+              </div>
             </div>
           </div>
           <div style={barStyle}></div>
           <div style={infoContainerStyle}>
             <div style={infoItemLeftStyle}>
               <div className="fontsize-md">생년월일</div>
-              <div style={infoDataStyle} className="fontsize-sm">[생년월일]</div>
+              <div style={infoDataStyle} className="fontsize-sm">
+                [생년월일]
+              </div>
             </div>
             <div style={infoItemRightStyle}>
               <div className="fontsize-md">성별</div>
-              <div style={infoDataStyle} className="fontsize-sm">[성별]</div>
+              <div style={infoDataStyle} className="fontsize-sm">
+                [성별]
+              </div>
             </div>
           </div>
         </div>
@@ -298,7 +289,9 @@ const MyProfile = () => {
       {/* ------------- 소비성향 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleStyle} className="fontsize-xl">소비성향</span>
+          <span style={titleStyle} className="fontsize-xl">
+            소비성향
+          </span>
         </div>
         <div style={testContainerStyle}>
           <TestResultHeader data={matchingData} result={result} />
