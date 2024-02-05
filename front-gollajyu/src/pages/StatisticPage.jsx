@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
 import categoryData from "/src/stores/categoryData";
 import tagColorData from "/src/stores/tagColorData";
 import TmpModal from "../components/TmpModal"; // 임시 모달
@@ -196,6 +197,18 @@ const StatisticPage = () => {
     backgroundColor: "#F0F0F0",
   };
 
+  // ----------- 차트 컨테이너 스타일 -----------
+  const chartContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    marginTop: "20px",
+
+    // 컨텐츠 정렬
+    justifyContent: "center",
+  }
+
   // --------------------------------- css 끝 ---------------------------------
 
 
@@ -210,51 +223,63 @@ const StatisticPage = () => {
   return (
     <>
       <div style={body}>
-        {/* ------------- 카테고리 선호도 ------------- */}
+        {/* ------------- 사용자별 선호 태그 통계 ------------- */}
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-xl">사용자별 선호 태그 통계</span>
           </div>
           <div style={contentsContainerStyle}>
-            <div style={flexContainerStyle}>
-              {/* ------------- 드롭다운 버튼 ------------- */}
-              <div style={dropdownContainerStyle}>
-                <div style={flexContainerStyle}>
-                  <div style={subTitleStyle} className="fontsize-md">다른 사람들은</div>
-                  <div style={relativeContainerStyle}>
-                    <div
-                      onClick={toggleDropdown}
-                      style={dropdownButtonStyle}
-                      className="fontsize-sm"
-                    >
-                      {selectedCategory !== null
-                        ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
-                        : '카테고리 선택'}
-                    </div>
-                    {isOpen && (
-                      <div style={dropdownMenuStyle}>
-                        {categoryData.map((category) => (
-                          <div
-                            key={category.id}
-                            onClick={() => handleCategoryChange({ target: { value: category.id } })}
-                            onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
-                            onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
-                            style={dropdownItemStyle}
-                          >
-                            {category.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+
+            {/* ------------- 드롭다운 버튼 ------------- */}
+            <div style={dropdownContainerStyle}>
+              <div style={flexContainerStyle}>
+                <div style={subTitleStyle} className="fontsize-md">다른 사람들은</div>
+                <div style={relativeContainerStyle}>
+                  <div
+                    onClick={toggleDropdown}
+                    style={dropdownButtonStyle}
+                    className="fontsize-sm"
+                  >
+                    {selectedCategory !== null
+                      ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
+                      : '카테고리 선택'}
                   </div>
-                  <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
-                  <div style={restStyle} className="fontsize-md">,</div>
+                  {isOpen && (
+                    <div style={dropdownMenuStyle}>
+                      {categoryData.map((category) => (
+                        <div
+                          key={category.id}
+                          onClick={() => handleCategoryChange({ target: { value: category.id } })}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
+                          style={dropdownItemStyle}
+                        >
+                          {category.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
+                <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
+                <div style={restStyle} className="fontsize-md">,</div>
               </div>
-              {/* --------------------------------------- */}
+              <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
             </div>
+            {/* --------------------------------------- */}
+
+            {/* ------------- 차트 그래프 ------------- */}
+            <div style={chartContainerStyle}>
+              <StatisticPageChart />
+            </div>
+            {/* --------------------------------------- */}
+
             <div style={barStyle}></div>
+
+            {/* ------------- 사용자 그룹 선택 ------------- */}
+            <div style={subTitleStyle} className="fontsize-lg">사용자 그룹 선택</div>
+
+
+            {/* --------------------------------------- */}
           </div>
         </div>
       </div>
