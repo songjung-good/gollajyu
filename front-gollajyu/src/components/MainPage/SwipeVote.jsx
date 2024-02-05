@@ -12,8 +12,10 @@ import VoteCard from '../vote/VoteCard';
 import image1 from '/favicon1.png';
 
 
-export default function SwipeVote() {
-
+export default function SwipeVote( props ) {
+  const { voteList } = props;
+  console.log("swipe"+voteList.body.data)
+  const [votes, setVotes] = useState(voteList.body.voteInfoList);
   // 슬라이드 기능
   const [activeSlide, setActiveSlide] = useState(0);
   useEffect(() => {
@@ -28,42 +30,10 @@ export default function SwipeVote() {
     };
   }, []);
 
-  //임시데이터
-  const votes = [
-    {
-      id: 1,
-      options: [
-        { id: 'a1', image: image1, title: '옵션 1' },
-        { id: 'a2', image: 'image2.png', title: '옵션 2' },
-        { id: 'a3', image: 'image3.png', title: '옵션 3' },
-      ],
-    },
-    {
-        id: 2,
-        options: [
-          { id: 'a1', image: 'image1.png', title: '옵션 1' },
-          { id: 'a2', image: 'image2.png', title: '옵션 2' },
-          { id: 'a3', image: 'image3.png', title: '옵션 3' },
-          { id: 'a3', image: 'image3.png', title: '옵션 3' },
-        ],
-      },
-    {
-      id: 3,
-      options: [
-        { id: 'a1', image: 'image1.png', title: '옵션 1' },
-        { id: 'a3', image: 'image3.png', title: '옵션 3' },
-      ],
-    },
-    // 추가 투표 데이터
-    // ...
-  ];
-
-
-
-
   return (
     <div className="py-10">
       <Swiper
+        key="swiper-instance"  // Add a unique key here
         // width={1280}
         effect={'coverflow'}
         grabCursor={true}
@@ -87,14 +57,14 @@ export default function SwipeVote() {
       >
         {votes.map((vote) => (
           <SwiperSlide 
-            key={vote.id} 
-            data-hash={vote.id} 
+            key={vote.voteId} 
+            data-hash={vote.voteId} 
             style={{ width: '1024px' }}
           >
             <div>
               <VoteCard
-                key={vote.id}
-                options={vote.options}
+                key={`${vote.voteId}-card`}  // Use a different key for VoteCard
+                vote={vote}
               />
             </div>
           </SwiperSlide>
