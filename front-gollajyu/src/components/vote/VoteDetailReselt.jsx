@@ -7,14 +7,14 @@ const VoteDetailResult = ({voteResults}) => {
   const [selectedOption, setSelectedOption] = useState(null);
   
   return (
-    <div>
+    <div className='flex w-full' style={{display: "flex"}}>
       {voteResults.map((result, index) => (
-        <div key={index} style={{border: "1px solid black", margin: "10px", padding: "10px"}}>
-          <h2>{result.voteResults}: %</h2>
+        <div key={index} style={{border: "1px solid black", width: "280px", margin: "10px", padding: "10px"}}>
+          <h2>{result.tagResults}: %</h2>
           <button onClick={() => setSelectedOption(selectedOption === index ? null : index)}>▼</button>
           {selectedOption === index && (
             <div>
-              {Object.entries(result.voteResults).map(([reason, percentage]) => (
+              {Object.entries(result.tagResults).map(([reason, percentage]) => (
                 <p key={reason}>{reason}: {percentage}%</p>
               ))}
             </div>
