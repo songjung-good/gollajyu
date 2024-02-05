@@ -4,6 +4,7 @@ import sobiTIData from "../stores/testResultData.js";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import useModalStore from "../stores/modalState";
+import API_URL from "../stores/apiURL";
 import axios from "axios";
 
 const getMBTI = (response) => {
@@ -87,7 +88,7 @@ const TestResultPage = () => {
       memberInfo.typeId = result;
       console.log(memberInfo);
       axios
-        .post("http://localhost:8080/api/members", memberInfo)
+        .post(API_URL + "/members", memberInfo)
         .then((response) => {
           console.log(response);
           if (response.data.header.message == "이미 존재하는 이메일입니다") {
@@ -101,11 +102,13 @@ const TestResultPage = () => {
           }
         })
         .catch((err) => console.log(err));
-    } else {
-      window.scrollTo({ top: 0 });
-      setMatchingData(sobiTIData.find((data) => data.id === result));
     }
-  }, [isFirstTime, result]);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    setMatchingData(sobiTIData.find((data) => data.id === result));
+  }, [result]);
 
   // console.log("isMyResult", isMyResult);
   return (

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import TestResultHeader from "../TestResultHeader";
 import sobiTIData from "../../stores/testResultData.js";
+import useAuthStore from "../../stores/userState";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
@@ -29,9 +30,9 @@ const MyProfile = () => {
   const [matchingData, setMatchingData] = useState({});
 
   // ----------- result가 변경될 때마다 실행되는 함수 -----------
+  const user = useAuthStore((state) => state.user); // local storage에 로그인 시 저장된 user 데이터를 가져옴 -> 네비게이션바에서도 이렇게 사용가능 (위의 import 참고)
   useEffect(() => {
-    // TODO local storage에서 가져와서 사용
-    // setResult(typeId)
+    setResult(user.typeId);
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, []);
 

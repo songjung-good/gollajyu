@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import useAuthStore from "../stores/userState";
 import useModalStore from "../stores/modalState";
+import API_URL from "../stores/apiURL";
 import axios from "axios";
 
 const LoginModal = () => {
@@ -25,17 +26,20 @@ const LoginModal = () => {
   const submitForm = async (data) => {
     console.log(data);
     // TODO: 서버로 로그인 요청
-    // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음(추가 필요)
-    setLoggedIn(data);
+    // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음
 
-    const response = await axios.post(
-      "https://i10e107.p.ssafy.io/api/members/login",
-      data,
-      { withCredentials: true }
-    );
-    // console.log(response.data);
+    const response = await axios.post(API_URL + "/members/login", data, {
+      withCredentials: true,
+    });
+    if (!response.data.header.result) {
+      console.log(response.data.header.message);
+      window.alert("이메일 또는 비밀번호가 틀렸습니다");
+    } else {
+      console.log("로그인 완료");
+      setLoggedIn(response.data.body);
+      setLoginModalClose();
+    }
     reset();
-    setLoginModalClose();
   };
 
   // TODO: 소셜로그인 핸들링 함수
@@ -84,7 +88,6 @@ const LoginModal = () => {
             <input
               type="text"
               id="email"
-              value="new@gmail.com"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               placeholder="이메일을 입력하세요"
               {...register("email", {
@@ -106,7 +109,6 @@ const LoginModal = () => {
           <div className="h-24">
             <input
               type="password"
-              value="qwer1234!@#$"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               id="password"
               placeholder="비밀번호를 입력하세요"
