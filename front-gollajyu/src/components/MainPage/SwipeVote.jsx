@@ -4,7 +4,7 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
-import VoteCard from './vote/VoteCard';
+import VoteCard from '../vote/VoteCard';
 
 // 임시 사진
 import image1 from '/favicon1.png';
@@ -62,7 +62,7 @@ export default function SwipeVote() {
         grabCursor={true}
         spaceBetween={50} // 여기를 조절하여 좌우 여백을 변경
         centeredSlides={true}
-        navigation={true}
+        navigation={true} // 네비게이션(화살표 버튼)
         slidesPerView={'auto'}
         loop={true}
         // breakpoints-480={spaceBetween=20}
@@ -78,7 +78,6 @@ export default function SwipeVote() {
         className="mySwiper"
         style={{ padding: '30px' }}
       >
-
         {votes.map((vote) => (
           <SwiperSlide key={vote.id} data-hash={vote.id} style={{ width: '1024px' }}>
             <div>

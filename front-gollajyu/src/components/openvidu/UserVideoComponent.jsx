@@ -31,7 +31,7 @@ export default function UserVideoComponent({ streamManager }) {
         <div className="streamcomponent" style={streamComponent}>
           <OpenViduVideoComponent streamManager={streamManager} />
           {/* 네임태그는 나중에 지울 것 */}
-          <p style={nameTag}>{getNicknameTag()}</p>
+          {/* <p style={nameTag}>{getNicknameTag()}</p> */}
         </div>
       ) : null}
     </div>

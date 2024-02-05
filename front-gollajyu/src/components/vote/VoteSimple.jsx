@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const VoteSimple = () => {
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('');
+  // const [category, setCategory] = useState('');
   const [images, setImages] = useState([null, null, null, null]);
 
   // 이미지 업로드 기능
@@ -40,7 +40,7 @@ const VoteSimple = () => {
               className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#8DB600] focus:shadow-md" 
             />
           </div>
-          <div className="mb-5">
+          {/* <div className="mb-5">
             <label htmlFor="category" className="mb-3 block text-base font-medium text-[#8DB600]">
               카테고리:
             </label>
@@ -58,7 +58,7 @@ const VoteSimple = () => {
               <option value="category3">전자제품</option>
               <option value="category3">기타</option>
             </select>
-          </div>
+          </div> */}
           {/* 사진 첨부, 캡쳐 */}
           <div className="flex flex-wrap justify-center mt-10">
             {Array(4).fill(null).map((_, index) => (
@@ -80,7 +80,7 @@ const VoteSimple = () => {
                         </span>
                       </div>
                     </label>
-                    <button 
+                    {/* <button 
                       type="button"
                       className="relative flex min-h-[100px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-6 text-center">
                       <div>
@@ -88,7 +88,7 @@ const VoteSimple = () => {
                           캡쳐 도구로 첨부하기
                         </span>
                       </div>
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>

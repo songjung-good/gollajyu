@@ -7,7 +7,7 @@ function VoteCardItem(props) {
   const [clicked, setClicked] = useState(null);
   
   // 투표선택지의 내용
-  const categoryIndex = props.category === 'a' || props.category === 'b' ? 0 : props.category === 'c' || props.category === 'd' ? 1 : 2;
+  const categoryIndex = props.category === '0' || props.category === '1' ? 0 : props.category === '2' || props.category === '3' ? 1 : 2;
   const selection = [
     ['가성비', '소재', '색감', '모양', '브랜드'],
     ['가성비', '디자인', '브랜드', '기능성', '내구성'],
