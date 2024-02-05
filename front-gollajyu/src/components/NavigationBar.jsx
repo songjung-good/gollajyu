@@ -207,8 +207,7 @@ const NavigationBar = () => {
     // 디자인
     width:
       isXLarge ? "200px" :
-      isLarge ? "170px" :
-      isMedium ? "140px" : "141px",
+      isLarge ? "170px" : "140px",
   };
 
   // ----------- 로고 스타일 -----------
@@ -236,11 +235,10 @@ const NavigationBar = () => {
   // ----------- 링크 아이템 스타일 -----------
   const linkItemStyle = {
     // 디자인
-    padding: !isLarge ? "0 15px" : "0px", // (반응형) 항목 좌우 padding
+    paddingTop: "8px",
     height: "100px", // 항목 높이
 
     // 글자
-    fontSize: isLarge ? "20px" : "18px", // (반응형) 글자 크기
     color: "#4A4A4A",
 
     // 컨텐츠 정렬
@@ -262,9 +260,10 @@ const NavigationBar = () => {
   const itemHoverStyle = {
     // 디자인
     width: "100%", // 가로 길이
-    height: "5px", // 세로 길이
+    height:
+      isXLarge ? "4.5px" :
+      isLarge ? "4px" : "3.5px",
     background: "#FFD257",
-    transition: "background 0.2s ease", // 나타날 때 애니메이션
   };
 
   // ----------- 버튼 컨테이너 스타일 -----------
@@ -665,7 +664,7 @@ const NavigationBar = () => {
             <>
               <div
                 style={hamburgerContainerStyle}
-                onMouseLeave={hamburgerMouseLeave}
+                // onMouseLeave={hamburgerMouseLeave}
               >
                 <button
                   style={hamburgerStyle}
