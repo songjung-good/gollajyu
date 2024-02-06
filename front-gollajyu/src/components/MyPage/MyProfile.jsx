@@ -38,21 +38,6 @@ const MyProfile = () => {
     setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
   }, []);
 
-  useEffect(() => {
-    // TODO 페이지가 마운트될 때, axios 요청을 보냄
-    // 작성한 투표
-    axios
-      .get(API_URL + "/members/" + user.memberId + "/votes")
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // 좋아요한 투표
-    // 참여한 투표
-    // 작성한 댓글
-  }, []);
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
