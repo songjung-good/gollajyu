@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import TestItem from "../components/TestItem";
 import mainImg from "/assets/images/sobiTest/tmp_mainImg.png";
 import LinearProgress, {
@@ -9,6 +9,7 @@ import { styled } from "@mui/material/styles";
 
 const TestPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const questions = [
     "힘찬 하루를 다짐하며 시계를 보니 벌써 9시를 넘긴 시간, 지각하는 동기를 본 나는?",
@@ -88,6 +89,8 @@ const TestPage = () => {
   const [response, setResponse] = useState([]);
   const [questionNumber, setQuestionNumber] = useState(-1);
 
+  // TODO 테스트 페이지에서 벗어날 때, 회원가입이 진행되지 않는다는 알림창이 뜨도록 하고 싶음
+
   const handleResponse = (answerType) => {
     // console.log(questionNumber, answerType);
     setResponse((prevResponse) => {
@@ -99,6 +102,7 @@ const TestPage = () => {
   const goResultPage = () => {
     navigate("/TestResultPage", {
       state: {
+        memberInfo: location.state?.memberInfo || undefined,
         isFirstTime: true,
         response: response,
       },

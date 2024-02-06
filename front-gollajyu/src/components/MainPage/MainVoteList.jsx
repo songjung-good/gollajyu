@@ -1,27 +1,27 @@
 import React from 'react';
-// import VoteCardItem from './VoteCardItem';
+import VoteCardItem from '../vote/VoteCardItem';
 
 // const MainVoteList = ({ votes }) => {
-//     return (
-//         <div>
-//             <h2>좋아요 많이 받은 투표</h2>
-//             {votes.sort((a, b) => b.likes - a.likes).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//             <h2>투표 참여자가 많은 투표</h2>
-//             {votes.sort((a, b) => b.participants - a.participants).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//             <h2>투표의 선택지가 박빙인 투표</h2>
-//             {votes.filter(vote => vote.isClose).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//             <h2>최근에 올라온 투표</h2>
-//             {votes.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//         </div>
-//     );
+//   return (
+//     <div>
+//       <h2>좋아요 많이 받은 투표</h2>
+//       {votes.sort((a, b) => b.likes - a.likes).slice(0, 5).map(vote => (
+//         <VoteCardItem key={vote.id} vote={vote} />
+//       ))}
+//       <h2>투표 참여자가 많은 투표</h2>
+//       {votes.sort((a, b) => b.participants - a.participants).slice(0, 5).map(vote => (
+//         <VoteCardItem key={vote.id} vote={vote} />
+//       ))}
+//       <h2>투표의 선택지가 박빙인 투표</h2>
+//       {votes.filter(vote => vote.isClose).slice(0, 5).map(vote => (
+//         <VoteCardItem key={vote.id} vote={vote} />
+//       ))}
+//       <h2>최근에 올라온 투표</h2>
+//       {votes.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).map(vote => (
+//         <VoteCardItem key={vote.id} vote={vote} />
+//       ))}
+//     </div>
+//   );
 // };
 
 // export default MainVoteList;
@@ -94,30 +94,3 @@ const VoteList = () => {
 };
 
 export default VoteList;
-
-
-// 자료받아오면 사용할 알고리즘
-// const MainVoteList = ({ votes }) => {
-//     return (
-//         <div>
-//             <h2>좋아요 많이 받은 투표</h2>
-//             {votes.sort((a, b) => b.likes - a.likes).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//             <h2>투표 참여자가 많은 투표</h2>
-//             {votes.sort((a, b) => b.participants - a.participants).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//             <h2>투표의 선택지가 박빙인 투표</h2>
-//             {votes.filter(vote => vote.isClose).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//             <h2>최근에 올라온 투표</h2>
-//             {votes.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5).map(vote => (
-//                 <VoteCardItem key={vote.id} vote={vote} />
-//             ))}
-//         </div>
-//     );
-// };
-
-// export default MainVoteList;
