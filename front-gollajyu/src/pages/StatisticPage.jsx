@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
 import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
@@ -23,6 +23,7 @@ const StatisticPage = () => {
     query : "(max-width:479.98px)"
   });
 
+
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
   const [
@@ -40,6 +41,55 @@ const StatisticPage = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  // ----------- 사용자 유형 count state 관리 -----------
+  const [itemCount, setItemCount] = useState(1);
+  const isAddButtonActive = itemCount < 4;
+  const isRemoveButtonActive = itemCount > 1;
+  
+  // ----------- itemCount가 변경될 때마다 화면을 가장 아래로 스크롤 -----------
+  useEffect(() => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [itemCount]);
+
+  const [selectedRadioValues, setSelectedRadioValues] = useState({});
+  const [selectedDropdownValues, setSelectedDropdownValues] = useState({});
+
+  const handleRadioChange = (label, number, value) => {
+    setSelectedRadioValues((prevValues) => ({
+      ...prevValues,
+      [`${label}-${number}`]: value,
+    }));
+  };
+
+  const handleDropdownChange = (label, number, value) => {
+    setSelectedDropdownValues((prevValues) => ({
+      ...prevValues,
+      [`${label}-${number}`]: value,
+    }));
+  };
+
+  // ----------- 버튼 클릭 시 사용자 유형 추가 및 제거하는 함수 -----------
+  const handleAddButtonClick = () => {
+    if (itemCount < 4) {
+      setItemCount(prevCount => prevCount + 1);
+    }
+  };
+
+  const handleRemoveButtonClick = () => {
+    if (itemCount > 1) {
+      setItemCount(prevCount => prevCount - 1);
+
+      // ----------- 사용자 유형 제거 시 객채에서 정보 제거 -----------
+      delete selectedRadioValues[`나이-${itemCount}`];
+      delete selectedRadioValues[`성별-${itemCount}`];
+      delete selectedDropdownValues[`소비성향-${itemCount}`];
+    }
+  };
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -304,22 +354,50 @@ const StatisticPage = () => {
 
             {/* ------------- 차트 그래프 ------------- */}
             <div style={chartContainerStyle}>
-              <StatisticPageChart />
+              <StatisticPageChart
+                selectedCategory={selectedCategory}
+                itemCount={itemCount}
+                selectedRadioValues={selectedRadioValues}
+                selectedDropdownValues={selectedDropdownValues}
+              />
             </div>
             {/* --------------------------------------- */}
 
             <div style={barStyle}></div>
 
             {/* ------------- 사용자 그룹 선택 ------------- */}
-            <div style={groupContainerStyle} className="fontsize-lg">사용자 그룹 선택</div>
-            <div>
-              <StatisticPageGroupItem />
-              <StatisticPageGroupItem />
+            <div style={groupContainerStyle} className="fontsize-lg">
+              사용자 그룹 선택
             </div>
-            <div style={addButtonContainerStyle}>
-              <button style={addButtonStyle}>+</button>
+            <div>
+              {[...Array(itemCount)].map((_, index) => (
+                <StatisticPageGroupItem
+                  key={index}
+                  number={index + 1}
+                  onRadioChange={handleRadioChange}
+                  onDropdownChange={handleDropdownChange}
+                />
+              ))}
+                <div style={addButtonContainerStyle}>
+                  <button
+                    style={{ ...addButtonStyle, opacity: isAddButtonActive ? 1 : 0.5 }}
+                    onClick={handleAddButtonClick}
+                    disabled={!isAddButtonActive} // 4개 이상일 시 버튼 비활성화
+                  >
+                    +
+                  </button>
+                  {itemCount > 1 && (
+                    <button
+                      style={{ ...addButtonStyle, opacity: isRemoveButtonActive ? 1 : 0.5 }}
+                      onClick={handleRemoveButtonClick}
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
             </div>
             {/* --------------------------------------- */}
+
           </div>
         </div>
       </div>
