@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import sobiTIData from "../../stores/testResultData.js";
-import { Dropdown } from "@mui/base";
 
-const MyActivitiesCommentItem = () => {
+const StatisticPageGroupItem = ({ number, onRadioChange, onDropdownChange }) => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query : "(min-width:768px) and (max-width:1023.98px)"
@@ -19,12 +18,15 @@ const MyActivitiesCommentItem = () => {
     query : "(max-width:479.98px)"
   });
 
-  // ----------- 예시 데이터 (임시) -----------
+  // ----------- 예시 데이터 -----------
   const userTypes = [
     { label: "나이", options: ['전체', '10대', '20대', '30대', '40대', '50대 이상'], type: "radio" },
     { label: "성별", options: ['전체', '남자', '여자'], type: "radio" },
     { label: "소비성향", options: ['전체', ...sobiTIData.map(item => item.title)], type: "dropdown" },
   ];
+
+  // ----------- 사용자 유형 색 리스트 -----------
+  const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -41,8 +43,19 @@ const MyActivitiesCommentItem = () => {
       isLarge ? "17px 26px" :
       isMedium ? "14px 22px" : "11px 18px",
     width: "100%",
-    boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.3)", // 그림자 효과
+    borderRadius:
+      isXLarge ? "30px" :
+      isLarge ? "25px" :
+      isMedium ? "20px" : "15px",
+    boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.2)", // 그림자 효과
   };
+
+  // ----------- 제목 스타일 -----------
+  const titleStyle = {
+    // 글자
+    color: colorList[number - 1] || colorList[0],
+    fontWeight: "bold"
+  }
 
   // ----------- flex 컨테이너 스타일 -----------
   const flexContainerStyle = {
@@ -74,7 +87,7 @@ const MyActivitiesCommentItem = () => {
     paddingLeft: 
       isXLarge ? "50px" :
       isLarge ? "30px" :
-      isMedium ? "10px" : "7px",
+      isMedium ? "20px" : "7px",
     height:
       isXLarge ? "50px" :
       isLarge ? "40px" :
@@ -126,13 +139,13 @@ const MyActivitiesCommentItem = () => {
       isMedium ? "10px" : "5px",
   }
 
-  // ----------- 라디오 아이템 스타일 -----------
-  const radioItemStyle = {
+  // ----------- 옵션 컨테이너 스타일 -----------
+  const optionContainerStyle = {
     // 디자인
     width:
       isXLarge ? "110px" :
       isLarge ? "80px" :
-      isMedium ? "66px" : "40px",
+      isMedium ? "62px" : "38px",
   }
 
   // ----------- 라디오 옵션 스타일 -----------
@@ -160,10 +173,24 @@ const MyActivitiesCommentItem = () => {
   // --------------------------------- css 끝 ---------------------------------
 
 
+  // ----------- '50대 이상'인 경우만 옵션의 width를 증가시키는 함수 -----------
+  const getOptionContainerStyle = (option) => {
+    if (option === '50대 이상') {
+      return {
+        ...optionContainerStyle,
+        width:
+          isXLarge ? "110px" :
+          isLarge ? "80px" :
+          isMedium ? "70px" : "60px",
+      };
+    }
+    return optionContainerStyle;
+  };
+
   return (
     <>
       <div style={containerStyle}>
-        <div className="fontsize-md">사용자 유형 [1]</div>
+        <div style={titleStyle} className="fontsize-md">사용자 유형 { number }</div>
         <div style={typeContainerStyle}>
           {userTypes.map((userType, index) => (
             <div
@@ -177,14 +204,22 @@ const MyActivitiesCommentItem = () => {
               {userType.type === "radio" ? (
                 <div style={flexContainerStyle}>
                   {userType.options.map((option, optionIndex) => (
-                    <div style={radioItemStyle} key={optionIndex}>
-                      <input type="radio" name={userType.label} value={option} />
+                    <div style={getOptionContainerStyle(option)} key={optionIndex}>
+                      <input
+                        type="radio"
+                        name={`${userType.label}-${number}`}
+                        value={option}
+                        onChange={(e) => onRadioChange(userType.label, number, e.target.value)}
+                      />
                       <label style={optionStyle} className="fontsize-xs">{option}</label>
                     </div>
                   ))}
                 </div>
               ) : (
-                <select style={dropdownStyle}>
+                <select
+                  style={dropdownStyle}
+                  onChange={(e) => onDropdownChange(userType.label, number, e.target.value)}
+                >
                   {userType.options.map((option, optionIndex) => (
                     <option key={optionIndex} value={option}>{option}</option>
                   ))}
@@ -198,4 +233,4 @@ const MyActivitiesCommentItem = () => {
   );
 };
 
-export default MyActivitiesCommentItem;
+export default StatisticPageGroupItem;
