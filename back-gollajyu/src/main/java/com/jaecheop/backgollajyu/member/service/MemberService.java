@@ -114,7 +114,7 @@ public class MemberService {
         LoginResDto loginResDto = LoginResDto.builder()
                 .memberId(member.getId())
                 .email(member.getEmail())
-                .typeName(member.getType().getTypeName())
+                .typeId(member.getType().getId())
                 .nickname(member.getNickname())
                 .birthday(
                         Birthday.builder()

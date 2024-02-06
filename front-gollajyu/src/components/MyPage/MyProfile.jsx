@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import TestResultHeader from "../TestResultHeader";
 import sobiTIData from "../../stores/testResultData.js";
+import useAuthStore from "../../stores/userState";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
@@ -11,13 +12,13 @@ const MyProfile = () => {
     query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023.98px)"
+    query: "(min-width:768px) and (max-width:1023.98px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767.98px)"
+    query: "(min-width:480px) and (max-width:767.98px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479.98px)"
+    query: "(max-width:479.98px)",
   });
 
   // ----------- 버튼 hover -----------
@@ -25,26 +26,16 @@ const MyProfile = () => {
   const [testButtonHovered, setTestButtonHovered] = useState(false);
 
   // ----------- state 정의 -----------
-  const [result, setResult] = useState(0);
+  const [result, setResult] = useState(1);
   const [matchingData, setMatchingData] = useState({});
 
-  // ----------- 이전 페이지에서 전달된 state에서 값 가져옴 -----------
-  const isFirstTime = location.state?.isFirstTime || false;
-  const response = location.state?.response || [];
-
-  // ----------- isFirstTime 또는 response가 변경될 때마다 실행되는 함수 -----------
-  useEffect(() => {
-    if (isFirstTime) {
-      setResult(getMBTI(response));
-      // 결과를 서버로 보내는 과정이 필요함
-    }
-  }, [isFirstTime, response]);
-
   // ----------- result가 변경될 때마다 실행되는 함수 -----------
+  const user = useAuthStore((state) => state.user); // local storage에 로그인 시 저장된 user 데이터를 가져옴 -> 네비게이션바에서도 이렇게 사용가능 (위의 import 참고)
   useEffect(() => {
-    window.scrollTo({ top: 0 });
-    setMatchingData(sobiTIData.find((data) => data.id === result));
-  }, [result]);
+    setResult(user.typeId);
+    setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
+  }, []);
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -74,10 +65,7 @@ const MyProfile = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height:
-      isXLarge ? "60px" :
-      isLarge ? "50px" :
-      isMedium ? "45px" : "40px",
+    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
   };
 
   // ----------- 제목 스타일 -----------
@@ -218,7 +206,7 @@ const MyProfile = () => {
   const testButtonStyle = {
     // 상속
     ...flexContainerStyle,
-    
+
     // 디자인
     marginTop: "10px",
     width: isXLarge
