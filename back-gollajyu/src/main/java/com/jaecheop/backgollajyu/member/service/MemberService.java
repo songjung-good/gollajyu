@@ -66,7 +66,7 @@ public class MemberService {
 
         Type type = optionalType.get();
 
-        // gender 설정
+        // gender 설정 test
         Gender gender = null;
         if (signUpReqDto.getGender().equals("F")) {
             gender = Gender.FEMALE;
