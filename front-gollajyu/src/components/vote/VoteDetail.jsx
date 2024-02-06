@@ -16,6 +16,9 @@ import VoteDetailChat from './VoteDetailChat';
 // };
 
 // 임시 데이터
+// 필요데이터
+// voteheader: 작성자, 작성일, 투표의 좋아요 수, 투표 참여자 수, 투표 번호
+// votecarditem: 투표
 const voteDetail = {
   author: 'Emily Jones',
   createdAt: '2024-01-30',
@@ -58,9 +61,18 @@ const VoteDetail = () => {
     const newClicked = clicked.map((item, i) => (i === index ? !item : item));
     setClicked(newClicked);
   };
+
+  const handleClose = () => {
+    // 모달 닫기 기능 구현
+    // ...
+  };
+
   return (
     <div className="bg-white shadow-md rounded-md max-w-5xl mx-auto">
-      <VoteDetailHeader {...voteDetail} />
+      <VoteDetailHeader
+        {...voteDetail}
+        onClose={handleClose}
+      />
       <div className="p-2 flex justify-around items-center h-full" >
         {Array(voteDetail.items.length).fill(null).map((_, index) => (
           <VoteCardItem 
@@ -69,7 +81,7 @@ const VoteDetail = () => {
             product={`Title ${index + 1}`}
             detail={`detail ${index + 1}`}
             category={voteDetail.category}
-            path="/VotePage"
+            path="/VoteDetailPage"
             clicked={clicked[index]}
             onClick={() => handleClick(index)}
           />
