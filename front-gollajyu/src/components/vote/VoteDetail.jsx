@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
 import VoteCardItem from './VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
@@ -55,6 +56,9 @@ const voteDetail = {
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
+  // 투표상세 링크를 통해 ID값 가지고 들어오게
+  // const { voteId } = useParams();
+
   const [clicked, setClicked] = useState([false, false, false, false]);
 
   const handleClick = (index) => {
