@@ -27,8 +27,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private String getEncryptedPassword(String plainPassword) {
         return new BCryptPasswordEncoder().encode(plainPassword);
     }
-
-    @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 //        System.out.println("userRequest = " + userRequest);
         // 우리 서버의 기본 정보 - registrationId로 어떤 OAUTH로 로그인 했는지 확인 가능
@@ -80,6 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //            Authentication result = SecurityContextHolder.getContext().getAuthentication();
 //            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 //            System.out.println("result = " + result);
+
 
         }
 
