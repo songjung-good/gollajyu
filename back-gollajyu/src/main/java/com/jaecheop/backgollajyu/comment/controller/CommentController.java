@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/votes")
+@RequestMapping("/api/votes")
 public class CommentController {
 
 
