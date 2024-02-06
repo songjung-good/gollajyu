@@ -20,7 +20,7 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
   });
 
   // ----------- 드롭다운으로 선택한 카테고리 -----------
-  const selectedCategoryData = categoryData[selectedCategory];
+  const selectedCategoryData = categoryData[selectedCategory - 1];
   const selectedTagData = [
     {
       subject: selectedCategoryData.tags[0],
@@ -73,8 +73,11 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
   // ----------- 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    width: "800px",
-    height: "600px",
+    width: "100%",
+    height:
+      isXLarge ? "600px" :
+      isLarge ? "500px" :
+      isMedium ? "400px" : "300px",
   };
 
   // --------------------------------- css 끝 ---------------------------------
@@ -105,7 +108,7 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={selectedTagData}>
             <PolarGrid />
             <PolarAngleAxis dataKey="subject" />
-            <PolarRadiusAxis angle={30} domain={[0, 150]} />
+            <PolarRadiusAxis angle={54} domain={[0, 150]} />
             {radars}
             <Legend />
           </RadarChart>
