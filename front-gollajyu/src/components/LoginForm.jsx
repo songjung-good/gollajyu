@@ -50,8 +50,39 @@ const LoginModal = () => {
     console.log("네이버로그인 시도 -> 사실 안됨");
   };
 
+  // const handleGoogleLogin = () => {
+  //   console.log("구글로그인 시도");
+  // };
+
   const handleGoogleLogin = () => {
-    console.log("구글로그인 시도");
+    // 팝업창 열기
+    // window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    // TODO 배포된 서버에서는 URL 달라져야함
+    // const popUpWindow = window.open(
+    //   "http://localhost:8080/oauth2/authorization/google",
+    //   "Google Login",
+    //   "width=600,height=600"
+    // );
+    // 팝업창 닫히면, gollajyu-cookie 체크
+    // const checkCookieInterval = setInterval(() => {
+    //   if (popUpWindow.closed) {
+    //     clearInterval(checkCookieInterval);
+    //     // gollajyu-cookie 체크
+    //     const gollajyuCookie = document.cookie.includes("gollajyu-cookie");
+    //     console.log(gollajyuCookie);
+    // gollajyu-cookie를 담아서 api 요청
+    // axios
+    //   .get(API_URL + "/members/addInfo", {
+    //     headers: { "gollajyu-cookie": gollajyuCookie },
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // }
+    // }, 1000);
   };
 
   const handleSignup = () => {
@@ -168,19 +199,13 @@ const LoginModal = () => {
                 className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
               />
             </div>
-            <a
-              href="http://localhost:8080/oauth2/authorization/google"
-              onClick={handleGoogleLogin}
-            >
-              <div id="google">
-                <img
-                  src="/assets/images/social-login/google.png"
-                  alt=""
-                  className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
-                  href="http://localhost:8080/oauth2/authorization/google"
-                />
-              </div>
-            </a>
+            <div id="google" onClick={handleGoogleLogin}>
+              <img
+                src="/assets/images/social-login/google.png"
+                alt=""
+                className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
+              />
+            </div>
           </div>
         </div>
         <p

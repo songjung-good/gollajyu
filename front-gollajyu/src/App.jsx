@@ -17,6 +17,7 @@ import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
 import VideoComponent from "./components/openvidu/VideoComponent";
 import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
+import SocialLoginPopup from "./components/SocialLoginPopup";
 import "./App.css";
 
 // 추후 삭제될 페이지입니다.
@@ -43,7 +44,6 @@ const Navbar = () => {
 const App = () => {
   return (
     <Router>
-      {/* <VoteButton /> */}
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path="/EnterVideoRoom" element={<VideoComponent />} />
@@ -64,6 +64,7 @@ const App = () => {
           <Route path="/VoteSimple" element={<VoteSimple />} />
           <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
+        <Route path="/SocialLoginPopup" element={<SocialLoginPopup />} />
       </Routes>
     </Router>
   );
