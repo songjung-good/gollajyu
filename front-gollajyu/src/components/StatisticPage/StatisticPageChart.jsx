@@ -1,14 +1,13 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
-import { PieChart, Pie, Cell } from 'recharts';
-import categoryData from '/src/stores/categoryData';
-import tagColorData from '/src/stores/tagColorData';
+import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import categoryData from "/src/stores/categoryData";
 
-const MyStatisticsChart = () => {
+const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, selectedDropdownValues }) => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query : "(min-width:768px) and (max-width:1023.98px)"
@@ -20,105 +19,100 @@ const MyStatisticsChart = () => {
     query : "(max-width:479.98px)"
   });
 
-  // ----------- 데이터 배열 (임시) -----------
-  const data = [
-    { name: '가성비', value: 15, color: '#8FD9B6' },
-    { name: '브랜드', value: 25, color: '#D395D0' },
-    { name: '디자인', value: 5, color: '#FF9999' },
-    { name: '기능성', value: 10, color: '#5EC4DC' },
-    { name: '내구성', value: 5, color: '#FFDF38' },
+  // ----------- 드롭다운으로 선택한 카테고리 -----------
+  const selectedCategoryData = categoryData[selectedCategory];
+  const selectedTagData = [
+    {
+      subject: selectedCategoryData.tags[0],
+      A: 120,
+      B: 110,
+      C: 50,
+      D: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[1],
+      A: 98,
+      B: 130,
+      C: 50,
+      D: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[2],
+      A: 86,
+      B: 130,
+      C: 50,
+      D: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[3],
+      A: 99,
+      B: 100,
+      C: 50,
+      D: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[4],
+      A: 85,
+      B: 90,
+      C: 50,
+      D: 70,
+      fullMark: 150,
+    },
   ];
 
-  // ----------- 라디안과 각도 간의 변환 상수 -----------
-  const RADIAN = Math.PI / 180;
+  // ----------- 사용자 유형 색 리스트 -----------
+  const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
 
-  // ----------- 라벨 생성 함수 -----------
-  const generateLabel = ({ cx, cy, midAngle, outerRadius, name, percent }) => {
-    const radius = outerRadius * 0.6;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    // ----------- 글자 스타일 -----------
-    const textStyle = {
-      // 위치
-      textAnchor: "middle", // 수평 가운데 정렬
-      dominantBaseline: "middle", // 수직 가운데 정렬
+  // --------------------------------- css 시작 ---------------------------------
 
-      // 글자
-      fill: "#6C6C6C",
-    }
-
-    return (
-      <>
-        <text
-          x={x}
-          y={
-            isXLarge ? y - 16 :
-            isLarge ? y - 14 :
-            isMedium ? y - 12 : y - 10
-          }
-          dominantBaseline="central"
-          style={textStyle}
-          className="fontsize-md"
-        >
-          {name}
-        </text>
-        <text
-          x={x}
-          y={
-            isXLarge ? y + 16 :
-            isLarge ? y + 14 :
-            isMedium ? y + 12 : y + 10
-          }
-          dominantBaseline="central"
-          style={textStyle}
-          className="fontsize-sm"
-        >
-          {`${(percent * 100).toFixed(0)}%`}
-        </text>
-      </>
-    );
+  // ----------- 컨테이너 스타일 -----------
+  const containerStyle = {
+    // 디자인
+    width: "800px",
+    height: "600px",
   };
+
+  // --------------------------------- css 끝 ---------------------------------
+
+  // ----------- itemCount 수 만큼 Radar를 생성 -----------
+  const radars = [];
+  for (let i = 1; i <= itemCount; i++) {
+    const ageValue = selectedRadioValues[`나이-${i}`] || '전체';
+    const genderValue = selectedRadioValues[`성별-${i}`] || '전체';
+    const tasteValue = selectedDropdownValues[`소비성향-${i}`] || '전체';
+
+    radars.push(
+      <Radar
+        key={`유형 ${i}`}
+        name={`${ageValue}/${genderValue}/${tasteValue}`}
+        dataKey={String.fromCharCode(64 + i)}  // A, B, C, D
+        stroke={colorList[i-1]}
+        fill={colorList[i-1]}
+        fillOpacity={0.3}
+      />
+    );
+  }
 
   return (
     <>
-      <PieChart
-        width={
-          isXLarge ? 500 :
-          isLarge ? 437.5 :
-          isMedium ? 375 : 312.5
-        }
-        height={
-          isXLarge ? 500 :
-          isLarge ? 437.5 :
-          isMedium ? 375 : 312.5
-        }
-      >
-        <Pie
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={generateLabel}
-          outerRadius={
-            isXLarge ? 240 :
-            isLarge ? 210 :
-            isMedium ? 180 : 150
-          }
-          nameKey="name"
-          dataKey="value"
-          data={data}
-        >
-          {data.map((tag, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={tag.color}
-              strokeWidth={2}
-            />
-          ))}
-        </Pie>
-      </PieChart>
+      <div style={containerStyle}>
+        <ResponsiveContainer width="100%" height="100%">
+          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={selectedTagData}>
+            <PolarGrid />
+            <PolarAngleAxis dataKey="subject" />
+            <PolarRadiusAxis angle={30} domain={[0, 150]} />
+            {radars}
+            <Legend />
+          </RadarChart>
+        </ResponsiveContainer>
+      </div>
     </>
   );
 };
 
-export default MyStatisticsChart;
+export default StatisticPageChart;
