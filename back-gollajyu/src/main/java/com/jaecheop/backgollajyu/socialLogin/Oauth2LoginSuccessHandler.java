@@ -40,11 +40,17 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
         // 만약 getmember에 추가 정보가 없다면, addinfo로, 아니라면 로그인된 메인으로!
         Type type = principal.getMember().getType();
-        if(type == null)
-            redirectStrategy.sendRedirect(request, response, "http://localhost:5173/addInfo");
-        else 
+        if(type == null) {
+            System.out.println("7777777777777777777777");
+            redirectStrategy.sendRedirect(request, response, "http://localhost:8080/api/members/addInfo");
+            System.out.println("888888888888888888888888");
+        }
+        else {
+            System.out.println("999999999999999999999");
             redirectStrategy.sendRedirect(request, response, "http://localhost:5173");
-        // 쿠키에 담으면 cors *이 안된다, withCredentials을 잘 설정해야한다.
+            // 쿠키에 담으면 cors *이 안된다, withCredentials을 잘 설정해야한다.
+            System.out.println("101010101010101010101010");
+        }
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }

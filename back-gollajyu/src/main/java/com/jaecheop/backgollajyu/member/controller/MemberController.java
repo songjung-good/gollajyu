@@ -94,7 +94,6 @@ public class MemberController {
     @Operation(summary = " 추가정보 입력 폼", description = "returns AddInfoResDto : 소셜로그인으로 받아온 정보를 입력해서 넣어주고(AddInfoResDto) 추가 정보를 입력받는 폼을 반환합니다.")
     public ResponseEntity<ResponseMessage<AddInfoResDto>> addInfo(HttpServletRequest request, Authentication authentication) {
         // 쿠키에서 string을 쪼개서 providerId를 가져옴
-
         System.out.println("4444444444444444444444444444444");
         Cookie[] cookieList = request.getCookies();
         String providerId = "";
@@ -104,16 +103,6 @@ public class MemberController {
             }
         }
 
-
-
-        // 이미 소셜 회원가입을 한적이 있는 사용자
-        if(providerId.equals("")){
-            System.out.println("already!!!!!!!!!!!!!!!!");
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            Object principal = auth.getPrincipal();
-            System.out.println("principal = " + principal);
-
-        }
 
         // provider ID로 멤버 레포지토리에서 멤버 정보 찾아옴
         Optional<Member> optionalMember = memberRepository.findByProviderId(providerId);
