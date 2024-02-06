@@ -1,19 +1,47 @@
 import React, { useState } from 'react';
 import { Container } from '@mui/system';
 import categoryData from '../../stores/categoryData';
+import useAuthStore from "../../stores/userState";
+import globalUrl from '../../stores/globalUrl';
+import axios from 'axios';
+
 // 각 투표에 관한 정보를 받아서 출력하는 곳
 function VoteCardItem(props) {
   const [hover, setHover] = useState(false);
   const [clicked, setClicked] = useState(null);
-  const { item, categoryId, onClick } = props;
-  
-  // 투표선택지의 내용
-  const categoryIndex = props.category === '0' || props.category === '1' ? 0 : props.category === '2' || props.category === '3' ? 1 : 2;
-  console.log(categoryId)
+  const { item, categoryId, voteId } = props;
+  const user = useAuthStore((state) => state.user);
+
+  // user.memberId
   console.log(categoryData[categoryId].tags)
+  console.log(voteId)
   const selection = categoryData[categoryId].tags
 
+  const [memberId, setMemberId] = useState(0);
+  const voteItemId = item.voteItemId;
 
+
+  // 투표하기 기능~~~~~
+  const onTagClick = (index) => {
+    const dto = {
+      memberId: user.memberId,
+      voteId: voteId,
+      voteItemId: voteItemId,
+      categoryId: categoryId,
+      tagId: (categoryId - 1)*5 + index+1,
+    };
+
+    // Send axios request
+    axios.post(globalUrl+'/votes/choices', dto)
+      .then(response => {
+        // Handle success
+        console.log('Axios request successful:', response.data);
+      })
+      .catch(error => {
+        // Handle error
+        console.error('Axios request failed:', error);
+      });
+  };
 
   return (
     // 카드 하나의 사이즈
@@ -38,7 +66,7 @@ function VoteCardItem(props) {
                 onClick={() => {
                   if(clicked === null) {
                     setClicked(index);
-                    props.onClick(index, selection[categoryIndex][index]);
+                    onTagClick(index);
                   }
                 }}
                 disabled={clicked !== null}
