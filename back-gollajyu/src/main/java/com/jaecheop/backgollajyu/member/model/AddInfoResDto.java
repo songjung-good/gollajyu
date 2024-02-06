@@ -12,4 +12,13 @@ import lombok.NoArgsConstructor;
 public class AddInfoResDto {
     private  String email;
     private  String nickname;
+    private String password;
+
+    private int year;
+    private int month;
+    private int day;
+
+    private String gender;
+
+    private int typeId;
 }

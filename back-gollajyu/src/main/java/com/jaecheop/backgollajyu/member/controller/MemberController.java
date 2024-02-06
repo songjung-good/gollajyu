@@ -114,6 +114,12 @@ public class MemberController {
         AddInfoResDto addInfoResDto = AddInfoResDto.builder()
                 .email(member.getEmail())
                 .nickname(member.getNickname())
+                .password(member.getPassword())
+                .year(member.getBirthDay().getYear())
+                .month(member.getBirthDay().getMonth())
+                .day(member.getBirthDay().getDay())
+                .gender(member.getGender().name())
+                .typeId(member.getType().getId())
                 .build();
 
         // 이 응답을 가지고 POST 컨트롤러를 하나 만들어서 비어있는 정보를 넣어 멤버 정보 업데이트 시킴(axios요청을 두번 보내야 한다는 뜻)
