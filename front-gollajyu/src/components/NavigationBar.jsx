@@ -4,6 +4,8 @@ import { useMediaQuery } from "react-responsive";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 import useAuthStore from "../stores/userState";
 import useModalStore from "../stores/modalState";
+import API_URL from "../stores/apiURL";
+import axios from "axios";
 
 // ----------- 커스텀 훅 -----------
 const useHoverState = () => {
@@ -17,7 +19,14 @@ const useHoverState = () => {
 };
 
 // ----------- 메뉴 아이템 함수형 컴포넌트 -----------
-const MenuItem = ({ to, style, activeStyle, hoverState, onClick, children }) => (
+const MenuItem = ({
+  to,
+  style,
+  activeStyle,
+  hoverState,
+  onClick,
+  children,
+}) => (
   <NavLink
     to={to}
     end
@@ -46,27 +55,23 @@ const ButtonItem = ({ label, style, hoverState, onClick }) => (
 );
 
 const NavigationBar = () => {
-
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023.98px)"
+    query: "(min-width:768px) and (max-width:1023.98px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767.98px)"
+    query: "(min-width:480px) and (max-width:767.98px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479.98px)"
+    query: "(max-width:479.98px)",
   });
-  
+
   // ----------- 메인 메뉴 hover -----------
-  const [
-    votePageHovered,
-    votePageMouseEnter,
-    votePageMouseLeave
-  ] = useHoverState();
+  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
+    useHoverState();
 
   const [
     broadcastPageHovered,
@@ -87,57 +92,35 @@ const NavigationBar = () => {
   ] = useHoverState();
 
   // ----------- 프로필 버튼 hover -----------
-  const [
-    profileHovered,
-    profileMouseEnter,
-    profileMouseLeave,
-    profileClick
-  ] = useHoverState();
+  const [profileHovered, profileMouseEnter, profileMouseLeave, profileClick] =
+    useHoverState();
 
   // ----------- 프로필 아이템 hover -----------
-  const [
-    myProfileHovered,
-    myProfileMouseEnter,
-    myProfileMouseLeave
-  ] = useHoverState();
+  const [myProfileHovered, myProfileMouseEnter, myProfileMouseLeave] =
+    useHoverState();
 
-  const [
-    myActivitiesHovered, 
-    myActivitiesMouseEnter, 
-    myActivitiesMouseLeave
-  ] = useHoverState();
+  const [myActivitiesHovered, myActivitiesMouseEnter, myActivitiesMouseLeave] =
+    useHoverState();
 
-  const [
-    myStatisticsHovered, 
-    myStatisticsMouseEnter, 
-    myStatisticsMouseLeave
-  ] = useHoverState();
+  const [myStatisticsHovered, myStatisticsMouseEnter, myStatisticsMouseLeave] =
+    useHoverState();
 
   // ----------- 로그아웃, 로그인, 회원가입 버튼 hover -----------
-  const [
-    logoutButtonHovered, 
-    logoutButtonMouseEnter, 
-    logoutButtonMouseLeave
-  ] = useHoverState();
+  const [logoutButtonHovered, logoutButtonMouseEnter, logoutButtonMouseLeave] =
+    useHoverState();
 
-  const [
-    loginButtonHovered, 
-    loginButtonMouseEnter, 
-    loginButtonMouseLeave
-  ] = useHoverState();
+  const [loginButtonHovered, loginButtonMouseEnter, loginButtonMouseLeave] =
+    useHoverState();
 
-  const [
-    signupButtonHovered, 
-    signupButtonMouseEnter, 
-    signupButtonMouseLeave
-  ] = useHoverState();
+  const [signupButtonHovered, signupButtonMouseEnter, signupButtonMouseLeave] =
+    useHoverState();
 
   // ----------- 햄버거 버튼 hover -----------
   const [
-    hamburgerHovered, 
-    hamburgerMouseEnter, 
-    hamburgerMouseLeave, 
-    hamburgerClick
+    hamburgerHovered,
+    hamburgerMouseEnter,
+    hamburgerMouseLeave,
+    hamburgerClick,
   ] = useHoverState();
 
   // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
@@ -145,6 +128,7 @@ const NavigationBar = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
+  const user = useAuthStore((state) => state.user);
 
   const handleLogin = () => {
     // isLoginModalOpen을 true로
@@ -167,9 +151,18 @@ const NavigationBar = () => {
 
   const navigate = useNavigate();
   const handleLogout = () => {
-    setLogout();
-    navigate("/");
+    axios
+      .get(API_URL + "/members/logout")
+      .then((res) => {
+        console.log(res.data.body); // 로그아웃 성공
+        setLogout();
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 내비게이션 배경 스타일 -----------
@@ -203,10 +196,7 @@ const NavigationBar = () => {
     transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
 
     // 디자인
-    width:
-      isXLarge ? "95%" :
-      isLarge ? "850px" :
-      isMedium ? "600px" : "375px",
+    width: isXLarge ? "95%" : isLarge ? "850px" : isMedium ? "600px" : "375px",
 
     // 컨텐츠 정렬
     justifyContent: "space-between",
@@ -215,19 +205,14 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width:
-      isXLarge ? "200px" :
-      isLarge ? "170px" : "140px",
+    width: isXLarge ? "200px" : isLarge ? "170px" : "140px",
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
-    fontSize: 
-      isXLarge ? "48px" :
-      isLarge ? "44px" :
-      isMedium ? "40px" : "38px",
+    fontSize: isXLarge ? "48px" : isLarge ? "44px" : isMedium ? "40px" : "38px",
     color: "#FFD257", // 로고 글자 색: 노란색
   };
 
@@ -270,9 +255,7 @@ const NavigationBar = () => {
   const itemHoverStyle = {
     // 디자인
     width: "100%",
-    height:
-      isXLarge ? "4.5px" :
-      isLarge ? "4px" : "3.5px",
+    height: isXLarge ? "4.5px" : isLarge ? "4px" : "3.5px",
     background: "#FFD257",
   };
 
@@ -319,7 +302,7 @@ const NavigationBar = () => {
 
     // (반응형) 작은 화면에서 닉네임 렌더링 하지 않음
     display: isXLarge || isLarge ? undefined : "none",
-  }
+  };
 
   // ----------- 프로필 닉네임 스타일 -----------
   const nickNameStyle = {
@@ -331,7 +314,7 @@ const NavigationBar = () => {
   const pointStyle = {
     // 글자
     color: "#FFA500", // 글자 색: 주황
-  }
+  };
 
   // ----------- 공통 메뉴 스타일 -----------
   const commonMenuStyle = {
@@ -339,10 +322,7 @@ const NavigationBar = () => {
     position: "absolute", // 메뉴 위치 기준
     top: "100px", // 상단 여백
     right: "0px", // 오른쪽 여백
-    paddingTop:
-      isXLarge ? "4px" :
-      isLarge ? "3px" :
-      isMedium ? "2px" : "1px",
+    paddingTop: isXLarge ? "4px" : isLarge ? "3px" : isMedium ? "2px" : "1px",
 
     // 디자인
     background: "#FFFFFF", // 메뉴 배경 색: 흰색
@@ -368,18 +348,15 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    paddingRight:
-      isXLarge ? "15px" :
-      isLarge ? "13px" :
-      isMedium ? "11px" : "9px",
-    width:
-      isXLarge ? "150px" :
-      isLarge ? "130px" :
-      isMedium ? "110px" : "90px",
-    height:
-      isXLarge ? "50px" :
-      isLarge ? "46px" :
-      isMedium ? "42px" : "38px",
+    paddingRight: isXLarge
+      ? "15px"
+      : isLarge
+      ? "13px"
+      : isMedium
+      ? "11px"
+      : "9px",
+    width: isXLarge ? "150px" : isLarge ? "130px" : isMedium ? "110px" : "90px",
+    height: isXLarge ? "50px" : isLarge ? "46px" : isMedium ? "42px" : "38px",
 
     // 글자
     color: "#4A4A4A", // 글자 색: 회색
@@ -632,10 +609,26 @@ const NavigationBar = () => {
                   onMouseEnter={profileMouseEnter}
                   onClick={profileClick}
                 >
-                  <img src={DefaultProfileImage} alt="사진" style={profileImageStyle} />
+                  <img
+                    src={
+                      // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
+                      !isNaN(user.profileImgUrl)
+                        ? `/assets/images/sobiTItest/${user.profileImgUrl}.png`
+                        : user.profileImgUrl
+                    }
+                    alt="사진"
+                    style={profileImageStyle}
+                  />
                   <div style={infoContainerStyle}>
-                    <p style={nickNameStyle} className="fontsize-xs">[닉네임] 님</p>
-                    <p style={pointStyle} className="fontsize-xs">[512] P</p>
+                    <p style={nickNameStyle} className="fontsize-xs">
+                      {user.nickname.length <= 6
+                        ? user.nickname
+                        : user.nickname.slice(0, 6) + "..."}
+                      님
+                    </p>
+                    <p style={pointStyle} className="fontsize-xs">
+                      {user.point} P
+                    </p>
                   </div>
                 </button>
                 <div style={profileMenuStyle}>

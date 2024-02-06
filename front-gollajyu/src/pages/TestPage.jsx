@@ -6,10 +6,15 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
+import API_URL from "../stores/apiURL";
+import useModalStore from "../stores/modalState";
+import useAuthStore from "../stores/userState";
+import axios from "axios";
 
 const TestPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const questions = [
     "힘찬 하루를 다짐하며 시계를 보니 벌써 9시를 넘긴 시간, 지각하는 동기를 본 나는?",
@@ -99,14 +104,125 @@ const TestPage = () => {
     setQuestionNumber(questionNumber + 1);
   };
 
+  const signUp = (memberInfo) => {
+    const isSocialLogin = document.cookie
+      .split(";")
+      .some((cookie) => cookie.trim().startsWith("gollajyu-cookie="));
+
+    if (isSocialLogin) {
+      // 소셜로그인인데, 신규가입자인 경우
+      const socialMemberInfo = {
+        email: memberInfo.email,
+        nickname: memberInfo.nickname,
+        year: memberInfo.year,
+        month: memberInfo.month,
+        day: memberInfo.day,
+        gender: memberInfo.gender == "F" ? "FEMALE" : "MALE",
+        typeId: memberInfo.typeId,
+      };
+      console.log(socialMemberInfo);
+      axios
+        .put(API_URL + "/members", socialMemberInfo)
+        .then((response) => {
+          console.log("소셜로그인 회원가입:", response);
+          if (!response.data.header.result) {
+            console.log(response.data.header.message);
+            navigate("/");
+            window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
+          } else {
+            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
+            const data = {
+              email: memberInfo.email,
+              password: memberInfo.password,
+            };
+            logIn(data);
+          }
+          document.cookie =
+            "gollajyu-cookie" +
+            "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        })
+        .catch((err) => {
+          console.log("회원가입 에러");
+          console.log(err);
+        });
+    } else {
+      // 일반 신규 가입자인 경우
+      axios
+        .post(API_URL + "/members", memberInfo)
+        .then((response) => {
+          console.log(response);
+          if (!response.data.header.result) {
+            console.log(response.data.header.message);
+            navigate("/");
+            window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
+          } else {
+            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
+            const data = {
+              email: memberInfo.email,
+              password: memberInfo.password,
+            };
+            logIn(data);
+          }
+        })
+        .catch((err) => {
+          console.log("회원가입 에러");
+          console.log(err);
+        });
+    }
+  };
+
+  const logIn = (data) => {
+    axios
+      .post(API_URL + "/members/login", data, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log("로그인 완료");
+        setLoggedIn(response.data.body);
+        // 로그인 후, 테스트 결과 페이지로 이동
+        navigate("/TestResultPage");
+      })
+      .catch((err) => {
+        console.log("로그인 과정에서 에러남");
+        console.log(err);
+      });
+  };
+
   const goResultPage = () => {
-    navigate("/TestResultPage", {
-      state: {
-        memberInfo: location.state?.memberInfo || undefined,
-        isFirstTime: true,
-        response: response,
-      },
-    });
+    const getMBTI = (response) => {
+      const MBTI = {
+        ISTP: 1,
+        ISFP: 2,
+        ESTP: 3,
+        ESFP: 4,
+        ISTJ: 5,
+        ISFJ: 6,
+        ESFJ: 7,
+        ESTJ: 8,
+        INTJ: 9,
+        INTP: 10,
+        ENTJ: 11,
+        ENTP: 12,
+        INFJ: 13,
+        INFP: 14,
+        ENFJ: 15,
+        ENFP: 16,
+      };
+
+      const EI = response[1] + response[2] + response[5] < 2 ? "E" : "I",
+        SN = response[4] + response[6] + response[8] < 2 ? "S" : "N",
+        TF = response[7] + response[9] + response[10] < 2 ? "T" : "F",
+        JP = response[0] + response[3] + response[11] < 2 ? "J" : "P";
+      // console.log(EI + SN + TF + JP);
+      return MBTI[EI + SN + TF + JP];
+    };
+
+    // 테스트 결과(typeId)를 memberInfo에 담아서 회원가입 및 로그인 시키기
+    const memberInfo = location.state.memberInfo;
+    const result = getMBTI(response);
+    memberInfo.typeId = result;
+    // console.log(memberInfo);
+    signUp(memberInfo);
   };
 
   const BorderLinearProgress = styled(LinearProgress)(() => ({

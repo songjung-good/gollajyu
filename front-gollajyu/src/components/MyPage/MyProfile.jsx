@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import axios from "axios";
 import TestResultHeader from "../TestResultHeader";
 import sobiTIData from "../../stores/testResultData.js";
 import useAuthStore from "../../stores/userState";
+import API_URL from "../../stores/apiURL";
 import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 const MyProfile = () => {
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query: "(min-width:768px) and (max-width:1023.98px)",
@@ -35,7 +37,6 @@ const MyProfile = () => {
     setResult(user.typeId);
     setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
   }, []);
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -247,16 +248,21 @@ const MyProfile = () => {
         <div style={contentContainerStyle}>
           <div style={flexContainerStyle}>
             <img
-              src={DefaultProfileImage}
+              src={
+                // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
+                !isNaN(user.profileImgUrl)
+                  ? `/assets/images/sobiTItest/${user.profileImgUrl}.png`
+                  : user.profileImgUrl
+              }
               alt="프로필 이미지"
               style={profileImageStyle}
             />
             <div>
               <div style={profileTextStyle} className="fontsize-lg">
-                [닉네임]
+                {user.nickname}
               </div>
               <div style={profileTextStyle} className="fontsize-md">
-                [이메일]
+                {user.email}
               </div>
             </div>
           </div>
@@ -265,13 +271,16 @@ const MyProfile = () => {
             <div style={infoItemLeftStyle}>
               <div className="fontsize-md">생년월일</div>
               <div style={infoDataStyle} className="fontsize-sm">
-                [생년월일]
+                {`${user.birthday.year}.${String(user.birthday.month).padStart(
+                  2,
+                  "0"
+                )}.${String(user.birthday.day).padStart(2, "0")}`}
               </div>
             </div>
             <div style={infoItemRightStyle}>
               <div className="fontsize-md">성별</div>
               <div style={infoDataStyle} className="fontsize-sm">
-                [성별]
+                {user.gender === "MALE" ? "남성" : "여성"}
               </div>
             </div>
           </div>

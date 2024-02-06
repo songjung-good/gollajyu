@@ -1,5 +1,4 @@
 const categoryData = [
-  {},
   {
     id: 1,
     name: "의류",
