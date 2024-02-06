@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Container } from '@mui/system';
 import categoryData from '../../stores/categoryData';
 import useAuthStore from "../../stores/userState";
-import globalUrl from '../../stores/globalUrl';
 import axios from 'axios';
+import API_URL from '../../stores/apiURL';
 
 // 각 투표에 관한 정보를 받아서 출력하는 곳
 function VoteCardItem(props) {
@@ -33,7 +33,7 @@ function VoteCardItem(props) {
     };
 
     // Send axios request
-    axios.post(globalUrl+'/votes/choices', dto)
+    axios.post(API_URL+'/votes/choices', dto)
       .then(response => {
         // Handle success
         console.log('Axios request successful:', response.data);

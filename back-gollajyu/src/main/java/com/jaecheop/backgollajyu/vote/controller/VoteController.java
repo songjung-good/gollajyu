@@ -118,13 +118,18 @@ public class VoteController {
 
     @GetMapping("")
     @Operation(summary = "카테고리별 투표 목록 리스트 조회", description = "returns VoteListResDto")
-    public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session) {
+    public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(
+            @RequestParam(value = "categoryId") int categoryId,
+            HttpSession session,
+            @RequestParam(value = "memberId") Long memberId
+    ) {
 
         System.out.println("categoryId = " + categoryId);
+        System.out.println("memberId = " + memberId);
         System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
-        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo);
+        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId);
         System.out.println("result = " + result);
 
         if (!result.isResult()) {
