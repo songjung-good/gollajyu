@@ -36,7 +36,6 @@ const MyProfile = () => {
     setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
   }, []);
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
@@ -247,16 +246,20 @@ const MyProfile = () => {
         <div style={contentContainerStyle}>
           <div style={flexContainerStyle}>
             <img
-              src={DefaultProfileImage}
+              src={
+                user.profileImgUrl === "1"
+                  ? DefaultProfileImage
+                  : user.profileImgUrl
+              }
               alt="프로필 이미지"
               style={profileImageStyle}
             />
             <div>
               <div style={profileTextStyle} className="fontsize-lg">
-                [닉네임]
+                {user.nickname}
               </div>
               <div style={profileTextStyle} className="fontsize-md">
-                [이메일]
+                {user.email}
               </div>
             </div>
           </div>
@@ -265,13 +268,16 @@ const MyProfile = () => {
             <div style={infoItemLeftStyle}>
               <div className="fontsize-md">생년월일</div>
               <div style={infoDataStyle} className="fontsize-sm">
-                [생년월일]
+                {`${user.birthday.year}.${String(user.birthday.month).padStart(
+                  2,
+                  "0"
+                )}.${String(user.birthday.day).padStart(2, "0")}`}
               </div>
             </div>
             <div style={infoItemRightStyle}>
               <div className="fontsize-md">성별</div>
               <div style={infoDataStyle} className="fontsize-sm">
-                [성별]
+                {user.gender === "MALE" ? "남성" : "여성"}
               </div>
             </div>
           </div>
