@@ -8,19 +8,21 @@ export default function VoteCard(props) {
   const [isSelect, setIsSelect] = useState(true);
   const { vote } = props;
   const user = useAuthStore((state) => state.user);
-
+  const [voteLikesCount, setVoteLikesCount] = useState(vote.likesCnt);
+  const [isVoteLike, setIsVoteLike] = useState(vote.liked);
   const handleClick = (index, selection) => {
     setIsSelect(false)
     console.log(`선택지 ${index + 1}: ${selection}`);
   };
-  // 좋아요 했는지에 따라서 axios 관리 해주기
+  // 좋아요 했는지에 따라서 axios 관리 해주기 = 하영이가 잘 해둬서 +-만 고려하면 됐음
   const handleLike = async () => {
     try {
       const response = await axios.post(API_URL+'/votes/likes', {
         memberId: user.memberId,
         voteId: vote.voteId
       });
-      vote.likesCnt += 1;
+      setVoteLikesCount((isVoteLike) ? voteLikesCount-1 : voteLikesCount+1);
+      setIsVoteLike(!isVoteLike)
       console.log('POST request response:', response.data);
     } catch (error) {
       console.error('Error sending POST request:', error);
@@ -51,7 +53,7 @@ export default function VoteCard(props) {
       <div>
         <button>상세보기</button>
         {/* "liked": true 여부에 따라 좋아요 변경 */}
-        <button onClick={handleLike}>좋아요{vote.likesCnt}</button>
+        <button onClick={handleLike}>{(isVoteLike) ? "좋아요 취소" : "좋아요"}{voteLikesCount}</button>
       </div>
     </div>
   );

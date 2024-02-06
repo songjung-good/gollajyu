@@ -41,7 +41,7 @@ const fetchData = async () => {
     const response = await axios.get(`${API_URL}/votes`,
     {params: {
       categoryId: categoryId,
-      memberId: user.memberId
+      memberId: (user) ? user.memberId : null
     }
   });
     setVoteListData(response.data)

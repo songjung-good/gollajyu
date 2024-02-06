@@ -12,16 +12,15 @@ function VoteCardItem(props) {
   const { item, categoryId, voteId, onClick, isSelect } = props;
   const user = useAuthStore((state) => state.user);
 
-  // user.memberId
-  console.log(categoryData[categoryId].tags)
-  console.log(isSelect, clicked, "cliked")
+  // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
+  // console.log(isSelect, clicked, "cliked")
   const selection = categoryData[categoryId].tags
 
   const [memberId, setMemberId] = useState(0);
   const voteItemId = item.voteItemId;
 
 
-  // 투표하기 기능~~~~~
+  // 투표하기 기능~~~~~ TODO 비로그인시 로그인 창 띄우면 좋을듯
   const onTagClick = (index) => {
     console.log("onTagClick"+index)
     const dto = {

@@ -121,7 +121,7 @@ public class VoteController {
     public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(
             @RequestParam(value = "categoryId") int categoryId,
             HttpSession session,
-            @RequestParam(value = "memberId") Long memberId
+            @RequestParam(value = "memberId", required = false) Long memberId
     ) {
 
         System.out.println("categoryId = " + categoryId);
