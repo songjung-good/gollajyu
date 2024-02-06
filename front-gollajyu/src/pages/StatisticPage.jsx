@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useMediaQuery } from "react-responsive";
 import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
 import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
 import categoryData from "/src/stores/categoryData";
-import tagColorData from "/src/stores/tagColorData";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import useModalStore from "../stores/modalState";
 
@@ -46,15 +45,27 @@ const StatisticPage = () => {
   const [itemCount, setItemCount] = useState(1);
   const isAddButtonActive = itemCount < 4;
   const isRemoveButtonActive = itemCount > 1;
-  
+
+  // ----------- 화면에 처음 접근할 때 스크롤이 내려가는 것을 막기 위한 상태 관리 -----------
+  const isInitialMount = useRef(true);
+  const isAddButtonClicked = useRef(false);
+
   // ----------- itemCount가 변경될 때마다 화면을 가장 아래로 스크롤 -----------
   useEffect(() => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth",
-    });
+    // 초기 마운트 시에는 스크롤 이벤트를 발생시키지 않음
+    if (!isInitialMount.current && isAddButtonClicked.current) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+    } else {
+      // 초기 마운트 이후 isInitialMount를 false로 설정
+      isInitialMount.current = false;
+    }
   }, [itemCount]);
 
+
+  // ----------- 라디오 및 드롭다운 값이 변경될 때 해당 값을 객체 안에 추가 -----------
   const [selectedRadioValues, setSelectedRadioValues] = useState({});
   const [selectedDropdownValues, setSelectedDropdownValues] = useState({});
 
@@ -76,6 +87,7 @@ const StatisticPage = () => {
   const handleAddButtonClick = () => {
     if (itemCount < 4) {
       setItemCount(prevCount => prevCount + 1);
+      isAddButtonClicked.current = true; // 버튼 클릭 시 화면이 내려갈 수 있게 함
     }
   };
 
