@@ -136,7 +136,7 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     radars.push(
       <Radar
         key={`유형 ${i}`}
-        name={`유형 ${i}: ${ageValue}/${genderValue}/${tasteValue}`}
+        name={`유형 ${i} : ${ageValue}/${genderValue}/${tasteValue}`}
         dataKey={String.fromCharCode(64 + i)}  // A, B, C, D
         stroke={colorList[i-1]}
         fill={colorList[i-1]}
