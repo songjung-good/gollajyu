@@ -15,6 +15,16 @@ export default function SwipeVote( props ) {
   const [votes, setVotes] = useState(voteList.body.voteInfoList);
   // 슬라이드 기능
   const [activeSlide, setActiveSlide] = useState(0);
+
+  // 드롭다운 옵션
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const options = ['의류', '신발', '가구', 'ㅁㅇ'];
+  const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
+  
   useEffect(() => {
     const swiperInstance = document.querySelector('.mySwiper').swiper;
     swiperInstance.on('slideChange', () => {
