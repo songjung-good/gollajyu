@@ -1,5 +1,10 @@
 const categoryData = [
   {
+    id: 0,
+    name:"전체",
+    tags:[]
+  },
+  {
     id: 1,
     name: "의류",
     tags: ["가성비", "브랜드", "소재", "색감", "모양"],
