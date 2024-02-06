@@ -178,7 +178,7 @@ const StatisticPage = () => {
     // 디자인
     margin:
       isXLarge ? "0 10px" :
-      isLarge ? "0 8px" :
+      isLarge ? "0 4px" :
       isMedium ? "0 6px" : "0 4px",
   }
 
@@ -233,7 +233,7 @@ const StatisticPage = () => {
   // ----------- 쉼표 스타일 -----------
   const restStyle = {
     // 디자인
-    marginRight: "10px",
+    marginRight: isXLarge ? "10px" : "0", 
   }
 
   // ----------- 구분선 스타일 -----------
