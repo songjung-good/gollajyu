@@ -5,10 +5,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @ToString
 public class Live {
     @Id
