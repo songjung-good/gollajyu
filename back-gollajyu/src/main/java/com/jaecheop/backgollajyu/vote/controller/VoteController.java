@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -124,7 +121,8 @@ public class VoteController {
     public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session) {
 
         System.out.println("categoryId = " + categoryId);
-        System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto) session.getAttribute("memberInfo"));
+        System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
+
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
         ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo);
         System.out.println("result = " + result);

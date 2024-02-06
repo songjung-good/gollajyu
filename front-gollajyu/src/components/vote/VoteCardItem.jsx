@@ -8,13 +8,13 @@ import axios from 'axios';
 // 각 투표에 관한 정보를 받아서 출력하는 곳
 function VoteCardItem(props) {
   const [hover, setHover] = useState(false);
-  const [clicked, setClicked] = useState(null);
-  const { item, categoryId, voteId } = props;
+  const [clicked, setClicked] = useState(0);
+  const { item, categoryId, voteId, onClick, isSelect } = props;
   const user = useAuthStore((state) => state.user);
 
   // user.memberId
   console.log(categoryData[categoryId].tags)
-  console.log(voteId)
+  console.log(isSelect, clicked, "cliked")
   const selection = categoryData[categoryId].tags
 
   const [memberId, setMemberId] = useState(0);
@@ -23,6 +23,7 @@ function VoteCardItem(props) {
 
   // 투표하기 기능~~~~~
   const onTagClick = (index) => {
+    console.log("onTagClick"+index)
     const dto = {
       memberId: user.memberId,
       voteId: voteId,
@@ -54,29 +55,29 @@ function VoteCardItem(props) {
         style={{ maxWidth: '100%' }}
       >
         {/* 호버 시 */}
-        {hover && (
-          <div className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl ${clicked !== null ? 'hidden' : 'flex'} flex-col justify-between`}
-          onMouseLeave={() => setClicked(null)}
+        {(clicked || isSelect ) && (hover || clicked) ? (
+          <div className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
+          onMouseLeave={() => {}}
           >
           {/* 선택지의 묶음 */}
             {selection.map((tag, index) => (
               <button 
                 key={index} 
-                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked === index ? 'text-white bg-blue-500' : 'text-black'} border-t-2 border-white text-max-xl`}
+                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked-1 === index ? 'text-white bg-blue-500' : 'text-black'} border-t-2 border-white text-max-xl`}
                 onClick={() => {
-                  if(clicked === null) {
-                    setClicked(index);
+                  if(clicked === 0) {
+                    setClicked(index+1);
                     onTagClick(index);
+                    onClick(index);
                   }
                 }}
-                disabled={clicked !== null}
               >
                 {tag}
               </button>
             ))}
           </div>
           
-        )}
+        ) : null }
         
         {/* 투표 이미지 */}
         <img

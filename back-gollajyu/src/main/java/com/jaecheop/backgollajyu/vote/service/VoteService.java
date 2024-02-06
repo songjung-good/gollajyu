@@ -608,7 +608,6 @@ public class VoteService {
     public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession) {
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
-
         // 로그인 하지 않은 사용자
         if (memberSession == null) {
             // 카테고리가 전체일때,
