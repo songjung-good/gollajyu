@@ -14,7 +14,7 @@ export default function VoteCard(props) {
 
   // 여기서 정보를 보내준다 (서버에서 받아온 데이터를 item으로 넘긴다.)
   return (
-    <div className="mx-auto my-10 max-w-5xl py-2 px-2 bg-white rounded-xl" style={{ height: '450px'}}>
+    <div className="mx-auto mb-10 max-w-5xl px-2 bg-white rounded-xl" style={{ height: '450px'}}>
       <div className=" ">
         <p>{vote.categoryName}</p>
         <div>{vote.voteTitle}</div>

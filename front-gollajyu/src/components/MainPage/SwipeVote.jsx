@@ -8,9 +8,6 @@ import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
 // 투표
 import VoteCard from '../vote/VoteCard';
 
-// 임시 사진
-import image1 from '/favicon1.png';
-
 
 export default function SwipeVote( props ) {
   const { voteList } = props;
@@ -20,7 +17,6 @@ export default function SwipeVote( props ) {
   const [activeSlide, setActiveSlide] = useState(0);
   useEffect(() => {
     const swiperInstance = document.querySelector('.mySwiper').swiper;
-
     swiperInstance.on('slideChange', () => {
       setActiveSlide(swiperInstance.activeIndex);
     });
@@ -31,7 +27,33 @@ export default function SwipeVote( props ) {
   }, []);
 
   return (
-    <div className="py-10">
+    <div className="pt-10">
+      {/* 드롭다운 */}
+      <div className="relative cursor-pointer w-40">  
+        <div
+          className={`flex items-center justify-between space-x-5 px-4 rounded-full ${isOpen ? 'bg-orange-500' : 'bg-white'}`}
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <a className="menu-hover my-2 py-2 text-base font-medium text-black lg:mx-4">
+          {selectedOption || '카테고리'}
+          </a>
+          {/* 화살표 */}
+          <span>
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </span>
+        </div>
+        {isOpen && (
+          <div className="absolute z-50 flex w-full flex-col bg-gray-100 py-1 px-4 text-gray-800 shadow-xl">
+            {options.map((option, index) => (
+              <a key={index} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2" onClick={() => handleOptionClick(option)}>
+                {option}
+              </a>  
+            ))}
+          </div>
+        )}
+      </div>
       <Swiper
         key="swiper-instance"  // Add a unique key here
         // width={1280}

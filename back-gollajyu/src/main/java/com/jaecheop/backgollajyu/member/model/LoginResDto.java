@@ -13,7 +13,7 @@ public class LoginResDto {
 
     private String email;
 
-    private String typeName;
+    private int typeId;
 
     private String nickname;
 
