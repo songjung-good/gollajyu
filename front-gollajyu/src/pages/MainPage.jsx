@@ -12,8 +12,6 @@ import VoteButton from "../components/VoteButton";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-import API_URL from '../stores/apiURL';
 
 const MainPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -30,7 +28,8 @@ const MainPage = () => {
   const isVoteProductCreateModalOpened = useModalStore(
     (state) => state.isVoteProductCreateModalOpened
   );
-
+  
+  const user = useAuthStore((state) => state.user);
   // ------------- 로그인 관련 --------------------
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
@@ -60,6 +59,8 @@ const MainPage = () => {
           setSignupModalOpen();
         }
       });
+    }
+  })
 
   const logIn = (data) => {
     axios
@@ -128,6 +129,5 @@ useEffect(() => {
       {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
     </>
   );
-};
-
+        }
 export default MainPage;
