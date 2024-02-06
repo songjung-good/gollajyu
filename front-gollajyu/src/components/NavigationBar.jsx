@@ -128,6 +128,7 @@ const NavigationBar = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
+  const user = useAuthStore((state) => state.user);
 
   const handleLogin = () => {
     // isLoginModalOpen을 true로
@@ -609,16 +610,20 @@ const NavigationBar = () => {
                   onClick={profileClick}
                 >
                   <img
-                    src={DefaultProfileImage}
+                    src={
+                      user.profileImgUrl === "1"
+                        ? DefaultProfileImage
+                        : user.profileImgUrl
+                    }
                     alt="사진"
                     style={profileImageStyle}
                   />
                   <div style={infoContainerStyle}>
                     <p style={nickNameStyle} className="fontsize-xs">
-                      [닉네임] 님
+                      {user.nickname} 님
                     </p>
                     <p style={pointStyle} className="fontsize-xs">
-                      [512] P
+                      {user.point} P
                     </p>
                   </div>
                 </button>
