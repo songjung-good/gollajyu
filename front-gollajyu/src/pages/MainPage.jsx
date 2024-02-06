@@ -13,7 +13,7 @@ import TmpModal from "../components/TmpModal"; // 임시 모달
 
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import globalUrl from "../stores/globalUrl";
+import API_URL from '../stores/apiURL';
 
 const MainPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -86,7 +86,12 @@ const MainPage = () => {
   // Function to fetch data using axios
 const fetchData = async () => {
   try {
-    const response = await axios.get(`${globalUrl}/votes?categoryId=${categoryId}`);
+    const response = await axios.get(`${API_URL}/votes`,
+    {params: {
+      categoryId: categoryId,
+      memberId: (user) ? user.memberId : null
+    }
+  });
     setVoteListData(response.data)
     setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
     console.log('Data:', response.data);
