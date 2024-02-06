@@ -26,5 +26,6 @@ public class Live {
     @Column(name = "live_count")
     private Long count;
 
-    private boolean status;
+    @Column(name = "live_img_url")
+    private String imgUrl;
 }

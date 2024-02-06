@@ -17,10 +17,10 @@ public class LiveVoteItem {
     private Long id;
 
     @Column(name = "live_vote_item_img_url")
-    private String url;
+    private String imgUrl;
 
     @Column(name = "live_vote_item_description")
-    private String live_vote_item_description;
+    private String description;
 
     @Column(name = "live_vote_item_count")
     private Long count;
