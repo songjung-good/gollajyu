@@ -1,5 +1,6 @@
 package com.jaecheop.backgollajyu.socialLogin;
 
+import com.jaecheop.backgollajyu.member.entity.Type;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,8 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 //        System.out.println("my succcesss handelr!!!!!!!!!!!!!");
 
         PrincipalDetails principal = (PrincipalDetails)authentication.getPrincipal();
-//        System.out.println("principal.getMember() = " + principal.getMember());
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("principal.getMember().getType() = " + principal.getMember().getType());
 //        Object oauthemail = principal.getAttributes().get("email");
         // Perform actions based on authorities or any other custom logic
         // TODO:: 추가 정보 받기!!!!
@@ -34,9 +36,14 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         Cookie myCookie = new Cookie("gollajyu-cookie", cookieValue);
         myCookie.setPath("/");
         response.addCookie(myCookie);
-//        System.out.println("6666666666666666666666");
+        System.out.println("6666666666666666666666");
 
-        redirectStrategy.sendRedirect(request, response, "http://localhost:5173");
+        // 만약 getmember에 추가 정보가 없다면, addinfo로, 아니라면 로그인된 메인으로!
+        Type type = principal.getMember().getType();
+        if(type == null)
+            redirectStrategy.sendRedirect(request, response, "http://localhost:5173/addInfo");
+        else 
+            redirectStrategy.sendRedirect(request, response, "http://localhost:5173");
         // 쿠키에 담으면 cors *이 안된다, withCredentials을 잘 설정해야한다.
         super.onAuthenticationSuccess(request, response, authentication);
     }

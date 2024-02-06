@@ -60,7 +60,7 @@ public class SecurityConfig {
                                         userInfoEndpoint
                                                 .userService(customOAuth2UserService)
                                 )
-                        .defaultSuccessUrl("http://localhost:5173/")// 리다이렉트 할 URL
+//                        .defaultSuccessUrl("http://localhost:5173/")// 리다이렉트 할 URL
         );
 
         // 여기서부터 로그아웃 API 내용~!

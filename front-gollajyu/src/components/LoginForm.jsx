@@ -56,7 +56,7 @@ const LoginModal = () => {
 
   const handleGoogleLogin = () => {
     // 팝업창 열기
-    // window.location.href = "http://localhost:8080/oauth2/authorization/google";
+    window.location.href = "http://localhost:8080/oauth2/authorization/google";
     // TODO 배포된 서버에서는 URL 달라져야함
     // const popUpWindow = window.open(
     //   "http://localhost:8080/oauth2/authorization/google",
