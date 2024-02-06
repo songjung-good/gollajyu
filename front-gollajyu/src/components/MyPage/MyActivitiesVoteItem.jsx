@@ -16,7 +16,7 @@ const MyActivitiesVoteItem = () => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query : "(min-width:768px) and (max-width:1023.98px)"
@@ -183,29 +183,33 @@ const MyActivitiesVoteItem = () => {
     };
 
     return (
-      <div>
-        <div style={myPickStyle} className="fontsize-xs">My Pick</div>
-        <div style={itemStyle}>
-          <div className="fontsize-sm">{label}</div>
-          <div className="fontsize-xs">{ratio} %</div>
+      <>
+        <div>
+          <div style={myPickStyle} className="fontsize-xs">My Pick</div>
+          <div style={itemStyle}>
+            <div className="fontsize-sm">{label}</div>
+            <div className="fontsize-xs">{ratio} %</div>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
   // ----------- Vote 컴포넌트 사용 함수 -----------
   const Vote = ({ voteOptions }) => {
     return (
-      <div style={voteContainerStyle}>
-        {voteOptions.map((option, index) => (
-          <VoteItem
-            key={index}
-            label={option.label}
-            ratio={option.ratio}
-            isMyChoice={option.isMyChoice}
-          />
-        ))}
-      </div>
+      <>
+        <div style={voteContainerStyle}>
+          {voteOptions.map((option, index) => (
+            <VoteItem
+              key={index}
+              label={option.label}
+              ratio={option.ratio}
+              isMyChoice={option.isMyChoice}
+            />
+          ))}
+        </div>
+      </>
     );
   };
 

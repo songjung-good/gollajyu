@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import API_URL from "../stores/apiURL";
 import MainVoteList from "../components/MainPage/MainVoteList";
@@ -10,6 +10,10 @@ import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 import VoteButton from "../components/VoteButton";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import globalUrl from "../stores/globalUrl";
 
 const MainPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -27,6 +31,7 @@ const MainPage = () => {
     (state) => state.isVoteProductCreateModalOpened
   );
 
+  // ------------- 로그인 관련 --------------------
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -55,8 +60,6 @@ const MainPage = () => {
           setSignupModalOpen();
         }
       });
-    }
-  });
 
   const logIn = (data) => {
     axios
@@ -73,14 +76,44 @@ const MainPage = () => {
         console.log(err);
       });
   };
+
+  // ------------------ 데이터 통신 관련 --------------------
+  const categoryId = 0;
+  const [voteListData, setVoteListData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  // Function to fetch data using axios
+const fetchData = async () => {
+  try {
+    const response = await axios.get(`${globalUrl}/votes?categoryId=${categoryId}`);
+    setVoteListData(response.data)
+    setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
+    console.log('Data:', response.data);
+  } catch (error) {
+    console.error('Axios request error:', error);
+    setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
+  }
+};
+
+useEffect(() => {
+  // Fetch data when the page is turned on
+  fetchData();
+}, []); // Empty dependency array ensures it runs only once when the component mounts
+
+
   return (
     <>
       <VoteButton />
       <div>
-        <div className="bg-gradient-to-tl from-blue-400 to-red-400">
-          <MainWord />
-          <SwipeVote />
-        </div>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="bg-gradient-to-tl from-blue-400 to-red-400">
+            <MainWord />
+            <SwipeVote voteList={voteListData} />
+          </div>
+        )}
         <MainVoteList />
       </div>
       {isLoginModalOpened && <LoginModal></LoginModal>}

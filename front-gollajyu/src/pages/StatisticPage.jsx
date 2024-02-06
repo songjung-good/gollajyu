@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
+import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
+import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
 import categoryData from "/src/stores/categoryData";
 import tagColorData from "/src/stores/tagColorData";
 import TmpModal from "../components/TmpModal"; // 임시 모달
@@ -21,6 +23,7 @@ const StatisticPage = () => {
     query: "(max-width:479.98px)",
   });
 
+
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categoryData[0].id);
@@ -35,6 +38,55 @@ const StatisticPage = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  // ----------- 사용자 유형 count state 관리 -----------
+  const [itemCount, setItemCount] = useState(1);
+  const isAddButtonActive = itemCount < 4;
+  const isRemoveButtonActive = itemCount > 1;
+  
+  // ----------- itemCount가 변경될 때마다 화면을 가장 아래로 스크롤 -----------
+  useEffect(() => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [itemCount]);
+
+  const [selectedRadioValues, setSelectedRadioValues] = useState({});
+  const [selectedDropdownValues, setSelectedDropdownValues] = useState({});
+
+  const handleRadioChange = (label, number, value) => {
+    setSelectedRadioValues((prevValues) => ({
+      ...prevValues,
+      [`${label}-${number}`]: value,
+    }));
+  };
+
+  const handleDropdownChange = (label, number, value) => {
+    setSelectedDropdownValues((prevValues) => ({
+      ...prevValues,
+      [`${label}-${number}`]: value,
+    }));
+  };
+
+  // ----------- 버튼 클릭 시 사용자 유형 추가 및 제거하는 함수 -----------
+  const handleAddButtonClick = () => {
+    if (itemCount < 4) {
+      setItemCount(prevCount => prevCount + 1);
+    }
+  };
+
+  const handleRemoveButtonClick = () => {
+    if (itemCount > 1) {
+      setItemCount(prevCount => prevCount - 1);
+
+      // ----------- 사용자 유형 제거 시 객채에서 정보 제거 -----------
+      delete selectedRadioValues[`나이-${itemCount}`];
+      delete selectedRadioValues[`성별-${itemCount}`];
+      delete selectedDropdownValues[`소비성향-${itemCount}`];
+    }
+  };
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -197,6 +249,52 @@ const StatisticPage = () => {
     backgroundColor: "#F0F0F0",
   };
 
+  // ----------- 차트 컨테이너 스타일 -----------
+  const chartContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    marginTop: "20px",
+
+    // 컨텐츠 정렬
+    justifyContent: "center",
+  }
+
+  // ----------- 그룹 컨테이너 스타일 -----------
+  const groupContainerStyle = {
+    // 상속
+    ...subTitleStyle,
+
+    // 디자인
+    marginBottom: "20px",
+  }
+
+  // ----------- 추가 버튼 컨테이너 스타일 -----------
+  const addButtonContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 컨텐츠 정렬
+    justifyContent: "center",
+  }
+
+  // ----------- 추가 버튼 스타일 -----------
+  const addButtonStyle = {
+    width:
+      isXLarge ? "70px" :
+      isLarge ? "60px" :
+      isMedium ? "50px" : "40px",
+    height:
+      isXLarge ? "70px" :
+      isLarge ? "60px" :
+      isMedium ? "50px" : "40px",
+    fontSize:
+      isXLarge ? "44px" :
+      isLarge ? "38px" :
+      isMedium ? "32px" : "26px",
+  }
+
   // --------------------------------- css 끝 ---------------------------------
 
   // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
@@ -211,7 +309,7 @@ const StatisticPage = () => {
     <>
       <VoteButton />
       <div style={body}>
-        {/* ------------- 카테고리 선호도 ------------- */}
+        {/* ------------- 사용자별 선호 태그 통계 ------------- */}
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-xl">
@@ -219,63 +317,90 @@ const StatisticPage = () => {
             </span>
           </div>
           <div style={contentsContainerStyle}>
-            <div style={flexContainerStyle}>
-              {/* ------------- 드롭다운 버튼 ------------- */}
-              <div style={dropdownContainerStyle}>
-                <div style={flexContainerStyle}>
-                  <div style={subTitleStyle} className="fontsize-md">
-                    다른 사람들은
+
+            {/* ------------- 드롭다운 버튼 ------------- */}
+            <div style={dropdownContainerStyle}>
+              <div style={flexContainerStyle}>
+                <div style={subTitleStyle} className="fontsize-md">다른 사람들은</div>
+                <div style={relativeContainerStyle}>
+                  <div
+                    onClick={toggleDropdown}
+                    style={dropdownButtonStyle}
+                    className="fontsize-sm"
+                  >
+                    {selectedCategory !== null
+                      ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
+                      : '카테고리 선택'}
                   </div>
-                  <div style={relativeContainerStyle}>
-                    <div
-                      onClick={toggleDropdown}
-                      style={dropdownButtonStyle}
-                      className="fontsize-sm"
-                    >
-                      {selectedCategory !== null
-                        ? categoryData.find(
-                            (c) => c.id === parseInt(selectedCategory)
-                          )?.name
-                        : "카테고리 선택"}
+                  {isOpen && (
+                    <div style={dropdownMenuStyle}>
+                      {categoryData.map((category) => (
+                        <div
+                          key={category.id}
+                          onClick={() => handleCategoryChange({ target: { value: category.id } })}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
+                          style={dropdownItemStyle}
+                        >
+                          {category.name}
+                        </div>
+                      ))}
                     </div>
-                    {isOpen && (
-                      <div style={dropdownMenuStyle}>
-                        {categoryData.map((category) => (
-                          <div
-                            key={category.id}
-                            onClick={() =>
-                              handleCategoryChange({
-                                target: { value: category.id },
-                              })
-                            }
-                            onMouseEnter={(e) =>
-                              (e.target.style.backgroundColor = "#FFE69C")
-                            }
-                            onMouseLeave={(e) =>
-                              (e.target.style.backgroundColor = "#FFFFFF")
-                            }
-                            style={dropdownItemStyle}
-                          >
-                            {category.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  <div style={subTitleStyle} className="fontsize-md">
-                    을(를) 구매 할 때
-                  </div>
-                  <div style={restStyle} className="fontsize-md">
-                    ,
-                  </div>
+                  )}
                 </div>
-                <div style={subTitleStyle} className="fontsize-md">
-                  어떤 요소를 중요하게 생각할까?
-                </div>
+                <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
+                <div style={restStyle} className="fontsize-md">,</div>
               </div>
-              {/* --------------------------------------- */}
+              <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
             </div>
+            {/* --------------------------------------- */}
+
+            {/* ------------- 차트 그래프 ------------- */}
+            <div style={chartContainerStyle}>
+              <StatisticPageChart
+                selectedCategory={selectedCategory}
+                itemCount={itemCount}
+                selectedRadioValues={selectedRadioValues}
+                selectedDropdownValues={selectedDropdownValues}
+              />
+            </div>
+            {/* --------------------------------------- */}
+
             <div style={barStyle}></div>
+
+            {/* ------------- 사용자 그룹 선택 ------------- */}
+            <div style={groupContainerStyle} className="fontsize-lg">
+              사용자 그룹 선택
+            </div>
+            <div>
+              {[...Array(itemCount)].map((_, index) => (
+                <StatisticPageGroupItem
+                  key={index}
+                  number={index + 1}
+                  onRadioChange={handleRadioChange}
+                  onDropdownChange={handleDropdownChange}
+                />
+              ))}
+                <div style={addButtonContainerStyle}>
+                  <button
+                    style={{ ...addButtonStyle, opacity: isAddButtonActive ? 1 : 0.5 }}
+                    onClick={handleAddButtonClick}
+                    disabled={!isAddButtonActive} // 4개 이상일 시 버튼 비활성화
+                  >
+                    +
+                  </button>
+                  {itemCount > 1 && (
+                    <button
+                      style={{ ...addButtonStyle, opacity: isRemoveButtonActive ? 1 : 0.5 }}
+                      onClick={handleRemoveButtonClick}
+                    >
+                      -
+                    </button>
+                  )}
+                </div>
+            </div>
+            {/* --------------------------------------- */}
+
           </div>
         </div>
       </div>
