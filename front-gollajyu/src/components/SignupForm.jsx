@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import dayjs from "dayjs";
+import API_URL from "../stores/apiURL";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -15,6 +17,24 @@ const SignupModal = () => {
 
   const navigate = useNavigate();
 
+  const [prevEmail, setPrevEmail] = useState("");
+  const [prevPW, setPrevPW] = useState("");
+
+  const isSocialLogin = document.cookie
+    .split(";")
+    .some((cookie) => cookie.trim().startsWith("gollajyu-cookie="));
+
+  useEffect(() => {
+    // gollajyu-cookie가 쿠키에 담겨 있으면, 소셜로그인을 한 사용자 -> 로직 처리 후, gollajyu-cookie 제거하기
+
+    if (isSocialLogin) {
+      axios.get(API_URL + "/members/addInfo").then((res) => {
+        // console.log(res.data.body);
+        setPrevEmail(res.data.body.email);
+        setPrevPW("소셜 구글 로그인");
+      });
+    }
+  }, []);
   const {
     register,
     handleSubmit,
@@ -35,6 +55,10 @@ const SignupModal = () => {
     if (!selectedGender) {
       window.alert("성별 입력은 필수입니다");
     } else {
+      if (isSocialLogin) {
+        data.email = prevEmail;
+        data.password = prevPW;
+      }
       const date = new Date(birthday);
       data.gender = selectedGender;
       data.year = date.getFullYear();
@@ -47,18 +71,6 @@ const SignupModal = () => {
       setSignupModalClose();
       navigate("/TestPage", { state: { memberInfo: data } });
     }
-  };
-
-  // 소셜로그인 핸들링 함수
-  const handleKakaoLogin = () => {
-    console.log("카카오로그인 시도");
-  };
-  const handleNaverLogin = () => {
-    console.log("네이버로그인 시도");
-  };
-
-  const handleGoogleLogin = () => {
-    console.log("구글로그인 시도");
   };
 
   return (
@@ -90,15 +102,21 @@ const SignupModal = () => {
               id="email"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               placeholder="이메일"
+              value={prevEmail ? prevEmail : undefined}
               {...register("email", {
-                required: "필수 입력사항입니다",
-                pattern: {
-                  value: /^[A-Za-z0-9]+@[A-Za-z0-9]+.[A-Za-z]+$/i,
-                  message: "올바른 형식의 이메일을 입력하세요",
-                },
+                ...(isSocialLogin
+                  ? {}
+                  : {
+                      required: "필수 입력사항입니다",
+                      pattern: {
+                        value:
+                          /^[A-Za-z0-9]+([.-]?[A-Za-z0-9]+)*@[A-Za-z0-9]+([.-]?[A-Za-z0-9]+)*\.[A-Za-z]+$/i,
+                        message: "올바른 형식의 이메일을 입력하세요",
+                      },
+                    }),
               })}
             />
-            {errors.email ? (
+            {!isSocialLogin && errors.email ? (
               <p className="px-3 text-red-500 text-sm">
                 {errors.email.message}
               </p>
@@ -112,24 +130,33 @@ const SignupModal = () => {
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               id="password"
               placeholder="비밀번호"
+              value={prevPW ? prevPW : undefined}
               {...register("password", {
-                required: "필수 입력사항입니다",
-                minLength: {
-                  value: 8,
-                  message: "비밀번호는 8자 이상 15자 미만 이어야 합니다",
-                },
-                maxLength: {
-                  value: 15,
-                  message: "비밀번호는 15자 미만 이어야 합니다",
-                },
-                pattern: {
-                  value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
-                  message: "영문, 숫자, 특수문자를 1가지 이상 포함해야 합니다",
-                },
+                ...(isSocialLogin
+                  ? {}
+                  : {
+                      required: "필수 입력사항입니다",
+                      minLength: {
+                        value: 8,
+                        message: "비밀번호는 8자 이상 15자 미만 이어야 합니다",
+                      },
+                      maxLength: {
+                        value: 15,
+                        message: "비밀번호는 15자 미만 이어야 합니다",
+                      },
+                      pattern: {
+                        value:
+                          /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/,
+                        message:
+                          "영문, 숫자, 특수문자를 1가지 이상 포함해야 합니다",
+                      },
+                    }),
               })}
             />
-            {errors.pw ? (
-              <p className="px-3 text-red-500 text-sm">{errors.pw.message}</p>
+            {!isSocialLogin && errors.password ? (
+              <p className="px-3 text-red-500 text-sm">
+                {errors.password.message}
+              </p>
             ) : (
               <p className="invisible text-sm">nothing</p>
             )}
@@ -140,18 +167,23 @@ const SignupModal = () => {
               type="password"
               className="rounded-full bg-stone-100 w-full p-3 border border-white mb-1"
               placeholder="비밀번호 확인"
+              value={prevPW ? prevPW : undefined}
               {...register("verifyPassword", {
-                required: "필수 입력사항입니다",
-                validate: {
-                  check: (val) => {
-                    if (getValues("password") !== val) {
-                      return "비밀번호가 일치하지 않습니다.";
-                    }
-                  },
-                },
+                ...(isSocialLogin
+                  ? {}
+                  : {
+                      required: "필수 입력사항입니다",
+                      validate: {
+                        check: (val) => {
+                          if (getValues("password") !== val) {
+                            return "비밀번호가 일치하지 않습니다.";
+                          }
+                        },
+                      },
+                    }),
               })}
             />
-            {errors.verifyPassword ? (
+            {!isSocialLogin && errors.verifyPassword ? (
               <p className="px-3 text-red-500 text-sm">
                 {errors.verifyPassword.message}
               </p>
@@ -236,41 +268,6 @@ const SignupModal = () => {
             골라쥬 동료 되기
           </button>
         </form>
-        {/* <div id="social-login" className="w-full my-10">
-        <div className="hr-sect w-1/2 mx-auto">
-          <div className="flex items-center text-gray-400 my-2">
-            <span className="flex-grow bg-gray-400 h-px m-1"></span>
-            <span className="text-xs">소셜 회원가입</span>
-            <span className="flex-grow bg-gray-400 h-px m-1"></span>
-          </div>
-        </div>
-        <div
-          id="social-icons"
-          className="flex justify-around w-1/2 mx-auto my-3"
-        >
-          <div id="kakao" onClick={handleKakaoLogin}>
-            <img
-              src="/assets/images/social-login/kakao.png"
-              alt=""
-              className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
-            />
-          </div>
-          <div id="naver" onClick={handleNaverLogin}>
-            <img
-              src="/assets/images/social-login/naver.png"
-              alt=""
-              className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
-            />
-          </div>
-          <div id="google" onClick={handleGoogleLogin}>
-            <img
-              src="/assets/images/social-login/google.png"
-              alt=""
-              className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
-            />
-          </div>
-        </div>
-      </div> */}
       </div>
     </div>
   );

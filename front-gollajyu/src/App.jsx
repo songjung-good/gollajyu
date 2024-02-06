@@ -17,7 +17,6 @@ import TestResultPage from "./pages/TestResultPage";
 import MyPage from "./pages/MyPage";
 import VideoComponent from "./components/openvidu/VideoComponent";
 import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
-import SocialLoginPopup from "./components/SocialLoginPopup";
 import "./App.css";
 
 // 추후 삭제될 페이지입니다.
@@ -55,16 +54,15 @@ const App = () => {
             <Route path="/VotePage" element={<VotePage />} />
             <Route path="/BroadcastPage" element={<BroadcastPage />} />
             <Route path="/StatisticPage" element={<StatisticPage />} />
-            <Route path="/TestPage" element={<TestPage />} />
             <Route path="/TestResultPage" element={<TestResultPage />} />
             <Route path="/MyPage/*" element={<MyPage />} />
           </Route>
+          <Route path="/TestPage" element={<TestPage />} />
           {/* 추후 삭제될 링크입니다. */}
           <Route path="/VoteDetail" element={<VoteDetail />} />
           <Route path="/VoteSimple" element={<VoteSimple />} />
           <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
-        <Route path="/SocialLoginPopup" element={<SocialLoginPopup />} />
       </Routes>
     </Router>
   );

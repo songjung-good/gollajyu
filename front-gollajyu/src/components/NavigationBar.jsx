@@ -620,7 +620,10 @@ const NavigationBar = () => {
                   />
                   <div style={infoContainerStyle}>
                     <p style={nickNameStyle} className="fontsize-xs">
-                      {user.nickname} 님
+                      {user.nickname.length <= 6
+                        ? user.nickname
+                        : user.nickname.slice(0, 6) + "..."}
+                      님
                     </p>
                     <p style={pointStyle} className="fontsize-xs">
                       {user.point} P

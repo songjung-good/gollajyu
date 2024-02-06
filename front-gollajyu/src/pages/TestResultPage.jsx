@@ -108,27 +108,67 @@ const TestResultPage = () => {
   // 1초 안에 호출되는 가장 마지막 api 호출만 실행 => react Strict Mode에 의해 useEffect가 두번 실행되어서 api 요청이 두번 가는 것을 방지함
   const signUp = useCallback(
     debounce((memberInfo) => {
-      axios
-        .post(API_URL + "/members", memberInfo)
-        .then((response) => {
-          console.log(response);
-          if (!response.data.header.result) {
-            console.log(response.data.header.message);
-            navigate("/");
-            window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
-          } else {
-            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
-            const data = {
-              email: memberInfo.email,
-              password: memberInfo.password,
-            };
-            logIn(data);
-          }
-        })
-        .catch((err) => {
-          console.log("회원가입 에러");
-          console.log(err);
-        });
+      const isSocialLogin = document.cookie
+        .split(";")
+        .some((cookie) => cookie.trim().startsWith("gollajyu-cookie="));
+
+      if (isSocialLogin) {
+        const socialMemberInfo = {
+          email: memberInfo.email,
+          nickname: memberInfo.nickname,
+          year: memberInfo.year,
+          month: memberInfo.month,
+          day: memberInfo.day,
+          gender: memberInfo.gender,
+          typeId: memberInfo.typeId,
+        };
+        axios
+          .put(API_URL + "/members", socialMemberInfo)
+          .then((response) => {
+            console.log(response);
+            if (!response.data.header.result) {
+              console.log(response.data.header.message);
+              navigate("/");
+              window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
+            } else {
+              window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
+              const data = {
+                email: memberInfo.email,
+                password: memberInfo.password,
+              };
+              logIn(data);
+            }
+            document.cookie =
+              "gollajyu-cookie" +
+              "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          })
+          .catch((err) => {
+            console.log("회원가입 에러");
+            console.log(err);
+          });
+      } else {
+        axios
+          .post(API_URL + "/members", memberInfo)
+          .then((response) => {
+            console.log(response);
+            if (!response.data.header.result) {
+              console.log(response.data.header.message);
+              navigate("/");
+              window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
+            } else {
+              window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
+              const data = {
+                email: memberInfo.email,
+                password: memberInfo.password,
+              };
+              logIn(data);
+            }
+          })
+          .catch((err) => {
+            console.log("회원가입 에러");
+            console.log(err);
+          });
+      }
     }, 1000),
     []
   );

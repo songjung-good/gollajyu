@@ -299,6 +299,7 @@ export default function VideoComponent() {
     const response = await axios.post(
       OPENVIDU_SERVER_URL + "openvidu/api/sessions",
       { customSessionId: sessionId },
+      { withCredentials: true },
       {
         Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
         "Content-Type": "application/json",
@@ -315,6 +316,7 @@ export default function VideoComponent() {
         sessionId +
         "/connections",
       { role: myRole },
+      { withCredentials: true },
       {
         headers: {
           Authorization:
