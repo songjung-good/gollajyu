@@ -6,6 +6,7 @@ import useModalStore from "../stores/modalState";
 import useAuthStore from "../stores/userState";
 import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
+import VoteButton from "../components/VoteButton";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
 const MainPage = () => {
@@ -33,6 +34,7 @@ const MainPage = () => {
   };
   return (
     <>
+      <VoteButton />
       <div>
         <div className="bg-gradient-to-tl from-blue-400 to-red-400">
           <MainWord />

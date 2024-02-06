@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import VotePageList from "../components/vote/VotePageList";
 import VotePageHeader from "../components/vote/VotePageHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
 
 const VotePage = () => {
@@ -13,7 +14,7 @@ const VotePage = () => {
   };
 
   // 검색어 상태
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   // 검색 함수
   const handleSearch = (term) => {
     setSearchTerm(term);
@@ -31,8 +32,11 @@ const VotePage = () => {
   );
   return (
     <div>
-      <VotePageHeader onSort={handleSort} onSearch={handleSearch} /> {/* 정렬 함수를 props로 전달 */}
-      <VotePageList sortType={sortType} searchTerm={searchTerm} /> {/* 정렬 상태를 props로 전달 */}
+      <VoteButton />
+      <VotePageHeader onSort={handleSort} onSearch={handleSearch} />{" "}
+      {/* 정렬 함수를 props로 전달 */}
+      <VotePageList sortType={sortType} searchTerm={searchTerm} />{" "}
+      {/* 정렬 상태를 props로 전달 */}
       {isVoteDetailModalOpened && <TmpModal></TmpModal>}
       {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
       {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}

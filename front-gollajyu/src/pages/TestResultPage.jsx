@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import VoteButton from "../components/VoteButton";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import sobiTIData from "../stores/testResultData.js";
@@ -149,6 +150,7 @@ const TestResultPage = () => {
 
   return (
     <>
+      <VoteButton />
       <div className="p-5">
         <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] md:w-[330px] lg:w-[380px] xl:w-[550px] flex flex-col items-center relative">
           {isMyResult ? (

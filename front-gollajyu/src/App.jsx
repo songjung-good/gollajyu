@@ -5,6 +5,7 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 import NavigationBar from "./components/NavigationBar";
 import VoteButton from "./components/VoteButton";
 import MainPage from "./pages/MainPage";
@@ -42,18 +43,22 @@ const Navbar = () => {
 const App = () => {
   return (
     <Router>
-      <VoteButton />
+      {/* <VoteButton /> */}
       <Routes>
-        <Route path="/EnterVideoRoom" element={<VideoComponent />} />
-        <Route path="/CreateVideoRoom" element={<CreateVideoRoom />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/EnterVideoRoom" element={<VideoComponent />} />
+          <Route path="/CreateVideoRoom" element={<CreateVideoRoom />} />
+        </Route>
         <Route element={<Navbar />}>
           <Route path="/" element={<MainPage />} />
-          <Route path="/VotePage" element={<VotePage />} />
-          <Route path="/BroadcastPage" element={<BroadcastPage />} />
-          <Route path="/StatisticPage" element={<StatisticPage />} />
-          <Route path="/TestPage" element={<TestPage />} />
-          <Route path="/TestResultPage" element={<TestResultPage />} />
-          <Route path="/MyPage/*" element={<MyPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/VotePage" element={<VotePage />} />
+            <Route path="/BroadcastPage" element={<BroadcastPage />} />
+            <Route path="/StatisticPage" element={<StatisticPage />} />
+            <Route path="/TestPage" element={<TestPage />} />
+            <Route path="/TestResultPage" element={<TestResultPage />} />
+            <Route path="/MyPage/*" element={<MyPage />} />
+          </Route>
           {/* 추후 삭제될 링크입니다. */}
           <Route path="/VoteDetail" element={<VoteDetail />} />
           <Route path="/VoteSimple" element={<VoteSimple />} />
