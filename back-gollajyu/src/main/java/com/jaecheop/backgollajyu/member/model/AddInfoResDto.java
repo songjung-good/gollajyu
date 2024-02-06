@@ -14,11 +14,11 @@ public class AddInfoResDto {
     private  String nickname;
     private String password;
 
-    private int year;
-    private int month;
-    private int day;
+    private Integer year;
+    private Integer month;
+    private Integer day;
 
     private String gender;
 
-    private int typeId;
+    private Integer typeId;
 }

@@ -4,6 +4,7 @@ import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
 import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.entity.Member;
+import com.jaecheop.backgollajyu.member.entity.Type;
 import com.jaecheop.backgollajyu.member.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.member.service.MemberService;
@@ -71,7 +72,7 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(summary = "Login method", description = "returns LoginResDto")
     public ResponseEntity<ResponseMessage<LoginResDto>> login(@RequestBody(required = false) LoginReqDto loginReqDto, HttpSession session,
-                                                 @AuthenticationPrincipal Object info) {
+                                                              @AuthenticationPrincipal Object info) {
         System.out.println("###############################################");
         System.out.println("info = " + info);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -87,6 +88,7 @@ public class MemberController {
 
     /**
      * 소셜 로그인 유저가 구글에서 받은 정보를 입력폼에 보여주기위해 요청하는  api
+     *
      * @param request
      * @return
      */
@@ -111,15 +113,19 @@ public class MemberController {
         }
         Member member = optionalMember.get();
         // 회원가입 폼에 가진 정보를 채워즘 - 채워진 값(이메일, 닉네임)은 수정 불가 했으면 합니다!
+        Birthday birthDay = member.getBirthDay();
+        Gender gender = member.getGender();
+        Type type = member.getType();
+
         AddInfoResDto addInfoResDto = AddInfoResDto.builder()
                 .email(member.getEmail())
                 .nickname(member.getNickname())
                 .password(member.getPassword())
-                .year(member.getBirthDay().getYear())
-                .month(member.getBirthDay().getMonth())
-                .day(member.getBirthDay().getDay())
-                .gender(member.getGender().name())
-                .typeId(member.getType().getId())
+                .year(birthDay != null ? member.getBirthDay().getYear() : null)
+                .month(birthDay != null ? member.getBirthDay().getMonth() : null)
+                .day(birthDay != null ? member.getBirthDay().getDay() : null)
+                .gender(gender != null ? member.getGender().name() : null)
+                .typeId(type != null ? member.getType().getId() : null)
                 .build();
 
         // 이 응답을 가지고 POST 컨트롤러를 하나 만들어서 비어있는 정보를 넣어 멤버 정보 업데이트 시킴(axios요청을 두번 보내야 한다는 뜻)
@@ -130,7 +136,7 @@ public class MemberController {
     // getmapping - security context 에서 정보 인증 정보 삭제, 쿠키 삭제
     @GetMapping("/logout")
     @Operation(summary = "logout", description = "로그아웃에 성공하면 로그아웃 성공이라는 문자열을 반환합니다")
-    public ResponseEntity<ResponseMessage<String>> logout(HttpServletRequest request){
+    public ResponseEntity<ResponseMessage<String>> logout(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("authentication = " + authentication);
         return ResponseEntity.ok().body(new ResponseMessage<String>().success("로그아웃 성공"));
@@ -138,16 +144,17 @@ public class MemberController {
 
     /**
      * 소셜 로그인 후 추가 정보 받기
+     *
      * @param addInfoReqDto
      * @return
      */
     @PutMapping("")
     @Operation(summary = "멤버 정보 업데이트", description = "No body")
-    public ResponseEntity<ResponseMessage> updateMember(@RequestBody AddInfoReqDto addInfoReqDto){
+    public ResponseEntity<ResponseMessage> updateMember(@RequestBody AddInfoReqDto addInfoReqDto) {
         // 소셜 로그인 추가 정보 저장
         ServiceResult result = memberService.updateMember(addInfoReqDto);
 
-        if(!result.isResult()){
+        if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<>().fail(result.getMessage()));
         }
 
@@ -155,7 +162,6 @@ public class MemberController {
 
 
     }
-
 
 
     // 내가 작성한 투표 모아보기
