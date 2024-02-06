@@ -50,6 +50,7 @@ const App = () => {
         </Route>
         <Route element={<Navbar />}>
           <Route path="/" element={<MainPage />} />
+          {/* 로그인 사용자만 접근할 수 있는 라우터 -> PrivateRoute 내부에 있음 */}
           <Route element={<PrivateRoute />}>
             <Route path="/VotePage" element={<VotePage />} />
             <Route path="/BroadcastPage" element={<BroadcastPage />} />

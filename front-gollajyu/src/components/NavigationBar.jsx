@@ -611,8 +611,9 @@ const NavigationBar = () => {
                 >
                   <img
                     src={
-                      user.profileImgUrl === "1"
-                        ? DefaultProfileImage
+                      // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
+                      !isNaN(user.profileImgUrl)
+                        ? `/assets/images/sobiTItest/${user.profileImgUrl}.png`
                         : user.profileImgUrl
                     }
                     alt="사진"
