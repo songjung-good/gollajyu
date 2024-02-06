@@ -8,7 +8,7 @@ const MyStatistics = () => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query : "(min-width:768px) and (max-width:1023.98px)"
@@ -244,8 +244,8 @@ const MyStatistics = () => {
       isMedium ? "0 4px" : "0",
   }
 
-  // ----------- 차트 컨테이너 스타일 -----------
-  const chartContainerStyle = {
+  // ----------- 태그 선호도 컨테이너 스타일 -----------
+  const tagContentsContainerStyle = {
     // 상속
     ...contentsContainerStyle,
 
@@ -323,6 +323,18 @@ const MyStatistics = () => {
       isLarge ? "7px" :
       isMedium ? "6px" : "5px",
     cursor: "pointer",
+  }
+
+  // ----------- 차트 컨테이너 스타일 -----------
+  const chartContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    marginTop: "20px",
+
+    // 컨텐츠 정렬
+    justifyContent: "center",
   }
 
   // ----------- 정보 컨테이너 스타일 -----------
@@ -414,27 +426,12 @@ const MyStatistics = () => {
       const top3Right = categoryItems[index + 1] ? findTop3Tags(categoryItems[index + 1]) : null;
 
       return (
-        <div style={infoContainerStyle} key={index}>
-          <div style={itemLeftStyle}>
-            <div className="fontsize-md">{item.category}</div>
-            <div style={flexContainerStyle}>
-              {top3Left.map((tag, i) => (
-                <div
-                  style={{
-                    ...tagItemStyle,
-                    backgroundColor: tagColorData[tag.key].color,
-                  }}
-                  className="fontsize-sm"
-                  key={i}
-                >{tagColorData[tag.key].name}</div>
-              ))}
-            </div>
-          </div>
-          {top3Right && (
-            <div style={itemRightStyle}>
-              <div className="fontsize-md">{categoryItems[index + 1].category}</div>
+        <>
+          <div style={infoContainerStyle} key={index}>
+            <div style={itemLeftStyle}>
+              <div className="fontsize-md">{item.category}</div>
               <div style={flexContainerStyle}>
-                {top3Right.map((tag, i) => (
+                {top3Left.map((tag, i) => (
                   <div
                     style={{
                       ...tagItemStyle,
@@ -446,8 +443,25 @@ const MyStatistics = () => {
                 ))}
               </div>
             </div>
-          )}
-        </div>
+            {top3Right && (
+              <div style={itemRightStyle}>
+                <div className="fontsize-md">{categoryItems[index + 1].category}</div>
+                <div style={flexContainerStyle}>
+                  {top3Right.map((tag, i) => (
+                    <div
+                      style={{
+                        ...tagItemStyle,
+                        backgroundColor: tagColorData[tag.key].color,
+                      }}
+                      className="fontsize-sm"
+                      key={i}
+                    >{tagColorData[tag.key].name}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       );
     }
     return null; // 홀수 index는 처리하지 않음
@@ -460,7 +474,7 @@ const MyStatistics = () => {
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">카테고리 선호도</span>
         </div>
-        <div style={contentsContainerStyle}>
+        <div style={tagContentsContainerStyle}>
 
           {/* ------------- 관심있는 카테고리 ------------- */}
           <div style={subTitleContainerStyle}>
@@ -521,7 +535,7 @@ const MyStatistics = () => {
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">태그 선호도</span>
         </div>
-        <div style={chartContainerStyle}>
+        <div style={tagContentsContainerStyle}>
 
           {/* ------------- 드롭다운 버튼 ------------- */}
           <div style={dropdownContainerStyle}>
@@ -561,11 +575,7 @@ const MyStatistics = () => {
           {/* --------------------------------------- */}
 
           {/* ------------- 차트 그래프 ------------- */}
-          <div style={{
-            ...flexContainerStyle,
-            justifyContent: "center",
-            marginTop: "20px",
-          }}>
+          <div style={chartContainerStyle}>
             <MyStatisticsChart />
           </div>
           {/* --------------------------------------- */}
@@ -574,12 +584,7 @@ const MyStatistics = () => {
 
           {/* ------------- 카테고리별 선호 태그 ------------- */}
           <div style={subTitleStyle} className="fontsize-lg">카테고리별 선호 태그 TOP 3</div>
-          <div style={{
-            ...flexContainerStyle,
-            flexDirection: "column"
-          }}>
-            {renderTop3Categories}
-          </div>
+          {renderTop3Categories}
           {/* --------------------------------------- */}
 
         </div>

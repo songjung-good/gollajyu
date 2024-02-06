@@ -37,7 +37,7 @@ const MyActivities = () => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query : "(min-width:768px) and (max-width:1023.98px)"
@@ -355,7 +355,7 @@ const MyActivities = () => {
   };
 
   // ----------- 활동기록 컨테이너 스타일 -----------
-  const hitoryContainerStyle = {
+  const historyContainerStyle = {
     // 디자인
     padding:
       isXLarge ? "40px" :
@@ -454,7 +454,7 @@ const MyActivities = () => {
             </MenuItem>
           ))}
         </div>
-        <div style={hitoryContainerStyle}>
+        <div style={historyContainerStyle}>
           <Routes>
             <Route path="/" element={<MyActivitiesCreated />} />
             <Route path="/0" element={<MyActivitiesParticipated />} />

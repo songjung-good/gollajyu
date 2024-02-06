@@ -16,7 +16,7 @@ const MyActivitiesCommentItem = () => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
+    query : "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query : "(min-width:768px) and (max-width:1023.98px)"
@@ -92,12 +92,6 @@ const MyActivitiesCommentItem = () => {
     marginRight: "10px",
 
     // 길이가 일정 이상일 경우 ... 되는 기능 필요
-  }
-
-  // ----------- 댓글 수 스타일 -----------
-  const commentNumberStyle = {
-    // 글자
-    color: "#868FF4",
   }
 
   // ----------- 구분 선 스타일 -----------
@@ -183,29 +177,33 @@ const MyActivitiesCommentItem = () => {
     };
 
     return (
-      <div>
-        <div style={myPickStyle} className="fontsize-xs">My Pick</div>
-        <div style={itemStyle}>
-          <div className="fontsize-sm">{label}</div>
-          <div className="fontsize-xs">{ratio} %</div>
+      <>
+        <div>
+          <div style={myPickStyle} className="fontsize-xs">My Pick</div>
+          <div style={itemStyle}>
+            <div className="fontsize-sm">{label}</div>
+            <div className="fontsize-xs">{ratio} %</div>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
   // ----------- Vote 컴포넌트 사용 함수 -----------
   const Vote = ({ voteOptions }) => {
     return (
-      <div style={voteContainerStyle}>
-        {voteOptions.map((option, index) => (
-          <VoteItem
-            key={index}
-            label={option.label}
-            ratio={option.ratio}
-            isMyChoice={option.isMyChoice}
-          />
-        ))}
-      </div>
+      <>
+        <div style={voteContainerStyle}>
+          {voteOptions.map((option, index) => (
+            <VoteItem
+              key={index}
+              label={option.label}
+              ratio={option.ratio}
+              isMyChoice={option.isMyChoice}
+            />
+          ))}
+        </div>
+      </>
     );
   };
 
@@ -216,7 +214,7 @@ const MyActivitiesCommentItem = () => {
         onMouseOut={ItemMouseLeave}
       >
         <div style={containerStyle}>
-          <div style={titleContainerStyle}>
+          <div style={flexContainerStyle}>
             <div style={titleStyle} className="fontsize-lg">[댓글 내용]</div>
           </div>
           <div style={infoContainerStyle}>
