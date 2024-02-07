@@ -11,5 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class LiveDetailResDto {
     private String title;
+    private String nickName;
+    private Long liveCount;
     private List<LiveVoteItemResDto> liveVoteItemDtoResList;
 }

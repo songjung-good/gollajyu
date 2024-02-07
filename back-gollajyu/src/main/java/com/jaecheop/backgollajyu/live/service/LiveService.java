@@ -145,6 +145,8 @@ public class LiveService {
                     return new ServiceResult<LiveDetailResDto>()
                             .success(LiveDetailResDto.builder()
                                     .title(live.getTitle())
+                                    .nickName(live.getMember().getNickname()) // Member의 nickname 설정
+                                    .liveCount(live.getCount()) // Live의 count 설정
                                     .liveVoteItemDtoResList(voteItems)
                                     .build());
                 })
