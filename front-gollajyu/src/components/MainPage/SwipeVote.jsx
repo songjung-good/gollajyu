@@ -6,7 +6,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
 // 투표
-import VoteCard from '../vote/VoteCard';
+import VoteCard from '../VotePage/VoteCard';
 
 
 export default function SwipeVote( props ) {
