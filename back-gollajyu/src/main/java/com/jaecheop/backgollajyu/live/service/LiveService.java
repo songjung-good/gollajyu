@@ -67,6 +67,7 @@ public class LiveService {
 
         // 라이브 방송 생성 및 저장
         Live live = liveRepository.save(Live.builder()
+                .id(liveStartReqDto.getSessionId())
                 .member(member)
                 .title(liveStartReqDto.getLiveTitle())
                 .imgUrl(liveImagePath)
@@ -113,5 +114,21 @@ public class LiveService {
                         .build())
                 .collect(Collectors.toList());
         return new ServiceResult<List<LiveListDto>>().success(liveListDtos);
+    }
+
+    @Transactional
+    public ServiceResult<Void> deleteLiveRoom(Long sessionId) {
+        // 라이브 방이 존재하는지 확인
+        if (!liveRepository.existsById(sessionId)) {
+            return new ServiceResult<Void>().fail("Live방이 존재하지 않습니다.");
+        }
+
+        // 라이브 방과 관련된 아이템들 삭제
+        liveVoteItemRepository.deleteByLiveId(sessionId);
+
+        // 라이브 방 삭제
+        liveRepository.deleteById(sessionId);
+
+        return new ServiceResult<Void>().success();
     }
 }

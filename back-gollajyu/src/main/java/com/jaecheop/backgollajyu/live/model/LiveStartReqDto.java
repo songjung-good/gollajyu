@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class LiveStartReqDto {
+    private Long sessionId;
     private Long memberId;
     private String liveTitle;
     private MultipartFile liveImgUrl;

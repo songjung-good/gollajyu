@@ -12,8 +12,7 @@ import lombok.*;
 @ToString
 public class Live {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "live_id")
+    @Column(name = "session_id")
     private Long id;
 
     @JoinColumn(name = "member_id")
