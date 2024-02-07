@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import useAuthStore from "../stores/userState";
 import useModalStore from "../stores/modalState";
 import API_URL from "../stores/apiURL";
@@ -44,17 +45,16 @@ const LoginModal = () => {
 
   // TODO: 소셜로그인 핸들링 함수
   const handleKakaoLogin = () => {
-    console.log("카카오로그인 시도");
+    console.log("카카오로그인 -> 사실 안됨");
   };
   const handleNaverLogin = () => {
-    console.log("네이버로그인 시도");
+    console.log("네이버로그인 시도 -> 사실 안됨");
   };
 
   const handleGoogleLogin = () => {
     console.log("구글로그인 시도");
   };
 
-  // TODO: 회원가입으로 가는 함수
   const handleSignup = () => {
     console.log("회원가입으로 갑니다");
     setLoginModalClose();
@@ -169,13 +169,18 @@ const LoginModal = () => {
                 className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
               />
             </div>
-            <div id="google" onClick={handleGoogleLogin}>
-              <img
-                src="/assets/images/social-login/google.png"
-                alt=""
-                className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
-              />
-            </div>
+            <Link
+              to="http://localhost:8080/oauth2/authorization/google"
+              onClick={handleGoogleLogin}
+            >
+              <div id="google" onClick={handleGoogleLogin}>
+                <img
+                  src="/assets/images/social-login/google.png"
+                  alt=""
+                  className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
+                />
+              </div>
+            </Link>
           </div>
         </div>
         <p

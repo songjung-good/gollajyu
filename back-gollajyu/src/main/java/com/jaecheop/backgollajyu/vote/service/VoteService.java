@@ -605,12 +605,11 @@ public class VoteService {
 
     }
 
-    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession) {
+    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession, Long memberId) {
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
-
         // 로그인 하지 않은 사용자
-        if (memberSession == null) {
+        if (memberId == null) {
             // 카테고리가 전체일때,
             if (categoryId == 0) {
                 // 기본 정보
@@ -662,7 +661,7 @@ public class VoteService {
 //         로그인 한 사용자
         else {
             // 로그인 한 사용자
-            long memberId = memberSession.getMemberId();
+//            long memberId = memberSession.getMemberId();
 
             // 결과에 담을 투표 리스트 기본 정보
             // 카테고리가 전체일때
@@ -674,7 +673,7 @@ public class VoteService {
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
                 List<ListVoteResultDto> voteResultList = voteResultRepository
-                        .findAllByMemberId(memberSession.getMemberId())
+                        .findAllByMemberId(memberId)
                         .stream()
                         .map(vr -> ListVoteResultDto.convertToDto(vr))
                         .toList();// 참여한 투표 결과 리스트
@@ -728,7 +727,7 @@ public class VoteService {
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
                 List<ListVoteResultDto> voteResultList = voteResultRepository
-                        .findAllByMemberIdAndCategoryId(memberSession.getMemberId(), category.getId())
+                        .findAllByMemberIdAndCategoryId(memberId, category.getId())
                         .stream()
                         .map(vr -> ListVoteResultDto.convertToDto(vr))
                         .toList();

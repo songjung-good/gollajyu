@@ -12,9 +12,9 @@ const ChatList = ({ list, choiced, onLike }) => {
   const items = () => list.map((v, k) => (
     <div key={k} className={`flex ${v.choiced === choiced ? 'justify-end' : ''}`}>
       <div className={`${colorMap[v.choiced]} text-black p-2 rounded-lg max-w-xs`}>
-        <small>{v.userid} (좋아요: {v.liked}, 선택지: {v.choiced})</small>
+        <small>{v.userid} (선택지: {v.choiced})</small>
         <p className='chat-content'>{v.content}</p>
-        <button onClick={() => onLike(k)}>👍</button>
+        <button className='fontsize-xs' onClick={() => onLike(k)}>좋아요: {v.liked} 👍</button>
       </div>
     </div>
   ));
