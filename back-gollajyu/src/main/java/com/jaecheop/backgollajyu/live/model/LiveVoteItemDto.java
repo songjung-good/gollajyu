@@ -1,16 +1,15 @@
 package com.jaecheop.backgollajyu.live.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LiveVoteItemDto {
-    private String imgUrl;
+    private MultipartFile imgUrl;
     private String description;
     private Long count;
 }
