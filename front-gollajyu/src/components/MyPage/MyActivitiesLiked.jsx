@@ -1,7 +1,8 @@
 import React from "react";
 import MyActivitiesVoteItem from "./MyActivitiesVoteItem";
 
-const MyActivitiesLikded = () => {
+const MyActivitiesLiked = (props) => {
+  console.log("좋아요한 투표:", props);
   return (
     <>
       <MyActivitiesVoteItem />
@@ -12,4 +13,4 @@ const MyActivitiesLikded = () => {
   );
 };
 
-export default MyActivitiesLikded;
+export default MyActivitiesLiked;
