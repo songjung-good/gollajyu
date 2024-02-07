@@ -1,7 +1,8 @@
 import React from "react";
 import MyActivitiesCommentItem from "./MyActivitiesCommentItem";
 
-const MyActivitiesCommented = () => {
+const MyActivitiesCommented = (props) => {
+  console.log("작성한 댓글:", props);
   return (
     <>
       <MyActivitiesCommentItem />

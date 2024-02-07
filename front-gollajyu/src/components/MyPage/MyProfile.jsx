@@ -11,7 +11,7 @@ import DefaultProfileImage from "/assets/images/default_profile_img.png";
 const MyProfile = () => {
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query : "(min-width:1024px)",
+    query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query: "(min-width:768px) and (max-width:1023.98px)",
@@ -251,7 +251,7 @@ const MyProfile = () => {
               src={
                 // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
                 !isNaN(user.profileImgUrl)
-                  ? `/assets/images/sobiTItest/${user.profileImgUrl}.png`
+                  ? `/assets/images/sobiTest/${user.profileImgUrl}.png`
                   : user.profileImgUrl
               }
               alt="프로필 이미지"

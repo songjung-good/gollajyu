@@ -7,7 +7,7 @@ import useAuthStore from "../../stores/userState";
 import API_URL from "../../stores/apiURL";
 import MyActivitiesCreated from "./MyActivitiesCreated";
 import MyActivitiesParticipated from "./MyActivitiesParticipated";
-import MyActivitiesLikded from "./MyActivitiesLikded";
+import MyActivitiesLiked from "./MyActivitiesLiked";
 import MyActivitiesCommented from "./MyActivitiesCommented";
 import PointImage from "/assets/images/point_img.png";
 
@@ -37,7 +37,7 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
 const MyActivities = () => {
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query : "(min-width:1024px)",
+    query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query: "(min-width:768px) and (max-width:1023.98px)",
@@ -495,7 +495,7 @@ const MyActivities = () => {
             />
             <Route
               path="/1"
-              element={<MyActivitiesLikded props={likedVote} />}
+              element={<MyActivitiesLiked props={likedVote} />}
             />
             <Route
               path="/2"
