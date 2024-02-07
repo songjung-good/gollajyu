@@ -22,7 +22,7 @@ const VoteSimple = () => {
     memberEmail: '',
     title: '',
     description: 'none',
-    categoryId: 0,
+    categoryId: '',
     voteItemList: [],
   });
 
@@ -74,8 +74,8 @@ const VoteSimple = () => {
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', 'none'); // description 값을 'none'으로 설정
-    formData.append('categoryId', '0'); // categoryId 값을 '0'으로 설정
-    formData.append('memberId', user.memberId); // 사용자 ID 값 추가
+    formData.append('categoryId', '5'); // categoryId 값을 '0'으로 설정
+    formData.append('memberEmail', user.memberEmail); // 사용자 ID 값 추가
 
     // 이미지 업로드 시 formData에 추가하는 부분
     images.forEach((image, index) => {
