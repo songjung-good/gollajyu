@@ -21,9 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -107,18 +105,46 @@ public class LiveService {
         return fileDir + "\\" + imgPath;
     }
 
-    public ServiceResult<List<LiveListDto>> findAllLives() {
-        List<Live> lives = liveRepository.findAll();
-        List<LiveListDto> liveListDtos = lives.stream()
-                .map(live -> LiveListDto.builder()
-                        .id(live.getId())
-                        .memberId(live.getMember().getId())
-                        .title(live.getTitle())
-                        .count(live.getCount())
-                        .imgUrl(live.getImgUrl())
-                        .build())
+//    public ServiceResult<List<LiveListDto>> findAllLives() {
+//        List<Live> lives = liveRepository.findAll();
+//        List<LiveListDto> liveListDtos = lives.stream()
+//                .map(live -> LiveListDto.builder()
+//                        .id(live.getId())
+//                        .nickname(live.getMember().getNickname())
+//                        .title(live.getTitle())
+//                        .count(live.getCount())
+//                        .imgUrl(live.getImgUrl())
+//                        .build())
+//                .collect(Collectors.toList());
+//        return new ServiceResult<List<LiveListDto>>().success(liveListDtos);
+//    }
+
+    public List<LiveListDto> findAllLivesWithTop3() {
+        List<Live> allLives = liveRepository.findAll();
+        List<Live> top3Lives = liveRepository.findTop3ByOrderByCountDesc();
+
+        // 상위 3개를 제외한 나머지 라이브 방송을 최신순으로 정렬
+        List<Live> otherLives = allLives.stream()
+                .filter(live -> !top3Lives.contains(live))
+                .sorted(Comparator.comparing(Live::getId).reversed())
                 .collect(Collectors.toList());
-        return new ServiceResult<List<LiveListDto>>().success(liveListDtos);
+
+        // DTO 변환 로직 (상위 3개 + 나머지)
+        List<LiveListDto> liveListDtos = new ArrayList<>();
+        top3Lives.forEach(live -> liveListDtos.add(convertToDto(live)));
+        otherLives.forEach(live -> liveListDtos.add(convertToDto(live)));
+
+        return liveListDtos;
+    }
+
+    private LiveListDto convertToDto(Live live) {
+        return LiveListDto.builder()
+                .id(live.getId())
+                .nickname(live.getMember().getNickname()) // Member의 닉네임
+                .title(live.getTitle())
+                .count(live.getCount()) // 시청자 수
+                .imgUrl(live.getImgUrl()) // 라이브 방송 이미지 URL
+                .build();
     }
 
     @Transactional

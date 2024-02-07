@@ -40,17 +40,24 @@ public class LiveController {
         return ResponseEntity.ok().body(responseMessage.success());
     }
 
-    @GetMapping("")
-    @Operation(summary = "라이브 방송 리스트 조회", description = "returns LiveListDto")
-    public ResponseEntity<ResponseMessage<List<LiveListDto>>> listLive() {
-        ServiceResult<List<LiveListDto>> result = liveService.findAllLives();
+//    @GetMapping("")
+//    @Operation(summary = "라이브 방송 리스트 조회", description = "returns LiveListDto")
+//    public ResponseEntity<ResponseMessage<List<LiveListDto>>> listLive() {
+//        ServiceResult<List<LiveListDto>> result = liveService.findAllLives();
+//
+//        ResponseMessage<List<LiveListDto>> responseMessage = new ResponseMessage<>();
+//        if (!result.isResult()) {
+//            return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
+//        }
+//
+//        return ResponseEntity.ok().body(responseMessage.success(result.getData()));
+//    }
 
-        ResponseMessage<List<LiveListDto>> responseMessage = new ResponseMessage<>();
-        if (!result.isResult()) {
-            return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
-        }
-
-        return ResponseEntity.ok().body(responseMessage.success(result.getData()));
+    @GetMapping("/listWithTop3")
+    @Operation(summary = "라이브 방송 리스트 조회 (상위 3개 포함)", description = "시청자 수가 많은 상위 3개 라이브 방송과 나머지를 최신순으로 조회합니다.")
+    public ResponseEntity<ResponseMessage<List<LiveListDto>>> listLiveWithTop3() {
+        List<LiveListDto> liveList = liveService.findAllLivesWithTop3();
+        return ResponseEntity.ok(new ResponseMessage<List<LiveListDto>>().success(liveList));
     }
 
     @DeleteMapping("/{sessionId}")
