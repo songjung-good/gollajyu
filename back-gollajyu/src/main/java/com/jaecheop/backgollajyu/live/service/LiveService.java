@@ -2,8 +2,10 @@ package com.jaecheop.backgollajyu.live.service;
 
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.live.entity.Live;
+import com.jaecheop.backgollajyu.live.entity.LiveParticipant;
 import com.jaecheop.backgollajyu.live.entity.LiveVoteItem;
 import com.jaecheop.backgollajyu.live.model.*;
+import com.jaecheop.backgollajyu.live.repository.LiveParticipantRepository;
 import com.jaecheop.backgollajyu.live.repository.LiveRepository;
 import com.jaecheop.backgollajyu.live.repository.LiveVoteItemRepository;
 import com.jaecheop.backgollajyu.member.entity.Member;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,6 +32,7 @@ public class LiveService {
     private final MemberRepository memberRepository;
     private final LiveRepository liveRepository;
     private final LiveVoteItemRepository liveVoteItemRepository;
+    private final LiveParticipantRepository liveParticipantRepository;
 
     @Transactional
     public ServiceResult<Void> startLive(LiveStartReqDto liveStartReqDto, String fileDir) {
@@ -151,5 +155,51 @@ public class LiveService {
                                     .build());
                 })
                 .orElseGet(() -> new ServiceResult<LiveDetailResDto>().fail("해당 라이브 방송을 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public boolean enterLive(Long liveId, Long memberId) {
+        Live live = liveRepository.findById(liveId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 라이브 방송이 존재하지 않습니다."));
+
+        boolean alreadyParticipating = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId)
+                .isPresent();
+
+        if (alreadyParticipating) {
+            // 이미 참여 중인 경우, false 반환
+            return false;
+        } else {
+                // 새로운 참여자인 경우, 참여자 추가
+                LiveParticipant participant = LiveParticipant.builder()
+                        .live(live)
+                        .member(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")))
+                        .build();
+                liveParticipantRepository.save(participant);
+                // 참여자 수 증가
+                live.setCount(live.getCount() + 1);
+                liveRepository.save(live);
+                return true;
+        }
+    }
+
+    @Transactional
+    public boolean exitLive(Long liveId, Long memberId) {
+        Optional<LiveParticipant> participantOpt = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId);
+
+        if (participantOpt.isEmpty()) {
+            // 참여자 정보가 데이터베이스에 존재하지 않는 경우, false 반환
+            return false;
+        }
+
+        // 참여자 정보가 있는 경우, 참여자 정보 삭제 및 참여자 수 감소
+        participantOpt.ifPresent(participant -> {
+            liveParticipantRepository.delete(participant);
+
+            Live live = participant.getLive();
+            live.setCount(Math.max(0, live.getCount() - 1)); // 참여자 수가 음수가 되지 않도록 조정
+            liveRepository.save(live);
+        });
+
+        return true;
     }
 }
