@@ -175,7 +175,7 @@ public class VoteController {
     }
 
 
-    @GetMapping("/ai")
+    @PostMapping("/ai")
     @Operation(summary = "투표 결과 예상", description = "returns GollaItem")
     public ResponseEntity<Long> gollAi(@RequestBody GollAiReqDto gollAiReqDto) {
 

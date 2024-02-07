@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +28,7 @@ public class InfoController {
 
     private final InfoService infoService;
 
-    @GetMapping("")
+    @PostMapping("")
     @Operation(summary = "통계결과", description = "returns CategoryTagDtoList")
 
     public ResponseEntity<List<CategoryTagDto>> resultStatistics(@RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
