@@ -1,5 +1,6 @@
 package com.jaecheop.backgollajyu.live.controller;
 
+import com.jaecheop.backgollajyu.live.model.LiveDetailDto;
 import com.jaecheop.backgollajyu.live.model.LiveListDto;
 import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
 import com.jaecheop.backgollajyu.live.service.LiveService;
@@ -23,7 +24,6 @@ public class LiveController {
     @Value("${file.dir}")
     private String fileDir;
 
-    // 라이브 방송 생성(시작)
     @PostMapping("")
     @Operation(summary = "라이브 방송 생성", description = "No body")
     public ResponseEntity<ResponseMessage<?>> startLive(LiveStartReqDto liveStartReqDto) {
@@ -38,7 +38,6 @@ public class LiveController {
         return ResponseEntity.ok().body(responseMessage.success());
     }
 
-    // 라이브 방송 전체 조회
     @GetMapping("")
     @Operation(summary = "라이브 방송 리스트 조회", description = "returns LiveListDto")
     public ResponseEntity<ResponseMessage<List<LiveListDto>>> listLive() {
@@ -52,7 +51,6 @@ public class LiveController {
         return ResponseEntity.ok().body(responseMessage.success(result.getData()));
     }
 
-    // 라이브 방송 삭제(종료)
     @DeleteMapping("/{sessionId}")
     @Operation(summary = "라이브 방송 삭제", description = "No body")
     public ResponseEntity<ResponseMessage<Void>> deleteLive(@PathVariable Long sessionId) {
@@ -66,4 +64,16 @@ public class LiveController {
         return ResponseEntity.ok().body(responseMessage.success());
     }
 
+    @GetMapping("/{liveId}")
+    @Operation(summary = "라이브 방송 상세 조회", description = "returns LiveDetailDto")
+    public ResponseEntity<ResponseMessage<LiveDetailDto>> getLiveDetail(@PathVariable Long liveId) {
+        ServiceResult<LiveDetailDto> result = liveService.findLiveDetail(liveId);
+
+        ResponseMessage<LiveDetailDto> responseMessage = new ResponseMessage<>();
+        if (!result.isResult()) {
+            return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
+        }
+
+        return ResponseEntity.ok().body(responseMessage.success(result.getData()));
+    }
 }

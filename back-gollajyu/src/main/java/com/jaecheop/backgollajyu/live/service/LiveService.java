@@ -3,6 +3,7 @@ package com.jaecheop.backgollajyu.live.service;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.live.entity.Live;
 import com.jaecheop.backgollajyu.live.entity.LiveVoteItem;
+import com.jaecheop.backgollajyu.live.model.LiveDetailDto;
 import com.jaecheop.backgollajyu.live.model.LiveListDto;
 import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
 import com.jaecheop.backgollajyu.live.model.LiveVoteItemDto;
@@ -130,5 +131,26 @@ public class LiveService {
         liveRepository.deleteById(sessionId);
 
         return new ServiceResult<Void>().success();
+    }
+
+    public ServiceResult<LiveDetailDto> findLiveDetail(Long liveId) {
+        return liveRepository.findById(liveId)
+                .map(live -> {
+                    List<LiveVoteItemDto> voteItems = liveVoteItemRepository.findByLiveId(liveId)
+                            .stream()
+                            .map(item -> LiveVoteItemDto.builder()
+                                    .imgUrl(item.getImgUrl())
+                                    .description(item.getDescription())
+                                    .count(item.getCount())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    return new ServiceResult<LiveDetailDto>()
+                            .success(LiveDetailDto.builder()
+                                    .title(live.getTitle())
+                                    .liveVoteItemDtoList(voteItems)
+                                    .build());
+                })
+                .orElseGet(() -> new ServiceResult<LiveDetailDto>().fail("해당 라이브 방송을 찾을 수 없습니다."));
     }
 }
