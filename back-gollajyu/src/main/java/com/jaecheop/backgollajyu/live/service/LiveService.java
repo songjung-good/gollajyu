@@ -3,7 +3,9 @@ package com.jaecheop.backgollajyu.live.service;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.live.entity.Live;
 import com.jaecheop.backgollajyu.live.entity.LiveVoteItem;
+import com.jaecheop.backgollajyu.live.model.LiveListDto;
 import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
+import com.jaecheop.backgollajyu.live.model.LiveVoteItemDto;
 import com.jaecheop.backgollajyu.live.repository.LiveRepository;
 import com.jaecheop.backgollajyu.live.repository.LiveVoteItemRepository;
 import com.jaecheop.backgollajyu.member.entity.Member;
@@ -17,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +62,7 @@ public class LiveService {
                 liveImagePath = saveFile(liveImageFile, fileDir);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Live image saving failed", e);
+            return new ServiceResult<Void>().fail(e.getMessage());
         }
 
         // 라이브 방송 생성 및 저장
@@ -70,21 +74,19 @@ public class LiveService {
                 .build());
 
         // 라이브 투표 아이템 생성 및 저장
-        liveStartReqDto.getLiveVoteItemDtoList().forEach(item -> {
-            String fullPath = ""; // 파일 저장 경로 초기화
-            try {
-                fullPath = saveFile(item.getImgUrl(), fileDir); // 파일 저장 로직 호출
-            } catch (IOException e) {
-                throw new RuntimeException("File saving failed", e);
+        try {
+            for (LiveVoteItemDto item : liveStartReqDto.getLiveVoteItemDtoList()) {
+                String fullPath = saveFile(item.getImgUrl(), fileDir); // 파일 저장 로직 호출
+                LiveVoteItem liveVoteItem = liveVoteItemRepository.save(LiveVoteItem.builder()
+                        .live(live)
+                        .imgUrl(fullPath)
+                        .description(item.getDescription())
+                        .count(0L)
+                        .build());
             }
-
-            LiveVoteItem liveVoteItem = liveVoteItemRepository.save(LiveVoteItem.builder()
-                    .live(live)
-                    .imgUrl(fullPath)
-                    .description(item.getDescription())
-                    .count(0L)
-                    .build());
-        });
+        } catch (IOException e) {
+            return new ServiceResult<Void>().fail("파일 저장 중 문제가 발생했습니다: " + e.getMessage());
+        }
 
         return new ServiceResult<Void>().success();
     }
@@ -97,5 +99,19 @@ public class LiveService {
             file.transferTo(new File(fileDir + "\\" + imgPath));
         }
         return fileDir + "\\" + imgPath;
+    }
+
+    public ServiceResult<List<LiveListDto>> findAllLives() {
+        List<Live> lives = liveRepository.findAll();
+        List<LiveListDto> liveListDtos = lives.stream()
+                .map(live -> LiveListDto.builder()
+                        .id(live.getId())
+                        .memberId(live.getMember().getId())
+                        .title(live.getTitle())
+                        .count(live.getCount())
+                        .imgUrl(live.getImgUrl())
+                        .build())
+                .collect(Collectors.toList());
+        return new ServiceResult<List<LiveListDto>>().success(liveListDtos);
     }
 }
