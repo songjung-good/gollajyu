@@ -22,11 +22,6 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     query : "(max-width:479.98px)"
   });
 
-  console.log(selectedCategory)
-  console.log(itemCount)
-  console.log(selectedRadioValues)
-  console.log(selectedDropdownValues)
-
   useEffect(() => {
 
     // ----------- 각 아이템에 대한 데이터를 담을 배열 -----------
@@ -63,70 +58,64 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
       });
     }
 
-    console.log(requestDataArray)
     console.log(requestDataArray[0])
-
-
 
     requestDataArray.forEach(data => {
       axios.post(`${API_URL}/statistics`, data)
         .then(response => {
           console.log("!@!@!@!@!@!@!@!@!@", response.data);
-          const aaa = response.data;
-          console.log("!%%%%%%%%", aaa);
         })
         .catch(error => {
           console.error(error);
         });
     });
-
   }, [selectedCategory, selectedRadioValues, selectedDropdownValues, itemCount]);
 
 
   // ----------- 드롭다운으로 선택한 카테고리 -----------
   const selectedCategoryData = categoryData[selectedCategory];
   const selectedTagData = [
-      {
-        subject: selectedCategoryData.tags[0],
-        A: 120,
-        B: 110,
-        C: 50,
-        D: 30,
-        fullMark: 150,
-      },
-      {
-        subject: selectedCategoryData.tags[1],
-        A: 98,
-        B: 130,
-        C: 50,
-        D: 30,
-        fullMark: 150,
-      },
-      {
-        subject: selectedCategoryData.tags[2],
-        A: 86,
-        B: 130,
-        C: 50,
-        D: 30,
-        fullMark: 150,
-      },
-      {
-        subject: selectedCategoryData.tags[3],
-        A: 99,
-        B: 100,
-        C: 50,
-        D: 30,
-        fullMark: 150,
-      },
-      {
-        subject: selectedCategoryData.tags[4],
-        A: 85,
-        B: 90,
-        C: 50,
-        D: 70,
-        fullMark: 150,
-      },
-    ];
+    {
+      subject: selectedCategoryData.tags[0],
+      type1: 120,
+      type2: 110,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[1],
+      type1: 98,
+      type2: 130,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[2],
+      type1: 86,
+      type2: 130,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[3],
+      type1: 99,
+      type2: 100,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[4],
+      type1: 85,
+      type2: 90,
+      type3: 50,
+      type4: 70,
+      fullMark: 150,
+    },
+  ];
 
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
@@ -201,7 +190,7 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
       <Radar
         key={`유형 ${i}`}
         name={`유형 ${i} : ${ageValue}/${genderValue}/${tasteValue}`}
-        dataKey={String.fromCharCode(64 + i)}  // A, B, C, D
+        dataKey={`type${i}`}
         stroke={colorList[i-1]}
         fill={colorList[i-1]}
         fillOpacity={0.3}
