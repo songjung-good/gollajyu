@@ -10,7 +10,7 @@ const MyActivitiesParticipated = ({ props }) => {
           return <MyActivitiesVoteItem key={index} voteItem={item} />;
         })
       ) : (
-        <p>참여한 투표가 없습니다</p>
+        <p className="fontsize-sm">참여한 투표가 없습니다</p>
       )}
     </>
   );

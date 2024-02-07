@@ -10,7 +10,7 @@ const MyActivitiesCommented = ({ props }) => {
           return <MyActivitiesCommentItem key={index} commentItem={item} />;
         })
       ) : (
-        <p>좋아요한 투표가 없습니다</p>
+        <p className="fontsize-sm">작성한 댓글이 없습니다</p>
       )}
     </>
   );
