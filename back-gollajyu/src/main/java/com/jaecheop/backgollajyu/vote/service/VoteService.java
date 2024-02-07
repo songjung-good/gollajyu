@@ -239,7 +239,7 @@ public class VoteService {
     // 태그별 투표수 첨부 해주기 For ItemResDto 결과랑 sSReq(null true)
     public List<CategoryTagDto> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<CategoryTagDto> statisticsList = new ArrayList<>();
-
+        System.out.println(voteResults+"@@@@@@@@@@@@@@@@");
         // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
         List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
@@ -296,21 +296,22 @@ public class VoteService {
     // StatisticsSearchReqDto 에 따른 필터링 작업 ,,,voteResultList(byVoteItem or byMemberId or byAll)
     public List<VoteResult> perfectResultsMethod(List<VoteResult> voteResultList, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<VoteResult> resultList = voteResultList;
+        System.out.println(statisticsSearchReqDto+"ssssssssssssssssssssssssssss");
 
         // 소비성향이 있다면
-        if (statisticsSearchReqDto.getTypeId() != null) {
+        if ((statisticsSearchReqDto.getTypeId() != null) && (statisticsSearchReqDto.getTypeId() != 0)) {
             resultList = resultList.stream()
                     .filter(result -> result.getType().getId() == statisticsSearchReqDto.getTypeId())
                     .collect(Collectors.toList());
         }
         // 나이 정보가 있다면
-        if (statisticsSearchReqDto.getAge() != null) {
+        if ((statisticsSearchReqDto.getAge() != null) && (statisticsSearchReqDto.getAge() != 0)) {
             resultList = resultList.stream()
                     .filter(result -> (result.getAge()/10) == statisticsSearchReqDto.getAge())
                     .collect(Collectors.toList());
         }
         // 성별 정보가 있다면
-        if (statisticsSearchReqDto.getGender() != null) {
+        if ((statisticsSearchReqDto.getGender() != null) && (!statisticsSearchReqDto.getGender().equals("0"))) {
             resultList = resultList.stream()
                     .filter(result -> result.getGender().name().equals(statisticsSearchReqDto.getGender()))
                     .collect(Collectors.toList());
