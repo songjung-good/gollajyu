@@ -44,13 +44,13 @@ public class InfoController {
                         statisticsSearchReqDto.getMemberId()
                 );
             } else {
-                System.out.println("nomember");
+//                System.out.println("nomember");
                 // memberId is not present, query without considering it
                 voteResults = voteResultRepository.findAllByCategoryId(
                         statisticsSearchReqDto.getCategoryId()
                 );
             }
-            System.out.println(voteResults+"213124124124");
+//            System.out.println(voteResults+"213124124124//"+statisticsSearchReqDto.getCategoryId());
             List<CategoryTagDto> statistics = voteService.generateStatistics(
                     voteResults,
                     statisticsSearchReqDto
