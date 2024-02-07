@@ -65,15 +65,17 @@ public class SecurityConfig {
 
         // 여기서부터 로그아웃 API 내용~!
         http.logout(logout ->
-                logout.logoutUrl("/members/logout")   // 로그아웃 처리 URL (= form action url)
+                logout.logoutUrl("/api/members/logout")   // 로그아웃 처리 URL (= form action url)
                         //.logoutSuccessUrl("/login") // 로그아웃 성공 후 targetUrl,
                         // logoutSuccessHandler 가 있다면 효과 없으므로 주석처리.
                         .addLogoutHandler((request, response, authentication) -> {
                             // 사실 굳이 내가 세션 무효화하지 않아도 됨.
                             // LogoutFilter가 내부적으로 해줌.
+                            System.out.println("logout filter!!!!!!!!");
                             HttpSession session = request.getSession();
                             if (session != null) {
                                 session.invalidate();
+                                System.out.println("session invalidated!!!!!!!!");
                             }
                         })  // 로그아웃 핸들러 추가
                         .logoutSuccessHandler((request, response, authentication) -> {

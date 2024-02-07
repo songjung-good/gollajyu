@@ -151,6 +151,7 @@ const NavigationBar = () => {
 
   const navigate = useNavigate();
   const handleLogout = () => {
+    console.log("!@!@!@!@!@!@!@logout!@!@!@!@!@!@!@!@!@!@!@")
     axios
       .get(API_URL + "/members/logout")
       .then((res) => {

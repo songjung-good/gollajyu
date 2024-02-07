@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Embeddable
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Birthday {
+public class Birthday implements Serializable {
     private int year;
     private int month;
     private int day;
