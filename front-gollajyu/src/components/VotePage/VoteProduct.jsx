@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import useModalStore from "../../stores/modalState";
 
 const VoteProduct = () => {
   const [items, setItems] = useState([{}, {}]);
   const [category, setCategory] = useState('');  // 카테고리 상태 변수 추가
-
+  // 모달창 닫기
+  const setVoteProductCreateModalClose = useModalStore((state) => state.setVoteProductCreateModalClose);
 
   const handleAddItem = () => {
     if (items.length < 4) {
@@ -14,7 +16,15 @@ const VoteProduct = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div
+      id="outer-layer"
+      className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center"
+      onClick={(e) => {
+        if (e.target.id == "outer-layer") {
+          setVoteProductCreateModalClose();
+        }
+      }}
+    >
       <div className="mx-auto w-full max-w-[550px] bg-white">
         <form className="py-4 px-9">
           <div className="mb-5">
