@@ -127,6 +127,7 @@ const NavigationBar = () => {
   const setLogout = useAuthStore((state) => state.setLogout);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
+  const setLoginModalClose = useModalStore((state) => state.setLoginModalClose);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
   const user = useAuthStore((state) => state.user);
 

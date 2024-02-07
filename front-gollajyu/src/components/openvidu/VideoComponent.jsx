@@ -6,11 +6,9 @@ import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChattingForm from "./Chat/ChattingForm.jsx";
 import ChattingList from "./Chat/ChattingList.jsx";
+import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
-
-// const APPLICATION_SERVER_URL =
-//   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 // const OPENVIDU_SERVER_URL = "https://i10e107.p.ssafy.io:8443/";
 // npm run dev 이면 localhost, npm run build 면 배포 서버
@@ -63,16 +61,6 @@ export default function VideoComponent() {
   console.log("isHost?:", isHost);
 
   const OV = useRef(new OpenVidu());
-
-  // sessionId가 변경되는 경우 -> MySessionId 상태 변경
-  const handleChangeSessionId = useCallback((e) => {
-    setMySessionId(e.target.value);
-  }, []);
-
-  // userName이 변경되는 경우 -> MyUserName 상태 변경
-  const handleChangeUserName = useCallback((e) => {
-    setMyUserName(e.target.value);
-  }, []);
 
   // session에 진입하기!
   const joinSession = useCallback(() => {
@@ -546,8 +534,9 @@ export default function VideoComponent() {
                       id="vote"
                       className="mb-3 basis-1/4 border-2 rounded-md bg-gray-100"
                     >
+                      <Vote />
                       {/* TODO 투표 결과 다시 받아오기 (새로고침) 버튼 추가 */}
-                      <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
+                      {/* <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
                         {voteItem &&
                           voteItem.map((item, index) => {
                             if (item.slice(0, 10) === "data:image") {
@@ -630,7 +619,7 @@ export default function VideoComponent() {
                               );
                             }
                           })}
-                      </div>
+                      </div> */}
                     </div>
                     <div
                       id="chatting"
