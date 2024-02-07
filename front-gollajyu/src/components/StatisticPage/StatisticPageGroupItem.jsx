@@ -220,6 +220,7 @@ const StatisticPageGroupItem = ({ number, onRadioChange, onDropdownChange }) => 
                   style={dropdownStyle}
                   onChange={(e) => onDropdownChange(userType.label, number, e.target.value)}
                 >
+                  <option value="">소비성향 선택</option>
                   {userType.options.map((option, optionIndex) => (
                     <option key={optionIndex} value={option}>{option}</option>
                   ))}
