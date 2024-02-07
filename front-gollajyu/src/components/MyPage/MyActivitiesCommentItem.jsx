@@ -12,10 +12,10 @@ const useHoverState = () => {
   return [hovered, handleMouseEnter, handleMouseLeave];
 };
 
-const MyActivitiesCommentItem = () => {
+const MyActivitiesCommentItem = ({ commentItem }) => {
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query : "(min-width:1024px)",
+    query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
     query: "(min-width:768px) and (max-width:1023.98px)",
@@ -30,14 +30,23 @@ const MyActivitiesCommentItem = () => {
   // ----------- 내 활동 아이템 hover -----------
   const [ItemHovered, ItemMouseEnter, ItemMouseLeave] = useHoverState();
 
-  // ----------- 예시 데이터 (임시) -----------
-  const voteOptions = [
-    { label: "[선택지 1]", ratio: 10, isMyChoice: false },
-    { label: "[선택지 2]", ratio: 30, isMyChoice: true },
-    { label: "[선택지 3]", ratio: 60, isMyChoice: false },
-    { label: "[선택지 4]", ratio: 0, isMyChoice: false },
-  ];
+  // ----------- voteOptions -----------
 
+  const voteItem = commentItem.voteResDto;
+  const voteOptions = [];
+  const total = voteItem.voteItems.reduce((total, item) => {
+    return total + item.resultSize;
+  }, 0);
+
+  voteItem.voteItems.map((item) => {
+    const isMyChoice =
+      item.voteItemId == voteItem.selectedItemId ? true : false;
+    voteOptions.push({
+      label: item.voteItemDesc,
+      ratio: (item.resultSize / total) * 100,
+      isMyChoice: isMyChoice,
+    });
+  });
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨테이너 스타일 -----------
@@ -174,10 +183,12 @@ const MyActivitiesCommentItem = () => {
     return (
       <>
         <div>
-          <div style={myPickStyle} className="fontsize-xs">My Pick</div>
+          <div style={myPickStyle} className="fontsize-xs">
+            My Pick
+          </div>
           <div style={itemStyle}>
             <div className="fontsize-sm">{label}</div>
-            <div className="fontsize-xs">{ratio} %</div>
+            <div className="fontsize-xs">{ratio.toFixed(2)} %</div>
           </div>
         </div>
       </>
@@ -207,19 +218,28 @@ const MyActivitiesCommentItem = () => {
       <NavLink onMouseOver={ItemMouseEnter} onMouseOut={ItemMouseLeave}>
         <div style={containerStyle}>
           <div style={flexContainerStyle}>
-            <div style={titleStyle} className="fontsize-lg">[댓글 내용]</div>
+            <div style={titleStyle} className="fontsize-lg">
+              {commentItem.commentDescription}
+            </div>
           </div>
           <div style={infoContainerStyle}>
             <div style={infoSubContainerStyle}>
-              <div className="fontsize-sm">[카테고리]</div>
+              <div className="fontsize-sm">
+                {voteItem.categoryDto.categoryName}
+              </div>
               <div style={barStyle} className="fontsize-sm">
                 |
               </div>
               <div style={likeNumberStyle} className="fontsize-sm">
-                ❤ [좋아요]
+                {voteItem.isLiked ? "❤" : "♡"} {voteItem.likesCount}
               </div>
             </div>
-            <div className="fontsize-sm">[작성 시간]</div>
+            <div className="fontsize-sm">
+              작성일 :{" "}
+              {voteItem.createAt.slice(0, 10) +
+                " " +
+                voteItem.createAt.slice(11, 16)}
+            </div>
           </div>
           <Vote voteOptions={voteOptions} />
         </div>
