@@ -776,6 +776,7 @@ public class VoteService {
                             .voteItemImgUrl(voteItem.getVoteItemImgUrl())
                             .voteItemDesc(voteItem.getVoteItemDesc())
                             .price(voteItem.getPrice())
+                            .count((long)voteItem.getVoteResultList().size())
                             .build()
             );
         }
