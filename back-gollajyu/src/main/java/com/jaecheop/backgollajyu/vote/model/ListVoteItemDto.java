@@ -18,4 +18,6 @@ public class ListVoteItemDto {
     private String voteItemDesc;
 
     private Long price;
+
+    private Long count;
 }
