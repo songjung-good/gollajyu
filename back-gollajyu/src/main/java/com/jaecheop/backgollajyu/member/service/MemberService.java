@@ -213,6 +213,7 @@ public class MemberService {
         Type type = optionalType.get();
         member.update(addInfoReqDto, type);
         memberRepository.save(member);
+        System.out.println("addInfoReqDto = " + addInfoReqDto);
         return  new ServiceResult<>().success();
     }
 }

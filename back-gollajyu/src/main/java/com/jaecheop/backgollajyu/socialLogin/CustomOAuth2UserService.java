@@ -58,7 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .provider(provider)
                     .providerId(providerId)
                     .createAt(LocalDateTime.now())
-                    .point(0L)
+                    .point(50L)
                     .build();
             memberRepository.save(member);
             System.out.println("111111111111111111111");

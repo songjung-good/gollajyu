@@ -70,5 +70,6 @@ public class Member {
                 .build();
         this.gender = Gender.valueOf(addInfoReqDto.getGender());
         this.type = type;
+        this.nickname = addInfoReqDto.getNickname();
     }
 }
