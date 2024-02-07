@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import categoryData from "/src/stores/categoryData";
+import testResultData from "/src/stores/testResultData";
+import API_URL from "../../stores/apiURL";
+import axios from "axios";
 
 const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, selectedDropdownValues }) => {
 
@@ -19,50 +22,111 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     query : "(max-width:479.98px)"
   });
 
+  console.log(selectedCategory)
+  console.log(itemCount)
+  console.log(selectedRadioValues)
+  console.log(selectedDropdownValues)
+
+  useEffect(() => {
+
+    // ----------- 각 아이템에 대한 데이터를 담을 배열 -----------
+    const requestDataArray = [];
+
+    // ----------- '전체'인지 확인하는 함수 -----------
+    const isNotAll = (value) => value !== '전체';
+
+    // ----------- itemCount 수 만큼 데이터 구성 -----------
+    for (let i = 1; i <= itemCount; i++) {
+      let ageValue = null;
+      let genderValue = null;
+      let testResultId = null;
+    
+      if (isNotAll(selectedRadioValues[`나이-${i}`])) {
+        ageValue = selectedRadioValues[`나이-${i}`]?.charAt(0) || null;
+      }
+    
+      if (isNotAll(selectedRadioValues[`성별-${i}`])) {
+        genderValue = selectedRadioValues[`성별-${i}`] === '남자' ? 'MALE' : (selectedRadioValues[`성별-${i}`] === '여자' ? 'FEMALE' : null);
+      }
+    
+      if (isNotAll(selectedDropdownValues[`소비성향-${i}`])) {
+        const selectedTestValue = selectedDropdownValues[`소비성향-${i}`];
+        testResultId = selectedTestValue ? (testResultData.find(item => item.title === selectedTestValue)?.id || 0) : null;
+      }
+
+      requestDataArray.push({
+        memberId: 0,
+        typeId: testResultId,
+        age: ageValue,
+        gender: genderValue,
+        categoryId: selectedCategory
+      });
+    }
+
+    console.log(requestDataArray)
+    console.log(requestDataArray[0])
+
+
+
+    requestDataArray.forEach(data => {
+      axios.post(`${API_URL}/statistics`, data)
+        .then(response => {
+          console.log("!@!@!@!@!@!@!@!@!@", response.data);
+          const aaa = response.data;
+          console.log("!%%%%%%%%", aaa);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+
+  }, [selectedCategory, selectedRadioValues, selectedDropdownValues, itemCount]);
+
+
   // ----------- 드롭다운으로 선택한 카테고리 -----------
-  const selectedCategoryData = categoryData[selectedCategory - 1];
+  const selectedCategoryData = categoryData[selectedCategory];
   const selectedTagData = [
-    {
-      subject: selectedCategoryData.tags[0],
-      A: 120,
-      B: 110,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[1],
-      A: 98,
-      B: 130,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[2],
-      A: 86,
-      B: 130,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[3],
-      A: 99,
-      B: 100,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[4],
-      A: 85,
-      B: 90,
-      C: 50,
-      D: 70,
-      fullMark: 150,
-    },
-  ];
+      {
+        subject: selectedCategoryData.tags[0],
+        A: 120,
+        B: 110,
+        C: 50,
+        D: 30,
+        fullMark: 150,
+      },
+      {
+        subject: selectedCategoryData.tags[1],
+        A: 98,
+        B: 130,
+        C: 50,
+        D: 30,
+        fullMark: 150,
+      },
+      {
+        subject: selectedCategoryData.tags[2],
+        A: 86,
+        B: 130,
+        C: 50,
+        D: 30,
+        fullMark: 150,
+      },
+      {
+        subject: selectedCategoryData.tags[3],
+        A: 99,
+        B: 100,
+        C: 50,
+        D: 30,
+        fullMark: 150,
+      },
+      {
+        subject: selectedCategoryData.tags[4],
+        A: 85,
+        B: 90,
+        C: 50,
+        D: 70,
+        fullMark: 150,
+      },
+    ];
 
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
