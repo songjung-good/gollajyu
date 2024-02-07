@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import VotePageList from "../components/vote/VotePageList";
-import VotePageHeader from "../components/vote/VotePageHeader";
+import VotePageList from "../components/VotePage/VotePageList";
+import VotePageHeader from "../components/VotePage/VotePageHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
