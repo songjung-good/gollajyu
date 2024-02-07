@@ -48,13 +48,14 @@ export default function VoteCard(props) {
             isSelect={isSelect}
           />
         ))}
-      </div>
-      
+              
       <div>
         <button>상세보기</button>
         {/* "liked": true 여부에 따라 좋아요 변경 */}
         <button onClick={handleLike}>{(isVoteLike) ? "좋아요 취소" : "좋아요"}{voteLikesCount}</button>
       </div>
+      </div>
+
     </div>
   );
 }

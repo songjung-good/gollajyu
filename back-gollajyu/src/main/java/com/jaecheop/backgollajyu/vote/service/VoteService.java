@@ -946,7 +946,7 @@ public class VoteService {
 
 
         // 로그인 했을 때,
-        if(memberInfo != null) {
+        if (memberInfo != null) {
             System.out.println("memberInfo!!!!!!!! = " + memberInfo);
             Long memberId = memberInfo.getMemberId();
 
@@ -984,10 +984,12 @@ public class VoteService {
                         .build();
 
                 allVoteList = voteRepository
-                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+
+                System.out.println("allVoteList = " + allVoteList);
 
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
@@ -1032,10 +1034,11 @@ public class VoteService {
                         .build();
 
                 allVoteList = voteRepository
-                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+                System.out.println("!!!!!!!!!!!!!allVoteList = " + allVoteList);
 
                 makeVoteDetail(allVoteList);
 
