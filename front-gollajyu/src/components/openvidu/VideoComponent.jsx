@@ -32,6 +32,7 @@ const logoStyle = {
 export default function VideoComponent() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isEnoughSize, setIsEnoughSize] = useState(true);
   const [profileImg, setProfileImg] = useState(tmpProfileImg);
   const [mySessionId, setMySessionId] = useState(location.state.sessionId);
   const isHost = location.state.isHost; // isHost로 분기해서 isHost=true면 화면을 publish하고 아니면 publish는 없이 subscribe만 함
@@ -299,10 +300,13 @@ export default function VideoComponent() {
     const response = await axios.post(
       OPENVIDU_SERVER_URL + "openvidu/api/sessions",
       { customSessionId: sessionId },
-      { withCredentials: true },
       {
-        Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
-        "Content-Type": "application/json",
+        headers: {
+          Authorization:
+            "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+          "Content-Type": "application/json",
+        },
+        withCredentials: false,
       }
     );
     return response.data.sessionId; // The sessionId
@@ -312,17 +316,17 @@ export default function VideoComponent() {
     let myRole = isHost ? "PUBLISHER" : "SUBSCRIBER";
     const response = await axios.post(
       OPENVIDU_SERVER_URL +
-        "openvidu/api/sessions" +
+        "openvidu/api/sessions/" +
         sessionId +
-        "/connections",
+        "/connection",
       { role: myRole },
-      { withCredentials: true },
       {
         headers: {
           Authorization:
             "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
           "Content-Type": "application/json",
         },
+        withCredentials: false,
       }
     );
     return response.data.token; // The token
@@ -333,6 +337,7 @@ export default function VideoComponent() {
     joinSession();
   };
 
+  // ------------ 방송 내 투표 관련 기능 ----------------
   const handleVote = (index, item) => {
     // TODO 클릭하면, 해당 item 투표수 1 증가시키는 요청을 서버로 보내기
     // 투표한 상태로 변경
@@ -359,55 +364,301 @@ export default function VideoComponent() {
     getVoteRate();
   }, [isVoted]);
 
+  // ----------------- 화면 사이즈가 충분한지 체크 --------------
+  // 740보다 작으면 -> 안내문 띄우기
+  function handleResize() {
+    // Get the width of the browser window
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth < 740) {
+      setIsEnoughSize(false);
+    } else {
+      setIsEnoughSize(true);
+    }
+  }
+
+  // Add event listener for the resize event
+  window.addEventListener("resize", handleResize);
+
   return (
     <>
-      <div id="logo" className="m-2 text-center">
-        <p style={logoStyle}>골라쥬</p>
-      </div>
-      {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
-      {session === undefined ? (
-        <div
-          id="join"
-          className="container my-24 mx-auto flex flex-col justify-center items-center space-y-10"
-        >
-          <h1 className="fontsize-md text-center">
-            글씨를 클릭하면, 방송으로 입장합니다.
-          </h1>
-          <div
-            id="spinner"
-            className="box-content w-[400px] h-[400px] flex items-center justify-center"
-          >
-            <CircularProgress
-              variant="determinate"
-              sx={{
-                color: (theme) =>
-                  theme.palette.grey[
-                    theme.palette.mode === "light" ? 200 : 800
-                  ],
-                position: "absolute",
-              }}
-              size={400}
-              thickness={3}
-              value={100}
-            />
-            <CircularProgress
-              variant="indeterminate"
-              disableShrink
-              sx={{
-                color: "#FFD257",
-                animationDuration: "3000ms",
-                position: "absolute",
-              }}
-              size={400}
-              thickness={3}
-            />
-            <button
-              className="text-5xl font-bold text-gray-700 z-10 hover:text-amber-300"
-              onClick={enterOnAirRoom}
-            >
-              지금골라쥬
-            </button>
+      {isEnoughSize ? (
+        <>
+          <div id="logo" className="m-2 text-center">
+            <p style={logoStyle}>골라쥬</p>
           </div>
+          {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
+          {session === undefined ? (
+            <div
+              id="join"
+              className="container my-24 mx-auto flex flex-col justify-center items-center space-y-10"
+            >
+              <h1 className="fontsize-md text-center">
+                글씨를 클릭하면, 방송으로 입장합니다.
+              </h1>
+              <div
+                id="spinner"
+                className="box-content w-[400px] h-[400px] flex items-center justify-center"
+              >
+                <CircularProgress
+                  variant="determinate"
+                  sx={{
+                    color: (theme) =>
+                      theme.palette.grey[
+                        theme.palette.mode === "light" ? 200 : 800
+                      ],
+                    position: "absolute",
+                  }}
+                  size={400}
+                  thickness={3}
+                  value={100}
+                />
+                <CircularProgress
+                  variant="indeterminate"
+                  disableShrink
+                  sx={{
+                    color: "#FFD257",
+                    animationDuration: "3000ms",
+                    position: "absolute",
+                  }}
+                  size={400}
+                  thickness={3}
+                />
+                <button
+                  className="text-5xl font-bold text-gray-700 z-10 hover:text-amber-300"
+                  onClick={enterOnAirRoom}
+                >
+                  지금골라쥬
+                </button>
+              </div>
+              <button
+                className={`bg-gray-400 hover:bg-gray-500 fontsize-sm ${settingButton}`}
+                onClick={() => {
+                  leaveSession();
+                  navigate("/");
+                }}
+              >
+                메인으로 돌아가기
+              </button>
+            </div>
+          ) : null}
+
+          <div className="container mx-auto space-y-3">
+            {/* 방송 화면으로 진입 후 */}
+            {session !== undefined ? (
+              // 방송자의 영상 송출 부분
+              <div id="session">
+                {isHost ? (
+                  <div
+                    id="session-header"
+                    className="flex justify-between mb-3"
+                  >
+                    <div className="space-x-2">
+                      <p className="fontsize-md">지금골라쥬 방송중</p>
+                      {/* <button
+                        className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
+                        onClick={screenShare}
+                      >
+                        화면 공유
+                      </button> */}
+                      {/* <button
+                    className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
+                    onClick={mute}
+                    >
+                    {audioState
+                      ? "마이크 음소거 (안됨)"
+                      : "마이크 음소거 해제 (안됨)"}
+                    </button> */}
+                    </div>
+                    <button
+                      className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
+                      id="buttonLeaveSession"
+                      onClick={leaveSession}
+                      value="Leave session"
+                    >
+                      방송 종료
+                    </button>
+                  </div>
+                ) : (
+                  <div id="session-header" className="flex justify-end mb-2">
+                    <button
+                      className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
+                      id="buttonLeaveSession"
+                      onClick={leaveSession}
+                      value="Leave session"
+                    >
+                      나가기
+                    </button>
+                  </div>
+                )}
+                <div
+                  id="sub-container"
+                  className="flex flex-row justify-between gap-7 h-[625px]"
+                >
+                  <div
+                    id="video+detail"
+                    className="basis-2/3 flex flex-col gap-y-5"
+                  >
+                    {isHost && (
+                      <div
+                        id="main-video"
+                        className="basis-4/5 w-full h-full rounded-md flex flex-col justify-center"
+                      >
+                        <UserVideoComponent streamManager={publisher} />
+                      </div>
+                    )}
+                    {!isHost && (
+                      <div
+                        id="main-video"
+                        className="basis-4/5 w-full h-full rounded-md flex flex-col justify-center"
+                        style={{ transform: "scaleX(-1)" }}
+                      >
+                        <UserVideoComponent streamManager={subscribers[0]} />
+                      </div>
+                    )}
+                    <div
+                      id="detail"
+                      className="basis-1/5 rounded-md p-3 space-y-3 bg-gray-100"
+                    >
+                      {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
+                      <div className="flex flex-row justify-between">
+                        <div
+                          id="host-info"
+                          className="flex text-center items-center space-x-2"
+                        >
+                          <img
+                            className="w-8 h-8 rounded-full border border-black"
+                            src={tmpProfileImg}
+                            alt=""
+                          />
+                          <p className="text-lg">{hostNickName}</p>
+                        </div>
+                        <div>시청자 수 : {totalUsers}</div>
+                      </div>
+                      <p className="text-xl font-bold px-5">{title}</p>
+                    </div>
+                  </div>
+                  <div
+                    id="vote+chatting"
+                    className="basis-1/3 flex flex-col gap-y-5"
+                  >
+                    <div
+                      id="vote"
+                      className="mb-3 basis-1/4 border-2 rounded-md bg-gray-100"
+                    >
+                      {/* TODO 투표 결과 다시 받아오기 (새로고침) 버튼 추가 */}
+                      <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
+                        {voteItem &&
+                          voteItem.map((item, index) => {
+                            if (item.slice(0, 10) === "data:image") {
+                              return (
+                                <div
+                                  className={`relative border flex justify-center items-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
+                                    isVotedArr[index]
+                                      ? "border-red-400 border-4"
+                                      : ""
+                                  }`}
+                                  key={index}
+                                  onMouseEnter={() =>
+                                    setIsVoteHoveredArr((prevArr) => {
+                                      prevArr[index] = true;
+                                      return [...prevArr];
+                                    })
+                                  }
+                                  onMouseLeave={() =>
+                                    setIsVoteHoveredArr((prevArr) => {
+                                      prevArr[index] = false;
+                                      return [...prevArr];
+                                    })
+                                  }
+                                  onClick={() => handleVote(index, item)}
+                                >
+                                  {isVoteHoveredArr[index] ? (
+                                    <p className="fontsize-sm font-bold text-center text-amber-300">
+                                      투표하기
+                                    </p>
+                                  ) : (
+                                    <img
+                                      src={item}
+                                      className="size-2/3"
+                                      alt="이미지 미리보기"
+                                    />
+                                  )}
+                                  {isVoted && (
+                                    <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
+                                      100표
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <div
+                                  className={`relative border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
+                                    isVotedArr[index]
+                                      ? "border-red-400 border-4"
+                                      : ""
+                                  }`}
+                                  key={index}
+                                  onMouseEnter={() =>
+                                    setIsVoteHoveredArr((prevArr) => {
+                                      prevArr[index] = true;
+                                      return [...prevArr];
+                                    })
+                                  }
+                                  onMouseLeave={() =>
+                                    setIsVoteHoveredArr((prevArr) => {
+                                      prevArr[index] = false;
+                                      return [...prevArr];
+                                    })
+                                  }
+                                  onClick={() => handleVote(index, item)}
+                                >
+                                  {isVoteHoveredArr[index] ? (
+                                    <p className="fontsize-sm font-bold text-amber-300">
+                                      투표하기
+                                    </p>
+                                  ) : (
+                                    item
+                                  )}
+                                  {isVoted && (
+                                    <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
+                                      100표
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            }
+                          })}
+                      </div>
+                    </div>
+                    <div
+                      id="chatting"
+                      className="grow rounded-md bg-gray-100 p-1 lg:max-h-[30rem] max-h-[25rem]"
+                    >
+                      <ChattingList messageList={messageList}></ChattingList>
+                      <ChattingForm
+                        myUserName={myUserName}
+                        onMessage={sendMsg}
+                        currentSession={session}
+                      ></ChattingForm>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </>
+      ) : (
+        <div className="container my-96 mx-auto text-center space-y-5">
+          <p className="fontsize-lg">
+            740px보다 작은 화면에서는 <br />
+            이용하실 수 없습니다.
+          </p>
+          <p className="fontsize-lg">
+            화면을 키우거나, <br />
+            메인으로 돌아가주세요.
+          </p>
           <button
             className={`bg-gray-400 hover:bg-gray-500 fontsize-sm ${settingButton}`}
             onClick={() => {
@@ -418,206 +669,7 @@ export default function VideoComponent() {
             메인으로 돌아가기
           </button>
         </div>
-      ) : null}
-
-      <div className="container mx-auto space-y-3">
-        {/* 방송 화면으로 진입 후 */}
-        {session !== undefined ? (
-          // 방송자의 영상 송출 부분
-          <div id="session">
-            {isHost ? (
-              <div id="session-header" className="flex justify-between mb-3">
-                <div className="space-x-2">
-                  <button
-                    className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
-                    onClick={screenShare}
-                  >
-                    화면 공유
-                  </button>
-                  {/* <button
-                    className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
-                    onClick={mute}
-                  >
-                    {audioState
-                      ? "마이크 음소거 (안됨)"
-                      : "마이크 음소거 해제 (안됨)"}
-                  </button> */}
-                </div>
-                <button
-                  className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
-                  id="buttonLeaveSession"
-                  onClick={leaveSession}
-                  value="Leave session"
-                >
-                  방송 종료
-                </button>
-              </div>
-            ) : (
-              <div id="session-header" className="flex justify-end mb-2">
-                <button
-                  className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
-                  id="buttonLeaveSession"
-                  onClick={leaveSession}
-                  value="Leave session"
-                >
-                  나가기
-                </button>
-              </div>
-            )}
-            <div
-              id="sub-container"
-              className="flex flex-row justify-between gap-7 h-[625px]"
-            >
-              <div
-                id="video+detail"
-                className="basis-2/3 flex flex-col gap-y-5"
-              >
-                {isHost && (
-                  <div
-                    id="main-video"
-                    className="basis-4/5 w-full h-full rounded-md"
-                  >
-                    <UserVideoComponent streamManager={publisher} />
-                  </div>
-                )}
-                {!isHost && (
-                  <div
-                    id="main-video"
-                    className="basis-4/5 w-full h-full rounded-md"
-                    style={{ transform: "scaleX(-1)" }}
-                  >
-                    <UserVideoComponent streamManager={subscribers[0]} />
-                  </div>
-                )}
-                <div
-                  id="detail"
-                  className="basis-1/5 rounded-md p-3 space-y-3 bg-gray-100"
-                >
-                  {/* 방송 정보는 지금 골라쥬 목록에서 받아오기 <- location으로 이전 페이지의 정보 state 가져오기 */}
-                  <div className="flex flex-row justify-between">
-                    <div
-                      id="host-info"
-                      className="flex text-center items-center space-x-2"
-                    >
-                      <img
-                        className="w-8 h-8 rounded-full border border-black"
-                        src={tmpProfileImg}
-                        alt=""
-                      />
-                      <p className="text-lg">{hostNickName}</p>
-                    </div>
-                    <div>시청자 수 : {totalUsers}</div>
-                  </div>
-                  <p className="text-xl font-bold px-5">{title}</p>
-                </div>
-              </div>
-              <div
-                id="vote+chatting"
-                className="basis-1/3 flex flex-col gap-y-5"
-              >
-                <div
-                  id="vote"
-                  className="mb-3 basis-1/4 border-2 rounded-md bg-gray-100"
-                >
-                  {/* TODO 투표 결과 다시 받아오기 (새로고침) 버튼 추가 */}
-                  <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
-                    {voteItem &&
-                      voteItem.map((item, index) => {
-                        if (item.slice(0, 10) === "data:image") {
-                          return (
-                            <div
-                              className={`relative border flex justify-center items-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
-                                isVotedArr[index]
-                                  ? "border-red-400 border-4"
-                                  : ""
-                              }`}
-                              key={index}
-                              onMouseEnter={() =>
-                                setIsVoteHoveredArr((prevArr) => {
-                                  prevArr[index] = true;
-                                  return [...prevArr];
-                                })
-                              }
-                              onMouseLeave={() =>
-                                setIsVoteHoveredArr((prevArr) => {
-                                  prevArr[index] = false;
-                                  return [...prevArr];
-                                })
-                              }
-                              onClick={() => handleVote(index, item)}
-                            >
-                              {isVoteHoveredArr[index] ? (
-                                <p className="fontsize-sm font-bold text-center text-amber-300">
-                                  투표하기
-                                </p>
-                              ) : (
-                                <img
-                                  src={item}
-                                  className="size-2/3"
-                                  alt="이미지 미리보기"
-                                />
-                              )}
-                              {isVoted && (
-                                <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
-                                  100표
-                                </p>
-                              )}
-                            </div>
-                          );
-                        } else {
-                          return (
-                            <div
-                              className={`relative border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
-                                isVotedArr[index]
-                                  ? "border-red-400 border-4"
-                                  : ""
-                              }`}
-                              key={index}
-                              onMouseEnter={() =>
-                                setIsVoteHoveredArr((prevArr) => {
-                                  prevArr[index] = true;
-                                  return [...prevArr];
-                                })
-                              }
-                              onMouseLeave={() =>
-                                setIsVoteHoveredArr((prevArr) => {
-                                  prevArr[index] = false;
-                                  return [...prevArr];
-                                })
-                              }
-                              onClick={() => handleVote(index, item)}
-                            >
-                              {isVoteHoveredArr[index] ? (
-                                <p className="fontsize-sm font-bold text-amber-300">
-                                  투표하기
-                                </p>
-                              ) : (
-                                item
-                              )}
-                              {isVoted && (
-                                <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
-                                  100표
-                                </p>
-                              )}
-                            </div>
-                          );
-                        }
-                      })}
-                  </div>
-                </div>
-                <div id="chatting" className="grow rounded-md bg-gray-100 p-1">
-                  <ChattingList messageList={messageList}></ChattingList>
-                  <ChattingForm
-                    myUserName={myUserName}
-                    onMessage={sendMsg}
-                    currentSession={session}
-                  ></ChattingForm>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : null}
-      </div>
+      )}
     </>
   );
 }
