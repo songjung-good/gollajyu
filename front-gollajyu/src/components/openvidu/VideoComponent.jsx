@@ -365,12 +365,12 @@ export default function VideoComponent() {
   }, [isVoted]);
 
   // ----------------- 화면 사이즈가 충분한지 체크 --------------
-  // 740보다 작으면 -> 안내문 띄우기
+  // 화면 너비가 768px보다 작으면 -> 안내문 띄우기
   function handleResize() {
     // Get the width of the browser window
     const screenWidth = window.innerWidth;
 
-    if (screenWidth < 740) {
+    if (screenWidth < 768) {
       setIsEnoughSize(false);
     } else {
       setIsEnoughSize(true);

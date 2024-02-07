@@ -5,7 +5,6 @@ import tmp_profile from "/assets/images/tmp_profile.png";
 
 const StyledChattingList = styled.div`
   height: 87%;
-  max-height: 87%;
   background: white;
   text-align: left;
   overflow: scroll;
