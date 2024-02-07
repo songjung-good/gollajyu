@@ -3,6 +3,7 @@ package com.jaecheop.backgollajyu.live.controller;
 import com.jaecheop.backgollajyu.live.model.LiveDetailResDto;
 import com.jaecheop.backgollajyu.live.model.LiveListDto;
 import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
+import com.jaecheop.backgollajyu.live.model.VoteRequestDto;
 import com.jaecheop.backgollajyu.live.service.LiveService;
 import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
@@ -80,24 +81,36 @@ public class LiveController {
 
     @PostMapping("/{liveId}/enter/{memberId}")
     @Operation(summary = "라이브 방송 입장", description = "No body")
-    public ResponseEntity<?> enterLive(@PathVariable Long liveId, @PathVariable Long memberId) {
-        if (!liveService.enterLive(liveId, memberId)) {
-            // 이미 참여 중인 경우, 오류 메시지와 함께 409 Conflict 상태 코드 반환
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage<Void>().fail("이미 라이브 방송에 참여 중입니다."));
+    public ResponseEntity<ResponseMessage<Void>> enterLive(@PathVariable Long liveId, @PathVariable Long memberId) {
+        ServiceResult<Void> result = liveService.enterLive(liveId, memberId);
+        if (!result.isResult()) {
+            // 실패한 경우
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ResponseMessage<Void>().fail(result.getMessage()));
         }
+        // 성공한 경우
         return ResponseEntity.ok().body(new ResponseMessage<Void>().success());
     }
 
     @PostMapping("/{liveId}/exit/{memberId}")
     @Operation(summary = "라이브 방송 퇴장", description = "No body")
-    public ResponseEntity<?> exitLive(@PathVariable Long liveId, @PathVariable Long memberId) {
-        boolean success = liveService.exitLive(liveId, memberId);
-
-        if (!success) {
-            // 참여자 정보가 존재하지 않는 경우, 404 Not Found 상태 코드와 오류 메시지 반환
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage<Void>().fail("참여자 정보가 존재하지 않습니다."));
+    public ResponseEntity<ResponseMessage<Void>> exitLive(@PathVariable Long liveId, @PathVariable Long memberId) {
+        ServiceResult<Void> result = liveService.exitLive(liveId, memberId);
+        if (!result.isResult()) {
+            // 실패한 경우
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseMessage<Void>().fail(result.getMessage()));
         }
-
+        // 성공한 경우
         return ResponseEntity.ok().body(new ResponseMessage<Void>().success());
     }
+
+    @PostMapping("/vote")
+    @Operation(summary = "라이브 방송 투표 참여 및 변경", description = "No body")
+    public ResponseEntity<ResponseMessage<?>> voteForItem(@RequestBody VoteRequestDto voteRequest) {
+        ServiceResult<?> result = liveService.voteForItem(voteRequest.getMemberId(), voteRequest.getLiveId(), voteRequest.getLiveVoteItemId());
+        if (!result.isResult()) {
+            return ResponseEntity.badRequest().body(new ResponseMessage<>().fail(result.getMessage()));
+        }
+        return ResponseEntity.ok(new ResponseMessage<>().success(result.getMessage()));
+    }
+
 }

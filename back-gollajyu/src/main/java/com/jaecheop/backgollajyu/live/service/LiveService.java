@@ -4,10 +4,12 @@ import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.live.entity.Live;
 import com.jaecheop.backgollajyu.live.entity.LiveParticipant;
 import com.jaecheop.backgollajyu.live.entity.LiveVoteItem;
+import com.jaecheop.backgollajyu.live.entity.LiveVoteParticipant;
 import com.jaecheop.backgollajyu.live.model.*;
 import com.jaecheop.backgollajyu.live.repository.LiveParticipantRepository;
 import com.jaecheop.backgollajyu.live.repository.LiveRepository;
 import com.jaecheop.backgollajyu.live.repository.LiveVoteItemRepository;
+import com.jaecheop.backgollajyu.live.repository.LiveVoteParticipantRepository;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
@@ -33,6 +35,7 @@ public class LiveService {
     private final LiveRepository liveRepository;
     private final LiveVoteItemRepository liveVoteItemRepository;
     private final LiveParticipantRepository liveParticipantRepository;
+    private final LiveVoteParticipantRepository liveVoteParticipantRepository;
 
     @Transactional
     public ServiceResult<Void> startLive(LiveStartReqDto liveStartReqDto, String fileDir) {
@@ -158,16 +161,16 @@ public class LiveService {
     }
 
     @Transactional
-    public boolean enterLive(Long liveId, Long memberId) {
+    public ServiceResult<Void> enterLive(Long liveId, Long memberId) {
         Live live = liveRepository.findById(liveId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 라이브 방송이 존재하지 않습니다."));
 
-        boolean alreadyParticipating = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId)
+        boolean isParticipating = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId)
                 .isPresent();
 
-        if (alreadyParticipating) {
-            // 이미 참여 중인 경우, false 반환
-            return false;
+        if (isParticipating) {
+            // 이미 참여 중인 경우
+            return new ServiceResult<Void>().fail("이미 라이브 방송에 참여 중입니다.");
         } else {
                 // 새로운 참여자인 경우, 참여자 추가
                 LiveParticipant participant = LiveParticipant.builder()
@@ -178,17 +181,17 @@ public class LiveService {
                 // 참여자 수 증가
                 live.setCount(live.getCount() + 1);
                 liveRepository.save(live);
-                return true;
+                return new ServiceResult<Void>().success();
         }
     }
 
     @Transactional
-    public boolean exitLive(Long liveId, Long memberId) {
+    public ServiceResult<Void> exitLive(Long liveId, Long memberId) {
         Optional<LiveParticipant> participantOpt = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId);
 
         if (participantOpt.isEmpty()) {
-            // 참여자 정보가 데이터베이스에 존재하지 않는 경우, false 반환
-            return false;
+            // 참여자 정보가 존재하지 않는 경우
+            return new ServiceResult<Void>().fail("참여자 정보가 존재하지 않습니다.");
         }
 
         // 참여자 정보가 있는 경우, 참여자 정보 삭제 및 참여자 수 감소
@@ -200,6 +203,45 @@ public class LiveService {
             liveRepository.save(live);
         });
 
-        return true;
+        return new ServiceResult<Void>().success();
+    }
+
+    @Transactional
+    public ServiceResult<?> voteForItem(Long memberId, Long liveId, Long liveVoteItemId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+
+        LiveVoteItem liveVoteItem = liveVoteItemRepository.findById(liveVoteItemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 투표 항목이 존재하지 않습니다."));
+
+        // 라이브 방송에 참여 중인지 확인
+        boolean isParticipating = liveParticipantRepository.existsByMemberIdAndLiveId(memberId, liveId);
+        if (!isParticipating) {
+            // 참여 중이지 않은 경우, 오류 반환
+            return new ServiceResult<>().fail("해당 라이브 방송을 시청 중인 사람만 투표할 수 있습니다.");
+        }
+
+        // 기존 투표 찾기 및 삭제
+        List<LiveVoteParticipant> existingVotes = liveVoteParticipantRepository.findByMemberId(memberId);
+        for (LiveVoteParticipant vote : existingVotes) {
+            liveVoteParticipantRepository.delete(vote);
+            // 기존 투표 항목의 투표 수 감소
+            LiveVoteItem oldItem = vote.getLiveVoteItem();
+            oldItem.setCount(Math.max(0, oldItem.getCount() - 1));
+            liveVoteItemRepository.save(oldItem);
+        }
+
+        // 새로운 투표 추가
+        LiveVoteParticipant newVote = LiveVoteParticipant.builder()
+                .member(member)
+                .liveVoteItem(liveVoteItem)
+                .build();
+        liveVoteParticipantRepository.save(newVote);
+
+        // 투표 항목의 투표 수 증가
+        liveVoteItem.setCount(liveVoteItem.getCount() + 1);
+        liveVoteItemRepository.save(liveVoteItem);
+
+        return new ServiceResult<>().success();
     }
 }

@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface LiveParticipantRepository extends JpaRepository<LiveParticipant, Long> {
     Optional<LiveParticipant> findByLiveIdAndMemberId(Long liveId, Long memberId);
+
+    boolean existsByMemberIdAndLiveId(Long memberId, Long liveId);
 }
