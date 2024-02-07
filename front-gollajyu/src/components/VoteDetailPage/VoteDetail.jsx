@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import { useParams } from 'react-router-dom';
-import VoteCardItem from './VoteCardItem';
+import VoteCardItem from '../VotePage/VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
 import VoteDetailChat from './VoteDetailChat';
@@ -78,7 +78,7 @@ const VoteDetail = () => {
         onClose={handleClose}
       />
       <div className="p-2 flex justify-around items-center h-full" >
-        {Array(voteDetail.items.length).fill(null).map((_, index) => (
+        {/* {Array(voteDetail.items.length).fill(null).map((_, index) => (
           <VoteCardItem 
             key={index}
             src={`1`}
@@ -89,7 +89,7 @@ const VoteDetail = () => {
             clicked={clicked[index]}
             onClick={() => handleClick(index)}
           />
-        ))}
+        ))} */}
       </div>
       {voteDetail.hasVoted && (
         <>

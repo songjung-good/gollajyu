@@ -3,7 +3,7 @@ import API_URL from "../../stores/apiURL";
 import axios from "axios";
 import { Responsive } from 'react-responsive';
 
-const VoteList = () => {
+const MainVoteList = () => {
   const [listsData, setListsData] = useState([]);
 
   useEffect(() => {
@@ -82,4 +82,4 @@ const VoteList = () => {
   );
 }
 
-export default VoteList;
+export default MainVoteList;

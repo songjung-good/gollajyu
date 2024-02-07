@@ -49,11 +49,11 @@ const VotePageList = ({ sortType, searchTerm }) => {
 
   return (
     <div>
-      {sortedVotes.map((vote) => (
+      {/* {sortedVotes.map((vote) => (
         <VoteCard
           key={vote.id}
           options={vote.options} />
-      ))}
+      ))} */}
     </div>
   );
 };
