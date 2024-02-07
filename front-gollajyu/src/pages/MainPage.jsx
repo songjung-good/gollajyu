@@ -9,6 +9,8 @@ import useAuthStore from "../stores/userState";
 import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 import VoteButton from "../components/VoteButton";
+import VoteSimple from "../components/VotePage/VoteSimple";
+import VoteProduct from "../components/VotePage/VoteProduct";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
 import { Link } from 'react-router-dom';
@@ -28,7 +30,7 @@ const MainPage = () => {
   const isVoteProductCreateModalOpened = useModalStore(
     (state) => state.isVoteProductCreateModalOpened
   );
-  
+
   const user = useAuthStore((state) => state.user);
   // ------------- 로그인 관련 --------------------
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
@@ -124,9 +126,10 @@ useEffect(() => {
       </div>
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}
+      {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
       {isVoteDetailModalOpened && <TmpModal></TmpModal>}
-      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
-      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
+      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
   );
         }

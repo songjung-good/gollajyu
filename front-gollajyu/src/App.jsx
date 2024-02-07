@@ -62,8 +62,6 @@ const App = () => {
           {/* 추후 삭제될 링크입니다. */}
           <Route path="/VoteDetail" element={<VoteDetail />} />
           {/* 나중에 사용할 링크 */}
-          {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
-          <Route path="/VoteSimple" element={<VoteSimple />} />
           <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
       </Routes>
