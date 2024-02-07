@@ -22,8 +22,11 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     query : "(max-width:479.98px)"
   });
 
-  useEffect(() => {
+  // ----------- response 데이터를 담을 배열 -----------
+  const responseDataArray = [];
 
+  const fetchDataSync = async () => {
+  
     // ----------- 각 아이템에 대한 데이터를 담을 배열 -----------
     const requestDataArray = [];
 
@@ -58,64 +61,74 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
       });
     }
 
-    console.log(requestDataArray[0])
+  for (const data of requestDataArray) {
+    try {
+      const response = await axios.post(`${API_URL}/statistics`, data);
+      responseDataArray.push(response.data);
+      console.log(responseDataArray);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
 
-    requestDataArray.forEach(data => {
-      axios.post(`${API_URL}/statistics`, data)
-        .then(response => {
-          console.log("!@!@!@!@!@!@!@!@!@", response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    });
+  useEffect(() => {
+    fetchDataSync();
   }, [selectedCategory, selectedRadioValues, selectedDropdownValues, itemCount]);
 
-
   // ----------- 드롭다운으로 선택한 카테고리 -----------
-  const selectedCategoryData = categoryData[selectedCategory];
-  const selectedTagData = [
-    {
-      subject: selectedCategoryData.tags[0],
-      type1: 120,
-      type2: 110,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[1],
-      type1: 98,
-      type2: 130,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[2],
-      type1: 86,
-      type2: 130,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[3],
-      type1: 99,
-      type2: 100,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[4],
-      type1: 85,
-      type2: 90,
-      type3: 50,
-      type4: 70,
-      fullMark: 150,
-    },
-  ];
+  const selectedTagData = responseDataArray.map(data => {
+    return {
+      subject: data[1]?.tag || null,
+      type1: data[1]?.count || 0,
+      type2: data[2]?.count || 0,
+      type3: data[3]?.count || 0,
+      type4: data[4]?.count || 0,
+      fullMark: 50,
+    };
+  });
+  // const selectedTagData = [
+  //   {
+  //     subject: responseDataArray[0][1].tag,
+  //     type1: responseDataArray[0][1].count,
+  //     type2: responseDataArray[1][1].count,
+  //     type3: responseDataArray[2][1].count,
+  //     type4: responseDataArray[3][1].count,
+  //     fullMark: 50,
+  //   },
+  //   {
+  //     subject: responseDataArray[0][2].tag,
+  //     type1: responseDataArray[0][2].count,
+  //     type2: responseDataArray[1][2].count,
+  //     type3: responseDataArray[2][2].count,
+  //     type4: responseDataArray[3][2].count,
+  //     fullMark: 50,
+  //   },
+  //   {
+  //     subject: responseDataArray[0][3].tag,
+  //     type1: responseDataArray[0][3].count,
+  //     type2: responseDataArray[1][3].count,
+  //     type3: responseDataArray[2][3].count,
+  //     type4: responseDataArray[3][3].count,
+  //     fullMark: 50,
+  //   },
+  //   {
+  //     subject: responseDataArray[0][4].tag,
+  //     type1: responseDataArray[0][4].count,
+  //     type2: responseDataArray[1][4].count,
+  //     type3: responseDataArray[2][4].count,
+  //     type4: responseDataArray[3][4].count,
+  //     fullMark: 50,
+  //   },
+  //   {
+  //     subject: responseDataArray[0][5].tag,
+  //     type1: responseDataArray[0][5].count,
+  //     type2: responseDataArray[1][5].count,
+  //     type3: responseDataArray[2][5].count,
+  //     type4: responseDataArray[3][5].count,
+  //     fullMark: 50,
+  //   },
+  // ];
 
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
