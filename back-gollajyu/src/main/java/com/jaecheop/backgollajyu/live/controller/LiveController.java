@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.live.controller;
 
 import com.jaecheop.backgollajyu.live.model.LiveDetailDto;
+import com.jaecheop.backgollajyu.live.model.LiveDetailResDto;
 import com.jaecheop.backgollajyu.live.model.LiveListDto;
 import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
 import com.jaecheop.backgollajyu.live.service.LiveService;
@@ -66,10 +67,10 @@ public class LiveController {
 
     @GetMapping("/{liveId}")
     @Operation(summary = "라이브 방송 상세 조회", description = "returns LiveDetailDto")
-    public ResponseEntity<ResponseMessage<LiveDetailDto>> getLiveDetail(@PathVariable Long liveId) {
-        ServiceResult<LiveDetailDto> result = liveService.findLiveDetail(liveId);
+    public ResponseEntity<ResponseMessage<LiveDetailResDto>> getLiveDetail(@PathVariable Long liveId) {
+        ServiceResult<LiveDetailResDto> result = liveService.findLiveDetail(liveId);
 
-        ResponseMessage<LiveDetailDto> responseMessage = new ResponseMessage<>();
+        ResponseMessage<LiveDetailResDto> responseMessage = new ResponseMessage<>();
         if (!result.isResult()) {
             return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
         }

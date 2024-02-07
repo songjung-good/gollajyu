@@ -3,10 +3,7 @@ package com.jaecheop.backgollajyu.live.service;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.live.entity.Live;
 import com.jaecheop.backgollajyu.live.entity.LiveVoteItem;
-import com.jaecheop.backgollajyu.live.model.LiveDetailDto;
-import com.jaecheop.backgollajyu.live.model.LiveListDto;
-import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
-import com.jaecheop.backgollajyu.live.model.LiveVoteItemDto;
+import com.jaecheop.backgollajyu.live.model.*;
 import com.jaecheop.backgollajyu.live.repository.LiveRepository;
 import com.jaecheop.backgollajyu.live.repository.LiveVoteItemRepository;
 import com.jaecheop.backgollajyu.member.entity.Member;
@@ -133,24 +130,24 @@ public class LiveService {
         return new ServiceResult<Void>().success();
     }
 
-    public ServiceResult<LiveDetailDto> findLiveDetail(Long liveId) {
+    public ServiceResult<LiveDetailResDto> findLiveDetail(Long liveId) {
         return liveRepository.findById(liveId)
                 .map(live -> {
-                    List<LiveVoteItemDto> voteItems = liveVoteItemRepository.findByLiveId(liveId)
+                    List<LiveVoteItemResDto> voteItems = liveVoteItemRepository.findByLiveId(liveId)
                             .stream()
-                            .map(item -> LiveVoteItemDto.builder()
+                            .map(item -> LiveVoteItemResDto.builder()
                                     .imgUrl(item.getImgUrl())
                                     .description(item.getDescription())
                                     .count(item.getCount())
                                     .build())
                             .collect(Collectors.toList());
 
-                    return new ServiceResult<LiveDetailDto>()
-                            .success(LiveDetailDto.builder()
+                    return new ServiceResult<LiveDetailResDto>()
+                            .success(LiveDetailResDto.builder()
                                     .title(live.getTitle())
-                                    .liveVoteItemDtoList(voteItems)
+                                    .liveVoteItemDtoResList(voteItems)
                                     .build());
                 })
-                .orElseGet(() -> new ServiceResult<LiveDetailDto>().fail("해당 라이브 방송을 찾을 수 없습니다."));
+                .orElseGet(() -> new ServiceResult<LiveDetailResDto>().fail("해당 라이브 방송을 찾을 수 없습니다."));
     }
 }

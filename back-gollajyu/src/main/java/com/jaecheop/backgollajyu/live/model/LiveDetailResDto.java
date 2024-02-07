@@ -9,9 +9,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LiveDetailDto {
+public class LiveDetailResDto {
     private String title;
-    private String nickName;
-    private Long liveCount;
-    private List<LiveVoteItemDto> liveVoteItemDtoList;
+    private List<LiveVoteItemResDto> liveVoteItemDtoResList;
 }
