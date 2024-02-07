@@ -64,10 +64,13 @@ function VoteCardItem(props) {
                 key={index} 
                 className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${clicked-1 === index ? 'text-white bg-blue-500' : 'text-black'} border-t-2 border-white text-max-xl`}
                 onClick={() => {
-                  if(clicked === 0) {
+                  if(clicked === 0 && user.memberId != null) {
                     setClicked(index+1);
                     onTagClick(index);
                     onClick(index);
+                  } else {
+                    console.log("비회원")
+                    // Login Modal
                   }
                 }}
               >

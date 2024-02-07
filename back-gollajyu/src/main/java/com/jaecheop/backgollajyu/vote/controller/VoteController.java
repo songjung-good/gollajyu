@@ -158,6 +158,8 @@ public class VoteController {
             @RequestParam(name = "categoryId", defaultValue = "0") String categoryId
             , @RequestParam(name = "keyword", defaultValue = "") String keyword
             , HttpSession session) {
+
+        System.out.println(categoryId +"aaaaaaaaaaaaaaaaaa" + keyword);
         SearchReqDto searchReqDto = SearchReqDto.builder()
                 .categoryId(Integer.parseInt(categoryId))
                 .keyword(keyword)

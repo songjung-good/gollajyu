@@ -945,7 +945,7 @@ public class VoteService {
 
 
         // 로그인 했을 때,
-        if(memberInfo != null) {
+        if (memberInfo != null) {
             System.out.println("memberInfo!!!!!!!! = " + memberInfo);
             Long memberId = memberInfo.getMemberId();
 
