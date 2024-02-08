@@ -227,9 +227,7 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
             <div style={titleStyle} className="fontsize-lg">
               {voteItem.title}
             </div>
-            <div style={commentNumberStyle} className="fontsize-md">
-              [[댓글]]
-            </div>
+            <div style={commentNumberStyle} className="fontsize-md"></div>
           </div>
           <div style={infoContainerStyle}>
             <div style={infoSubContainerStyle}>
