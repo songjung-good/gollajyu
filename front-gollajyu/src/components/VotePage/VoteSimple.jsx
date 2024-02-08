@@ -17,22 +17,11 @@ const VoteSimple = () => {
   // 모달창 닫는 로직
   const setVoteSimpleModalClose = useModalStore((state) => state.setVoteSimpleCreateModalClose);
 
-  // voteReqDto 객체를 컴포넌트 외부에 선언하고 초기화
-  const [voteReqDto, setVoteReqDto] = useState({
-    memberEmail: '',
-    title: '',
-    description: 'none',
-    categoryId: '',
-    voteItemList: [],
-  });
-
-  // 이미지 업로드 기능
   const handleImageUpload = (event, index) => {
     const newImages = images.slice();
     newImages[index] = event.target.files[0];
     setImages(newImages);
 
-    // 이미지 URL
     const newPreviewImages = previewImages.slice();
     if (event.target.files.length > 0) {
       newPreviewImages[index] = URL.createObjectURL(event.target.files[0]);
@@ -40,21 +29,10 @@ const VoteSimple = () => {
       newPreviewImages[index] = null;
     }
     setPreviewImages(newPreviewImages);
-
-    // 업로드된 이미지 정보를 voteReqDto에 추가
-    const newVoteItemList = voteReqDto.voteItemList.slice();
-    newVoteItemList[index] = {
-      voteItemImg: event.target.files[0],
-      voteItemDesc: '',
-      price: 0,
-    };
-    setVoteReqDto({
-      ...voteReqDto,
-      voteItemList: newVoteItemList,
-    });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+    console.log(images);
     event.preventDefault();
     // 이미지 갯수와 제목 확인
     const imageCount = images.filter((img) => img !== null && img !== '').length;
@@ -72,63 +50,65 @@ const VoteSimple = () => {
 
     // 데이터 전송
     const formData = new FormData();
-      formData.append('title', title);
-      // description 값을 'none'으로 설정
-      formData.append('description', 'null');
-      // categoryId 값을 '0'으로 설정
-      formData.append('categoryId', '5');
-      // 사용자 ID 값 추가
-      formData.append('memberEmail', user.email);
-      // voteItemList 값 추가
-      formData.append('voteItemList', {})
+    
+    formData.append('title', title);
+    // description 값을 'none'으로 설정
+    formData.append('description', 'null');
+    // categoryId 값을 '0'으로 설정
+    formData.append('categoryId', '5');
+    // 사용자 ID 값 추가
+    formData.append('memberEmail', user.email);
 
-      // voteItemList 객체 생성
-      const voteItemList = [];
 
-      // 이미지 파일 및 기본값 설정
-      images.forEach((image, index) => {
-        if (image !== null) {
-          voteItemList.push({
-            voteItemImg: image,
-            voteItemDesc: null, // 기본값
-            price: 0, // 기본값
-          });
-        }
+    images.forEach((image, index) => {
+      console.log(images)
+      console.log(image)
+      if (image) {
+        formData.append(`voteItems[${index}].voteItemImg`, image);
+        formData.append(`voteItems[${index}].voteItemDesc`, ''); // 이미지 설명 필드에 대한 정보가 없으므로 빈 문자열로 설정
+        formData.append(`voteItems[${index}].price`, 0); // 가격 필드에 대한 정보가 없으므로 0으로 설정
+      }
+      console.log(formData)
+    });
+
+    console.log(formData);
+
+    try {
+      const response = await axios.post(`${API_URL}/votes`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-
-      // formData에 voteItemList 추가
-      formData.append('voteItemList', JSON.stringify(voteItemList));
-
-    console.log("formData:", formData);
-    const formDataObject = Object.fromEntries(formData);
-    console.log("formDataObject:", formDataObject);
-
-
-    axios.post(`${API_URL}/votes`, {
-      data: formDataObject,
-    })
-    .then((response) => {
-      console.log(response)
-      // API 호출 성공
-      if (response.status === 200) {
-        // 투표 게시 성공
-        alert('투표 생성에 성공했쥬!');
-        setVoteSimpleModalClose();
-      } else {
-        // API 호출 실패
-        // 에러 메시지 출력
-        alert(response.data.message);
+        if (response.status === 200) {
+          alert('투표 생성에 성공했습니다!');
+          setVoteSimpleModalClose();
+        } else {
+          alert(response.data.message || '투표 생성에 실패했습니다.');
+        }
+      } catch (error) {
+        console.error('투표 생성 중 오류 발생:', error);
+        alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+      } finally {
         setIsSubmitting(false);
       }
-    })
-    .catch((error) => {
-      // 네트워크 오류 등 예외 처리
-      console.log(error);
-      alert('네트워크 오류가 발생했쥬.. 다시 시도해쥬..');
-      setIsSubmitting(false);
-    });
-  };
-
+    };
+    // const form = document.getElementById('imageUploadForm');
+    // form.addEventListener('submit', async (event) => {
+    //     event.preventDefault();
+        
+    //     const formData = new FormData(form);
+        
+    //     try {
+    //         const response = await fetch('your_server_url', {
+    //             method: 'POST',
+    //             body: formData
+    //         });
+    //         const data = await response.json();
+    //         console.log(data);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // });
   return (
     <div
       id="outer-layer"
@@ -196,6 +176,7 @@ const VoteSimple = () => {
           {/* 투표 올리기, 취소하기 버튼 */}
           <div className="flex justify-between">
             <button
+              type="submit"
               className="hover:shadow-form w-full rounded-md 
               bg-[#8DB600] py-3 px-8 
               text-center text-base font-semibold text-white 
