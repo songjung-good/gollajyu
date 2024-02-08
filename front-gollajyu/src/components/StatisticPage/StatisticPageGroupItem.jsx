@@ -208,8 +208,9 @@ const StatisticPageGroupItem = ({ number, onRadioChange, onDropdownChange }) => 
                       <input
                         type="radio"
                         name={`${userType.label}-${number}`}
-                        value={option}
+                        value={optionIndex}
                         onChange={(e) => onRadioChange(userType.label, number, e.target.value)}
+                        defaultChecked={optionIndex === 0}
                       />
                       <label style={optionStyle} className="fontsize-xs">{option}</label>
                     </div>
@@ -221,7 +222,7 @@ const StatisticPageGroupItem = ({ number, onRadioChange, onDropdownChange }) => 
                   onChange={(e) => onDropdownChange(userType.label, number, e.target.value)}
                 >
                   {userType.options.map((option, optionIndex) => (
-                    <option key={optionIndex} value={option}>{option}</option>
+                    <option key={optionIndex} value={optionIndex}>{option}</option>
                   ))}
                 </select>
               )}
