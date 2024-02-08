@@ -245,6 +245,20 @@ public class VoteService {
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
                 : voteResults;
 
+        assert statisticsSearchReqDto != null;
+        List<Tag> allTags = tagRepository.findAllByCategoryId(statisticsSearchReqDto.getCategoryId());
+        CategoryTagDto allTagDto = new CategoryTagDto(0, "all", "all", 0L);
+        statisticsList.add(allTagDto);
+
+        for (Tag tag : allTags) {
+            CategoryTagDto categoryTagDto = CategoryTagDto.builder()
+                    .category(tag.getCategory().getCategoryName())
+                    .tag(tag.getName())
+                    .tagId(tag.getId()) // Unique identifier for the tag
+                    .count(0L) // Initialize count to 0
+                    .build();
+            statisticsList.add(categoryTagDto);
+        }
         // Going through the loop, all: creates a list of the overall size and the size of each tag.
         for (VoteResult voteResult : voteResultList) {
             // Assuming VoteResult has a method to retrieve associated Tag
