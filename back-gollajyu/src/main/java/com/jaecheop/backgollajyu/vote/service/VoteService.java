@@ -91,18 +91,24 @@ public class VoteService {
             // 받은 MultipartFile 이미지 파일을 저장
             String fullPath = "";
             try {
+                System.out.println("1111111111111111");
                 fullPath = saveFile(voteItemReqDto.getVoteItemImg(), fileDir);
+                System.out.println("2222222222fullPath = " + fullPath);
             } catch (IOException e) {
+                System.out.println("3333333333333333333333"+e);
                 return  new ServiceResult<>().fail(e.getMessage());
             }
             // 저장한 경로 반환
             // VoteItem 저장시 이미지가 저장된 경로를 DB에 저장
+            System.out.println("4444444444444");
             VoteItem voteItem = VoteItem.builder()
                     .vote(vote)
                     .voteItemDesc(voteItemReqDto.getVoteItemDesc())
                     .price(voteItemReqDto.getPrice())
                     .build();
+            System.out.println("555555555555555");
             voteItem.updateImgPath(fullPath);
+            System.out.println("66666666666666666666");
             voteItemRepository.save(voteItem);
         }
 
