@@ -25,7 +25,7 @@ const VoteProduct = () => {
         }
       }}
     >
-      <div className="mx-auto w-full max-w-[550px] bg-white">
+      <div className="mx-auto h-auto w-full max-w-[550px] bg-white">
         <form className="py-4 px-9">
           <div className="mb-5">
             <label htmlFor="title" className="mb-3 block text-base font-medium text-[#FF7F50]">
