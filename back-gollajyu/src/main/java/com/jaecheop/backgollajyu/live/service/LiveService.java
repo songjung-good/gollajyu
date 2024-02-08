@@ -70,7 +70,7 @@ public class LiveService {
 
         // 라이브 방송 생성 및 저장
         Live live = liveRepository.save(Live.builder()
-                .id(liveStartReqDto.getSessionId())
+                .sessionId(liveStartReqDto.getSessionId())
                 .member(member)
                 .title(liveStartReqDto.getLiveTitle())
                 .imgUrl(liveImagePath)
@@ -149,7 +149,6 @@ public class LiveService {
     private LiveListDto convertToDto(Live live) {
         return LiveListDto.builder()
                 .id(live.getId())
-                .nickname(live.getMember().getNickname()) // Member의 닉네임
                 .title(live.getTitle())
                 .count(live.getCount()) // 시청자 수
                 .imgUrl(live.getImgUrl()) // 라이브 방송 이미지 URL
@@ -157,17 +156,17 @@ public class LiveService {
     }
 
     @Transactional
-    public ServiceResult<Void> deleteLiveRoom(Long sessionId) {
+    public ServiceResult<Void> deleteLiveRoom(Long liveId) {
         // 라이브 방이 존재하는지 확인
-        if (!liveRepository.existsById(sessionId)) {
+        if (!liveRepository.existsById(liveId)) {
             return new ServiceResult<Void>().fail("Live방이 존재하지 않습니다.");
         }
 
         // 라이브 방과 관련된 아이템들 삭제
-        liveVoteItemRepository.deleteByLiveId(sessionId);
+        liveVoteItemRepository.deleteByLiveId(liveId);
 
         // 라이브 방 삭제
-        liveRepository.deleteById(sessionId);
+        liveRepository.deleteById(liveId);
 
         return new ServiceResult<Void>().success();
     }

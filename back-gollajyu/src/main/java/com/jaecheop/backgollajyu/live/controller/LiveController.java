@@ -60,10 +60,10 @@ public class LiveController {
         return ResponseEntity.ok(new ResponseMessage<List<LiveListDto>>().success(liveList));
     }
 
-    @DeleteMapping("/{sessionId}")
+    @DeleteMapping("/{liveId}")
     @Operation(summary = "라이브 방송 삭제", description = "No body")
-    public ResponseEntity<ResponseMessage<Void>> deleteLive(@PathVariable Long sessionId) {
-        ServiceResult<Void> result = liveService.deleteLiveRoom(sessionId);
+    public ResponseEntity<ResponseMessage<Void>> deleteLive(@PathVariable Long liveId) {
+        ServiceResult<Void> result = liveService.deleteLiveRoom(liveId);
 
         ResponseMessage<Void> responseMessage = new ResponseMessage<>();
         if (!result.isResult()) {
