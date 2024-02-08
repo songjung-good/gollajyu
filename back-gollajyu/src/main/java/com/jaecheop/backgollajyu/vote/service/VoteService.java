@@ -119,9 +119,15 @@ public class VoteService {
         String imgPath = "";
 
         if (!file.isEmpty()) {
+            System.out.println("1111imgPath = '' + imgPath");
             imgPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(fileDir + "/" + imgPath));
+            System.out.println("22222imgPath = " + imgPath);
+            File temp = new File(fileDir + "/" + imgPath);
+            System.out.println("333333temp = " + temp);
+            file.transferTo(temp);
+            System.out.println("44444");
         }
+        System.out.println("555");
         return fileDir + "/" + imgPath;
     }
 
