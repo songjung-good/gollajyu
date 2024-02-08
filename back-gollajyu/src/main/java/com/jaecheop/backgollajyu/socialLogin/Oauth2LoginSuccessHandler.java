@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -15,8 +16,10 @@ import java.io.IOException;
 
 public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+    @Value("${api.url}")
+    private String apiUrl;
 
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
@@ -41,7 +44,7 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         // 만약 getmember에 추가 정보가 없다면, addinfo로, 아니라면 로그인된 메인으로!
         Type type = principal.getMember().getType();
 
-            redirectStrategy.sendRedirect(request, response, "http://localhost:5173");
+            redirectStrategy.sendRedirect(request, response, apiUrl);
 
         super.onAuthenticationSuccess(request, response, authentication);
     }

@@ -2,11 +2,13 @@ package com.jaecheop.backgollajyu.member.model;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResDto {
+public class LoginResDto implements Serializable {
 
 
     private Long memberId;

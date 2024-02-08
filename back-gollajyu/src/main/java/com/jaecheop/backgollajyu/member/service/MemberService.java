@@ -130,7 +130,7 @@ public class MemberService {
 
         // 1. 세션에 값 담아주기
         session.setAttribute("memberInfo", loginResDto);
-        System.out.println("getattrbiute"+session.getAttribute("memberInfo"));
+        System.out.println("login - getattrbiute"+session.getAttribute("memberInfo"));
         // 4. loginResDto에 멤버정보와 세션정보를 담아 반환하기
         return new ServiceResult<LoginResDto>().success(loginResDto);
     }
@@ -213,6 +213,7 @@ public class MemberService {
         Type type = optionalType.get();
         member.update(addInfoReqDto, type);
         memberRepository.save(member);
+        System.out.println("addInfoReqDto = " + addInfoReqDto);
         return  new ServiceResult<>().success();
     }
 }

@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import NavigationBar from "./components/NavigationBar";
-import VoteButton from "./components/VoteButton";
+// import VoteButton from "./components/VoteButton";
 import MainPage from "./pages/MainPage";
 import VotePage from "./pages/VotePage";
 import BroadcastPage from "./pages/BroadcastPage";
@@ -20,9 +20,9 @@ import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
 import "./App.css";
 
 // 추후 삭제될 페이지입니다.
-import VoteDetail from "./components/vote/VoteDetail";
-import VoteSimple from "./components/vote/VoteSimple";
-import VoteProduct from "./components/vote/VoteProduct";
+import VoteDetail from "./components/VoteDetailPage/VoteDetail";
+import VoteSimple from "./components/VotePage/VoteSimple";
+import VoteProduct from "./components/VotePage/VoteProduct";
 
 // 추후 적용
 // NavigationBar가 나타나지 않아야하는 곳: EnterVideoRoom, CreateVideoRoom => 적용 완료
@@ -62,8 +62,6 @@ const App = () => {
           {/* 추후 삭제될 링크입니다. */}
           <Route path="/VoteDetail" element={<VoteDetail />} />
           {/* 나중에 사용할 링크 */}
-          {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
-          <Route path="/VoteSimple" element={<VoteSimple />} />
           <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
       </Routes>

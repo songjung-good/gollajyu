@@ -16,10 +16,7 @@ import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -61,6 +58,7 @@ public class VoteService {
 
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
+        System.out.println(optionalMember+"/sdfsdfasdfasdfasdfasdfasdf/"+voteReqDto.toString());
 
         if (optionalMember.isEmpty()) {
             return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
@@ -625,7 +623,8 @@ public class VoteService {
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
         // 로그인 하지 않은 사용자
-        if (memberId == null) {
+//        if (memberId == null) {
+        if(memberSession == null){
             // 카테고리가 전체일때,
             if (categoryId == 0) {
                 // 기본 정보
@@ -762,7 +761,7 @@ public class VoteService {
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-        System.out.println("voteListResDto = " + voteListResDto);
+//        System.out.println("voteListResDto = " + voteListResDto);
         return new ServiceResult<VoteListResDto>().success(voteListResDto);
 
     }
@@ -792,6 +791,7 @@ public class VoteService {
                             .voteItemImgUrl(voteItem.getVoteItemImgUrl())
                             .voteItemDesc(voteItem.getVoteItemDesc())
                             .price(voteItem.getPrice())
+                            .count((long)voteItem.getVoteResultList().size())
                             .build()
             );
         }
@@ -961,7 +961,7 @@ public class VoteService {
 
 
         // 로그인 했을 때,
-        if(memberInfo != null) {
+        if (memberInfo != null) {
             System.out.println("memberInfo!!!!!!!! = " + memberInfo);
             Long memberId = memberInfo.getMemberId();
 
@@ -999,10 +999,12 @@ public class VoteService {
                         .build();
 
                 allVoteList = voteRepository
-                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+
+                System.out.println("allVoteList = " + allVoteList);
 
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
@@ -1047,10 +1049,11 @@ public class VoteService {
                         .build();
 
                 allVoteList = voteRepository
-                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+                System.out.println("!!!!!!!!!!!!!allVoteList = " + allVoteList);
 
                 makeVoteDetail(allVoteList);
 

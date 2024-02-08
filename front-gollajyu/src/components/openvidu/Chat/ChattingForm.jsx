@@ -32,7 +32,9 @@ const ChattingForm = (props) => {
   return (
     <div onSubmit={sendMessage} className="flex justify-stretch">
       <div className="flex-none w-20 text-center m-auto">
-        {props.myUserName}
+        {props.myUserName.length <= 6
+          ? props.myUserName
+          : props.myUserName.length.slice(0, 6) + "..."}
       </div>
       <Input
         className="flex-grow"

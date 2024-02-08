@@ -40,7 +40,7 @@ const MessageSenderDiv = styled.div`
 `;
 
 const MessageContentDiv = styled.div`
-  width: 300px;
+  width: 230px;
   color: black;
   font-weight: bold;
   font-size: large;
