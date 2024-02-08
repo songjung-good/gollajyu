@@ -4,7 +4,7 @@ import com.jaecheop.backgollajyu.socialLogin.CustomOAuth2UserService;
 import com.jaecheop.backgollajyu.socialLogin.Oauth2LoginSuccessHandler;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.file.ConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,11 +25,14 @@ import java.util.List;
 public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
+    @Value("${api.url}")
+    private String apiUrl;
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of("https://i10E107.p.ssafy.io"));
+        configuration.setAllowedOrigins(List.of(apiUrl));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(Arrays.asList("set-cookie"));
