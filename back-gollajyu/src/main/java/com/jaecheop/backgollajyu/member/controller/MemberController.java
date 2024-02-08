@@ -72,16 +72,23 @@ public class MemberController {
     @PostMapping("/login")
     @Operation(summary = "Login method", description = "returns LoginResDto")
     public ResponseEntity<ResponseMessage<LoginResDto>> login(@RequestBody(required = false) LoginReqDto loginReqDto, HttpSession session,
-                                                              @AuthenticationPrincipal Object info) {
+                                                              @AuthenticationPrincipal Object info, HttpServletResponse response) {
         System.out.println("###############################################");
-        System.out.println("info = " + info);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("email:::::::::::authentication.getPrincipal() = " + authentication.getPrincipal());
+//        System.out.println("info = " + info);
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println("email:::::::::::authentication.getPrincipal() = " + authentication.getPrincipal());
 
         ServiceResult<LoginResDto> result = memberService.login(loginReqDto, session);
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<LoginResDto>().fail(result.getMessage()));
         }
+        System.out.println("controller - session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
+
+        Cookie cookie = new Cookie("login-cookie", loginReqDto.getEmail() );
+        cookie.setMaxAge(3600); // 쿠키의 만료 시간 설정 (초 단위)
+        cookie.setPath("/"); // 쿠키의 적용 범위 설정
+        response.addCookie(cookie); // 쿠키를 응답에 추가
+
         return ResponseEntity.ok().body(new ResponseMessage<LoginResDto>().success(result.getData()));
     }
 
