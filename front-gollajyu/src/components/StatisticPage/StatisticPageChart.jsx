@@ -5,6 +5,7 @@ import categoryData from "/src/stores/categoryData";
 import testResultData from "/src/stores/testResultData";
 import API_URL from "../../stores/apiURL";
 import axios from "axios";
+import constructWithOptions from "styled-components/dist/constructors/constructWithOptions";
 
 const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, selectedDropdownValues }) => {
 
@@ -34,24 +35,30 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     const isNotAll = (value) => value !== '전체';
 
     // ----------- itemCount 수 만큼 데이터 구성 -----------
-    for (let i = 1; i <= itemCount; i++) {
-      let ageValue = null;
-      let genderValue = null;
-      let testResultId = null;
-    
-      if (isNotAll(selectedRadioValues[`나이-${i}`])) {
-        ageValue = selectedRadioValues[`나이-${i}`]?.charAt(0) || null;
-      }
-    
-      if (isNotAll(selectedRadioValues[`성별-${i}`])) {
-        genderValue = selectedRadioValues[`성별-${i}`] === '남자' ? 'MALE' : (selectedRadioValues[`성별-${i}`] === '여자' ? 'FEMALE' : null);
-      }
-    
-      if (isNotAll(selectedDropdownValues[`소비성향-${i}`])) {
-        const selectedTestValue = selectedDropdownValues[`소비성향-${i}`];
-        testResultId = selectedTestValue ? (testResultData.find(item => item.title === selectedTestValue)?.id || 0) : null;
-      }
+    // for (let i = 1; i <= itemCount; i++) {
+    //   const selectedAgeValue = selectedRadioValues[`나이-${i}`];
+    //   const selectedGenderValue = selectedRadioValues[`성별-${i}`];
+    //   const selectedTestValue = selectedDropdownValues[`소비성향-${i}`];
 
+    //   const ageValue = isNotAll(selectedAgeValue) ? selectedAgeValue?.charAt(0) : null;
+    //   const genderValue = isNotAll(selectedGenderValue) ? (selectedGenderValue === '남자' ? 'MALE' : 'FEMALE') : null;
+    //   const testResultId = isNotAll(selectedTestValue) ? (testResultData.find(item => item.title === selectedTestValue)?.id || 0) : null;
+
+    //   requestDataArray.push({
+    //     memberId: 0,
+    //     typeId: testResultId,
+    //     age: ageValue,
+    //     gender: genderValue,
+    //     categoryId: selectedCategory
+    //   });
+    // }
+    for (let i = 1; i <= itemCount; i++) {
+      const ageValue = isNotAll(selectedRadioValues[`나이-${i}`]) ? selectedRadioValues[`나이-${i}`]?.charAt(0) : null;
+      const genderValue = isNotAll(selectedRadioValues[`성별-${i}`]) ? (selectedRadioValues[`성별-${i}`] === '남자' ? 'MALE' : 'FEMALE') : null;
+    
+      const selectedTestValue = selectedDropdownValues[`소비성향-${i}`];
+      const testResultId = isNotAll(selectedTestValue) ? (testResultData.find(item => item.title === selectedTestValue)?.id || 0) : null;
+    
       requestDataArray.push({
         memberId: 0,
         typeId: testResultId,
@@ -61,74 +68,126 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
       });
     }
 
-  for (const data of requestDataArray) {
-    try {
-      const response = await axios.post(`${API_URL}/statistics`, data);
-      responseDataArray.push(response.data);
-      console.log(responseDataArray);
-    } catch (error) {
-      console.error(error);
+    for (const data of requestDataArray) {
+      try {
+        const response = await axios.post(`${API_URL}/statistics`, data);
+        responseDataArray.push(response.data);
+        console.log(responseDataArray);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
-};
+  };
+
+  // const responseDataArray = [
+  //   [
+  //     {tagId: 0, category: 'all', tag: 'all', count: 6},
+  //     {tagId: 11, category: '신발', tag: '가성비', count: 3},
+  //     {tagId: 12, category: '신발', tag: '브랜드', count: 1},
+  //     {tagId: 13, category: '신발', tag: '디자인', count: 1},
+  //     {tagId: 14, category: '신발', tag: '기능성', count: 1},
+  //     {tagId: 15, category: '신발', tag: '내구성', count: 0},
+  //   ],
+  //   [
+  //     {tagId: 0, category: 'all', tag: 'all', count: 3},
+  //     {tagId: 11, category: '신발', tag: '가성비', count: 2},
+  //     {tagId: 13, category: '신발', tag: '디자인', count: 1}
+  //   ]
+  // ] 
 
   useEffect(() => {
     fetchDataSync();
   }, [selectedCategory, selectedRadioValues, selectedDropdownValues, itemCount]);
 
   // ----------- 드롭다운으로 선택한 카테고리 -----------
-  const selectedTagData = responseDataArray.map(data => {
-    return {
-      subject: data[1]?.tag || null,
-      type1: data[1]?.count || 0,
-      type2: data[2]?.count || 0,
-      type3: data[3]?.count || 0,
-      type4: data[4]?.count || 0,
-      fullMark: 50,
-    };
-  });
+  // const selectedCategoryData = categoryData[selectedCategory];
   // const selectedTagData = [
   //   {
-  //     subject: responseDataArray[0][1].tag,
+  //     tag: selectedCategoryData.tags[0],
   //     type1: responseDataArray[0][1].count,
   //     type2: responseDataArray[1][1].count,
   //     type3: responseDataArray[2][1].count,
   //     type4: responseDataArray[3][1].count,
-  //     fullMark: 50,
+  //     fullMark: 150,
   //   },
   //   {
-  //     subject: responseDataArray[0][2].tag,
+  //     tag: selectedCategoryData.tags[1],
   //     type1: responseDataArray[0][2].count,
   //     type2: responseDataArray[1][2].count,
   //     type3: responseDataArray[2][2].count,
   //     type4: responseDataArray[3][2].count,
-  //     fullMark: 50,
+  //     fullMark: 150,
   //   },
   //   {
-  //     subject: responseDataArray[0][3].tag,
+  //     tag: selectedCategoryData.tags[2],
   //     type1: responseDataArray[0][3].count,
   //     type2: responseDataArray[1][3].count,
   //     type3: responseDataArray[2][3].count,
   //     type4: responseDataArray[3][3].count,
-  //     fullMark: 50,
+  //     fullMark: 150,
   //   },
   //   {
-  //     subject: responseDataArray[0][4].tag,
+  //     tag: selectedCategoryData.tags[3],
   //     type1: responseDataArray[0][4].count,
   //     type2: responseDataArray[1][4].count,
   //     type3: responseDataArray[2][4].count,
   //     type4: responseDataArray[3][4].count,
-  //     fullMark: 50,
+  //     fullMark: 150,
   //   },
   //   {
-  //     subject: responseDataArray[0][5].tag,
+  //     tag: selectedCategoryData.tags[4],
   //     type1: responseDataArray[0][5].count,
   //     type2: responseDataArray[1][5].count,
   //     type3: responseDataArray[2][5].count,
   //     type4: responseDataArray[3][5].count,
-  //     fullMark: 50,
+  //     fullMark: 150,
   //   },
   // ];
+
+  const selectedCategoryData = categoryData[selectedCategory - 1];
+  const selectedTagData = [
+    {
+      subject: selectedCategoryData.tags[0],
+      type1: 120,
+      type2: 110,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[1],
+      type1: 120,
+      type2: 110,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[2],
+      type1: 120,
+      type2: 110,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[3],
+      type1: 120,
+      type2: 110,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+    {
+      subject: selectedCategoryData.tags[4],
+      type1: 120,
+      type2: 110,
+      type3: 50,
+      type4: 30,
+      fullMark: 150,
+    },
+  ];
+
 
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
@@ -244,7 +303,7 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
             data={selectedTagData}
           >
             <PolarGrid />
-            <PolarAngleAxis dataKey="subject" />
+            <PolarAngleAxis dataKey="tag" />
             <PolarRadiusAxis angle={54} domain={[0, 150]} />
             {radars}
             <Legend content={<CustomLegend />} />
