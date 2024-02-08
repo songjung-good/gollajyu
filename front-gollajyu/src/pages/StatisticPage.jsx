@@ -22,14 +22,13 @@ const StatisticPage = () => {
     query: "(max-width:479.98px)",
   });
 
-
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(1);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(1);
 
   // ----------- 카테고리가 변경될 때 호출되는 함수 -----------
   const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+    setSelectedCategoryId(event.target.value);
     setIsOpen(false);
   };
 
@@ -337,8 +336,8 @@ const StatisticPage = () => {
                     style={dropdownButtonStyle}
                     className="fontsize-sm"
                   >
-                    {selectedCategory !== null
-                      ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
+                    {selectedCategoryId !== null
+                      ? categoryData.find((c) => c.id === parseInt(selectedCategoryId))?.name
                       : categoryData[1].name}
                   </div>
                   {isOpen && (
@@ -369,7 +368,7 @@ const StatisticPage = () => {
             {/* ------------- 차트 그래프 ------------- */}
             <div style={chartContainerStyle}>
               <StatisticPageChart
-                selectedCategory={selectedCategory}
+                selectedCategoryId={selectedCategoryId}
                 itemCount={itemCount}
                 selectedRadioValues={selectedRadioValues}
                 selectedDropdownValues={selectedDropdownValues}
