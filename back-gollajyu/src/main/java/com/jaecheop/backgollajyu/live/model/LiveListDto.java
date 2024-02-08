@@ -9,7 +9,6 @@ import lombok.*;
 @ToString
 public class LiveListDto {
     private Long id;
-    private String nickname;
     private String title;
     private Long count;
     private String imgUrl;

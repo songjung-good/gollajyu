@@ -11,7 +11,7 @@ import java.util.List;
 public interface LiveVoteItemRepository extends JpaRepository<LiveVoteItem, Long> {
 
     @Transactional
-    void deleteByLiveId(Long sessionId);
+    void deleteByLiveId(Long liveId);
 
     List<LiveVoteItem> findByLiveId(Long liveId);
 }
