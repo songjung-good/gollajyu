@@ -12,4 +12,5 @@ public class LiveListDto {
     private String title;
     private Long count;
     private String imgUrl;
+    private String sessionId;
 }

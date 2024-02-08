@@ -1,9 +1,6 @@
 package com.jaecheop.backgollajyu.live.controller;
 
-import com.jaecheop.backgollajyu.live.model.LiveDetailResDto;
-import com.jaecheop.backgollajyu.live.model.LiveListDto;
-import com.jaecheop.backgollajyu.live.model.LiveStartReqDto;
-import com.jaecheop.backgollajyu.live.model.VoteRequestDto;
+import com.jaecheop.backgollajyu.live.model.*;
 import com.jaecheop.backgollajyu.live.service.LiveService;
 import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
@@ -27,17 +24,17 @@ public class LiveController {
     private String fileDir;
 
     @PostMapping("")
-    @Operation(summary = "라이브 방송 생성", description = "No body")
-    public ResponseEntity<ResponseMessage<?>> startLive(LiveStartReqDto liveStartReqDto) {
-        ServiceResult<?> result = liveService.startLive(liveStartReqDto, fileDir);
+    @Operation(summary = "라이브 방송 생성", description = "returns liveId")
+    public ResponseEntity<ResponseMessage<LiveStartResDto>> startLive(LiveStartReqDto liveStartReqDto) {
+        ServiceResult<LiveStartResDto> result = liveService.startLive(liveStartReqDto, fileDir);
 
-        ResponseMessage<?> responseMessage = new ResponseMessage<>();
+        ResponseMessage<LiveStartResDto> responseMessage = new ResponseMessage<>();
 
         if (!result.isResult()) {
             return ResponseEntity.ok().body(responseMessage.fail(result.getMessage()));
         }
 
-        return ResponseEntity.ok().body(responseMessage.success());
+        return ResponseEntity.ok().body(responseMessage.success(result.getData()));
     }
 
 //    @GetMapping("")

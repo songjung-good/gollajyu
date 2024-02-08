@@ -36,10 +36,10 @@ public class LiveService {
     private final LiveVoteParticipantRepository liveVoteParticipantRepository;
 
     @Transactional
-    public ServiceResult<Void> startLive(LiveStartReqDto liveStartReqDto, String fileDir) {
+    public ServiceResult<LiveStartResDto> startLive(LiveStartReqDto liveStartReqDto, String fileDir) {
         // 멤버 ID로 이미 라이브 방송이 존재하는지 확인
         if (liveRepository.existsByMemberId(liveStartReqDto.getMemberId())) {
-            return new ServiceResult<Void>().fail("이미 라이브 방송이 존재합니다.");
+            return new ServiceResult<LiveStartResDto>().fail("이미 라이브 방송이 존재합니다.");
         }
 
         // 멤버 조회
@@ -47,14 +47,14 @@ public class LiveService {
                 .orElse(null);
 
         if (member == null) {
-            return new ServiceResult<Void>().fail("존재하지 않는 회원입니다.");
+            return new ServiceResult<LiveStartResDto>().fail("존재하지 않는 회원입니다.");
         }
 
         // 포인트 차감 로직
         try {
             member.minusPoint(10L); // 라이브 방송 시작 시 필요한 포인트 차감
         } catch (NotEnoughPointException e) {
-            return new ServiceResult<Void>().fail(e.getMessage());
+            return new ServiceResult<LiveStartResDto>().fail(e.getMessage());
         }
 
         // 라이브 방송 이미지 저장
@@ -65,7 +65,7 @@ public class LiveService {
                 liveImagePath = saveFile(liveImageFile, fileDir);
             }
         } catch (IOException e) {
-            return new ServiceResult<Void>().fail(e.getMessage());
+            return new ServiceResult<LiveStartResDto>().fail(e.getMessage());
         }
 
         // 라이브 방송 생성 및 저장
@@ -98,10 +98,11 @@ public class LiveService {
                 liveVoteItemRepository.save(liveVoteItem);
             }
         } catch (IOException e) {
-            return new ServiceResult<Void>().fail("파일 저장 중 문제가 발생했습니다: " + e.getMessage());
+            return new ServiceResult<LiveStartResDto>().fail("파일 저장 중 문제가 발생했습니다: " + e.getMessage());
         }
 
-        return new ServiceResult<Void>().success();
+        LiveStartResDto liveStartResDto = LiveStartResDto.builder().liveId(live.getId()).build();
+        return new ServiceResult<LiveStartResDto>().success(liveStartResDto);
     }
 
     private String saveFile(MultipartFile file, String fileDir) throws IOException {
@@ -152,6 +153,7 @@ public class LiveService {
                 .title(live.getTitle())
                 .count(live.getCount()) // 시청자 수
                 .imgUrl(live.getImgUrl()) // 라이브 방송 이미지 URL
+                .sessionId(live.getSessionId())
                 .build();
     }
 
