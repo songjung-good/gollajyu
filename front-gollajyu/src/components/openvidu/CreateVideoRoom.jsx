@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import tmpProfileImg from "/assets/images/tmp_profile.png";
+// import tmpProfileImg from "/assets/images/tmp_profile.png";
 import AddVoteItemModal from "./AddVoteItemModal";
+import useAuthStore from "../../stores/userState";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 
@@ -24,13 +25,13 @@ const CreateVideoRoom = () => {
   // 화면 구성 => VideoRoomComponent와 유사하게, 채팅창 부분은 빈 상태로
   // 방송 시작하기 버튼 => 제목, 투표항목, 호스트 닉네임, 세션 아이디 넘겨주기(VideoComponent와 서버에) => VideoComponent에서 isHost=true이면 enterRoom 건너뛰게..?
   const settingButton = "text-white py-2 px-4 rounded-xl";
+  const user = useAuthStore((state) => state.user);
 
   const navigate = useNavigate();
   const videoRef = useRef(null);
-  const [profileImg, setProfileImg] = useState(tmpProfileImg);
-  const [nickName, setNickName] = useState(
-    localStorage.userNickName ? localStorage.userNickName : "고라파덕"
-  );
+  const profileImgUrl = user.profileImgUrl;
+  const memberId = user.memberId;
+  const nickName = user.nickname;
   const [title, setTitle] = useState("");
   const [voteItem, setVoteItem] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -40,6 +41,7 @@ const CreateVideoRoom = () => {
   // 서버로 지금골라쥬 방의 정보를 보내는 함수
   const sendRoomInfo = async (
     sessionId,
+    memberId,
     title,
     nickName,
     voteItem,
@@ -212,7 +214,12 @@ const CreateVideoRoom = () => {
               >
                 <img
                   className="w-8 h-8 rounded-full border border-black"
-                  src={tmpProfileImg}
+                  src={
+                    // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
+                    !isNaN(user.profileImgUrl)
+                      ? `/assets/images/sobiTest/${user.profileImgUrl}.png`
+                      : user.profileImgUrl
+                  }
                   alt=""
                 />
                 <p className="fontsize-sm">{nickName}</p>

@@ -170,7 +170,7 @@ const LoginModal = () => {
               />
             </div>
             <Link
-              to="http://localhost:8080/oauth2/authorization/google"
+              to={`${API_URL.slice(0, -3)}oauth2/authorization/google`}
               onClick={handleGoogleLogin}
             >
               <div id="google" onClick={handleGoogleLogin}>
