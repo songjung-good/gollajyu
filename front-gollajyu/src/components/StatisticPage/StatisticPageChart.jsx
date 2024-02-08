@@ -27,10 +27,12 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
   const [selectedTagData, setSelectedTagData] = useState([]);
 
 
-
+  console.log(selectedRadioValues)
+  console.log(selectedDropdownValues)
 
   // ----------- response 데이터를 담을 배열 -----------
   const responseDataArray = [];
+
 
   const fetchDataSync = async () => {
   
@@ -63,7 +65,6 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
       try {
         const response = await axios.post(`${API_URL}/statistics`, data);
         responseDataArray.push(response.data);
-        console.log(responseDataArray);
       } catch (error) {
         console.error(error);
       }
@@ -76,9 +77,9 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     fetchDataSync().then((responseDataArray) => {
       // 여기에 데이터 추가 작업 완료 후 실행할 코드 작성
       console.log('Data added successfully:', responseDataArray);
+      setSelectedTagData([])
       
       const selectedCategoryData = categoryData[selectedCategory];
-      const updatedTagData = [];
 
       for (let i = 0; i < selectedCategoryData.tags.length; i++) {
         selectedTagData.push({
@@ -198,26 +199,28 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
 
   return (
     <>
-      <div style={containerStyle}>
-        <ResponsiveContainer width="100%" height="100%">
-          <RadarChart
-            cx="50%"
-            cy={ isXLarge || isLarge ? "44%" : "37%" }
-            outerRadius={
-              isXLarge ? 300 :
-              isLarge ? 250 :
-              isMedium ? 190 : 130
-            }
-            data={selectedTagData}
-          >
-            <PolarGrid />
-            <PolarAngleAxis dataKey="tag" />
-            <PolarRadiusAxis angle={54} domain={[0, 150]} />
-            {radars}
-            <Legend content={<CustomLegend />} />
-          </RadarChart>
-        </ResponsiveContainer>
-      </div>
+      {selectedTagData.length > 0 && (
+        <div style={containerStyle}>
+          <ResponsiveContainer width="100%" height="100%">
+            <RadarChart
+              cx="50%"
+              cy={ isXLarge || isLarge ? "44%" : "37%" }
+              outerRadius={
+                isXLarge ? 300 :
+                isLarge ? 250 :
+                isMedium ? 190 : 130
+              }
+              data={selectedTagData}
+            >
+              <PolarGrid />
+              <PolarAngleAxis dataKey="tag" />
+              <PolarRadiusAxis angle={54} domain={[0, 150]} />
+              {radars}
+              <Legend content={<CustomLegend />} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </>
   );
 };
