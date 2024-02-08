@@ -43,7 +43,8 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
 
     List<Vote> findAllByCreateAtBetweenOrderByCreateAtDesc(LocalDateTime startDate, LocalDateTime endDate);
 
-    List<Vote> findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(int categoryId, String keyword1, String keyword2);
+    @Query("SELECT v FROM Vote v WHERE v.category.id = :categoryId AND (v.title LIKE %:keyword% OR v.description LIKE %:keyword%) ORDER BY v.createAt DESC")
+    List<Vote> findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(int categoryId, String keyword);
 
     List<Vote> findAllByTitleContainingOrDescriptionContainingOrderByCreateAtDesc(String keyword1, String keyword2);
 

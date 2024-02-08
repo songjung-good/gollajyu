@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @ToString
 public class LiveVoteItem {
 
@@ -16,16 +17,16 @@ public class LiveVoteItem {
     @Column(name = "live_vote_item_id")
     private Long id;
 
-    @Column(name = "live_vote_item_img_url")
+    @Column(name = "live_vote_item_img_url" , nullable = true)
     private String imgUrl;
 
-    @Column(name = "live_vote_item_description")
+    @Column(name = "live_vote_item_description" , nullable = true)
     private String description;
 
     @Column(name = "live_vote_item_count")
     private Long count;
 
     @ManyToOne
-    @JoinColumn(name = "live_id")
+    @JoinColumn(name = "session_id")
     private Live live;
 }

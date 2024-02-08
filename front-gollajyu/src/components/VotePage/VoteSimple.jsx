@@ -22,7 +22,7 @@ const VoteSimple = () => {
     memberEmail: '',
     title: '',
     description: 'none',
-    categoryId: 0,
+    categoryId: '',
     voteItemList: [],
   });
 
@@ -60,11 +60,11 @@ const VoteSimple = () => {
     const imageCount = images.filter((img) => img !== null && img !== '').length;
     // 조건에 안맞으면 알림창
     if (title === '') {
-      alert('제목을 입력해야 합니다.');
+      alert('제목을 입력해쥬!');
       return;
     }
     if (imageCount < 2) {
-      alert('투표를 게시하려면 최소 2개 이상의 사진을 첨부해야 합니다.');
+      alert('최소 2개 이상의 사진을 첨부해쥬!');
       return;
     }
     // 업로드 시 로딩
@@ -72,31 +72,47 @@ const VoteSimple = () => {
 
     // 데이터 전송
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', 'none'); // description 값을 'none'으로 설정
-    formData.append('categoryId', '0'); // categoryId 값을 '0'으로 설정
-    formData.append('memberId', user.memberId); // 사용자 ID 값 추가
+      formData.append('title', title);
+      // description 값을 'none'으로 설정
+      formData.append('description', 'null');
+      // categoryId 값을 '0'으로 설정
+      formData.append('categoryId', '5');
+      // 사용자 ID 값 추가
+      formData.append('memberEmail', user.email);
+      // voteItemList 값 추가
+      formData.append('voteItemList', {})
 
-    // 이미지 업로드 시 formData에 추가하는 부분
-    images.forEach((image, index) => {
-      if (image !== null) {
-        formData.append(`voteItemImg${index + 1}`, image);
-      }
-    });
-    
+      // voteItemList 객체 생성
+      const voteItemList = [];
+
+      // 이미지 파일 및 기본값 설정
+      images.forEach((image, index) => {
+        if (image !== null) {
+          voteItemList.push({
+            voteItemImg: image,
+            voteItemDesc: null, // 기본값
+            price: 0, // 기본값
+          });
+        }
+      });
+
+      // formData에 voteItemList 추가
+      formData.append('voteItemList', JSON.stringify(voteItemList));
+
+    console.log("formData:", formData);
     const formDataObject = Object.fromEntries(formData);
-    console.log('formDataObject:', formDataObject);
+    console.log("formDataObject:", formDataObject);
 
-    // api주소
+
     axios.post(`${API_URL}/votes`, {
-      method: 'POST',
-      body: formData,
+      data: formDataObject,
     })
     .then((response) => {
+      console.log(response)
       // API 호출 성공
       if (response.status === 200) {
         // 투표 게시 성공
-        alert('투표 생성이 완료되었습니다!');
+        alert('투표 생성에 성공했쥬!');
         setVoteSimpleModalClose();
       } else {
         // API 호출 실패
@@ -108,7 +124,7 @@ const VoteSimple = () => {
     .catch((error) => {
       // 네트워크 오류 등 예외 처리
       console.log(error);
-      alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
+      alert('네트워크 오류가 발생했쥬.. 다시 시도해쥬..');
       setIsSubmitting(false);
     });
   };
@@ -160,12 +176,12 @@ const VoteSimple = () => {
                       name={`file${index}`}
                       id={`file${index}`}
                       className="sr-only"
-                      onChange={(event) => handleImageUpload(event, index)} 
+                      onChange={(event) => handleImageUpload(event, index)}
                     />
                     <label htmlFor={`file${index}`}
-                      className="relative flex min-h-[100px] items-center justify-center 
+                      className="relative flex items-center justify-center 
                       rounded-md border border-dashed border-[#e0e0e0] p-6 text-center">
-                      <div>
+                      <div className="max-w-[200px] h-[200px]">
                         <span className="mb-2 block text-xl font-semibold text-white">
                           사진을 첨부해주세요
                         </span>
