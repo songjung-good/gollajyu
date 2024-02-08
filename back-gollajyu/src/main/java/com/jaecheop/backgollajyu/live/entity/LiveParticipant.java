@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 public class LiveParticipant {
     @Id
+    @Column(name = "live_participant_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
