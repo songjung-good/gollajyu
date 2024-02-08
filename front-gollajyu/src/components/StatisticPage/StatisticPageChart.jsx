@@ -22,6 +22,13 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     query : "(max-width:479.98px)"
   });
 
+
+
+  const [selectedTagData, setSelectedTagData] = useState([]);
+
+
+
+
   // ----------- response 데이터를 담을 배열 -----------
   const responseDataArray = [];
 
@@ -61,72 +68,34 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
         console.error(error);
       }
     }
+
+    return responseDataArray;
   };
 
   useEffect(() => {
-    fetchDataSync();
+    fetchDataSync().then((responseDataArray) => {
+      // 여기에 데이터 추가 작업 완료 후 실행할 코드 작성
+      console.log('Data added successfully:', responseDataArray);
+      
+      const selectedCategoryData = categoryData[selectedCategory];
+      const updatedTagData = [];
+
+      for (let i = 0; i < selectedCategoryData.tags.length; i++) {
+        selectedTagData.push({
+          tag: selectedCategoryData.tags[i],
+          type1: 100,
+          type2: 70,
+          type3: 50,
+          type4: 30,
+          fullMark: 150,
+        });
+
+        console.log(selectedTagData);
+      }
+
+      setSelectedTagData(updatedTagData)
+    });
   }, [selectedCategory, selectedRadioValues, selectedDropdownValues, itemCount]);
-
-  // ----------- 드롭다운으로 선택한 카테고리 -----------
-  // const selectedCategoryData = categoryData[selectedCategory];
-  // const selectedTagData = [];
-
-  // for (let i = 0; i < selectedCategoryData.tags.length; i++) {
-  //   const tagIndex = i + 1;
-  //   selectedTagData.push({
-  //     tag: selectedCategoryData.tags[i],
-  //     type1: responseDataArray[0][tagIndex]?.count || 0,
-  //     type2: responseDataArray[1][tagIndex]?.count || 0,
-  //     type3: responseDataArray[2][tagIndex]?.count || 0,
-  //     type4: responseDataArray[3][tagIndex]?.count || 0,
-  //     fullMark: 150,
-  //   });
-  // }
-
-  const selectedCategoryData = categoryData[selectedCategory];
-  const selectedTagData = [
-    {
-      subject: selectedCategoryData.tags[0],
-      type1: 120,
-      type2: 110,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[1],
-      type1: 120,
-      type2: 110,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[2],
-      type1: 120,
-      type2: 110,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[3],
-      type1: 120,
-      type2: 110,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[4],
-      type1: 120,
-      type2: 110,
-      type3: 50,
-      type4: 30,
-      fullMark: 150,
-    },
-  ];
-
 
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
