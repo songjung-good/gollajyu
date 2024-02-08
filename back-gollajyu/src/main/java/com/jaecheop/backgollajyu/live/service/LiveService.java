@@ -188,27 +188,34 @@ public class LiveService {
 
     @Transactional
     public ServiceResult<Void> enterLive(Long liveId, Long memberId) {
-        Live live = liveRepository.findById(liveId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 라이브 방송이 존재하지 않습니다."));
-
-        boolean isParticipating = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId)
-                .isPresent();
-
-        if (isParticipating) {
-            // 이미 참여 중인 경우
-            return new ServiceResult<Void>().fail("이미 라이브 방송에 참여 중입니다.");
-        } else {
-                // 새로운 참여자인 경우, 참여자 추가
-                LiveParticipant participant = LiveParticipant.builder()
-                        .live(live)
-                        .member(memberRepository.findById(memberId).orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다.")))
-                        .build();
-                liveParticipantRepository.save(participant);
-                // 참여자 수 증가
-                live.setCount(live.getCount() + 1);
-                liveRepository.save(live);
-                return new ServiceResult<Void>().success();
+        Optional<Live> liveOpt = liveRepository.findById(liveId);
+        if (liveOpt.isEmpty()) {
+            return new ServiceResult<Void>().fail("해당 라이브 방송이 존재하지 않습니다.");
         }
+        Live live = liveOpt.get();
+
+        Optional<Member> memberOpt = memberRepository.findById(memberId);
+        if (memberOpt.isEmpty()) {
+            return new ServiceResult<Void>().fail("해당 회원이 존재하지 않습니다.");
+        }
+        Member member = memberOpt.get();
+
+        Optional<LiveParticipant> participantOpt = liveParticipantRepository.findByLiveIdAndMemberId(liveId, memberId);
+        if (participantOpt.isPresent()) {
+            return new ServiceResult<Void>().fail("이미 라이브 방송에 참여 중입니다.");
+        }
+
+        LiveParticipant participant = LiveParticipant.builder()
+                .live(live)
+                .member(member)
+                .build();
+        liveParticipantRepository.save(participant);
+
+        // 참여자 수 증가
+        live.setCount(live.getCount() + 1);
+        liveRepository.save(live);
+
+        return new ServiceResult<Void>().success();
     }
 
     @Transactional
@@ -234,32 +241,35 @@ public class LiveService {
 
     @Transactional
     public ServiceResult<?> voteForItem(Long memberId, Long liveId, Long liveVoteItemId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+        Optional<Member> memberOpt = memberRepository.findById(memberId);
+        if (memberOpt.isEmpty()) {
+            return new ServiceResult<Void>().fail("해당 회원이 존재하지 않습니다.");
+        }
 
-        LiveVoteItem liveVoteItem = liveVoteItemRepository.findById(liveVoteItemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 투표 항목이 존재하지 않습니다."));
+        Optional<LiveVoteItem> liveVoteItemOpt = liveVoteItemRepository.findById(liveVoteItemId);
+        if (liveVoteItemOpt.isEmpty()) {
+            return new ServiceResult<Void>().fail("해당 투표 항목이 존재하지 않습니다.");
+        }
 
-        // 라이브 방송에 참여 중인지 확인
         boolean isParticipating = liveParticipantRepository.existsByMemberIdAndLiveId(memberId, liveId);
         if (!isParticipating) {
-            // 참여 중이지 않은 경우, 오류 반환
-            return new ServiceResult<>().fail("해당 라이브 방송을 시청 중인 사람만 투표할 수 있습니다.");
+            return new ServiceResult<Void>().fail("해당 라이브 방송을 시청 중인 사람만 투표할 수 있습니다.");
         }
 
         // 기존 투표 찾기 및 삭제
         List<LiveVoteParticipant> existingVotes = liveVoteParticipantRepository.findByMemberId(memberId);
-        for (LiveVoteParticipant vote : existingVotes) {
-            liveVoteParticipantRepository.delete(vote);
-            // 기존 투표 항목의 투표 수 감소
+        existingVotes.forEach(vote -> {
             LiveVoteItem oldItem = vote.getLiveVoteItem();
             oldItem.setCount(Math.max(0, oldItem.getCount() - 1));
             liveVoteItemRepository.save(oldItem);
-        }
+            // 기존 투표 항목의 투표 수 감소
+            liveVoteParticipantRepository.delete(vote);
+        });
 
+        LiveVoteItem liveVoteItem = liveVoteItemOpt.get();
         // 새로운 투표 추가
         LiveVoteParticipant newVote = LiveVoteParticipant.builder()
-                .member(member)
+                .member(memberOpt.get())
                 .liveVoteItem(liveVoteItem)
                 .build();
         liveVoteParticipantRepository.save(newVote);
@@ -268,6 +278,6 @@ public class LiveService {
         liveVoteItem.setCount(liveVoteItem.getCount() + 1);
         liveVoteItemRepository.save(liveVoteItem);
 
-        return new ServiceResult<>().success();
+        return new ServiceResult<Void>().success();
     }
 }
