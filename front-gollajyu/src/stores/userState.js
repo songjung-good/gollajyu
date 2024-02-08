@@ -38,4 +38,4 @@ export default useAuthStore;
 //     "gender": "string",
 //     "point": 0,
 //     "profileImgUrl": "string"
-//   }
+// }
