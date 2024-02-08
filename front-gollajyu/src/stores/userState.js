@@ -24,7 +24,6 @@ export default useAuthStore;
 
 // user.memberId
 
-
 // user에 담겨있는 데이터
 // {
 //     "memberId": 0,
@@ -39,4 +38,4 @@ export default useAuthStore;
 //     "gender": "string",
 //     "point": 0,
 //     "profileImgUrl": "string"
-//   }
+// }
