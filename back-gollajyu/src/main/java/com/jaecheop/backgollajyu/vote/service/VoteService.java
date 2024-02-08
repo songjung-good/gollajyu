@@ -6,20 +6,13 @@ import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.comment.repository.CommentRepository;
 import com.jaecheop.backgollajyu.exception.NotEnoughPointException;
 import com.jaecheop.backgollajyu.member.entity.Member;
-import com.jaecheop.backgollajyu.member.model.MemberDto;
 import com.jaecheop.backgollajyu.member.model.LoginResDto;
-import com.jaecheop.backgollajyu.vote.model.*;
+import com.jaecheop.backgollajyu.member.model.MemberDto;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.entity.*;
-import com.jaecheop.backgollajyu.vote.model.ChoiceReqDto;
-import com.jaecheop.backgollajyu.vote.model.ServiceResult;
-import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
-import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
+import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.*;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -121,9 +114,9 @@ public class VoteService {
 
         if (!file.isEmpty()) {
             imgPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(fileDir + "\\" + imgPath));
+            file.transferTo(new File(fileDir + "/" + imgPath));
         }
-        return fileDir + "\\" + imgPath;
+        return fileDir + "/" + imgPath;
     }
 
 
