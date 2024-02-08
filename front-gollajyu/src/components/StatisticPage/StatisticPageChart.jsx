@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import categoryData from "/src/stores/categoryData";
-import testResultData from "/src/stores/testResultData";
+import sobiTIData from "../../stores/testResultData";
 import API_URL from "../../stores/apiURL";
 import axios from "axios";
 
-const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, selectedDropdownValues }) => {
+const StatisticPageChart = ({ selectedCategoryId, itemCount, selectedRadioValues, selectedDropdownValues }) => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
@@ -22,84 +22,79 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     query : "(max-width:479.98px)"
   });
 
-
-
-  const [selectedTagData, setSelectedTagData] = useState([]);
-
-
-  console.log(selectedRadioValues)
-  console.log(selectedDropdownValues)
-
-  // ----------- response 데이터를 담을 배열 -----------
-  const responseDataArray = [];
-
-
-  const fetchDataSync = async () => {
-  
-    // ----------- 각 아이템에 대한 데이터를 담을 배열 -----------
-    const requestDataArray = [];
-
-    // ----------- '전체'인지 확인하는 함수 -----------
-    const isNotAll = (value) => value !== '전체';
-
-    // ----------- itemCount 수 만큼 데이터 구성 -----------
-    for (let i = 1; i <= itemCount; i++) {
-      const selectedAgeValue = selectedRadioValues[`나이-${i}`];
-      const selectedGenderValue = selectedRadioValues[`성별-${i}`];
-      const selectedTestValue = selectedDropdownValues[`소비성향-${i}`];
-
-      const ageValue = isNotAll(selectedAgeValue) ? selectedAgeValue?.charAt(0) : null;
-      const genderValue = isNotAll(selectedGenderValue) ? (selectedGenderValue === '남자' ? 'MALE' : 'FEMALE') : null;
-      const testResultId = isNotAll(selectedTestValue) ? (testResultData.find(item => item.title === selectedTestValue)?.id || 0) : null;
-
-      requestDataArray.push({
-        memberId: 0,
-        typeId: testResultId,
-        age: ageValue,
-        gender: genderValue,
-        categoryId: selectedCategory
-      });
-    }
-
-    for (const data of requestDataArray) {
-      try {
-        const response = await axios.post(`${API_URL}/statistics`, data);
-        responseDataArray.push(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    return responseDataArray;
-  };
-
-  useEffect(() => {
-    fetchDataSync().then((responseDataArray) => {
-      // 여기에 데이터 추가 작업 완료 후 실행할 코드 작성
-      console.log('Data added successfully:', responseDataArray);
-      setSelectedTagData([])
-      
-      const selectedCategoryData = categoryData[selectedCategory];
-
-      for (let i = 0; i < selectedCategoryData.tags.length; i++) {
-        selectedTagData.push({
-          tag: selectedCategoryData.tags[i],
-          type1: 100,
-          type2: 70,
-          type3: 50,
-          type4: 30,
-          fullMark: 150,
-        });
-
-        console.log(selectedTagData);
-      }
-
-      setSelectedTagData(updatedTagData)
-    });
-  }, [selectedCategory, selectedRadioValues, selectedDropdownValues, itemCount]);
-
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
+
+  // ----------- 최대값 초기화 -----------
+  const [maxTagCount, setMaxTagCount] = useState(0)
+
+  // ----------- 선택한 카테고리에 대한 태그 통계 배열 초기화 -----------
+  const [selectedTagDataArray, setSelectedTagDataArray
+    ] = useState(categoryData[selectedCategoryId].tags.map(tag => ({
+      tag,
+      userType1: 0,
+      userType2: 0,
+      userType3: 0,
+      userType4: 0,
+    })));
+
+  // ----------- 데이터를 서버에서 가져오는 함수 -----------
+  const fetchData = async () => {
+
+    // ----------- 응답 데이터를 담을 배열 -----------
+    const responseDataArray = [];
+  
+    // ----------- itemCount 수 만큼 반복 -----------
+    for (let i = 1; i <= itemCount; i++) {
+      const requestData = {
+        memberId: 0,
+        typeId: selectedDropdownValues[`소비성향-${i}`],
+        age: selectedRadioValues[`나이-${i}`],
+        gender: selectedRadioValues[`성별-${i}`],
+        categoryId: selectedCategoryId
+      };
+  
+      try {
+        // axios.post를 사용하여 서버에 비동기 요청을 보내고 응답을 기다림
+        const responseData = await axios.post(`${API_URL}/statistics`, requestData);
+        
+        // responseDataArray에 서버 응답 데이터 추가
+        responseDataArray.push(responseData.data);
+        // console.log('요청', requestData);
+        // console.log('응답', responseData.data);
+      } catch (error) {
+        console.error("axios 에러", error);
+      }
+    }
+
+    // ----------- 업데이트 할 배열 선언 및 데이터 채우기 -----------
+    const updatedDataArray = [...selectedTagDataArray]
+    responseDataArray.forEach((responseData, userType) => {
+      responseData.slice(1, 6).forEach((tagData, tagIndex) => {
+        updatedDataArray[tagIndex][`userType${userType + 1}`] = tagData.count;
+      });
+    });
+
+    // console.log('응답 데이터 배열', responseDataArray)
+    // console.log("태그 통계", updatedDataArray)
+
+    // ----------- 배열 업데이트 -----------
+    setSelectedTagDataArray([...updatedDataArray]);
+
+    // ----------- tag 최대 값 업데이트 -----------
+    let tagCount = 0
+    selectedTagDataArray.forEach(tagData => {
+      for (let i = 1; i <= 5; i++) {
+        tagCount = Math.max(tagCount, tagData[i]);
+      }
+    });
+    setMaxTagCount(tagCount)
+  };
+  
+  // ----------- 값이 변경될 때 fetchData 함수 호출 -----------
+  useEffect(() => {
+    fetchData();
+  }, [selectedCategoryId, itemCount, selectedRadioValues, selectedDropdownValues]);
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -163,15 +158,19 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
   // ----------- itemCount 수 만큼 Radar를 생성 -----------
   const radars = [];
   for (let i = 1; i <= itemCount; i++) {
-    const ageValue = selectedRadioValues[`나이-${i}`] || ' - ';
-    const genderValue = selectedRadioValues[`성별-${i}`] || ' - ';
-    const tasteValue = selectedDropdownValues[`소비성향-${i}`] || ' - ';
+    const ageId = selectedRadioValues[`나이-${i}`] ?? 0;
+    const genderId = selectedRadioValues[`성별-${i}`] ?? 0;
+    const testId = selectedDropdownValues[`소비성향-${i}`] ?? 0;
+
+    const ageValue = ageId == 0 ? '전체' : ageId == 5 ? '50대 이상' : `${ageId}0대`
+    const genderValue = genderId == 0 ? '전체' : genderId == 1 ? '남자' : '여자'
+    const testValue = testId == 0 ? '전체' : sobiTIData[testId-1].title
 
     radars.push(
       <Radar
         key={`유형 ${i}`}
-        name={`유형 ${i} : ${ageValue}/${genderValue}/${tasteValue}`}
-        dataKey={`type${i}`}
+        name={`유형 ${i} : ${ageValue}/${genderValue}/${testValue}`}
+        dataKey={`userType${i}`}
         stroke={colorList[i-1]}
         fill={colorList[i-1]}
         fillOpacity={0.3}
@@ -199,28 +198,26 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
 
   return (
     <>
-      {selectedTagData.length > 0 && (
-        <div style={containerStyle}>
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart
-              cx="50%"
-              cy={ isXLarge || isLarge ? "44%" : "37%" }
-              outerRadius={
-                isXLarge ? 300 :
-                isLarge ? 250 :
-                isMedium ? 190 : 130
-              }
-              data={selectedTagData}
-            >
-              <PolarGrid />
-              <PolarAngleAxis dataKey="tag" />
-              <PolarRadiusAxis angle={54} domain={[0, 150]} />
-              {radars}
-              <Legend content={<CustomLegend />} />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
+      <div style={containerStyle}>
+        <ResponsiveContainer width="100%" height="100%">
+          <RadarChart
+            cx="50%"
+            cy={ isXLarge || isLarge ? "44%" : "37%" }
+            outerRadius={
+              isXLarge ? 300 :
+              isLarge ? 250 :
+              isMedium ? 190 : 130
+            }
+            data={selectedTagDataArray}
+          >
+            <PolarGrid />
+            <PolarAngleAxis dataKey="tag" />
+            <PolarRadiusAxis angle={54} domain={[0, maxTagCount]} />
+            {radars}
+            <Legend content={<CustomLegend />} />
+          </RadarChart>
+        </ResponsiveContainer>
+      </div>
     </>
   );
 };
