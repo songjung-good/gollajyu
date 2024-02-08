@@ -15,6 +15,7 @@ build/
 .sts4-cache
 bin/
 !**/src/main/**/bin/
+!**/src/main/resources/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
