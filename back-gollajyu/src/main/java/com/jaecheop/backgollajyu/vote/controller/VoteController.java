@@ -126,11 +126,13 @@ public class VoteController {
 
         System.out.println("categoryId = " + categoryId);
         System.out.println("memberId = " + memberId);
-        System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
+        System.out.println("session 잘 되어 있나요---(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
+
+
         ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId);
-        System.out.println("result = " + result);
+//        System.out.println("result = " + result);
 
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().fail(result.getMessage()));

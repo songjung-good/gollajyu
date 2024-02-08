@@ -610,7 +610,8 @@ public class VoteService {
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
         // 로그인 하지 않은 사용자
-        if (memberId == null) {
+//        if (memberId == null) {
+        if(memberSession == null){
             // 카테고리가 전체일때,
             if (categoryId == 0) {
                 // 기본 정보
@@ -747,7 +748,7 @@ public class VoteService {
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-        System.out.println("voteListResDto = " + voteListResDto);
+//        System.out.println("voteListResDto = " + voteListResDto);
         return new ServiceResult<VoteListResDto>().success(voteListResDto);
 
     }
