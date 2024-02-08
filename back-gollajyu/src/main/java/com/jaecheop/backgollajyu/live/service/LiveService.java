@@ -79,14 +79,23 @@ public class LiveService {
 
         // 라이브 투표 아이템 생성 및 저장
         try {
-            for (LiveVoteItemDto item : liveStartReqDto.getLiveVoteItemDtoList()) {
-                String fullPath = saveFile(item.getImgUrl(), fileDir); // 파일 저장 로직 호출
-                LiveVoteItem liveVoteItem = liveVoteItemRepository.save(LiveVoteItem.builder()
-                        .live(live)
-                        .imgUrl(fullPath)
-                        .description(item.getDescription())
-                        .count(0L)
-                        .build());
+            for (LiveVoteItemDto itemDto : liveStartReqDto.getLiveVoteItemDtoList()) {
+                LiveVoteItem liveVoteItem = new LiveVoteItem();
+                liveVoteItem.setLive(live); // 라이브 방송 설정
+
+                // imgUrl이 null이 아닌 경우에만 파일 저장 로직 수행
+                if (itemDto.getImgUrl() != null && !itemDto.getImgUrl().isEmpty()) {
+                    String fullPath = saveFile(itemDto.getImgUrl(), fileDir);
+                    liveVoteItem.setImgUrl(fullPath); // 파일 경로 저장
+                } else {
+                    liveVoteItem.setImgUrl(null); // imgUrl이 없는 경우 null로 설정
+                }
+
+                // description 설정
+                liveVoteItem.setDescription(itemDto.getDescription());
+
+                // DB에 저장
+                liveVoteItemRepository.save(liveVoteItem);
             }
         } catch (IOException e) {
             return new ServiceResult<Void>().fail("파일 저장 중 문제가 발생했습니다: " + e.getMessage());
