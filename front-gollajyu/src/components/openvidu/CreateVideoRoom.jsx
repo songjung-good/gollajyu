@@ -5,6 +5,7 @@ import AddVoteItemModal from "./AddVoteItemModal";
 import useAuthStore from "../../stores/userState";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import API_URL from "../../stores/apiURL";
 
 /*
 <uuid란?>
@@ -47,7 +48,14 @@ const CreateVideoRoom = () => {
     voteItem,
     thumbnail
   ) => {
-    // await axios();
+    const data = {
+      sessionId: sessionId,
+      memberId: memberId,
+      liveTitle: title,
+      liveImgUrl: thumbnail,
+      liveVoteItemDtoList: voteItem,
+    };
+    // await axios.post(API_URL + "/lives", data);
     console.log({ sessionId, title, nickName, voteItem, thumbnail });
     return true;
   };
@@ -63,6 +71,7 @@ const CreateVideoRoom = () => {
       console.log("sessionId :", sessionId);
       const roomIs = await sendRoomInfo(
         sessionId,
+        memberId,
         title,
         nickName,
         voteItem,

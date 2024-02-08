@@ -13,7 +13,7 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -62,7 +62,7 @@ const MainPage = () => {
         }
       });
     }
-  })
+  });
 
   const logIn = (data) => {
     axios
@@ -73,6 +73,7 @@ const MainPage = () => {
         console.log("로그인 완료");
         console.log(response);
         setLoggedIn(response.data.body);
+        window.location.reload(); // 로그인 후, 메인페이지 새로고침
       })
       .catch((err) => {
         console.log("로그인 과정에서 에러남");
@@ -85,30 +86,28 @@ const MainPage = () => {
   const [voteListData, setVoteListData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-
   // Function to fetch data using axios
-const fetchData = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/votes`,
-    {params: {
-      categoryId: categoryId,
-      memberId: (user) ? user.memberId : null
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/votes`, {
+        params: {
+          categoryId: categoryId,
+          memberId: user ? user.memberId : null,
+        },
+      });
+      setVoteListData(response.data);
+      setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
+      console.log("Data:", response.data);
+    } catch (error) {
+      console.error("Axios request error:", error);
+      setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
     }
-  });
-    setVoteListData(response.data)
-    setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
-    console.log('Data:', response.data);
-  } catch (error) {
-    console.error('Axios request error:', error);
-    setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
-  }
-};
+  };
 
-useEffect(() => {
-  // Fetch data when the page is turned on
-  fetchData();
-}, []); // Empty dependency array ensures it runs only once when the component mounts
-
+  useEffect(() => {
+    // Fetch data when the page is turned on
+    fetchData();
+  }, []); // Empty dependency array ensures it runs only once when the component mounts
 
   return (
     <>
@@ -132,5 +131,5 @@ useEffect(() => {
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
   );
-        }
+};
 export default MainPage;
