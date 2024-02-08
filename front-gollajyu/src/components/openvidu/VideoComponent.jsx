@@ -10,12 +10,7 @@ import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
 
-// const OPENVIDU_SERVER_URL = "https://i10e107.p.ssafy.io:8443/";
-// npm run dev 이면 localhost, npm run build 면 배포 서버
-const OPENVIDU_SERVER_URL =
-  process.env.NODE_ENV !== "production"
-    ? "http://localhost:4443/"
-    : "https://i10e107.p.ssafy.io:8443/";
+const OPENVIDU_SERVER_URL = import.meta.env.VITE_OPENVIDU_API_URL;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 const settingButton = "text-white py-2 px-4 rounded-xl";
