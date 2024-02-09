@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import API_URL from "../../stores/apiURL";
 import axios from "axios";
 import useAuthStore from "../../stores/userState";
 import useModalStore from "../../stores/modalState";
 
-const VoteProduct = () => {
+const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
   // 제목 state
   const [title, setTitle] = useState('');
   // 설명 state 추가
@@ -20,35 +20,38 @@ const VoteProduct = () => {
   // 사진 첨부 미리보기 관련 state 추가
   const [previewImages, setPreviewImages] = useState([]);
 
-  // voteReqDto 객체를 컴포넌트 외부에 선언하고 초기화
-  const [voteReqDto, setVoteReqDto] = useState({
-    memberEmail: '',
-    title: '',
-    description: '',
-    categoryId: '',
-    voteItemList: [
-      {
-        "voteItemImg": "",
-        "voteItemDesc": null,
-        "price": 0
-      }
-    ],
-  });
+  const handleImageUpload = (event, index) => {
+    const newPreviewImages = previewImages.slice();
+    if (event.target.files.length > 0) {
+      newPreviewImages[index] = URL.createObjectURL(event.target.files[0]);
+    } else {
+      newPreviewImages[index] = null;
+    }
+    setPreviewImages(newPreviewImages);
+
+    // 업로드된 이미지 정보를 voteReqDto에 추가
+    const newVoteItemList = voteReqDto.voteItemList.slice();
+    newVoteItemList[index] = {
+      voteItemImg: event.target.files[0],
+      voteItemDesc: '',
+      price: 0,
+    };
+    setVoteReqDto({
+      ...voteReqDto,
+      voteItemList: newVoteItemList,
+    });
+  };
 
   // 사진 첨부 기능
   const handleImageChange = (e, index) => {
-    // ...
+    const newImages = images.slice();
+    newImages[index] = e.target.files[0];
+    setImages(newImages);
+  
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewImages([...previewImages, reader.result]);
-        // voteReqDto 객체 업데이트
-        const voteItemList = [...voteReqDto.voteItemList];
-        voteItemList[index].voteItemImg = reader.result;
-        setVoteReqDto({
-          ...voteReqDto,
-          voteItemList,
-        });
       };
       reader.readAsDataURL(e.target.files[0]);
     } else {
@@ -62,7 +65,6 @@ const VoteProduct = () => {
       setPreviewImages([...previewImages.slice(0, index), ...previewImages.slice(index + 1)]);
     }
   };
-
 
   // 항목 추가 기능
   const handleAddItem = () => {
@@ -109,15 +111,12 @@ const VoteProduct = () => {
     formData.append('categoryId', category);
     formData.append('memberEmail', user.email);
 
-    const voteItemList = [];
-    items.forEach((item, index) => {
-      if (item.voteItemImg !== null) {
-        voteItemList.push({
-          voteItemImg: item.voteItemImg,
-          voteItemDesc: item.voteItemDesc,
-          price: item.price,
-        });
-      }
+    const voteItemList = items.map((item) => {
+      return {
+        voteItemImg: item.voteItemImg,
+        voteItemDesc: item.voteItemDesc,
+        price: item.price,
+      };
     });
     formData.append('voteItemList', JSON.stringify(voteItemList));
 
@@ -128,6 +127,10 @@ const VoteProduct = () => {
 
     axios.post(`${API_URL}/votes`, {
       data: formDataObject,
+      headers: {
+        // 'Content-Type': 'multipart/form-data',
+        // 'Authorization': `Bearer ${user.accessToken}`
+      }
     })
     .then((response) => {
       console.log(response);
@@ -214,40 +217,34 @@ const VoteProduct = () => {
               <label className="mb-5 block text-xl font-semibold text-[#FF7F50]">
                 투표 항목 추가
               </label>
-              <div className="mb-8">
-                <input type="file" name="file" id="file" className="sr-only" />
-                <label htmlFor="file" className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center">
-                  <div>
-                    <span className="mb-2 block text-xl font-semibold text-[#FF7F50]">
-                      사진을 첨부해주세요
-                    </span>
-                    <span className="mb-2 block text-base font-medium text-[#6B7280]">
-                      또는
-                    </span>
-                    <span className="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#FF7F50]">
-                      찾아보기
-                    </span>
-                    <div className="my-5">
-                      {previewImages.map((image, index) => (
-                        <div key={index} className="relative">
-                          <img
-                            src={image}
-                            alt={`투표 항목 ${index + 1} 이미지`}
-                            className="w-20 h-20 object-cover mr-2 mb-2"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleImageChange(null, index)}
-                            className="absolute top-0 right-0 w-4 h-4 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center"
-                          >
-                            X
-                          </button>
-                        </div>
-                      ))}
+              {previewImages[index] && (
+                <img
+                  src={previewImages[index]}
+                  alt={`투표 항목 ${index + 1} 이미지`}
+                  className="object-cover max-h-[300px] w-full rounded-lg mb-8"
+                />
+              )}
+              {!previewImages[index] && (
+                <div>
+                <input
+                  type="file"
+                  name={`file-${index}`}
+                  id={`file-${index}`}
+                  className="sr-only"
+                  onChange={(e) => handleImageUpload(e, index)}
+                />
+                  <label
+                    htmlFor={`file-${index}`}
+                    className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                  >
+                    <div>
+                      <span className="mb-2 block text-xl font-semibold text-[#FF7F50]">
+                        사진을 첨부해주세요
+                      </span>
                     </div>
-                  </div>
-                </label>
-              </div>
+                  </label>
+                </div>
+              )}
               <div className="mb-5">
                 <label htmlFor="price" className="mb-3 block text-base font-medium text-[#FF7F50]">
                   가격:
