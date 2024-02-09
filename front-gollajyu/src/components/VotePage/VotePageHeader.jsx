@@ -47,7 +47,7 @@ const VotePageHeader = ({ onSort, onSearch, onSearchTerm, onSearchCategory }) =>
           placeholder="투표 검색..."
           onChange={handleChange}
           className="border p-1 mt-4 fontsize-md"
-        />;
+        />
         <button 
           onClick={handleSearchClick}
           className="ml-2 border border-orange-500 mt-4 fontsize-max-sm rounded-full px-4 py-2 hover:bg-orange-500 hover:text-white active:bg-orange-600 active:text-white">

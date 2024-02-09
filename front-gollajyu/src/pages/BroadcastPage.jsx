@@ -4,6 +4,8 @@ import BroadcastItem from "../components/BroadcastItem";
 import VoteButton from "../components/VoteButton";
 import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import VoteSimple from "../components/VotePage/VoteSimple";
+import VoteProduct from "../components/VotePage/VoteProduct";
 import useModalStore from "../stores/modalState";
 
 const BroadcastPage = () => {
@@ -191,8 +193,8 @@ const BroadcastPage = () => {
           </div>
         </div>
       </div>
-      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
-      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
+      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
   );
 };

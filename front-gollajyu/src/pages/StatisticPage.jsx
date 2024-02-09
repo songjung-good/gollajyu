@@ -4,6 +4,8 @@ import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
 import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
 import categoryData from "/src/stores/categoryData";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import VoteSimple from "../components/VotePage/VoteSimple";
+import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
 
@@ -414,8 +416,8 @@ const StatisticPage = () => {
           </div>
         </div>
       </div>
-      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
-      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
+      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
   );
 };
