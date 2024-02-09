@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import VoteCardItem from './VoteCardItem';
+// import { useParams } from 'react-router-dom';
+import VoteCardItem from '../VotePage/VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
 import VoteDetailChat from './VoteDetailChat';
@@ -16,6 +17,9 @@ import VoteDetailChat from './VoteDetailChat';
 // };
 
 // 임시 데이터
+// 필요데이터
+// voteheader: 작성자, 작성일, 투표의 좋아요 수, 투표 참여자 수, 투표 번호
+// votecarditem: 투표
 const voteDetail = {
   author: 'Emily Jones',
   createdAt: '2024-01-30',
@@ -52,28 +56,40 @@ const voteDetail = {
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
+  // 투표상세 링크를 통해 ID값 가지고 들어오게
+  // const { voteId } = useParams();
+
   const [clicked, setClicked] = useState([false, false, false, false]);
 
   const handleClick = (index) => {
     const newClicked = clicked.map((item, i) => (i === index ? !item : item));
     setClicked(newClicked);
   };
+
+  const handleClose = () => {
+    // 모달 닫기 기능 구현
+    // ...
+  };
+
   return (
     <div className="bg-white shadow-md rounded-md max-w-5xl mx-auto">
-      <VoteDetailHeader {...voteDetail} />
+      <VoteDetailHeader
+        {...voteDetail}
+        onClose={handleClose}
+      />
       <div className="p-2 flex justify-around items-center h-full" >
-        {Array(voteDetail.items.length).fill(null).map((_, index) => (
+        {/* {Array(voteDetail.items.length).fill(null).map((_, index) => (
           <VoteCardItem 
             key={index}
             src={`1`}
             product={`Title ${index + 1}`}
             detail={`detail ${index + 1}`}
             category={voteDetail.category}
-            path="/VotePage"
+            path="/VoteDetailPage"
             clicked={clicked[index]}
             onClick={() => handleClick(index)}
           />
-        ))}
+        ))} */}
       </div>
       {voteDetail.hasVoted && (
         <>

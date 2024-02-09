@@ -6,7 +6,7 @@ import 'swiper/css/effect-coverflow';
 import 'swiper/css/navigation';
 import { EffectCoverflow, Navigation, HashNavigation } from 'swiper/modules';
 // 투표
-import VoteCard from '../vote/VoteCard';
+import VoteCard from '../VotePage/VoteCard';
 
 
 export default function SwipeVote( props ) {
@@ -15,6 +15,24 @@ export default function SwipeVote( props ) {
   const [votes, setVotes] = useState(voteList.body.voteInfoList);
   // 슬라이드 기능
   const [activeSlide, setActiveSlide] = useState(0);
+
+  // 드롭다운 옵션
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const options = ['전체', '의류', '가구', '신발', '전자제품'];
+
+  // 카테고리 클릭시 해당 value 값의 options 인덱스를 찾아서 카테고리Id로 필터링
+  const handleOptionClick = (option) => {
+    const selectedIndex = options.indexOf(option);
+    setSelectedOption(option);
+    const filteredVotes = (selectedIndex != 0) ?
+    voteList.body.voteInfoList.filter(vote => vote.categoryId === selectedIndex)
+    : voteList.body.voteInfoList;
+    setVotes(filteredVotes);
+
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     const swiperInstance = document.querySelector('.mySwiper').swiper;
     swiperInstance.on('slideChange', () => {
@@ -47,7 +65,8 @@ export default function SwipeVote( props ) {
         {isOpen && (
           <div className="absolute z-50 flex w-full flex-col bg-gray-100 py-1 px-4 text-gray-800 shadow-xl">
             {options.map((option, index) => (
-              <a key={index} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2" onClick={() => handleOptionClick(option)}>
+              <a key={index} className="my-2 block border-b border-gray-100 py-1 font-semibold text-gray-500 hover:text-black md:mx-2"
+                onClick={() => handleOptionClick(option)}>
                 {option}
               </a>  
             ))}

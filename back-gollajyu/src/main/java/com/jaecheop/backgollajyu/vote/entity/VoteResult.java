@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class VoteResult {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,8 +5,9 @@ import {
   Route,
   Outlet,
 } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 import NavigationBar from "./components/NavigationBar";
-import VoteButton from "./components/VoteButton";
+// import VoteButton from "./components/VoteButton";
 import MainPage from "./pages/MainPage";
 import VotePage from "./pages/VotePage";
 import BroadcastPage from "./pages/BroadcastPage";
@@ -19,9 +20,9 @@ import CreateVideoRoom from "./components/openvidu/CreateVideoRoom";
 import "./App.css";
 
 // 추후 삭제될 페이지입니다.
-import VoteDetail from "./components/vote/VoteDetail";
-import VoteSimple from "./components/vote/VoteSimple";
-import VoteProduct from "./components/vote/VoteProduct";
+import VoteDetail from "./components/VoteDetailPage/VoteDetail";
+import VoteSimple from "./components/VotePage/VoteSimple";
+import VoteProduct from "./components/VotePage/VoteProduct";
 
 // 추후 적용
 // NavigationBar가 나타나지 않아야하는 곳: EnterVideoRoom, CreateVideoRoom => 적용 완료
@@ -42,21 +43,25 @@ const Navbar = () => {
 const App = () => {
   return (
     <Router>
-      <VoteButton />
       <Routes>
-        <Route path="/EnterVideoRoom" element={<VideoComponent />} />
-        <Route path="/CreateVideoRoom" element={<CreateVideoRoom />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/EnterVideoRoom" element={<VideoComponent />} />
+          <Route path="/CreateVideoRoom" element={<CreateVideoRoom />} />
+        </Route>
         <Route element={<Navbar />}>
           <Route path="/" element={<MainPage />} />
-          <Route path="/VotePage" element={<VotePage />} />
-          <Route path="/BroadcastPage" element={<BroadcastPage />} />
-          <Route path="/StatisticPage" element={<StatisticPage />} />
+          {/* 로그인 사용자만 접근할 수 있는 라우터 -> PrivateRoute 내부에 있음 */}
+          <Route element={<PrivateRoute />}>
+            <Route path="/VotePage" element={<VotePage />} />
+            <Route path="/BroadcastPage" element={<BroadcastPage />} />
+            <Route path="/StatisticPage" element={<StatisticPage />} />
+            <Route path="/TestResultPage" element={<TestResultPage />} />
+            <Route path="/MyPage/*" element={<MyPage />} />
+          </Route>
           <Route path="/TestPage" element={<TestPage />} />
-          <Route path="/TestResultPage" element={<TestResultPage />} />
-          <Route path="/MyPage/*" element={<MyPage />} />
           {/* 추후 삭제될 링크입니다. */}
           <Route path="/VoteDetail" element={<VoteDetail />} />
-          <Route path="/VoteSimple" element={<VoteSimple />} />
+          {/* 나중에 사용할 링크 */}
           <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
       </Routes>

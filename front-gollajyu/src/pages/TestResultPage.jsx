@@ -1,41 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import VoteButton from "../components/VoteButton";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import sobiTIData from "../stores/testResultData.js";
 import useModalStore from "../stores/modalState";
 import useAuthStore from "../stores/userState";
-import API_URL from "../stores/apiURL";
-import axios from "axios";
 import { debounce } from "lodash";
-
-const getMBTI = (response) => {
-  const MBTI = {
-    ISTP: 1,
-    ISFP: 2,
-    ESTP: 3,
-    ESFP: 4,
-    ISTJ: 5,
-    ISFJ: 6,
-    ESFJ: 7,
-    ESTJ: 8,
-    INTJ: 9,
-    INTP: 10,
-    ENTJ: 11,
-    ENTP: 12,
-    INFJ: 13,
-    INFP: 14,
-    ENFJ: 15,
-    ENFP: 16,
-  };
-
-  const EI = response[1] + response[2] + response[5] < 2 ? "E" : "I",
-    SN = response[4] + response[6] + response[8] < 2 ? "S" : "N",
-    TF = response[7] + response[9] + response[10] < 2 ? "T" : "F",
-    JP = response[0] + response[3] + response[11] < 2 ? "J" : "P";
-  // console.log(EI + SN + TF + JP);
-  return MBTI[EI + SN + TF + JP];
-};
 
 const items = [
   "프렌치 마카롱",
@@ -59,7 +30,6 @@ const items = [
 const TestResultPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const user = useAuthStore((state) => state.user);
 
   // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
@@ -71,28 +41,12 @@ const TestResultPage = () => {
   );
 
   const [isMyResult, setIsMyResult] = useState(true);
-  // const [isFirstTime, setIsFirstTime] = useState(
-  //   location.state?.isFirstTime || false
-  // );
-  const isFirstTime = location.state?.isFirstTime || false;
-  const memberInfo = location.state?.memberInfo || undefined;
-  const response = location.state?.response || [];
   const [result, setResult] = useState(1);
   const [matchingData, setMatchingData] = useState({});
 
   useEffect(() => {
-    // TestPage에서 넘어왔으면, getMBTI 함수를 통해서 결과를 구함 -> 회원정보에 테스트 결과를 담아서 서버로 보냄 (회원가입)
-    if (isFirstTime) {
-      setResult(getMBTI(response));
-      setMatchingData(sobiTIData.find((data) => data.id === result));
-      const typeId = getMBTI(response);
-      memberInfo.typeId = typeId;
-      console.log(memberInfo);
-      signUp(memberInfo);
-    }
-
     // 네비게이션 바 또는 마이페이지를 통해서 소비성향알려쥬로 진입했을 경우
-    if (isMyResult && !isFirstTime) {
+    if (isMyResult) {
       setResult(user.typeId);
       setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
     }
@@ -104,51 +58,9 @@ const TestResultPage = () => {
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, [result]);
 
-  // 1초 안에 호출되는 가장 마지막 api 호출만 실행 => react Strict Mode에 의해 useEffect가 두번 실행되어서 api 요청이 두번 가는 것을 방지함
-  const signUp = useCallback(
-    debounce((memberInfo) => {
-      axios
-        .post(API_URL + "/members", memberInfo)
-        .then((response) => {
-          console.log(response);
-          if (!response.data.header.result) {
-            console.log(response.data.header.message);
-            navigate("/");
-            window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
-          } else {
-            window.alert(`${memberInfo.nickname}님 회원가입을 환영합니다.`);
-            const data = {
-              email: memberInfo.email,
-              password: memberInfo.password,
-            };
-            logIn(data);
-          }
-        })
-        .catch((err) => {
-          console.log("회원가입 에러");
-          console.log(err);
-        });
-    }, 1000),
-    []
-  );
-
-  const logIn = (data) => {
-    axios
-      .post(API_URL + "/members/login", data, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log("로그인 완료");
-        setLoggedIn(response.data.body);
-      })
-      .catch((err) => {
-        console.log("로그인 과정에서 에러남");
-        console.log(err);
-      });
-  };
-
   return (
     <>
+      <VoteButton />
       <div className="p-5">
         <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] md:w-[330px] lg:w-[380px] xl:w-[550px] flex flex-col items-center relative">
           {isMyResult ? (

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import BroadcastItem from "../components/BroadcastItem";
+import VoteButton from "../components/VoteButton";
 import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import useModalStore from "../stores/modalState";
@@ -126,6 +127,7 @@ const BroadcastPage = () => {
   // 반응형 컨테이너 크기 = xl:w-[1000px] lg:w-[740px] md:w-[560px] sm:w-[375px]
   return (
     <>
+      <VoteButton />
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={createRoom}

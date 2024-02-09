@@ -17,3 +17,26 @@ const useAuthStore = create(
 );
 
 export default useAuthStore;
+
+
+// import useAuthStore from "../stores/userState";
+
+// const user = useAuthStore((state) => state.user);
+
+// user.memberId
+
+// user에 담겨있는 데이터
+// {
+//     "memberId": 0,
+//     "email": "string",
+//     "typeId": 0,
+//     "nickname": "string",
+//     "birthday": {
+//       "year": 0,
+//       "month": 0,
+//       "day": 0
+//     },
+//     "gender": "string",
+//     "point": 0,
+//     "profileImgUrl": "string"
+// }

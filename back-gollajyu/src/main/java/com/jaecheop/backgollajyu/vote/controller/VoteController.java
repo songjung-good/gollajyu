@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -121,13 +118,21 @@ public class VoteController {
 
     @GetMapping("")
     @Operation(summary = "카테고리별 투표 목록 리스트 조회", description = "returns VoteListResDto")
-    public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(@RequestParam(value = "categoryId") int categoryId, HttpSession session) {
+    public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(
+            @RequestParam(value = "categoryId") int categoryId,
+            HttpSession session,
+            @RequestParam(value = "memberId", required = false) Long memberId
+    ) {
 
         System.out.println("categoryId = " + categoryId);
-        System.out.println("(LoginResDto)session.getAttribute(\"memberInfo\") = " + (LoginResDto) session.getAttribute("memberInfo"));
+        System.out.println("memberId = " + memberId);
+
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
-        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo);
-        System.out.println("result = " + result);
+        System.out.println("session 잘 되어 있나요---(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
+
+
+        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId);
+//        System.out.println("result = " + result);
 
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().fail(result.getMessage()));
@@ -155,6 +160,8 @@ public class VoteController {
             @RequestParam(name = "categoryId", defaultValue = "0") String categoryId
             , @RequestParam(name = "keyword", defaultValue = "") String keyword
             , HttpSession session) {
+
+        System.out.println(categoryId +"aaaaaaaaaaaaaaaaaa" + keyword);
         SearchReqDto searchReqDto = SearchReqDto.builder()
                 .categoryId(Integer.parseInt(categoryId))
                 .keyword(keyword)
@@ -170,7 +177,7 @@ public class VoteController {
     }
 
 
-    @GetMapping("/ai")
+    @PostMapping("/ai")
     @Operation(summary = "투표 결과 예상", description = "returns GollaItem")
     public ResponseEntity<Long> gollAi(@RequestBody GollAiReqDto gollAiReqDto) {
 

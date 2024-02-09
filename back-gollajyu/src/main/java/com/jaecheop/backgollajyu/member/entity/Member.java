@@ -7,6 +7,7 @@ import com.jaecheop.backgollajyu.member.model.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Member {
+public class Member implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -70,5 +71,6 @@ public class Member {
                 .build();
         this.gender = Gender.valueOf(addInfoReqDto.getGender());
         this.type = type;
+        this.nickname = addInfoReqDto.getNickname();
     }
 }

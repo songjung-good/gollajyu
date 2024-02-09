@@ -54,6 +54,7 @@ public class VoteService {
 
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
+        System.out.println(optionalMember+"/sdfsdfasdfasdfasdfasdfasdf/"+voteReqDto.toString());
 
         if (optionalMember.isEmpty()) {
             return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
@@ -244,12 +245,26 @@ public class VoteService {
     // 태그별 투표수 첨부 해주기 For ItemResDto 결과랑 sSReq(null true)
     public List<CategoryTagDto> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<CategoryTagDto> statisticsList = new ArrayList<>();
-
+//        System.out.println(voteResults+"@@@@@@@@@@@@@@@@");
         // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
         List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
                 : voteResults;
 
+        assert statisticsSearchReqDto != null;
+        List<Tag> allTags = tagRepository.findAllByCategoryId(statisticsSearchReqDto.getCategoryId());
+        CategoryTagDto allTagDto = new CategoryTagDto(0, "all", "all", 0L);
+        statisticsList.add(allTagDto);
+
+        for (Tag tag : allTags) {
+            CategoryTagDto categoryTagDto = CategoryTagDto.builder()
+                    .category(tag.getCategory().getCategoryName())
+                    .tag(tag.getName())
+                    .tagId(tag.getId()) // Unique identifier for the tag
+                    .count(0L) // Initialize count to 0
+                    .build();
+            statisticsList.add(categoryTagDto);
+        }
         // Going through the loop, all: creates a list of the overall size and the size of each tag.
         for (VoteResult voteResult : voteResultList) {
             // Assuming VoteResult has a method to retrieve associated Tag
@@ -293,6 +308,7 @@ public class VoteService {
                 statisticsList.add(allCategoryTagDto);
             }
         }
+        statisticsList.sort(Comparator.comparing(CategoryTagDto::getTagId));
 
         return statisticsList;
     }
@@ -301,21 +317,22 @@ public class VoteService {
     // StatisticsSearchReqDto 에 따른 필터링 작업 ,,,voteResultList(byVoteItem or byMemberId or byAll)
     public List<VoteResult> perfectResultsMethod(List<VoteResult> voteResultList, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<VoteResult> resultList = voteResultList;
+//        System.out.println(statisticsSearchReqDto+"ssssssssssssssssssssssssssss");
 
         // 소비성향이 있다면
-        if (statisticsSearchReqDto.getTypeId() != null) {
+        if ((statisticsSearchReqDto.getTypeId() != null) && (statisticsSearchReqDto.getTypeId() != 0)) {
             resultList = resultList.stream()
                     .filter(result -> result.getType().getId() == statisticsSearchReqDto.getTypeId())
                     .collect(Collectors.toList());
         }
         // 나이 정보가 있다면
-        if (statisticsSearchReqDto.getAge() != null) {
+        if ((statisticsSearchReqDto.getAge() != null) && (statisticsSearchReqDto.getAge() != 0)) {
             resultList = resultList.stream()
                     .filter(result -> (result.getAge()/10) == statisticsSearchReqDto.getAge())
                     .collect(Collectors.toList());
         }
         // 성별 정보가 있다면
-        if (statisticsSearchReqDto.getGender() != null) {
+        if ((statisticsSearchReqDto.getGender() != null) && (!statisticsSearchReqDto.getGender().equals("0"))) {
             resultList = resultList.stream()
                     .filter(result -> result.getGender().name().equals(statisticsSearchReqDto.getGender()))
                     .collect(Collectors.toList());
@@ -610,12 +627,12 @@ public class VoteService {
 
     }
 
-    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession) {
+    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession, Long memberId) {
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
-
         // 로그인 하지 않은 사용자
-        if (memberSession == null) {
+//        if (memberId == null) {
+        if(memberSession == null){
             // 카테고리가 전체일때,
             if (categoryId == 0) {
                 // 기본 정보
@@ -667,7 +684,7 @@ public class VoteService {
 //         로그인 한 사용자
         else {
             // 로그인 한 사용자
-            long memberId = memberSession.getMemberId();
+//            long memberId = memberSession.getMemberId();
 
             // 결과에 담을 투표 리스트 기본 정보
             // 카테고리가 전체일때
@@ -679,7 +696,7 @@ public class VoteService {
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
                 List<ListVoteResultDto> voteResultList = voteResultRepository
-                        .findAllByMemberId(memberSession.getMemberId())
+                        .findAllByMemberId(memberId)
                         .stream()
                         .map(vr -> ListVoteResultDto.convertToDto(vr))
                         .toList();// 참여한 투표 결과 리스트
@@ -733,7 +750,7 @@ public class VoteService {
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
                 List<ListVoteResultDto> voteResultList = voteResultRepository
-                        .findAllByMemberIdAndCategoryId(memberSession.getMemberId(), category.getId())
+                        .findAllByMemberIdAndCategoryId(memberId, category.getId())
                         .stream()
                         .map(vr -> ListVoteResultDto.convertToDto(vr))
                         .toList();
@@ -752,7 +769,7 @@ public class VoteService {
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-        System.out.println("voteListResDto = " + voteListResDto);
+//        System.out.println("voteListResDto = " + voteListResDto);
         return new ServiceResult<VoteListResDto>().success(voteListResDto);
 
     }
@@ -782,6 +799,7 @@ public class VoteService {
                             .voteItemImgUrl(voteItem.getVoteItemImgUrl())
                             .voteItemDesc(voteItem.getVoteItemDesc())
                             .price(voteItem.getPrice())
+                            .count((long)voteItem.getVoteResultList().size())
                             .build()
             );
         }
@@ -951,7 +969,7 @@ public class VoteService {
 
 
         // 로그인 했을 때,
-        if(memberInfo != null) {
+        if (memberInfo != null) {
             System.out.println("memberInfo!!!!!!!! = " + memberInfo);
             Long memberId = memberInfo.getMemberId();
 
@@ -989,10 +1007,12 @@ public class VoteService {
                         .build();
 
                 allVoteList = voteRepository
-                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+
+                System.out.println("allVoteList = " + allVoteList);
 
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
@@ -1037,10 +1057,11 @@ public class VoteService {
                         .build();
 
                 allVoteList = voteRepository
-                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword, keyword)
+                        .findAllByCategoryIdAndTitleContainingOrDescriptionContainingOrderByCreateAtDesc(searchReqDto.getCategoryId(), keyword)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+                System.out.println("!!!!!!!!!!!!!allVoteList = " + allVoteList);
 
                 makeVoteDetail(allVoteList);
 
