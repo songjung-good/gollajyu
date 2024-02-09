@@ -26,11 +26,14 @@ const VoteSimple = () => {
   // Function to handle changing voting item image
   const handleVoteItemImageChange = (index, event) => {
     const newVoteItems = [...voteItems];
+    // 여기서 취소를 눌러도 유지되게끔 바꿀 수도 있음.
     newVoteItems[index].voteItemImg = event.target.files[0];
     setVoteItems(newVoteItems)
 
     const newPreviewImages = [...previewImages];
-    newPreviewImages[index] = URL.createObjectURL(event.target.files[0]);
+    // 그림을 넣으려다 취소를 눌렀을 때 제거되기 때문에 보관하던 이미지도 제거했다.
+    (event.target.files[0]) ? newPreviewImages[index] = URL.createObjectURL(event.target.files[0])
+    : newPreviewImages[index] = null;
     setPreviewImages(newPreviewImages);
   };
   // Function to handle form submission
@@ -54,8 +57,8 @@ const VoteSimple = () => {
     formData.append('categoryId', 5);
     voteItems.forEach((item, index) => {
       formData.append(`voteItemList[${index}].voteItemImg`, item.voteItemImg);
-      formData.append(`voteItemList[${index}].voteItemDesc`, 'non');
-      formData.append(`voteItemList[${index}].price`, 0);
+      formData.append(`voteItemList[${index}].voteItemDesc`, '');
+      formData.append(`voteItemList[${index}].price`, '');
     });
     
     try {
@@ -65,7 +68,7 @@ const VoteSimple = () => {
         },
       });
       console.log(response.data);
-      alert('Poll created successfully!');
+      setVoteSimpleModalClose();
     } catch (error) {
       console.error(error);
       alert('Failed to create poll.');
@@ -109,6 +112,7 @@ const VoteSimple = () => {
             <div key={index} className="p-4 max-w-sm flex-grow">
               <div className="flex rounded-lg h-full bg-[#8DB600] p-8 flex-col">
                   <div className="mb-8">
+                    <label htmlFor={`voteItem${index + 1}`} className="relative">
                     <input
                       type="file"
                       name={`voteItemImgs`}
@@ -120,6 +124,8 @@ const VoteSimple = () => {
                           className="object-cover h-full w-full rounded-lg"
                         />
                     )}
+                    </label>
+
                     {!previewImages[index] && (
                     <label htmlFor={`voteItem${index + 1}`}
                       className="relative flex items-center justify-center 
