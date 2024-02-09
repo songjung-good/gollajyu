@@ -342,11 +342,11 @@ export default function VideoComponent() {
     axios
       .post(API_URL + `/lives/${liveId}/enter/${user.memberId}`)
       .then((res) => {
-        console.log("라이브 방송 퇴장 성공");
+        console.log("라이브 방송 입장 성공");
       })
       .catch((err) => {
         console.log(err);
-        console.log("라이브 방송 퇴장 실패");
+        console.log("라이브 방송 입장 실패");
       });
   };
 
