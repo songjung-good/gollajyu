@@ -10,7 +10,7 @@ import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
 
-const OPENVIDU_SERVER_URL = import.meta.env.VITE_OPENVIDU_API_URL;
+const OPENVIDU_SERVER_URL = import.meta.env.REACT_APP_OPENVIDU_API_URL;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
 const settingButton = "text-white py-2 px-4 rounded-xl";
