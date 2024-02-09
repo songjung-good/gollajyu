@@ -1,11 +1,13 @@
 import { OpenVidu } from "openvidu-browser";
 
 import axios from "axios";
+import API_URL from "../../stores/apiURL";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChattingForm from "./Chat/ChattingForm.jsx";
 import ChattingList from "./Chat/ChattingList.jsx";
+import useAuthStore from "../../stores/userState";
 import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";
@@ -25,35 +27,35 @@ const logoStyle = {
 export default function VideoComponent() {
   const navigate = useNavigate();
   const location = useLocation();
+  const user = useAuthStore((state) => state.user);
   const [isEnoughSize, setIsEnoughSize] = useState(true);
-  const [profileImg, setProfileImg] = useState(tmpProfileImg);
+  const liveId = location.state.liveId; // createVideoRoom이나 broadcastpage에서 넘어올때 state에 담아서 줌
+  const [title, setTitle] = useState("");
+  const [hostNickName, setHostNickName] = useState("");
   const [mySessionId, setMySessionId] = useState(location.state.sessionId);
   const isHost = location.state.isHost; // isHost로 분기해서 isHost=true면 화면을 publish하고 아니면 publish는 없이 subscribe만 함
-  const [myUserName, setMyUserName] = useState(
-    isHost ? "방송자" : location.state.userNickName
-  );
+  const myUserName = user.nickname;
   const [session, setSession] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
   const [audioState, setAudioSate] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0); // 총 유저수
-  const voteItem = location.state.voteItem
-    ? location.state.voteItem
-    : ["임시", "임시", "임시", "임시"];
-  const [isVoteHoveredArr, setIsVoteHoveredArr] = useState(
-    Array(voteItem.length).fill(false)
-  ); // 각 투표 선택지 위에 마우스가 올라가 있는지
-  const [isVotedArr, setIsVotedArr] = useState(
-    Array(voteItem.length).fill(false)
-  ); // 각 투표 선택지가 선택되었는지 여부
-  const [isVoted, setIsVoted] = useState(false); // 투표를 했는지 여부
-  const [voteCounts, setVoteCounts] = useState([]); // 투표 아이템 별 표 수
-  const title = location.state.title ? location.state.title : "임시 제목";
-  const hostNickName = location.state.hostNickName
-    ? location.state.hostNickName
-    : "임시 닉네임";
   console.log("isHost?:", isHost);
+
+  useEffect(() => {
+    // 컴포넌트가 마운트 될 때, liveId로 방송 정보 GET 요청을 보냄
+    axios
+      .get(API_URL + `/lives/${liveId}`)
+      .then((res) => {
+        setTitle(res.data.body.title);
+        setHostNickName(res.data.body.nickName);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  });
 
   const OV = useRef(new OpenVidu());
 
@@ -146,7 +148,7 @@ export default function VideoComponent() {
         }
       });
     }
-  }, [session, myUserName]);
+  }, [session]);
 
   // subscribers 변경이 잘 되는지 확인하기 위한 코드 => 배포 시, 삭제
   useEffect(() => {
@@ -164,8 +166,24 @@ export default function VideoComponent() {
     setSession(undefined);
     setSubscribers([]);
     setMySessionId("SessionA");
-    setMyUserName("Anonymous");
     setPublisher(undefined);
+
+    // Host이면 지금골라쥬 방 삭제 요청
+    if (isHost) {
+      axios.delete(API_URL + `/lives/${liveId}`);
+    } else {
+      // Host가 아니면 퇴장 요청
+      // api/lives/{liveId}/exit/{memberId} 에 POST 요청을 보내면서 방에서 퇴장
+      axios
+        .post(API_URL + `/lives/${liveId}/exit/${user.memberId}`)
+        .then((res) => {
+          console.log("라이브 방송 퇴장 성공");
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log("라이브 방송 퇴장 실패");
+        });
+    }
 
     navigate("/BroadcastPage");
   }, [session]);
@@ -318,34 +336,17 @@ export default function VideoComponent() {
   // 로딩 페이지를 통한 방 입장
   const enterOnAirRoom = () => {
     joinSession();
+    // api/lives/{liveId}/enter/{memberId} 에 POST 요청을 보내면서 방에 입장
+    axios
+      .post(API_URL + `/lives/${liveId}/enter/${user.memberId}`)
+      .then((res) => {
+        console.log("라이브 방송 퇴장 성공");
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log("라이브 방송 퇴장 실패");
+      });
   };
-
-  // ------------ 방송 내 투표 관련 기능 ----------------
-  const handleVote = (index, item) => {
-    // TODO 클릭하면, 해당 item 투표수 1 증가시키는 요청을 서버로 보내기
-    // 투표한 상태로 변경
-    setIsVoted(true);
-    setIsVotedArr(() => {
-      const arr = Array(voteItem.length).fill(false);
-      arr[index] = true;
-      // console.log("선택:", arr);
-      return [...arr];
-    });
-    console.log(index, item);
-  };
-
-  const getVoteRate = async () => {
-    // TODO 서버에서 투표 아이템별 표 수에 대한 정보를 받아오기 -> 투표 아이템별 표 수 상태 업데이트, 일정 시간마다 동작하도록 작성
-    // const response = await axios.get(
-    //url 기타 등등
-    // )
-    setVoteCounts(); // 서버에서 받은 투표 아이템별 표 수 넣기 -> id, count 또는 name, count + 총 참여자 수
-  };
-
-  // 투표를 하면 -> 서버에서 투표 아이템별 표 수에 대한 정보 받아오기
-  useEffect(() => {
-    getVoteRate();
-  }, [isVoted]);
 
   // ----------------- 화면 사이즈가 충분한지 체크 --------------
   // 화면 너비가 768px보다 작으면 -> 안내문 띄우기
@@ -509,12 +510,7 @@ export default function VideoComponent() {
                           id="host-info"
                           className="flex text-center items-center space-x-2"
                         >
-                          <img
-                            className="w-8 h-8 rounded-full border border-black"
-                            src={tmpProfileImg}
-                            alt=""
-                          />
-                          <p className="text-lg">{hostNickName}</p>
+                          <p className="text-lg">{hostNickName}님의 방송</p>
                         </div>
                         <div>시청자 수 : {totalUsers}</div>
                       </div>
@@ -529,92 +525,7 @@ export default function VideoComponent() {
                       id="vote"
                       className="mb-3 basis-1/4 border-2 rounded-md bg-gray-100"
                     >
-                      <Vote />
-                      {/* TODO 투표 결과 다시 받아오기 (새로고침) 버튼 추가 */}
-                      {/* <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
-                        {voteItem &&
-                          voteItem.map((item, index) => {
-                            if (item.slice(0, 10) === "data:image") {
-                              return (
-                                <div
-                                  className={`relative border flex justify-center items-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
-                                    isVotedArr[index]
-                                      ? "border-red-400 border-4"
-                                      : ""
-                                  }`}
-                                  key={index}
-                                  onMouseEnter={() =>
-                                    setIsVoteHoveredArr((prevArr) => {
-                                      prevArr[index] = true;
-                                      return [...prevArr];
-                                    })
-                                  }
-                                  onMouseLeave={() =>
-                                    setIsVoteHoveredArr((prevArr) => {
-                                      prevArr[index] = false;
-                                      return [...prevArr];
-                                    })
-                                  }
-                                  onClick={() => handleVote(index, item)}
-                                >
-                                  {isVoteHoveredArr[index] ? (
-                                    <p className="fontsize-sm font-bold text-center text-amber-300">
-                                      투표하기
-                                    </p>
-                                  ) : (
-                                    <img
-                                      src={item}
-                                      className="size-2/3"
-                                      alt="이미지 미리보기"
-                                    />
-                                  )}
-                                  {isVoted && (
-                                    <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
-                                      100표
-                                    </p>
-                                  )}
-                                </div>
-                              );
-                            } else {
-                              return (
-                                <div
-                                  className={`relative border flex fontsize-sm font-bold justify-center items-center text-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
-                                    isVotedArr[index]
-                                      ? "border-red-400 border-4"
-                                      : ""
-                                  }`}
-                                  key={index}
-                                  onMouseEnter={() =>
-                                    setIsVoteHoveredArr((prevArr) => {
-                                      prevArr[index] = true;
-                                      return [...prevArr];
-                                    })
-                                  }
-                                  onMouseLeave={() =>
-                                    setIsVoteHoveredArr((prevArr) => {
-                                      prevArr[index] = false;
-                                      return [...prevArr];
-                                    })
-                                  }
-                                  onClick={() => handleVote(index, item)}
-                                >
-                                  {isVoteHoveredArr[index] ? (
-                                    <p className="fontsize-sm font-bold text-amber-300">
-                                      투표하기
-                                    </p>
-                                  ) : (
-                                    item
-                                  )}
-                                  {isVoted && (
-                                    <p className="absolute bottom-0 right-0 m-1 font-normal fontsize-xs">
-                                      100표
-                                    </p>
-                                  )}
-                                </div>
-                              );
-                            }
-                          })}
-                      </div> */}
+                      <Vote liveId={liveId} />
                     </div>
                     <div
                       id="chatting"

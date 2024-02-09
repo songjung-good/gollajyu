@@ -32,6 +32,7 @@ const CreateVideoRoom = () => {
   const videoRef = useRef(null);
   const memberId = user.memberId;
   const nickName = user.nickname;
+  // const [liveId, setLiveId] = useState(null);
   const [title, setTitle] = useState("");
   const [voteItem, setVoteItem] = useState([]);
   const [previewVoteItem, setPreviewVoteItem] = useState([]);
@@ -45,93 +46,85 @@ const CreateVideoRoom = () => {
     sessionId,
     memberId,
     title,
-    nickName,
     voteItem,
     thumbnail
   ) => {
-    // FormData 형식으로 변환
-    const formData = new FormData();
-    formData.append("sessionId", sessionId);
-    formData.append("memberId", memberId);
-    formData.append("liveTitle", title);
-    formData.append("liveImgUrl", thumbnail);
+    try {
+      // FormData 형식으로 변환
+      const formData = new FormData();
+      formData.append("sessionId", sessionId);
+      formData.append("memberId", memberId);
+      formData.append("liveTitle", title);
+      formData.append("liveImgUrl", thumbnail);
 
-    const voteItemForAxios = [];
-    voteItem.forEach((item) => {
-      if (item instanceof File) {
-        voteItemForAxios.push({ imgUrl: item, description: null, count: 0 });
-      } else if (typeof item === "string") {
-        voteItemForAxios.push({ imgUrl: null, description: item, count: 0 });
-      }
-    });
+      const voteItemForAxios = [];
+      voteItem.forEach((item) => {
+        if (item instanceof File) {
+          voteItemForAxios.push({ imgUrl: item, description: null, count: 0 });
+        } else if (typeof item === "string") {
+          voteItemForAxios.push({ imgUrl: null, description: item, count: 0 });
+        }
+      });
 
-    voteItemForAxios.forEach((item, index) => {
-      formData.append(`liveVoteItemDtoResList[${index}][imgUrl]`, item.imgUrl);
-      formData.append(
-        `liveVoteItemDtoResList[${index}][description]`,
-        item.description
-      );
-      formData.append(`liveVoteItemDtoResList[${index}][count]`, item.count);
-    });
+      voteItemForAxios.forEach((item, index) => {
+        if (item.imgUrl) {
+          formData.append(`liveVoteItemDtoList[${index}].imgUrl`, item.imgUrl);
+        }
+        if (item.description) {
+          formData.append(
+            `liveVoteItemDtoList[${index}].description`,
+            item.description
+          );
+        }
+        formData.append(`liveVoteItemDtoList[${index}].count`, item.count);
+      });
 
-    // for (let key of formData.keys()) {
-    //   console.log(key);
-    // }
-    // for (let value of formData.values()) {
-    //   console.log(value);
-    // }
+      // formdata 확인용 코드
+      // for (let [key, value] of formData.entries()) {
+      //   console.log(key, value);
+      // }
 
-    // [File, text, ... ] 형태의 voteItem 배열을
-    //[{imgUrl: , description: , count: }, ... ] 배열로 바꾸고 formdata의
-    // "liveVoteItemDtoList": [
-    // {
-    //   "imgUrl": "string",
-    //   "description": "string",
-    //   "count": 0
-    // }, ... ] 부분으로 집어넣기
-
-    await axios
-      .post(API_URL + "/lives", formData, {
+      const response = await axios.post(API_URL + "/lives", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
       });
 
-    return false;
+      if (response.data.header.result) {
+        // res.data.body에서 liveId를 얻은 후 videoComponent로 진입
+        return response.data.body.liveId;
+      } else {
+        window.alert(response.data.header.message);
+        return false;
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   };
 
   const startBroadcast = async () => {
-    //sessionId 생성
-    // TODO title, hostNickName, voteItem, thumbnail, sessionId, isHost 담아서 VideoRoom으로 진입 + 서버로 데이터 전송
-
     if ((title.length < 1) | (voteItem.length < 2) | thumbnail) {
       window.alert("제목, 투표 항목(2개 이상), 썸네일을 모두 등록하세요!");
     } else {
+      // sessionId 생성 (랜덤한 값)
       const sessionId = "Session" + uuidv4();
-      console.log("sessionId :", sessionId);
-      const roomIs = await sendRoomInfo(
+      // console.log("sessionId :", sessionId);
+      // sendRoomInfo : 서버로 라이브 방 생성을 요청 -> 응답으로 liveId를 받음
+      const liveId = await sendRoomInfo(
         sessionId,
         memberId,
         title,
-        nickName,
         voteItem,
         thumbnail
       );
-      if (roomIs !== false) {
+      // console.log(liveId);
+      if (liveId !== false) {
         console.log("방송 생성 성공");
         navigate("/EnterVideoRoom", {
           state: {
             sessionId: sessionId,
-            title: title,
-            voteItem: voteItem,
-            hostNickName: nickName,
-            thumbnail: thumbnail,
+            liveId: liveId,
             isHost: true,
           },
         });
