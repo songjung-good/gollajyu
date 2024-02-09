@@ -98,7 +98,8 @@ const Vote = ({ liveId }) => {
       <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
         {voteItem &&
           voteItem.map((item, index) => {
-            if (item.item.includes("gollajyuImages")) {
+            // item.item.length가 50자보다 길면 -> img URL로 판단
+            if (item.item.length > 50) {
               return (
                 <div
                   className={`relative border flex justify-center items-center bg-gray-50 w-1/2 h-[90px] cursor-pointer ${
