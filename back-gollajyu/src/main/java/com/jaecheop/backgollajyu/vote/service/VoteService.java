@@ -244,8 +244,10 @@ public class VoteService {
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
                 : voteResults;
 
-        assert statisticsSearchReqDto != null;
-        List<Tag> allTags = tagRepository.findAllByCategoryId(statisticsSearchReqDto.getCategoryId());
+        List<Tag> allTags = new ArrayList<>();
+        if (statisticsSearchReqDto != null) {
+            allTags = tagRepository.findAllByCategoryId(statisticsSearchReqDto.getCategoryId());
+        }
         CategoryTagDto allTagDto = new CategoryTagDto(0, "all", "all", 0L);
         statisticsList.add(allTagDto);
 

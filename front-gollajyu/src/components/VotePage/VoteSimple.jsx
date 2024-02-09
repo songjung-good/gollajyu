@@ -86,7 +86,8 @@ const VoteSimple = () => {
       }}
     >
       <div className="mx-auto max-h-[800px] w-full max-w-[800px] bg-white overflow-y-auto">
-        <form className="py-4 px-9" onSubmit={handleSubmit}>
+        <form className="py-4 px-9" onSubmit={handleSubmit}
+          encType="multipart/form-data">
           {/* 제목 및 카테고리 설정 */}
           <div className="mb-5">
             <label htmlFor="title" 
