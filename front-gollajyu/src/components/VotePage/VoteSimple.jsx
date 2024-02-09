@@ -10,7 +10,7 @@ const VoteSimple = () => {
   const [images, setImages] = useState([null, null, null, null]);
   // 로딩기능
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // 사용자 ID를 저장할 state 변수 추가
+  // 사용자 Email를 저장할 state 변수 추가
   const user = useAuthStore((state) => state.user);
   // 이미지 미리보기
   const [previewImages, setPreviewImages] = useState([null, null, null, null]);
@@ -77,7 +77,7 @@ const VoteSimple = () => {
       formData.append('description', 'null');
       // categoryId 값을 '0'으로 설정
       formData.append('categoryId', '5');
-      // 사용자 ID 값 추가
+      // 사용자 Email값 추가
       formData.append('memberEmail', user.email);
       // voteItemList 값 추가
       formData.append('voteItemList', {})
