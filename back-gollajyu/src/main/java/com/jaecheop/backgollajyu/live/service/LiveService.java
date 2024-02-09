@@ -15,12 +15,14 @@ import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class LiveService {
+
+    @Value("${img.url}")
+    private String imgUrl;
 
     private final MemberRepository memberRepository;
     private final LiveRepository liveRepository;
@@ -188,7 +193,7 @@ public class LiveService {
                             .stream()
                             .map(item -> LiveVoteItemResDto.builder()
                                     .id(item.getId())
-                                    .imgUrl(item.getImgUrl())
+                                    .imgUrl(convertFilePathToUrl(item.getImgUrl()))
                                     .description(item.getDescription())
                                     .count(item.getCount())
                                     .build())
@@ -203,6 +208,17 @@ public class LiveService {
                                     .build());
                 })
                 .orElseGet(() -> new ServiceResult<LiveDetailResDto>().fail("해당 라이브 방송을 찾을 수 없습니다."));
+    }
+
+    // 파일 경로를 웹 URL로 변환
+    private String convertFilePathToUrl(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return null; // 또는 기본 이미지 URL
+        }
+        // 이미지 파일명만 추출합니다.
+        String fileName = Paths.get(filePath).getFileName().toString();
+        // 웹 접근 가능한 URL로 변환합니다.
+        return String.format("%s/resources/%s", imgUrl, fileName);
     }
 
     @Transactional
