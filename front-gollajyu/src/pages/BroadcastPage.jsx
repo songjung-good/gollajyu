@@ -186,11 +186,14 @@ const BroadcastPage = () => {
             지금 <span className="text-red-300 fontsize-lg">당장</span> 골라쥬
             <p className="fontsize-xs">현재 시청자 TOP3</p>
           </p>
-          <div className="flex flex-row space-x-10 sm:space-x-5 bg-red-100 rounded-3xl px-24 py-10 sm:px-10 sm:py-5">
-            {liveItem &&
+          <div className="flex flex-row space-x-10 sm:space-x-5 bg-red-100 rounded-3xl px-24 py-10 sm:px-10 sm:py-5 min-h-[200px]">
+            {liveItem.length > 0 ? (
               liveItem.slice(0, 3).map((item, index) => {
                 return <BroadcastItem key={index} index={index} item={item} />;
-              })}
+              })
+            ) : (
+              <p className="fontsize-sm">현재 방송중인 지금골라쥬가 없습니다</p>
+            )}
             {/* {dummyData
               .sort((a, b) => b.viewerCnt - a.viewerCnt)
               .slice(0, 3)
@@ -207,15 +210,16 @@ const BroadcastPage = () => {
             지금 골라쥬
             <p className="fontsize-xs">최신순</p>
           </p>
-          <div className="grid grid-cols-4 sm:grid-cols-3 bg-white rounded-3xl p-7 gap-10">
+          <div className="relative grid grid-cols-4 sm:grid-cols-3 bg-white rounded-3xl p-7 gap-10 min-h-[300px]">
             {liveItem.length > 3 ? (
               liveItem.slice(3).map((item, index) => {
                 return <BroadcastItem key={index} item={item} />;
               })
             ) : (
-              <div>
-                <p>현재 방송중인 지금 골라쥬가</p>
-                <p>충분하지 않습니다ㅠㅠ</p>
+              <div className="absolute left-20 top-10">
+                <p className="fontsize-sm">
+                  현재 방송중인 지금 골라쥬가 충분하지 않습니다ㅠㅠ
+                </p>
               </div>
             )}
             {/* {dummyData
