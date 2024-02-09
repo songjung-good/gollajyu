@@ -93,6 +93,7 @@ public class LiveService {
 
                 // description 설정
                 liveVoteItem.setDescription(itemDto.getDescription());
+                liveVoteItem.setCount(0L);
 
                 // DB에 저장
                 liveVoteItemRepository.save(liveVoteItem);
@@ -164,8 +165,14 @@ public class LiveService {
             return new ServiceResult<Void>().fail("Live방이 존재하지 않습니다.");
         }
 
-        // 라이브 방과 관련된 아이템들 삭제
+        // 라이브 방의 투표 참가자들 삭제 (LiveVoteParticipant)
+        liveVoteParticipantRepository.deleteByLiveVoteItemLiveId(liveId);
+
+        // 라이브 방과 관련된 아이템들 삭제 (LiveVoteItem)
         liveVoteItemRepository.deleteByLiveId(liveId);
+
+        // 라이브 방에 참여중인 참가자들 삭제 (LiveParticipant)
+        liveParticipantRepository.deleteByLiveId(liveId);
 
         // 라이브 방 삭제
         liveRepository.deleteById(liveId);

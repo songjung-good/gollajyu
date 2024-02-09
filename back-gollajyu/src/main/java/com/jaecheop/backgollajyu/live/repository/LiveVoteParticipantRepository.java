@@ -8,5 +8,8 @@ import java.util.Optional;
 
 public interface LiveVoteParticipantRepository extends JpaRepository<LiveVoteParticipant, Long> {
     Optional<LiveVoteParticipant> findByMemberIdAndLiveVoteItemId(Long memberId, Long liveVoteItemId);
+
+    void deleteByLiveVoteItemLiveId(Long liveId);
+
     List<LiveVoteParticipant> findByMemberId(Long memberId);
 }
