@@ -71,9 +71,15 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 className="w-3/5"
-                placeholder="텍스트를 추가해주세요"
+                placeholder="텍스트 추가해쥬(15자 이내)"
+                value={text}
                 onChange={(e) => {
-                  setText(e.target.value);
+                  if (e.target.value.length > 15) {
+                    window.alert("글자수가 15자를 넘었습니다");
+                    setText(e.target.value.slice(0, 15));
+                  } else {
+                    setText(e.target.value);
+                  }
                 }}
               />
             </>
