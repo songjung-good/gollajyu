@@ -44,12 +44,6 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
         redirectStrategy.sendRedirect(request, response, apiUrl);
 
-
-        // 만약 getmember에 추가 정보가 없다면, addinfo로, 아니라면 로그인된 메인으로!
-        Type type = principal.getMember().getType();
-
-            redirectStrategy.sendRedirect(request, response, apiUrl);
-
         super.onAuthenticationSuccess(request, response, authentication);
     }
 }
