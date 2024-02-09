@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import VotePageList from "../components/VotePage/VotePageList";
 import VotePageHeader from "../components/VotePage/VotePageHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import VoteSimple from "../components/VotePage/VoteSimple";
+import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
 import API_URL from "../stores/apiURL";
@@ -106,8 +108,8 @@ const fetchData = async (categoryId, keyword) => {
       }</div>
       {/* 정렬 상태를 props로 전달 */}
       {isVoteDetailModalOpened && <TmpModal></TmpModal>}
-      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
-      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
+      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </div>
   );
 };

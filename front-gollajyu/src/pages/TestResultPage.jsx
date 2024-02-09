@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import VoteButton from "../components/VoteButton";
 import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import VoteSimple from "../components/VotePage/VoteSimple";
+import VoteProduct from "../components/VotePage/VoteProduct";
 import sobiTIData from "../stores/testResultData.js";
 import useModalStore from "../stores/modalState";
 import useAuthStore from "../stores/userState";
@@ -169,8 +171,8 @@ const TestResultPage = () => {
           )}
         </div>
       </div>
-      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
-      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
+      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
   );
 };

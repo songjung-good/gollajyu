@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
 import useModalStore from "../../stores/modalState";
+import API_URL from "../../stores/apiURL";
+import axios from "axios";
+import useAuthStore from "../../stores/userState";
 
 const VoteProduct = () => {
+  // 제목 state
+  const [title, setTitle] = useState('');
+  // 카테고리 상태 변수 추가
+  const [category, setCategory] = useState('');
+  // 투표 항목 state
   const [items, setItems] = useState([{}, {}]);
-  const [category, setCategory] = useState('');  // 카테고리 상태 변수 추가
   // 모달창 닫기
   const setVoteProductCreateModalClose = useModalStore((state) => state.setVoteProductCreateModalClose);
+  // 사용자 ID를 저장할 state 변수 추가
+  const user = useAuthStore((state) => state.user);
+  // voteReqDto 객체를 컴포넌트 외부에 선언하고 초기화
+  const [voteReqDto, setVoteReqDto] = useState({
+    memberEmail: '',
+    title: '',
+    description: '',
+    categoryId: '',
+    voteItemList: [],
+  });
 
   const handleAddItem = () => {
     if (items.length < 4) {
@@ -15,6 +32,68 @@ const VoteProduct = () => {
     }
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // 이미지 갯수와 제목 확인
+    const imageCount = items.filter((item) => item.voteItemImg !== null && item.voteItemImg !== '').length;
+    // 조건에 안맞으면 알림창
+    if (title === '') {
+      alert('제목을 입력해주세요!');
+      return;
+    }
+    if (imageCount < 2) {
+      alert('최소 2개 이상의 사진을 첨부해주세요!');
+      return;
+    }
+
+    // 데이터 전송
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', 'none');
+    formData.append('categoryId', category);
+    formData.append('memberEmail', user.email);
+
+    const voteItemList = [];
+    items.forEach((item) => {
+      if (item.voteItemImg !== null) {
+        voteItemList.push({
+          voteItemImg: item.voteItemImg,
+          voteItemDesc: item.voteItemDesc,
+          price: item.price,
+        });
+      }
+    });
+    formData.append('voteItemList', JSON.stringify(voteItemList));
+
+    console.log("formData:", formData);
+    const formDataObject = Object.fromEntries(formData);
+    console.log("formDataObject:", formDataObject);
+
+    axios.post(`${API_URL}/votes`, {
+      data: formDataObject,
+    })
+    .then((response) => {
+      console.log(response)
+      // API 호출 성공
+      if (response.status === 200) {
+        // 투표 게시 성공
+        alert('투표 생성에 성공했쥬!');
+        setVoteProductCreateModalClose(true); // 모달창 닫기
+      } else {
+        // API 호출 실패
+        alert('투표 생성에 실패했습니다. 다시 시도해주세요.');
+        console.error(response.data);
+      }
+    })
+    .catch((error) => {
+      // 에러 발생
+      console.error(error);
+      alert('투표 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    });
+};
+
+
+          
   return (
     <div
       id="outer-layer"
@@ -25,7 +104,7 @@ const VoteProduct = () => {
         }
       }}
     >
-      <div className="mx-auto h-auto w-full max-w-[550px] bg-white">
+      <div className="mx-auto max-h-[700px] w-full max-w-[550px] bg-white overflow-y-auto">
         <form className="py-4 px-9">
           <div className="mb-5">
             <label htmlFor="title" className="mb-3 block text-base font-medium text-[#FF7F50]">
