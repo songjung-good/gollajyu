@@ -4,6 +4,8 @@ import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
 import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
 import categoryData from "/src/stores/categoryData";
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import VoteSimple from "../components/VotePage/VoteSimple";
+import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
 
@@ -22,14 +24,13 @@ const StatisticPage = () => {
     query: "(max-width:479.98px)",
   });
 
-
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(categoryData[0].id);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(1);
 
   // ----------- 카테고리가 변경될 때 호출되는 함수 -----------
   const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
+    setSelectedCategoryId(event.target.value);
     setIsOpen(false);
   };
 
@@ -337,22 +338,24 @@ const StatisticPage = () => {
                     style={dropdownButtonStyle}
                     className="fontsize-sm"
                   >
-                    {selectedCategory !== null
-                      ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
-                      : '카테고리 선택'}
+                    {selectedCategoryId !== null
+                      ? categoryData.find((c) => c.id === parseInt(selectedCategoryId))?.name
+                      : categoryData[1].name}
                   </div>
                   {isOpen && (
                     <div style={dropdownMenuStyle}>
                       {categoryData.map((category) => (
-                        <div
-                          key={category.id}
-                          onClick={() => handleCategoryChange({ target: { value: category.id } })}
-                          onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
-                          onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
-                          style={dropdownItemStyle}
-                        >
-                          {category.name}
-                        </div>
+                        category.id !== 0 && ( // 첫 번째 항목(전체)는 포함하지 않음
+                          <div
+                            key={category.id}
+                            onClick={() => handleCategoryChange({ target: { value: category.id } })}
+                            onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
+                            onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
+                            style={dropdownItemStyle}
+                          >
+                            {category.name}
+                          </div>
+                        )
                       ))}
                     </div>
                   )}
@@ -367,7 +370,7 @@ const StatisticPage = () => {
             {/* ------------- 차트 그래프 ------------- */}
             <div style={chartContainerStyle}>
               <StatisticPageChart
-                selectedCategory={selectedCategory}
+                selectedCategoryId={selectedCategoryId}
                 itemCount={itemCount}
                 selectedRadioValues={selectedRadioValues}
                 selectedDropdownValues={selectedDropdownValues}
@@ -413,8 +416,8 @@ const StatisticPage = () => {
           </div>
         </div>
       </div>
-      {isVoteSimpleCreateModalOpened && <TmpModal></TmpModal>}
-      {isVoteProductCreateModalOpened && <TmpModal></TmpModal>}
+      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
+      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
   );
 };

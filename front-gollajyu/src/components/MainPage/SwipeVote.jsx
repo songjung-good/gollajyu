@@ -82,7 +82,7 @@ export default function SwipeVote( props ) {
         centeredSlides={true}
         navigation={true} // 네비게이션(화살표 버튼)
         slidesPerView={'auto'}
-        loop={true}
+        loop={false}
         // breakpoints-480={spaceBetween=20}
         // breakpoints-640={spaceBetween=30}
         coverflowEffect={{
