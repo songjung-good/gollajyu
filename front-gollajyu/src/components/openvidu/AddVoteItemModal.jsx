@@ -4,16 +4,19 @@ const settingButton = "text-white font-bold py-2 px-4 rounded";
 
 const AddVoteItemModal = ({ isOpen, onClose }) => {
   const [imgFile, setImgFile] = useState("");
+  const [previewImgFile, setPreviewImgFile] = useState("");
   const [text, setText] = useState("");
   const imgRef = useRef();
 
   // 이미지 업로드 input의 onChange
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
+    // console.log(file);
+    setImgFile(file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setImgFile(reader.result);
+      setPreviewImgFile(reader.result);
     };
   };
 
@@ -27,9 +30,9 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = () => {
     if (imgFile) {
-      onClose(imgFile);
+      onClose("img", [imgFile, previewImgFile]);
     } else if (text) {
-      onClose(text);
+      onClose("text", [text]);
     }
     setImgFile("");
     setText("");
@@ -48,7 +51,7 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
         <div className="flex flex-col items-center space-y-3">
           {imgFile && (
             <img
-              src={imgFile}
+              src={previewImgFile}
               className="w-48 h-40 mx-auto"
               alt="이미지 미리보기"
             />
