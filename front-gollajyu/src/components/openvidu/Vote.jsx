@@ -91,7 +91,6 @@ const Vote = ({ liveId }) => {
       .catch((err) => {
         console.log("투표실패", err);
       });
-    // 방송 상세조회 GET 요청 보내서 바뀐 결과 받기
   };
 
   return (

@@ -170,7 +170,9 @@ export default function VideoComponent() {
 
     // Host이면 지금골라쥬 방 삭제 요청
     if (isHost) {
-      axios.delete(API_URL + `/lives/${liveId}`);
+      axios
+        .delete(API_URL + `/lives/${liveId}`)
+        .then(console.log("라이브 방송 삭제"));
     } else {
       // Host가 아니면 퇴장 요청
       // api/lives/{liveId}/exit/{memberId} 에 POST 요청을 보내면서 방에서 퇴장

@@ -17,10 +17,7 @@ const BroadcastItem = ({ index, item }) => {
       state: {
         isHost: false,
         sessionId: item.sessionId,
-        userNickName: localStorage.userNickName,
-        voteItem: item.voteItem,
-        title: item.title,
-        hostNickName: item.hostNickName,
+        liveId: item.id,
       },
     });
   };
@@ -51,7 +48,8 @@ const BroadcastItem = ({ index, item }) => {
         ) : null}
         <img
           className="rounded-3xl mb-2"
-          src={item.thumbnail}
+          style={{ width: "13rem", height: "13rem" }}
+          src={item.imgUrl}
           alt="지금골라쥬 썸네일"
         />
       </div>
@@ -63,9 +61,9 @@ const BroadcastItem = ({ index, item }) => {
             src={viewerIcon}
             alt=""
           />
-          <p>{item.viewerCnt}</p>
+          <p>{item.count}</p>
         </div>
-        <p className="font-bold">{item.hostNickName}</p>
+        <p className="font-bold">{item.nickName}</p>
       </div>
       <p className="mx-2">{item.title}</p>
     </div>
