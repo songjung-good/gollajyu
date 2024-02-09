@@ -58,7 +58,8 @@ public class VoteService {
 
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
-        System.out.println(optionalMember+"/sdfsdfasdfasdfasdfasdfasdf/"+voteReqDto.toString());
+        System.out.println(optionalMember);
+        System.out.println("/sdfsdfasdfasdfasdfasdfasdf/"+voteReqDto.toString());
 
         if (optionalMember.isEmpty()) {
             return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
