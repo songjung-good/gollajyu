@@ -21,111 +21,111 @@ const BroadcastPage = () => {
     (state) => state.isVoteProductCreateModalOpened
   );
 
-  const enterRoom = () => {
-    navigate("/EnterVideoRoom", {
-      state: {
-        isHost: false,
-        sessionId: "SessionABCDEFG",
-        userNickName: userNickName,
-      },
-    });
-  };
-  const createRoom = () => {
-    navigate("/EnterVideoRoom", {
-      state: {
-        isHost: true,
-        sessionId: "SessionABCDEFG",
-      },
-    });
-  };
-  const handleInput = (event) => {
-    setUserNickName(event.target.value);
-    console.log(userNickName);
-  };
+  // const enterRoom = () => {
+  //   navigate("/EnterVideoRoom", {
+  //     state: {
+  //       isHost: false,
+  //       sessionId: "SessionABCDEFG",
+  //       userNickName: userNickName,
+  //     },
+  //   });
+  // };
+  // const createRoom = () => {
+  //   navigate("/EnterVideoRoom", {
+  //     state: {
+  //       isHost: true,
+  //       sessionId: "SessionABCDEFG",
+  //     },
+  //   });
+  // };
+  // const handleInput = (event) => {
+  //   setUserNickName(event.target.value);
+  //   console.log(userNickName);
+  // };
 
-  const dummyData = [
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 1000,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 14:11"),
-      voteItem: ["고양이", "강아지", "햄스터", "도마뱀"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 2,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 15:11"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 123,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 16:11"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 78,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 14:10"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 44,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 14:04"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 678,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 10:11"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 707,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 12:11"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 500,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 14:30"),
-      voteItem: ["고양이", "강아지"],
-    },
-    {
-      thumbnail: tmpThumbnailImg,
-      title: "최고의 반려동물은? 고양이 vs 강아지",
-      viewerCnt: 10,
-      sessionId: "sessionABCD",
-      hostNickName: "고라파덕",
-      createdDate: new Date("2024-01-24 14:50"),
-      voteItem: ["고양이", "강아지"],
-    },
-  ];
+  // const dummyData = [
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 1000,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 14:11"),
+  //     voteItem: ["고양이", "강아지", "햄스터", "도마뱀"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 2,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 15:11"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 123,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 16:11"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 78,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 14:10"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 44,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 14:04"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 678,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 10:11"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 707,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 12:11"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 500,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 14:30"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  //   {
+  //     thumbnail: tmpThumbnailImg,
+  //     title: "최고의 반려동물은? 고양이 vs 강아지",
+  //     viewerCnt: 10,
+  //     sessionId: "sessionABCD",
+  //     hostNickName: "고라파덕",
+  //     createdDate: new Date("2024-01-24 14:50"),
+  //     voteItem: ["고양이", "강아지"],
+  //   },
+  // ];
 
   useEffect(() => {
     axios
