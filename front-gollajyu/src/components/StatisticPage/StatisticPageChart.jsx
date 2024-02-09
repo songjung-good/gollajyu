@@ -26,7 +26,7 @@ const StatisticPageChart = ({ selectedCategoryId, itemCount, selectedRadioValues
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
 
   // ----------- 최대값 초기화 -----------
-  const [maxTagCount, setMaxTagCount] = useState(0)
+  const [maxTagRatio, setMaxTagRatio] = useState(0)
 
   // ----------- 선택한 카테고리에 대한 태그 통계 배열 초기화 -----------
   const [selectedTagDataArray, setSelectedTagDataArray
@@ -71,7 +71,8 @@ const StatisticPageChart = ({ selectedCategoryId, itemCount, selectedRadioValues
     const updatedDataArray = [...selectedTagDataArray]
     responseDataArray.forEach((responseData, userType) => {
       responseData.slice(1, 6).forEach((tagData, tagIndex) => {
-        updatedDataArray[tagIndex][`userType${userType + 1}`] = tagData.count;
+        const tagRatio = tagData.count / responseData[0].count * 100
+        updatedDataArray[tagIndex][`userType${userType + 1}`] = tagRatio;
       });
     });
 
@@ -82,13 +83,13 @@ const StatisticPageChart = ({ selectedCategoryId, itemCount, selectedRadioValues
     setSelectedTagDataArray([...updatedDataArray]);
 
     // ----------- tag 최대 값 업데이트 -----------
-    let tagCount = 0
+    let tagRatio = 0
     selectedTagDataArray.forEach(tagData => {
       for (let i = 1; i <= 5; i++) {
-        tagCount = Math.max(tagCount, tagData[i]);
+        tagRatio = Math.max(tagRatio, tagData[i]);
       }
     });
-    setMaxTagCount(tagCount)
+    setMaxTagRatio(tagRatio)
   };
   
   // ----------- 값이 변경될 때 fetchData 함수 호출 -----------
@@ -212,7 +213,7 @@ const StatisticPageChart = ({ selectedCategoryId, itemCount, selectedRadioValues
           >
             <PolarGrid />
             <PolarAngleAxis dataKey="tag" />
-            <PolarRadiusAxis angle={54} domain={[0, maxTagCount]} />
+            <PolarRadiusAxis angle={54} domain={[0, maxTagRatio]} tickFormatter={(value) => `${value.toFixed(1)}%`} />
             {radars}
             <Legend content={<CustomLegend />} />
           </RadarChart>
