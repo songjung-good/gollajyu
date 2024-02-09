@@ -152,6 +152,7 @@ public class LiveService {
         return LiveListDto.builder()
                 .id(live.getId())
                 .title(live.getTitle())
+                .nickName(live.getMember().getNickname())
                 .count(live.getCount()) // 시청자 수
                 .imgUrl(live.getImgUrl()) // 라이브 방송 이미지 URL
                 .sessionId(live.getSessionId())
