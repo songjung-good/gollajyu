@@ -55,7 +55,7 @@ export default function VideoComponent() {
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   const OV = useRef(new OpenVidu());
 
