@@ -59,7 +59,7 @@ const MyActivities = () => {
     ParticipatedPageMouseLeave,
   ] = useHoverState();
 
-  const [LikdedPageHovered, LikdedPageMouseEnter, LikdedPageMouseLeave] =
+  const [LikedPageHovered, LikedPageMouseEnter, LikedPageMouseLeave] =
     useHoverState();
 
   const [
@@ -150,9 +150,9 @@ const MyActivities = () => {
       to: "/Mypage/MyActivities/1",
       label: "좋아요 한 투표",
       smallLabel: "좋아요",
-      hovered: LikdedPageHovered,
-      mouseEnter: LikdedPageMouseEnter,
-      mouseLeave: LikdedPageMouseLeave,
+      hovered: LikedPageHovered,
+      mouseEnter: LikedPageMouseEnter,
+      mouseLeave: LikedPageMouseLeave,
     },
     {
       to: "/Mypage/MyActivities/2",

@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import categoryData from "/src/stores/categoryData";
+import sobiTIData from "../../stores/testResultData";
+import API_URL from "../../stores/apiURL";
+import axios from "axios";
 
-const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, selectedDropdownValues }) => {
+const StatisticPageChart = ({ selectedCategoryId, itemCount, selectedRadioValues, selectedDropdownValues }) => {
 
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
@@ -19,53 +22,79 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
     query : "(max-width:479.98px)"
   });
 
-  // ----------- 드롭다운으로 선택한 카테고리 -----------
-  const selectedCategoryData = categoryData[selectedCategory - 1];
-  const selectedTagData = [
-    {
-      subject: selectedCategoryData.tags[0],
-      A: 120,
-      B: 110,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[1],
-      A: 98,
-      B: 130,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[2],
-      A: 86,
-      B: 130,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[3],
-      A: 99,
-      B: 100,
-      C: 50,
-      D: 30,
-      fullMark: 150,
-    },
-    {
-      subject: selectedCategoryData.tags[4],
-      A: 85,
-      B: 90,
-      C: 50,
-      D: 70,
-      fullMark: 150,
-    },
-  ];
-
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A",]
+
+  // ----------- 최대값 초기화 -----------
+  const [maxTagCount, setMaxTagCount] = useState(0)
+
+  // ----------- 선택한 카테고리에 대한 태그 통계 배열 초기화 -----------
+  const [selectedTagDataArray, setSelectedTagDataArray
+    ] = useState(categoryData[selectedCategoryId].tags.map(tag => ({
+      tag,
+      userType1: 0,
+      userType2: 0,
+      userType3: 0,
+      userType4: 0,
+    })));
+
+  // ----------- 데이터를 서버에서 가져오는 함수 -----------
+  const fetchData = async () => {
+
+    // ----------- 응답 데이터를 담을 배열 -----------
+    const responseDataArray = [];
+  
+    // ----------- itemCount 수 만큼 반복 -----------
+    for (let i = 1; i <= itemCount; i++) {
+      const requestData = {
+        memberId: 0,
+        typeId: selectedDropdownValues[`소비성향-${i}`],
+        age: selectedRadioValues[`나이-${i}`],
+        gender: selectedRadioValues[`성별-${i}`],
+        categoryId: selectedCategoryId
+      };
+  
+      try {
+        // axios.post를 사용하여 서버에 비동기 요청을 보내고 응답을 기다림
+        const responseData = await axios.post(`${API_URL}/statistics`, requestData);
+        
+        // responseDataArray에 서버 응답 데이터 추가
+        responseDataArray.push(responseData.data);
+        // console.log('요청', requestData);
+        // console.log('응답', responseData.data);
+      } catch (error) {
+        console.error("axios 에러", error);
+      }
+    }
+
+    // ----------- 업데이트 할 배열 선언 및 데이터 채우기 -----------
+    const updatedDataArray = [...selectedTagDataArray]
+    responseDataArray.forEach((responseData, userType) => {
+      responseData.slice(1, 6).forEach((tagData, tagIndex) => {
+        updatedDataArray[tagIndex][`userType${userType + 1}`] = tagData.count;
+      });
+    });
+
+    // console.log('응답 데이터 배열', responseDataArray)
+    // console.log("태그 통계", updatedDataArray)
+
+    // ----------- 배열 업데이트 -----------
+    setSelectedTagDataArray([...updatedDataArray]);
+
+    // ----------- tag 최대 값 업데이트 -----------
+    let tagCount = 0
+    selectedTagDataArray.forEach(tagData => {
+      for (let i = 1; i <= 5; i++) {
+        tagCount = Math.max(tagCount, tagData[i]);
+      }
+    });
+    setMaxTagCount(tagCount)
+  };
+  
+  // ----------- 값이 변경될 때 fetchData 함수 호출 -----------
+  useEffect(() => {
+    fetchData();
+  }, [selectedCategoryId, itemCount, selectedRadioValues, selectedDropdownValues]);
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -129,15 +158,19 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
   // ----------- itemCount 수 만큼 Radar를 생성 -----------
   const radars = [];
   for (let i = 1; i <= itemCount; i++) {
-    const ageValue = selectedRadioValues[`나이-${i}`] || ' - ';
-    const genderValue = selectedRadioValues[`성별-${i}`] || ' - ';
-    const tasteValue = selectedDropdownValues[`소비성향-${i}`] || ' - ';
+    const ageId = selectedRadioValues[`나이-${i}`] ?? 0;
+    const genderId = selectedRadioValues[`성별-${i}`] ?? 0;
+    const testId = selectedDropdownValues[`소비성향-${i}`] ?? 0;
+
+    const ageValue = ageId == 0 ? '전체' : ageId == 5 ? '50대 이상' : `${ageId}0대`
+    const genderValue = genderId == 0 ? '전체' : genderId == 1 ? '남자' : '여자'
+    const testValue = testId == 0 ? '전체' : sobiTIData[testId-1].title
 
     radars.push(
       <Radar
         key={`유형 ${i}`}
-        name={`유형 ${i} : ${ageValue}/${genderValue}/${tasteValue}`}
-        dataKey={String.fromCharCode(64 + i)}  // A, B, C, D
+        name={`유형 ${i} : ${ageValue}/${genderValue}/${testValue}`}
+        dataKey={`userType${i}`}
         stroke={colorList[i-1]}
         fill={colorList[i-1]}
         fillOpacity={0.3}
@@ -175,11 +208,11 @@ const StatisticPageChart = ({ selectedCategory, itemCount, selectedRadioValues, 
               isLarge ? 250 :
               isMedium ? 190 : 130
             }
-            data={selectedTagData}
+            data={selectedTagDataArray}
           >
             <PolarGrid />
-            <PolarAngleAxis dataKey="subject" />
-            <PolarRadiusAxis angle={54} domain={[0, 150]} />
+            <PolarAngleAxis dataKey="tag" />
+            <PolarRadiusAxis angle={54} domain={[0, maxTagCount]} />
             {radars}
             <Legend content={<CustomLegend />} />
           </RadarChart>

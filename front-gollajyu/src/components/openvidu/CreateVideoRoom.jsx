@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import tmpProfileImg from "/assets/images/tmp_profile.png";
+// import tmpProfileImg from "/assets/images/tmp_profile.png";
 import AddVoteItemModal from "./AddVoteItemModal";
+import useAuthStore from "../../stores/userState";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import API_URL from "../../stores/apiURL";
 
 /*
 <uuid란?>
@@ -24,30 +26,84 @@ const CreateVideoRoom = () => {
   // 화면 구성 => VideoRoomComponent와 유사하게, 채팅창 부분은 빈 상태로
   // 방송 시작하기 버튼 => 제목, 투표항목, 호스트 닉네임, 세션 아이디 넘겨주기(VideoComponent와 서버에) => VideoComponent에서 isHost=true이면 enterRoom 건너뛰게..?
   const settingButton = "text-white py-2 px-4 rounded-xl";
+  const user = useAuthStore((state) => state.user);
 
   const navigate = useNavigate();
   const videoRef = useRef(null);
-  const [profileImg, setProfileImg] = useState(tmpProfileImg);
-  const [nickName, setNickName] = useState(
-    localStorage.userNickName ? localStorage.userNickName : "고라파덕"
-  );
+  const memberId = user.memberId;
+  const nickName = user.nickname;
   const [title, setTitle] = useState("");
   const [voteItem, setVoteItem] = useState([]);
+  const [previewVoteItem, setPreviewVoteItem] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [thumbnail, setThumbnail] = useState("");
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
   const thumbnailRef = useRef();
 
   // 서버로 지금골라쥬 방의 정보를 보내는 함수
   const sendRoomInfo = async (
     sessionId,
+    memberId,
     title,
     nickName,
     voteItem,
     thumbnail
   ) => {
-    // await axios();
-    console.log({ sessionId, title, nickName, voteItem, thumbnail });
-    return true;
+    // FormData 형식으로 변환
+    const formData = new FormData();
+    formData.append("sessionId", sessionId);
+    formData.append("memberId", memberId);
+    formData.append("liveTitle", title);
+    formData.append("liveImgUrl", thumbnail);
+
+    const voteItemForAxios = [];
+    voteItem.forEach((item) => {
+      if (item instanceof File) {
+        voteItemForAxios.push({ imgUrl: item, description: null, count: 0 });
+      } else if (typeof item === "string") {
+        voteItemForAxios.push({ imgUrl: null, description: item, count: 0 });
+      }
+    });
+
+    voteItemForAxios.forEach((item, index) => {
+      formData.append(`liveVoteItemDtoResList[${index}][imgUrl]`, item.imgUrl);
+      formData.append(
+        `liveVoteItemDtoResList[${index}][description]`,
+        item.description
+      );
+      formData.append(`liveVoteItemDtoResList[${index}][count]`, item.count);
+    });
+
+    // for (let key of formData.keys()) {
+    //   console.log(key);
+    // }
+    // for (let value of formData.values()) {
+    //   console.log(value);
+    // }
+
+    // [File, text, ... ] 형태의 voteItem 배열을
+    //[{imgUrl: , description: , count: }, ... ] 배열로 바꾸고 formdata의
+    // "liveVoteItemDtoList": [
+    // {
+    //   "imgUrl": "string",
+    //   "description": "string",
+    //   "count": 0
+    // }, ... ] 부분으로 집어넣기
+
+    await axios
+      .post(API_URL + "/lives", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return false;
   };
 
   const startBroadcast = async () => {
@@ -61,6 +117,7 @@ const CreateVideoRoom = () => {
       console.log("sessionId :", sessionId);
       const roomIs = await sendRoomInfo(
         sessionId,
+        memberId,
         title,
         nickName,
         voteItem,
@@ -121,6 +178,15 @@ const CreateVideoRoom = () => {
     });
   };
 
+  // 미리보기용 voteItem 배열 -> 서버 전송용은 미리보기 이미지를 보내면 안되기 때문에 분리함
+  const addPreviewVoteItem = (item) => {
+    setPreviewVoteItem((prevVoteItem) => {
+      const newVoteItem = [...prevVoteItem, item];
+      // console.log(newVoteItem);
+      return newVoteItem;
+    });
+  };
+
   const addVoteItemTag = () => {
     const newArr = [];
     for (let i = 0; i < 4 - voteItem.length; i++) {
@@ -140,10 +206,12 @@ const CreateVideoRoom = () => {
   // 이미지 업로드 input의 onChange
   const saveImgFile = () => {
     const file = thumbnailRef.current.files[0];
+    // console.log(file);
+    setThumbnail(file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setThumbnail(reader.result);
+      setPreviewThumbnail(reader.result);
     };
   };
 
@@ -153,11 +221,15 @@ const CreateVideoRoom = () => {
   };
 
   // 모달을 닫는데, item이 담겨서 닫히면 => voteItem 배열에 추가, item이 안 담겨서 닫히면 그냥 모달만 닫음
-  const closeModal = (item) => {
+  const closeModal = (type, item) => {
     setModalOpen(false);
-    if (item) {
+    if (type == "img") {
       // console.log(item);
-      addVoteItem(item);
+      addVoteItem(item[0]);
+      addPreviewVoteItem(item[1]);
+    } else if (type == "text") {
+      addVoteItem(item[0]);
+      addPreviewVoteItem(item[0]);
     }
   };
 
@@ -212,7 +284,12 @@ const CreateVideoRoom = () => {
               >
                 <img
                   className="w-8 h-8 rounded-full border border-black"
-                  src={tmpProfileImg}
+                  src={
+                    // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
+                    !isNaN(user.profileImgUrl)
+                      ? `/assets/images/sobiTest/${user.profileImgUrl}.png`
+                      : user.profileImgUrl
+                  }
                   alt=""
                 />
                 <p className="fontsize-sm">{nickName}</p>
@@ -242,8 +319,8 @@ const CreateVideoRoom = () => {
               className="mb-3 basis-1/3 bg-white border-2 rounded-md"
             >
               <div className="w-full h-full justify-center items-center inline-flex flex-wrap">
-                {voteItem &&
-                  voteItem.map((item, index) => {
+                {previewVoteItem &&
+                  previewVoteItem.map((item, index) => {
                     if (item.slice(0, 10) === "data:image") {
                       return (
                         <div
@@ -277,9 +354,9 @@ const CreateVideoRoom = () => {
               className="basis-2/3 rounded-md text-center flex flex-col justify-around items-center p-10 bg-gray-100"
             >
               <p className="fontsize-sm font-bold">방송 썸네일 추가</p>
-              {thumbnail && (
+              {previewThumbnail && (
                 <img
-                  src={thumbnail}
+                  src={previewThumbnail}
                   className="w-48 h-40 mx-auto"
                   alt="이미지 미리보기"
                 />

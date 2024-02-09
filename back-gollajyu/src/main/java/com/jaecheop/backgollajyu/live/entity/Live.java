@@ -1,31 +1,35 @@
-package com.jaecheop.backgollajyu.live.entity;
+    package com.jaecheop.backgollajyu.live.entity;
 
-import com.jaecheop.backgollajyu.member.entity.Member;
-import jakarta.persistence.*;
-import lombok.*;
+    import com.jaecheop.backgollajyu.member.entity.Member;
+    import jakarta.persistence.*;
+    import lombok.*;
 
-@Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@ToString
-public class Live {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "live_id")
-    private Long id;
+    @Entity
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @ToString
+    public class Live {
+        @Id
+        @Column(name = "live_id")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @JoinColumn(name = "member_id")
-    @ManyToOne
-    private Member member;
+        @Column(name = "session_id")
+        private String sessionId;
 
-    @Column(name = "live_title")
-    private String title;
+        @JoinColumn(name = "member_id")
+        @ManyToOne
+        private Member member;
 
-    @Column(name = "live_count")
-    private Long count;
+        @Column(name = "live_title")
+        private String title;
 
-    @Column(name = "live_img_url")
-    private String imgUrl;
-}
+        @Column(name = "live_count")
+        private Long count;
+
+        @Column(name = "live_img_url")
+        private String imgUrl;
+    }

@@ -39,6 +39,7 @@ const LoginModal = () => {
       console.log(response);
       setLoggedIn(response.data.body);
       setLoginModalClose();
+      window.location.reload(); // 로그인 후, 메인페이지 새로고침
     }
     reset();
   };
@@ -170,7 +171,7 @@ const LoginModal = () => {
               />
             </div>
             <Link
-              to="http://localhost:8080/oauth2/authorization/google"
+              to={`${API_URL.slice(0, -3)}oauth2/authorization/google`}
               onClick={handleGoogleLogin}
             >
               <div id="google" onClick={handleGoogleLogin}>
