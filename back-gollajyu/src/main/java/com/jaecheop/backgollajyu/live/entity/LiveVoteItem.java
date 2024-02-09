@@ -27,6 +27,6 @@ public class LiveVoteItem {
     private Long count;
 
     @ManyToOne
-    @JoinColumn(name = "session_id")
+    @JoinColumn(name = "live_id")
     private Live live;
 }
