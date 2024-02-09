@@ -93,6 +93,7 @@ public class LiveService {
 
                 // description 설정
                 liveVoteItem.setDescription(itemDto.getDescription());
+                liveVoteItem.setCount(0L);
 
                 // DB에 저장
                 liveVoteItemRepository.save(liveVoteItem);
@@ -151,6 +152,7 @@ public class LiveService {
         return LiveListDto.builder()
                 .id(live.getId())
                 .title(live.getTitle())
+                .nickName(live.getMember().getNickname())
                 .count(live.getCount()) // 시청자 수
                 .imgUrl(live.getImgUrl()) // 라이브 방송 이미지 URL
                 .sessionId(live.getSessionId())
@@ -164,8 +166,14 @@ public class LiveService {
             return new ServiceResult<Void>().fail("Live방이 존재하지 않습니다.");
         }
 
-        // 라이브 방과 관련된 아이템들 삭제
+        // 라이브 방의 투표 참가자들 삭제 (LiveVoteParticipant)
+        liveVoteParticipantRepository.deleteByLiveVoteItemLiveId(liveId);
+
+        // 라이브 방과 관련된 아이템들 삭제 (LiveVoteItem)
         liveVoteItemRepository.deleteByLiveId(liveId);
+
+        // 라이브 방에 참여중인 참가자들 삭제 (LiveParticipant)
+        liveParticipantRepository.deleteByLiveId(liveId);
 
         // 라이브 방 삭제
         liveRepository.deleteById(liveId);
@@ -179,6 +187,7 @@ public class LiveService {
                     List<LiveVoteItemResDto> voteItems = liveVoteItemRepository.findByLiveId(liveId)
                             .stream()
                             .map(item -> LiveVoteItemResDto.builder()
+                                    .id(item.getId())
                                     .imgUrl(item.getImgUrl())
                                     .description(item.getDescription())
                                     .count(item.getCount())
