@@ -91,7 +91,7 @@ function VoteCardItem(props) {
       </Container>
       {/* 버튼을 누르면 생기는 상세페이지 */}
       <div className='h-1/3 w-full flex flex-col justify-center items-center'>
-        <h2 className='text-lg font-bold mb-2'>{item.price}원</h2>
+        <h2 className='text-lg font-bold mb-2'>{(item.price) ? `${item.price.toLocaleString()}원` : ''}</h2>
         <p>{item.voteItemDesc}</p>
       </div>
     </div>

@@ -5,128 +5,74 @@ import useAuthStore from "../../stores/userState";
 import useModalStore from "../../stores/modalState";
 
 const VoteSimple = () => {
+  const [voteItems, setVoteItems] = useState([{ voteItemImg: null, voteItemDesc: '', price: '' }, { voteItemImg: null, voteItemDesc: '', price: '' }]);
+  const [previewImages, setPreviewImages] = useState([]);
+
   const [title, setTitle] = useState('');
-  // 이미지의 기본 값
-  const [images, setImages] = useState([null, null, null, null]);
-  // 로딩기능
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  // 사용자 Email를 저장할 state 변수 추가
+  // 사용자 ID를 저장할 state 변수 추가
   const user = useAuthStore((state) => state.user);
-  // 이미지 미리보기
-  const [previewImages, setPreviewImages] = useState([null, null, null, null]);
   // 모달창 닫는 로직
   const setVoteSimpleModalClose = useModalStore((state) => state.setVoteSimpleCreateModalClose);
 
-  // voteReqDto 객체를 컴포넌트 외부에 선언하고 초기화
-  const [voteReqDto, setVoteReqDto] = useState({
-    memberEmail: '',
-    title: '',
-    description: 'none',
-    categoryId: '',
-    voteItemList: [],
-  });
-
-  // 이미지 업로드 기능
-  const handleImageUpload = (event, index) => {
-    const newImages = images.slice();
-    newImages[index] = event.target.files[0];
-    setImages(newImages);
-
-    // 이미지 URL
-    const newPreviewImages = previewImages.slice();
-    if (event.target.files.length > 0) {
-      newPreviewImages[index] = URL.createObjectURL(event.target.files[0]);
-    } else {
-      newPreviewImages[index] = null;
+  const addVoteItem = () => {
+    if (voteItems.length > 3) {
+      alert('최대 개수를 초과하였습니다.');
+      return
     }
-    setPreviewImages(newPreviewImages);
+    setVoteItems(prevState => [...prevState, { voteItemImg: null, voteItemDesc: '', price: '' }]);
+    setPreviewImages(prevState => [...prevState, null]);
 
-    // 업로드된 이미지 정보를 voteReqDto에 추가
-    const newVoteItemList = voteReqDto.voteItemList.slice();
-    newVoteItemList[index] = {
-      voteItemImg: event.target.files[0],
-      voteItemDesc: '',
-      price: 0,
-    };
-    setVoteReqDto({
-      ...voteReqDto,
-      voteItemList: newVoteItemList,
-    });
   };
+  // Function to handle changing voting item image
+  const handleVoteItemImageChange = (index, event) => {
+    const newVoteItems = [...voteItems];
+    // 여기서 취소를 눌러도 유지되게끔 바꿀 수도 있음.
+    newVoteItems[index].voteItemImg = event.target.files[0];
+    setVoteItems(newVoteItems)
 
-  const handleSubmit = (event) => {
+    const newPreviewImages = [...previewImages];
+    // 그림을 넣으려다 취소를 눌렀을 때 제거되기 때문에 보관하던 이미지도 제거했다.
+    (event.target.files[0]) ? newPreviewImages[index] = URL.createObjectURL(event.target.files[0])
+    : newPreviewImages[index] = null;
+    setPreviewImages(newPreviewImages);
+  };
+  // Function to handle form submission
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // 이미지 갯수와 제목 확인
-    const imageCount = images.filter((img) => img !== null && img !== '').length;
-    // 조건에 안맞으면 알림창
+
     if (title === '') {
       alert('제목을 입력해쥬!');
       return;
     }
-    if (imageCount < 2) {
+
+    if (voteItems && voteItems.length<2) {
       alert('최소 2개 이상의 사진을 첨부해쥬!');
       return;
     }
-    // 업로드 시 로딩
-    setIsSubmitting(true);
 
-    // 데이터 전송
     const formData = new FormData();
-      formData.append('title', title);
-      // description 값을 'none'으로 설정
-      formData.append('description', 'null');
-      // categoryId 값을 '0'으로 설정
-      formData.append('categoryId', '5');
-      // 사용자 Email값 추가
-      formData.append('memberEmail', user.email);
-      // voteItemList 값 추가
-      formData.append('voteItemList', {})
-
-      // voteItemList 객체 생성
-      const voteItemList = [];
-
-      // 이미지 파일 및 기본값 설정
-      images.forEach((image, index) => {
-        if (image !== null) {
-          voteItemList.push({
-            voteItemImg: image,
-            voteItemDesc: null, // 기본값
-            price: 0, // 기본값
-          });
-        }
-      });
-
-      // formData에 voteItemList 추가
-      formData.append('voteItemList', JSON.stringify(voteItemList));
-
-    console.log("formData:", formData);
-    const formDataObject = Object.fromEntries(formData);
-    console.log("formDataObject:", formDataObject);
-
-
-    axios.post(`${API_URL}/votes`, {
-      data: formDataObject,
-    })
-    .then((response) => {
-      console.log(response)
-      // API 호출 성공
-      if (response.status === 200) {
-        // 투표 게시 성공
-        alert('투표 생성에 성공했쥬!');
-        setVoteSimpleModalClose();
-      } else {
-        // API 호출 실패
-        // 에러 메시지 출력
-        alert(response.data.message);
-        setIsSubmitting(false);
-      }
-    })
-    .catch((error) => {
-      // 네트워크 오류 등 예외 처리
-      console.log(error);
-      alert('네트워크 오류가 발생했쥬.. 다시 시도해쥬..');
-      setIsSubmitting(false);
+    formData.append('memberEmail', user.email);
+    formData.append('title', event.target.title.value);
+    formData.append('description', 'simple');
+    formData.append('categoryId', 5);
+    voteItems.forEach((item, index) => {
+      formData.append(`voteItemList[${index}].voteItemImg`, item.voteItemImg);
+      formData.append(`voteItemList[${index}].voteItemDesc`, '');
+      formData.append(`voteItemList[${index}].price`, '');
     });
+    
+    try {
+      const response = await axios.post(API_URL+'/votes', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
+      setVoteSimpleModalClose();
+    } catch (error) {
+      console.error(error);
+      alert('Failed to create poll.');
+    }
   };
 
   return (
@@ -160,25 +106,26 @@ const VoteSimple = () => {
             />
           </div>
           <div className="flex flex-wrap justify-center mt-10">
-          {Array(4).fill(null).map((_, index) => (
+          {voteItems.map((voteItem, index) => (
             <div key={index} className="p-4 max-w-sm flex-grow">
               <div className="flex rounded-lg h-full bg-[#8DB600] p-8 flex-col">
-                {previewImages[index] && (
-                  <img src={previewImages[index]} 
-                    alt="" 
-                    className="object-cover h-full w-full rounded-lg"
-                  />
-                )}
-                {!previewImages[index] && (
                   <div className="mb-8">
+                    <label htmlFor={`voteItem${index + 1}`} className="relative">
                     <input
                       type="file"
-                      name={`file${index}`}
-                      id={`file${index}`}
-                      className="sr-only"
-                      onChange={(event) => handleImageUpload(event, index)}
-                    />
-                    <label htmlFor={`file${index}`}
+                      name={`voteItemImgs`}
+                      id={`voteItem${index + 1}`}
+                      onChange={(e) => handleVoteItemImageChange(index, e)} multiple />
+                    {previewImages[index] && (
+                        <img src={previewImages[index]} 
+                          alt="" 
+                          className="object-cover h-full w-full rounded-lg"
+                        />
+                    )}
+                    </label>
+
+                    {!previewImages[index] && (
+                    <label htmlFor={`voteItem${index + 1}`}
                       className="relative flex items-center justify-center 
                       rounded-md border border-dashed border-[#e0e0e0] p-6 text-center">
                       <div className="max-w-[200px] h-[200px]">
@@ -187,15 +134,21 @@ const VoteSimple = () => {
                         </span>
                       </div>
                     </label>
+                    )}
                   </div>
-                )}
+                
                 </div>
               </div>
             ))}
+            
+          </div>
+          <div>
+          <button type="button" onClick={addVoteItem}>Add Vote Item</button><br /><br />
           </div>
           {/* 투표 올리기, 취소하기 버튼 */}
           <div className="flex justify-between">
             <button
+              type="submit"
               className="hover:shadow-form w-full rounded-md 
               bg-[#8DB600] py-3 px-8 
               text-center text-base font-semibold text-white 
@@ -204,6 +157,7 @@ const VoteSimple = () => {
               투표 올리기
             </button>
             <button
+              onClick={setVoteSimpleModalClose}
               className="
               hover:shadow-form w-full rounded-md 
               bg-[#8DB600] py-3 px-8 
