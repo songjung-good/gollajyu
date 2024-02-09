@@ -179,6 +179,7 @@ public class LiveService {
                     List<LiveVoteItemResDto> voteItems = liveVoteItemRepository.findByLiveId(liveId)
                             .stream()
                             .map(item -> LiveVoteItemResDto.builder()
+                                    .id(item.getId())
                                     .imgUrl(item.getImgUrl())
                                     .description(item.getDescription())
                                     .count(item.getCount())
