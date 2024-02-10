@@ -797,7 +797,7 @@ public class VoteService {
             listVoteItemDtoList.add(
                     ListVoteItemDto.builder()
                             .voteItemId(voteItem.getId())
-                            .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                            .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                             .voteItemDesc(voteItem.getVoteItemDesc())
                             .price(voteItem.getPrice())
                             .count((long)voteItem.getVoteResultList().size())
