@@ -17,6 +17,7 @@ import com.jaecheop.backgollajyu.vote.model.VoteItemReqDto;
 import com.jaecheop.backgollajyu.vote.model.VoteReqDto;
 import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.*;
@@ -33,6 +35,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class VoteService {
+
+    @Value("${img.url}")
+    private String imgUrl;
+
     private final VoteResultRepository voteResultRepository;
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
@@ -190,7 +196,7 @@ public class VoteService {
     public VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
         return VoteItemResDto.builder()
                 .voteItemId(voteItem.getId())
-                .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                 .voteItemDesc(voteItem.getVoteItemDesc())
                 .price(voteItem.getPrice())
                 .resultSize((long) voteResultRepository.findByVoteItem(voteItem).size()) //
@@ -560,7 +566,7 @@ public class VoteService {
             VoteItemInfoDto voteItemInfoDto = VoteItemInfoDto.builder()
                     .voteItemId(voteItem.getId())
                     .voteItemDesc(voteItem.getVoteItemDesc())
-                    .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                    .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                     .price(voteItem.getPrice())
                     .choiceCnt(choiceCnt) // 해당 아이템 선택 개수
                     .tagCountList(tagCountList) // 해당 아이템 내 각 태그 별 선택 개수
@@ -1066,5 +1072,16 @@ public class VoteService {
         }
 
         return new ServiceResult<SearchResDto>().success(searchResDto);
+    }
+
+    // 파일 경로를 웹 URL로 변환
+    private String convertFilePathToUrl(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return null; // 또는 기본 이미지 URL
+        }
+        // 이미지 파일명만 추출합니다.
+        String fileName = Paths.get(filePath).getFileName().toString();
+        // 웹 접근 가능한 URL로 변환합니다.
+        return String.format("%s/resources/%s", imgUrl, fileName);
     }
 }
