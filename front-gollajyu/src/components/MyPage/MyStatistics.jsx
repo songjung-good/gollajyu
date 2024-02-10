@@ -1,31 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 import MyStatisticsChart from "./MyStatisticsChart";
-import categoryData from '/src/stores/categoryData';
-import tagColorData from '/src/stores/tagColorData';
+import categoryData from "/src/stores/categoryData";
+import tagColorData from "/src/stores/tagColorData";
+import axios from "axios";
+import API_URL from "../../stores/apiURL";
+import useAuthStore from "../../stores/userState";
+
+const filteredCategoryData = categoryData.filter((category) => {
+  return category.name !== "전체" && category.name !== "간단";
+});
 
 const MyStatistics = () => {
-
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query : "(min-width:1024px)",
+    query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023.98px)"
+    query: "(min-width:768px) and (max-width:1023.98px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767.98px)"
+    query: "(min-width:480px) and (max-width:767.98px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479.98px)"
+    query: "(max-width:479.98px)",
   });
 
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
-  const [
-    selectedCategory, 
-    setSelectedCategory
-  ] = useState(categoryData[0].id);
+  const [selectedCategory, setSelectedCategory] = useState(categoryData[1].id);
 
   // ----------- 카테고리가 변경될 때 호출되는 함수 -----------
   const handleCategoryChange = (event) => {
@@ -38,10 +41,134 @@ const MyStatistics = () => {
     setIsOpen(!isOpen);
   };
 
+  // ----------- 서버에서 내가 참여한 투표를 받아오고 객체로 정리하는 작업 ------
+  const user = useAuthStore((state) => state.user);
+  const [categoryRatio, setCategoryRatio] = useState({});
+  const [tagRatio, setTagRatio] = useState({});
+  const [topCategory, setTopCategory] = useState("");
+  const [othersTopTag, setOthersTopTag] = useState("");
+
+  // 나이대 구하기
+  const currentYear = new Date().getFullYear();
+  // 0~9세: 0, 10~19세: 1, 20~29세: 2, ...
+  const ageId = Math.floor((currentYear - user.birthday.year) / 10);
+
+  // 함수를 통해 카테고리 별로 태그 비율을 계산하는 기능을 추출합니다.
+  const calculateCategoryRatio = (data, totalCount) => {
+    const categoryRatio = {};
+    for (const category in data) {
+      if (category !== "간단" && data.hasOwnProperty(category)) {
+        const categoryObj = data[category];
+        for (const item of categoryObj) {
+          const categoryTotal = item.find((item) => item.tagId === 0).count;
+          categoryRatio[category] = (categoryTotal / totalCount) * 100;
+        }
+      }
+    }
+    return categoryRatio;
+  };
+
+  // 카테고리 별, 태그 별로 비율을 계산
+  const calculateTagRatio = (data) => {
+    const tagRatio = [];
+    for (const category in data) {
+      if (category !== "간단" && data.hasOwnProperty(category)) {
+        const categoryObj = data[category];
+        const tmpObj = {};
+        for (const item of categoryObj) {
+          const categoryTotal = item.find((item) => item.tagId === 0).count;
+          tmpObj["category"] = category;
+          for (const obj of item) {
+            if (obj.tagId !== 0) {
+              tmpObj[obj.tag] = (obj.count / categoryTotal) * 100;
+            }
+          }
+        }
+        tagRatio.push(tmpObj);
+      }
+    }
+
+    return tagRatio;
+  };
+
+  const getUserStatistics = (topCategory) => {
+    const categoryId = categoryData.find(
+      (item) => item.name == topCategory.key
+    ).id;
+    // (현재 유저와 나이대, 성별이 같은 유저)의 (현재 유저가 가장 관심있는 카테고리)에 대한 투표 정보를 가져옴
+    const axiosData = {
+      memberId: 0,
+      typeId: 0,
+      age: ageId,
+      gender: user.gender,
+      categoryId: categoryId,
+    };
+    axios
+      .post(API_URL + "/statistics", axiosData)
+      .then((res) => {
+        console.log(res);
+        const allValue = res.data.find((item) => item.tagId === 0).count;
+        const othersTagRatio = {};
+        res.data.forEach((item) => {
+          if (item.tagId != 0) {
+            othersTagRatio[item.tag] = (item.count / allValue) * 100;
+          }
+        });
+
+        // console.log(othersTagRatio)
+        setOthersTopTag(
+          Object.entries(othersTagRatio).reduce(
+            (prev, [key, value]) => {
+              return value > prev.value ? { key, value } : prev;
+            },
+            { key: null, value: -Infinity }
+          )
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    axios
+      .get(API_URL + `/members/${user.memberId}/votes/statistics`)
+      .then((res) => {
+        console.log(res);
+        // 간단을 제외하고, 참여한 모든 투표 수를 더함
+        let totalCount = 0;
+        for (const category in res.data) {
+          if (category !== "간단" && res.data.hasOwnProperty(category)) {
+            const categoryObj = res.data[category];
+            for (const item of categoryObj) {
+              const categoryTotal = item.find((item) => item.tagId === 0).count;
+              totalCount += categoryTotal;
+            }
+          }
+        }
+
+        const tmpCategoryRatio = calculateCategoryRatio(res.data, totalCount);
+        const tmpTagRatio = calculateTagRatio(res.data);
+        const tmpTopCategory = Object.entries(tmpCategoryRatio).reduce(
+          (prev, [key, value]) => {
+            return value > prev.value ? { key, value } : prev;
+          },
+          { key: null, value: -Infinity }
+        );
+        setCategoryRatio(tmpCategoryRatio);
+        setTagRatio(tmpTagRatio);
+        setTopCategory(tmpTopCategory);
+        console.log(tmpTagRatio);
+        getUserStatistics(tmpTopCategory);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   // ----------- 카테고리 아이템 목록 (임시) -----------
   const categoryItems = [
     {
-      category: '의류',
+      category: "의류",
       0: 30,
       1: 20,
       2: 20,
@@ -49,7 +176,7 @@ const MyStatistics = () => {
       4: 15,
     },
     {
-      category: '신발',
+      category: "신발",
       0: 45,
       1: 35,
       5: 30,
@@ -57,7 +184,7 @@ const MyStatistics = () => {
       7: 10,
     },
     {
-      category: '가구',
+      category: "가구",
       0: 40,
       1: 30,
       2: 60,
@@ -65,7 +192,7 @@ const MyStatistics = () => {
       4: 80,
     },
     {
-      category: '전자제품',
+      category: "전자제품",
       0: 0,
       1: 10,
       5: 20,
@@ -74,16 +201,18 @@ const MyStatistics = () => {
     },
   ];
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom:
-      isXLarge ? "50px" :
-      isLarge ? "45px" :
-      isMedium ? "40px" : "35px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -100,32 +229,26 @@ const MyStatistics = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height:
-      isXLarge ? "60px" :
-      isLarge ? "50px" :
-      isMedium ? "45px" : "40px",
+    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
   };
 
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop:
-      isXLarge ? "5px" :
-      isLarge ? "3px" :
-      isMedium ? "5px" : "4px",
+    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
     // 디자인
-    padding:
-      isXLarge ? "40px" :
-      isLarge ? "35px" :
-      isMedium ? "30px" : "25px",
-    borderRadius:
-      isXLarge ? "50px" :
-      isLarge ? "40px" :
-      isMedium ? "30px" : "20px",
+    padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
@@ -137,7 +260,7 @@ const MyStatistics = () => {
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "10px",
   };
-  
+
   // ----------- 서브 제목 스타일 -----------
   const subTitleStyle = {
     // 디자인
@@ -158,49 +281,55 @@ const MyStatistics = () => {
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: isXLarge || isLarge ? "row" : "column",
-  }
+  };
 
   // ----------- 반응형 설명 컨테이너 스타일 -----------
-  const responsiveDescriptionContainerStyle  = {
+  const responsiveDescriptionContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: !isSmall ? "row" : "column",
-  }
+  };
 
   // ----------- 반응형 설명 서브 컨테이너 스타일 -----------
-  const responsiveDescriptionSubContainerStyle  = {
+  const responsiveDescriptionSubContainerStyle = {
     // 상속
     ...flexContainerStyle,
 
     // 글자
     color: "#4A4A4A",
-  }
+  };
 
   // ----------- 설명 데이터 글자 스타일 -----------
   const descriptionDataStyle = {
     // 디자인
-    margin:
-      isXLarge ? "0 10px" :
-      isLarge ? "0 8px" :
-      isMedium ? "0 6px" : "0 4px",
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
 
     // 글자
     color: "#FF595E",
-  }
+  };
 
   // ----------- 쉼표 스타일 -----------
   const restStyle = {
     // 디자인
     marginRight: "10px",
-  }
+  };
 
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: 
-      isXLarge ? "30px 0" :
-      isLarge ? "25px 0" :
-      isMedium ? "20px 0" : "15px 0",
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "25px 0"
+      : isMedium
+      ? "20px 0"
+      : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -211,7 +340,7 @@ const MyStatistics = () => {
     // 컨텐츠 정렬
     display: "flex",
     justifyContent: "center", // 둘레 균일 간격으로 정렬
-  }
+  };
 
   // ----------- 멘트 컨테이너 스타일 -----------
   const mentContainerStyle = {
@@ -221,28 +350,28 @@ const MyStatistics = () => {
     // 컨텐츠 정렬
     flexDirection: "column",
     justifyContent: "center",
-  }
+  };
 
   // ----------- 멘트 데이터 스타일 -----------
   const mentDataStyle = {
     // 디자인
-    margin:
-      isXLarge ? "0 10px" :
-      isLarge ? "0 8px" :
-      isMedium ? "0 6px" : "0 4px",
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
 
     // 글자
     color: "#FF595E",
-  }
+  };
 
   // ----------- 따옴표 스타일 -----------
   const quotesStyle = {
     // 디자인
-    margin:
-      isXLarge ? "0 12px" :
-      isLarge ? "0 8px" :
-      isMedium ? "0 4px" : "0",
-  }
+    margin: isXLarge ? "0 12px" : isLarge ? "0 8px" : isMedium ? "0 4px" : "0",
+  };
 
   // ----------- 태그 선호도 컨테이너 스타일 -----------
   const tagContentsContainerStyle = {
@@ -262,32 +391,32 @@ const MyStatistics = () => {
     // 컨텐츠 정렬
     display: "flex",
     alignItems: isXLarge || isLarge ? "center" : "flex-start",
-    flexDirection: isXLarge || isLarge  ? "row" : "column",
-  }
+    flexDirection: isXLarge || isLarge ? "row" : "column",
+  };
 
   // ----------- relative 컨테이너 스타일 -----------
   const relativeContainerStyle = {
     // 위치
-    position: 'relative',
-    
+    position: "relative",
+
     // 디자인
-    margin:
-      isXLarge ? "0 10px" :
-      isLarge ? "0 8px" :
-      isMedium ? "0 6px" : "0 4px",
-  }
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
+  };
 
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
     // 디자인
-    padding:
-      isXLarge ? "8px" :
-      isLarge ? "7px" :
-      isMedium ? "6px" : "5px",
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  }
+    padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    cursor: "pointer",
+  };
 
   // ----------- 드롭다운 메뉴 스타일 -----------
   const dropdownMenuStyle = {
@@ -298,32 +427,32 @@ const MyStatistics = () => {
 
     // 디자인
     marginTop: "4px",
-    padding:
-      isXLarge ? "0 8px" :
-      isLarge ? "0 7px" :
-      isMedium ? "0 6px" : "0 5px",
-    width:
-      isXLarge ? "120px" :
-      isLarge ? "110px" :
-      isMedium ? "100px" : "90px",
+    padding: isXLarge
+      ? "0 8px"
+      : isLarge
+      ? "0 7px"
+      : isMedium
+      ? "0 6px"
+      : "0 5px",
+    width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
     border: "1px solid #ccc",
     borderRadius: "4px",
     backgroundColor: "#FFFFFF",
-  }
+  };
 
   // ----------- 드롭다운 아이템 스타일 -----------
   const dropdownItemStyle = {
     // 디자인
-    margin:
-      isXLarge ? "8px 0" :
-      isLarge ? "7px 0" :
-      isMedium ? "6px 0" : "5px 0", 
-    padding:
-      isXLarge ? "8px" :
-      isLarge ? "7px" :
-      isMedium ? "6px" : "5px",
+    margin: isXLarge
+      ? "8px 0"
+      : isLarge
+      ? "7px 0"
+      : isMedium
+      ? "6px 0"
+      : "5px 0",
+    padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     cursor: "pointer",
-  }
+  };
 
   // ----------- 차트 컨테이너 스타일 -----------
   const chartContainerStyle = {
@@ -335,7 +464,7 @@ const MyStatistics = () => {
 
     // 컨텐츠 정렬
     justifyContent: "center",
-  }
+  };
 
   // ----------- 정보 컨테이너 스타일 -----------
   const infoContainerStyle = {
@@ -347,7 +476,7 @@ const MyStatistics = () => {
 
     // 컨텐츠 정렬
     flexDirection: isXLarge || isLarge ? "row" : "column",
-  }
+  };
 
   // ----------- 정보 아이템 스타일 -----------
   const infoItemStyle = {
@@ -356,15 +485,15 @@ const MyStatistics = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding:
-      isXLarge ? "10px 20px" :
-      isLarge ? "8px 18px" :
-      isMedium ? "6px 16px" : "4px 14px",
+    padding: isXLarge
+      ? "10px 20px"
+      : isLarge
+      ? "8px 18px"
+      : isMedium
+      ? "6px 16px"
+      : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
-    height:
-      isXLarge ? "60px" :
-      isLarge ? "52px" :
-      isMedium ? "44px" : "36px",
+    height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
 
     // 컨텐츠 정렬
@@ -377,9 +506,7 @@ const MyStatistics = () => {
     ...infoItemStyle,
 
     // 디자인
-    marginRight: 
-      isXLarge ? "16px" :
-      isLarge ? "12px" : "0px",
+    marginRight: isXLarge ? "16px" : isLarge ? "12px" : "0px",
   };
 
   // ----------- 오른쪽 아이템 스타일 -----------
@@ -388,9 +515,7 @@ const MyStatistics = () => {
     ...infoItemStyle,
 
     // 디자인
-    marginLeft:
-      isXLarge ? "16px" :
-      isLarge ? "12px" : "0px",
+    marginLeft: isXLarge ? "16px" : isLarge ? "12px" : "0px",
   };
 
   // ----------- 태그 아이템 스타일 -----------
@@ -398,9 +523,7 @@ const MyStatistics = () => {
     // 디자인
     marginLeft: isXLarge || isMedium ? "20px" : "5px",
     paddingTop: "5px",
-    width:
-      isXLarge || isMedium ? "80px" :
-      isMedium ? "70px" : "60px",
+    width: isXLarge || isMedium ? "80px" : isMedium ? "70px" : "60px",
     borderRadius: "20px",
 
     // 컨텐츠 정렬
@@ -410,7 +533,6 @@ const MyStatistics = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-  
   // ----------- 배열에서 가장 높은 세 Tag를 찾는 함수 -----------
   const findTop3Tags = (obj) => {
     const sortedTags = Object.entries(obj).sort((a, b) => b[1] - a[1]);
@@ -420,82 +542,116 @@ const MyStatistics = () => {
   };
 
   // ----------- 각 객체에서 가장 높은 세 값을 찾아 렌더링 하는 함수 -----------
-  const renderTop3Categories = categoryItems.map((item, index) => {
-    if (index % 2 === 0) {
-      const top3Left = findTop3Tags(item);
-      const top3Right = categoryItems[index + 1] ? findTop3Tags(categoryItems[index + 1]) : null;
-
-      return (
-        <>
-          <div style={infoContainerStyle} key={index}>
-            <div style={itemLeftStyle}>
-              <div className="fontsize-md">{item.category}</div>
-              <div style={flexContainerStyle}>
-                {top3Left.map((tag, i) => (
-                  <div
-                    style={{
-                      ...tagItemStyle,
-                      backgroundColor: tagColorData[tag.key].color,
-                    }}
-                    className="fontsize-sm"
-                    key={i}
-                  >{tagColorData[tag.key].name}</div>
-                ))}
-              </div>
-            </div>
-            {top3Right && (
-              <div style={itemRightStyle}>
-                <div className="fontsize-md">{categoryItems[index + 1].category}</div>
+  // 원본: tagRatio -> categoryItems
+  const renderTop3Categories =
+    tagRatio.length > 0 &&
+    tagRatio.map((item, index) => {
+      console.log("여기!", item);
+      if (index % 2 === 0) {
+        const top3Left = findTop3Tags(item);
+        const top3Right = tagRatio[index + 1]
+          ? findTop3Tags(tagRatio[index + 1])
+          : null;
+        console.log("top3Left", top3Left);
+        console.log("top3Right", top3Right);
+        return (
+          <>
+            <div style={infoContainerStyle} key={index}>
+              <div style={itemLeftStyle}>
+                <div className="fontsize-md">{item.category}</div>
                 <div style={flexContainerStyle}>
-                  {top3Right.map((tag, i) => (
+                  {top3Left.map((tag, i) => (
                     <div
                       style={{
                         ...tagItemStyle,
-                        backgroundColor: tagColorData[tag.key].color,
+                        backgroundColor:
+                          tag.key &&
+                          tagColorData.find((tagObj) => tagObj.name == tag.key)
+                            .color,
                       }}
                       className="fontsize-sm"
                       key={i}
-                    >{tagColorData[tag.key].name}</div>
+                    >
+                      {tag.key}
+                    </div>
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-        </>
-      );
-    }
-    return null; // 홀수 index는 처리하지 않음
-  });
+              {top3Right && (
+                <div style={itemRightStyle}>
+                  <div className="fontsize-md">
+                    {tagRatio[index + 1].category}
+                  </div>
+                  <div style={flexContainerStyle}>
+                    {top3Right.map((tag, i) => (
+                      <div
+                        style={{
+                          ...tagItemStyle,
+                          backgroundColor:
+                            tag.key &&
+                            tagColorData.find(
+                              (tagObj) => tagObj.name == tag.key
+                            ).color,
+                        }}
+                        className="fontsize-sm"
+                        key={i}
+                      >
+                        {tag.key}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        );
+      }
+      return null; // 홀수 index는 처리하지 않음
+    });
 
   return (
     <>
       {/* -------------------------- 카테고리 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">카테고리 선호도</span>
+          <span style={titleTextStyle} className="fontsize-xl">
+            카테고리 선호도
+          </span>
         </div>
         <div style={tagContentsContainerStyle}>
-
           {/* ------------- 관심있는 카테고리 ------------- */}
           <div style={subTitleContainerStyle}>
-            <div style={subTitleStyle} className="fontsize-lg">가장 관심있는 카테고리 :</div>
-            <div style={categoryTextStyle} className="fontsize-xl">" 의류 "</div>
+            <div style={subTitleStyle} className="fontsize-lg">
+              가장 관심있는 카테고리 :
+            </div>
+            <div style={categoryTextStyle} className="fontsize-xl">
+              " {topCategory.key} "
+            </div>
           </div>
           <div style={descriptionContainerStyle}>
             <div style={responsiveDescriptionContainerStyle}>
-              <div style={responsiveDescriptionSubContainerStyle}>
+              {/* 투표 통계가 참여한 투표에 대한 것만 응답으로 와서, 이 문구는 제외했습니다. */}
+              {/* <div style={responsiveDescriptionSubContainerStyle}>
                 <div className="fontsize-sm">작성한 투표의</div>
-                <div style={descriptionDataStyle} className="fontsize-sm">[40]%</div>
-                <div style={restStyle} className="fontsize-sm">,</div>
-              </div>
+                <div style={descriptionDataStyle} className="fontsize-sm">
+                  [40]%
+                </div>
+                <div style={restStyle} className="fontsize-sm">
+                  ,
+                </div>
+              </div> */}
               <div style={responsiveDescriptionSubContainerStyle}>
                 <div className="fontsize-sm">참여한 투표의</div>
-                <div style={descriptionDataStyle} className="fontsize-sm">[50]%</div>
+                <div style={descriptionDataStyle} className="fontsize-sm">
+                  {topCategory && topCategory.value.toFixed(1)}%
+                </div>
                 <div className="fontsize-sm">가</div>
               </div>
             </div>
             <div style={responsiveDescriptionSubContainerStyle}>
-              <div style={descriptionDataStyle} className="fontsize-sm">[의류]</div>
+              <div style={descriptionDataStyle} className="fontsize-sm">
+                {topCategory.key}
+              </div>
               <div className="fontsize-sm">카테고리에 속해있어요!</div>
             </div>
           </div>
@@ -505,42 +661,70 @@ const MyStatistics = () => {
 
           {/* ------------- 랜덤 선호도 비교 ------------- */}
           <div style={randomContainerStyle}>
-            <div style={quotesStyle} className="fontsize-xl">"</div>
+            <div style={quotesStyle} className="fontsize-xl">
+              "
+            </div>
             <div style={mentContainerStyle}>
               <div style={flexContainerStyle}>
-                <div style={mentDataStyle} className="fontsize-md">[닉네임]</div>
+                <div style={mentDataStyle} className="fontsize-md">
+                  {user.nickname}
+                </div>
                 <div className="fontsize-md">님과 같은</div>
-                <div style={mentDataStyle} className="fontsize-md">[20대]</div>
-                <div style={mentDataStyle} className="fontsize-md">[남성]</div>
+                <div style={mentDataStyle} className="fontsize-md">
+                  {ageId * 10}대
+                </div>
+                <div style={mentDataStyle} className="fontsize-md">
+                  {user.gender == "MALE" ? "남성" : "여성"}
+                </div>
                 <div className="fontsize-md">의</div>
-                <div style={mentDataStyle} className="fontsize-md">[42%]</div>
+                <div style={mentDataStyle} className="fontsize-md">
+                  {othersTopTag && othersTopTag.value.toFixed(1)}%
+                </div>
                 <div className="fontsize-md">는</div>
               </div>
               <div style={flexContainerStyle}>
-                <div style={mentDataStyle} className="fontsize-md">" 의류 "</div>
+                <div style={mentDataStyle} className="fontsize-md">
+                  " {topCategory.key} "
+                </div>
                 <div className="fontsize-md">를 고를 때</div>
-                <div style={mentDataStyle} className="fontsize-md">[태그 1]</div>
+                <div
+                  style={{
+                    ...mentDataStyle,
+                    color: "black",
+                    backgroundColor:
+                      othersTopTag &&
+                      tagColorData.find((item) => item.name == othersTopTag.key)
+                        .color,
+                  }}
+                  className="fontsize-md"
+                >
+                  {othersTopTag.key}
+                </div>
                 <div className="fontsize-md">을 눈여겨봐요!</div>
               </div>
             </div>
-            <div style={quotesStyle} className="fontsize-xl">"</div>
+            <div style={quotesStyle} className="fontsize-xl">
+              "
+            </div>
           </div>
           {/* --------------------------------------- */}
-
         </div>
       </div>
 
       {/* -------------------------- 태그 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">태그 선호도</span>
+          <span style={titleTextStyle} className="fontsize-xl">
+            태그 선호도
+          </span>
         </div>
         <div style={tagContentsContainerStyle}>
-
           {/* ------------- 드롭다운 버튼 ------------- */}
           <div style={dropdownContainerStyle}>
             <div style={flexContainerStyle}>
-              <div style={subTitleStyle} className="fontsize-md">나는</div>
+              <div style={subTitleStyle} className="fontsize-md">
+                나는
+              </div>
               <div style={relativeContainerStyle}>
                 <div
                   onClick={toggleDropdown}
@@ -548,17 +732,27 @@ const MyStatistics = () => {
                   className="fontsize-sm"
                 >
                   {selectedCategory !== null
-                    ? categoryData.find((c) => c.id === parseInt(selectedCategory))?.name
-                    : '카테고리 선택'}
+                    ? filteredCategoryData.find(
+                        (c) => c.id === parseInt(selectedCategory)
+                      )?.name
+                    : "카테고리 선택"}
                 </div>
                 {isOpen && (
                   <div style={dropdownMenuStyle}>
-                    {categoryData.map((category) => (
+                    {filteredCategoryData.map((category) => (
                       <div
                         key={category.id}
-                        onClick={() => handleCategoryChange({ target: { value: category.id } })}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
+                        onClick={() =>
+                          handleCategoryChange({
+                            target: { value: category.id },
+                          })
+                        }
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = "#FFE69C")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = "#FFFFFF")
+                        }
                         style={dropdownItemStyle}
                       >
                         {category.name}
@@ -567,10 +761,16 @@ const MyStatistics = () => {
                   </div>
                 )}
               </div>
-              <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
-              <div style={restStyle} className="fontsize-md">,</div>
+              <div style={subTitleStyle} className="fontsize-md">
+                을(를) 구매 할 때
+              </div>
+              <div style={restStyle} className="fontsize-md">
+                ,
+              </div>
             </div>
-            <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
+            <div style={subTitleStyle} className="fontsize-md">
+              어떤 요소를 중요하게 생각할까?
+            </div>
           </div>
           {/* --------------------------------------- */}
 
@@ -583,10 +783,11 @@ const MyStatistics = () => {
           <div style={barStyle}></div>
 
           {/* ------------- 카테고리별 선호 태그 ------------- */}
-          <div style={subTitleStyle} className="fontsize-lg">카테고리별 선호 태그 TOP 3</div>
-          {renderTop3Categories}
+          <div style={subTitleStyle} className="fontsize-lg">
+            카테고리별 선호 태그 TOP 3
+          </div>
+          {tagRatio.length > 0 && renderTop3Categories}
           {/* --------------------------------------- */}
-
         </div>
       </div>
     </>
