@@ -7,6 +7,7 @@ const store = (set) => ({
   isVoteDetailModalOpened: false,
   isVoteSimpleCreateModalOpened: false,
   isVoteProductCreateModalOpened: false,
+  detailVoteId: 0,
 
   // 로그인폼 열립니다 => 하나가 열리면, 다른 모달은 모두 닫힘으로 바뀜
   setLoginModalOpen: () =>
@@ -87,6 +88,9 @@ const store = (set) => ({
     set(() => ({
       isVoteProductCreateModalOpened: false,
     })),
+
+  // 상세페이지 모달을 열기 위한 voteId를 설정합니다
+  setDetailVoteId: (voteId) => set(() => ({ detailVoteId: voteId })),
 });
 
 const useModalStore = create(

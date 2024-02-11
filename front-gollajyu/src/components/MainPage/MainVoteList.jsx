@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import API_URL from "../../stores/apiURL";
 import axios from "axios";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 import useModalStore from "../../stores/modalState";
 // import { Responsive } from 'react-responsive';
 
@@ -10,11 +10,11 @@ const MainVoteList = () => {
   const setVoteDetailModalOpen = useModalStore(
     (state) => state.setVoteDetailModalOpen
   );
-  
+
   const openVoteDetailModal = (voteId) => {
     setVoteDetailModalOpen();
     // VoteDetail 컴포넌트가 외부에서 voteId를 받을 수 있도록 전달합니다.
-    console.log('VoteDetail 컴포넌트로 voteId 전달:', voteId); // 전달 방법은 상황에 따라 조정
+    console.log("VoteDetail 컴포넌트로 voteId 전달:", voteId); // 전달 방법은 상황에 따라 조정
   };
 
   useEffect(() => {
@@ -78,8 +78,11 @@ const MainVoteList = () => {
   return (
     <div className="flex flex-wrap justify-center">
       {listsData.map((data, index) => (
-        <div key={data.key} className="max-w-sm mx-2 mt-20 p-4 shadow-md rounded-lg 
-        border-t-2 border-teal-400 w-1/2">
+        <div
+          key={data.key}
+          className="max-w-sm mx-2 mt-20 p-4 shadow-md rounded-lg 
+        border-t-2 border-teal-400 w-1/2"
+        >
           <div className="flex justify-between pb-4">
             <p className="font-bold text-xl">{data.subject}</p>
           </div>
