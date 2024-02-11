@@ -1,86 +1,43 @@
 const tmpAxiosRes = {
-  간단: [
-    [
-      {
-        tagId: 0,
-        category: "all",
-        tag: "all",
-        count: 2,
-      },
-      {
-        tagId: 21,
-        category: "간단",
-        tag: "간단",
-        count: 2,
-      },
-    ],
-  ],
   신발: [
-    [
-      {
-        tagId: 0,
-        category: "all",
-        tag: "all",
-        count: 1,
-      },
-      {
-        tagId: 11,
-        category: "신발",
-        tag: "가성비",
-        count: 1,
-      },
-    ],
+    {
+      tagId: 0,
+      category: "all",
+      tag: "all",
+      count: 0,
+    },
   ],
   의류: [
-    [
-      {
-        tagId: 0,
-        category: "all",
-        tag: "all",
-        count: 0,
-      },
-    ],
+    {
+      tagId: 0,
+      category: "all",
+      tag: "all",
+      count: 0,
+    },
   ],
   가구: [
-    [
-      {
-        tagId: 0,
-        category: "all",
-        tag: "all",
-        count: 1,
-      },
-      {
-        tagId: 8,
-        category: "가구",
-        tag: "소재",
-        count: 1,
-      },
-    ],
+    {
+      tagId: 0,
+      category: "all",
+      tag: "all",
+      count: 0,
+    },
   ],
   전자제품: [
-    [
-      {
-        tagId: 0,
-        category: "all",
-        tag: "all",
-        count: 3,
-      },
-      {
-        tagId: 18,
-        category: "전자제품",
-        tag: "디자인",
-        count: 2,
-      },
-      {
-        tagId: 16,
-        category: "전자제품",
-        tag: "가성비",
-        count: 1,
-      },
-    ],
+    {
+      tagId: 0,
+      category: "all",
+      tag: "all",
+      count: 2,
+    },
+    {
+      tagId: 18,
+      category: "전자제품",
+      tag: "디자인",
+      count: 2,
+    },
   ],
 };
-
 /*
 // Initialize total count variable
 let totalCount = 0;
@@ -158,18 +115,16 @@ for (const category in tmpAxiosRes) {
 
 console.log(tagRatio);
 
-
+*/
 
 // 함수를 통해 카테고리 별로 태그 비율을 계산하는 기능을 추출합니다.
 const calculateCategoryRatio = (data, totalCount) => {
   const categoryRatio = {};
   for (const category in data) {
-    if (category !== "간단" && data.hasOwnProperty(category)) {
+    if (data.hasOwnProperty(category)) {
       const categoryData = data[category];
-      for (const item of categoryData) {
-        const categoryTotal = item.find((item) => item.tagId === 0).count;
-        categoryRatio[category] = (categoryTotal / totalCount) * 100;
-      }
+      const categoryTotal = categoryData.find((item) => item.tagId === 0).count;
+      categoryRatio[category] = (categoryTotal / totalCount) * 100;
     }
   }
   return categoryRatio;
@@ -179,15 +134,13 @@ const calculateCategoryRatio = (data, totalCount) => {
 const calculateTagRatio = (data) => {
   const tagRatio = {};
   for (const category in data) {
-    if (category !== "간단" && data.hasOwnProperty(category)) {
+    if (data.hasOwnProperty(category)) {
       const categoryData = data[category];
-      for (const item of categoryData) {
-        const categoryTotal = item.find((item) => item.tagId === 0).count;
-        tagRatio[category] = {};
-        for (const obj of item) {
-          if (obj.tagId !== 0) {
-            tagRatio[category][obj.tag] = (obj.count / categoryTotal) * 100;
-          }
+      const categoryTotal = categoryData.find((item) => item.tagId === 0).count;
+      tagRatio[category] = {};
+      for (const obj of categoryData) {
+        if (obj.tagId !== 0) {
+          tagRatio[category][obj.tag] = (obj.count / categoryTotal) * 100;
         }
       }
     }
@@ -198,12 +151,11 @@ const calculateTagRatio = (data) => {
 // 간단을 제외하고, 참여한 모든 투표 수를 더함
 let totalCount = 0;
 for (const category in tmpAxiosRes) {
-  if (category !== "간단" && tmpAxiosRes.hasOwnProperty(category)) {
+  if (tmpAxiosRes.hasOwnProperty(category)) {
     const categoryData = tmpAxiosRes[category];
-    for (const item of categoryData) {
-      const categoryTotal = item.find((item) => item.tagId === 0).count;
-      totalCount += categoryTotal;
-    }
+    console.log(categoryData);
+    const categoryTotal = categoryData.find((item) => item.tagId === 0).count;
+    totalCount += categoryTotal;
   }
 }
 
@@ -216,7 +168,6 @@ console.log("Category Ratio:", categoryRatio);
 // 카테고리별 태그별 투표 비율을 계산합니다.
 const tagRatio = calculateTagRatio(tmpAxiosRes);
 console.log("Tag Ratio:", tagRatio);
-*/
 
 // const data = {
 //   신발: {

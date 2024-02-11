@@ -53,16 +53,19 @@ const MyStatistics = () => {
   // 0~9세: 0, 10~19세: 1, 20~29세: 2, ...
   const ageId = Math.floor((currentYear - user.birthday.year) / 10);
 
+  // "전체"를 제외한 카테고리 이름 순서대로 담긴 배열
+  const categoryNames = categoryData.map((item) => item.name).slice(1);
+
   // 함수를 통해 카테고리 별로 태그 비율을 계산하는 기능을 추출합니다.
   const calculateCategoryRatio = (data, totalCount) => {
     const categoryRatio = {};
-    for (const category in data) {
-      if (category !== "간단" && data.hasOwnProperty(category)) {
+    for (const category of categoryNames) {
+      if (data.hasOwnProperty(category)) {
         const categoryObj = data[category];
-        for (const item of categoryObj) {
-          const categoryTotal = item.find((item) => item.tagId === 0).count;
-          categoryRatio[category] = (categoryTotal / totalCount) * 100;
-        }
+        const categoryTotal = categoryObj.find(
+          (item) => item.tagId === 0
+        ).count;
+        categoryRatio[category] = (categoryTotal / totalCount) * 100;
       }
     }
     return categoryRatio;
@@ -71,23 +74,23 @@ const MyStatistics = () => {
   // 카테고리 별, 태그 별로 비율을 계산
   const calculateTagRatio = (data) => {
     const tagRatio = [];
-    for (const category in data) {
-      if (category !== "간단" && data.hasOwnProperty(category)) {
+    for (const category of categoryNames) {
+      if (data.hasOwnProperty(category)) {
         const categoryObj = data[category];
+        console.log(category, categoryObj);
+        const categoryTotal = categoryObj.find(
+          (item) => item.tagId === 0
+        ).count;
         const tmpObj = {};
-        for (const item of categoryObj) {
-          const categoryTotal = item.find((item) => item.tagId === 0).count;
-          tmpObj["category"] = category;
-          for (const obj of item) {
-            if (obj.tagId !== 0) {
-              tmpObj[obj.tag] = (obj.count / categoryTotal) * 100;
-            }
+        tmpObj["category"] = category;
+        for (const obj of categoryObj) {
+          if (obj.tagId !== 0) {
+            tmpObj[obj.tag] = (obj.count / categoryTotal) * 100;
           }
         }
         tagRatio.push(tmpObj);
       }
     }
-
     return tagRatio;
   };
 
@@ -138,12 +141,12 @@ const MyStatistics = () => {
         // 간단을 제외하고, 참여한 모든 투표 수를 더함
         let totalCount = 0;
         for (const category in res.data) {
-          if (category !== "간단" && res.data.hasOwnProperty(category)) {
-            const categoryObj = res.data[category];
-            for (const item of categoryObj) {
-              const categoryTotal = item.find((item) => item.tagId === 0).count;
-              totalCount += categoryTotal;
-            }
+          if (res.data.hasOwnProperty(category)) {
+            const categoryData = res.data[category];
+            const categoryTotal = categoryData.find(
+              (item) => item.tagId === 0
+            ).count;
+            totalCount += categoryTotal;
           }
         }
 
@@ -158,6 +161,7 @@ const MyStatistics = () => {
         setCategoryRatio(tmpCategoryRatio);
         setTagRatio(tmpTagRatio);
         setTopCategory(tmpTopCategory);
+        console.log(tmpCategoryRatio);
         console.log(tmpTagRatio);
         getUserStatistics(tmpTopCategory);
       })
@@ -165,41 +169,6 @@ const MyStatistics = () => {
         console.log(err);
       });
   }, []);
-  // ----------- 카테고리 아이템 목록 (임시) -----------
-  const categoryItems = [
-    {
-      category: "의류",
-      0: 30,
-      1: 20,
-      2: 20,
-      3: 15,
-      4: 15,
-    },
-    {
-      category: "신발",
-      0: 45,
-      1: 35,
-      5: 30,
-      6: 20,
-      7: 10,
-    },
-    {
-      category: "가구",
-      0: 40,
-      1: 30,
-      2: 60,
-      3: 10,
-      4: 80,
-    },
-    {
-      category: "전자제품",
-      0: 0,
-      1: 10,
-      5: 20,
-      6: 30,
-      7: 40,
-    },
-  ];
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -542,18 +511,14 @@ const MyStatistics = () => {
   };
 
   // ----------- 각 객체에서 가장 높은 세 값을 찾아 렌더링 하는 함수 -----------
-  // 원본: tagRatio -> categoryItems
   const renderTop3Categories =
     tagRatio.length > 0 &&
     tagRatio.map((item, index) => {
-      console.log("여기!", item);
       if (index % 2 === 0) {
         const top3Left = findTop3Tags(item);
         const top3Right = tagRatio[index + 1]
           ? findTop3Tags(tagRatio[index + 1])
           : null;
-        console.log("top3Left", top3Left);
-        console.log("top3Right", top3Right);
         return (
           <>
             <div style={infoContainerStyle} key={index}>
@@ -643,7 +608,7 @@ const MyStatistics = () => {
               <div style={responsiveDescriptionSubContainerStyle}>
                 <div className="fontsize-sm">참여한 투표의</div>
                 <div style={descriptionDataStyle} className="fontsize-sm">
-                  {topCategory && topCategory.value.toFixed(1)}%
+                  {topCategory && topCategory.value.toFixed(0)}%
                 </div>
                 <div className="fontsize-sm">가</div>
               </div>
@@ -678,7 +643,7 @@ const MyStatistics = () => {
                 </div>
                 <div className="fontsize-md">의</div>
                 <div style={mentDataStyle} className="fontsize-md">
-                  {othersTopTag && othersTopTag.value.toFixed(1)}%
+                  {othersTopTag && othersTopTag.value.toFixed(0)}%
                 </div>
                 <div className="fontsize-md">는</div>
               </div>
@@ -776,7 +741,12 @@ const MyStatistics = () => {
 
           {/* ------------- 차트 그래프 ------------- */}
           <div style={chartContainerStyle}>
-            <MyStatisticsChart />
+            {tagRatio && (
+              <MyStatisticsChart
+                tagRatio={tagRatio.length > 1 ? tagRatio : null}
+                selectedCategory={selectedCategory}
+              />
+            )}
           </div>
           {/* --------------------------------------- */}
 

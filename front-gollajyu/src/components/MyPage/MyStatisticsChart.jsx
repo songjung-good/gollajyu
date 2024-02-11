@@ -1,34 +1,46 @@
 import React from "react";
 import { useMediaQuery } from "react-responsive";
-import { PieChart, Pie, Cell } from 'recharts';
-import categoryData from '/src/stores/categoryData';
-import tagColorData from '/src/stores/tagColorData';
+import { PieChart, Pie, Cell } from "recharts";
+import categoryData from "/src/stores/categoryData";
+import tagColorData from "/src/stores/tagColorData";
 
-const MyStatisticsChart = () => {
-
+const MyStatisticsChart = ({ tagRatio, selectedCategory }) => {
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
-    query : "(min-width:1024px)",
+    query: "(min-width:1024px)",
   });
   const isLarge = useMediaQuery({
-    query : "(min-width:768px) and (max-width:1023.98px)"
+    query: "(min-width:768px) and (max-width:1023.98px)",
   });
   const isMedium = useMediaQuery({
-    query : "(min-width:480px) and (max-width:767.98px)"
+    query: "(min-width:480px) and (max-width:767.98px)",
   });
   const isSmall = useMediaQuery({
-    query : "(max-width:479.98px)"
+    query: "(max-width:479.98px)",
   });
 
   // ----------- 데이터 배열 (임시) -----------
-  const data = [
-    { name: '가성비', value: 15, color: '#8FD9B6' },
-    { name: '브랜드', value: 25, color: '#D395D0' },
-    { name: '디자인', value: 5, color: '#FF9999' },
-    { name: '기능성', value: 10, color: '#5EC4DC' },
-    { name: '내구성', value: 5, color: '#FFDF38' },
-  ];
 
+  const categoryName = categoryData.find(
+    (item) => item.id == selectedCategory
+  ).name;
+
+  // tagRatio에서 선택된 카테고리의 데이터 추출
+  const targetData =
+    tagRatio && tagRatio.find((item) => item.category == categoryName);
+
+  // TODO data 형식에 맞게 출력되도록 고쳐야함!!!
+  const data =
+    targetData &&
+    Object.entries(targetData)
+      .filter(([key]) => key !== "category")
+      .map(([name, value]) => ({
+        name,
+        value,
+        color: tagColorData.find((item) => item.name === name).color,
+      }));
+
+  console.log(categoryName, data);
   // ----------- 라디안과 각도 간의 변환 상수 -----------
   const RADIAN = Math.PI / 180;
 
@@ -46,17 +58,13 @@ const MyStatisticsChart = () => {
 
       // 글자
       fill: "#6C6C6C",
-    }
+    };
 
     return (
       <>
         <text
           x={x}
-          y={
-            isXLarge ? y - 16 :
-            isLarge ? y - 14 :
-            isMedium ? y - 12 : y - 10
-          }
+          y={isXLarge ? y - 16 : isLarge ? y - 14 : isMedium ? y - 12 : y - 10}
           dominantBaseline="central"
           style={textStyle}
           className="fontsize-md"
@@ -65,11 +73,7 @@ const MyStatisticsChart = () => {
         </text>
         <text
           x={x}
-          y={
-            isXLarge ? y + 16 :
-            isLarge ? y + 14 :
-            isMedium ? y + 12 : y + 10
-          }
+          y={isXLarge ? y + 16 : isLarge ? y + 14 : isMedium ? y + 12 : y + 10}
           dominantBaseline="central"
           style={textStyle}
           className="fontsize-sm"
@@ -82,41 +86,33 @@ const MyStatisticsChart = () => {
 
   return (
     <>
-      <PieChart
-        width={
-          isXLarge ? 500 :
-          isLarge ? 437.5 :
-          isMedium ? 375 : 312.5
-        }
-        height={
-          isXLarge ? 500 :
-          isLarge ? 437.5 :
-          isMedium ? 375 : 312.5
-        }
-      >
-        <Pie
-          cx="50%"
-          cy="50%"
-          labelLine={false}
-          label={generateLabel}
-          outerRadius={
-            isXLarge ? 240 :
-            isLarge ? 210 :
-            isMedium ? 180 : 150
-          }
-          nameKey="name"
-          dataKey="value"
-          data={data}
+      {data.length > 0 ? (
+        <PieChart
+          width={isXLarge ? 500 : isLarge ? 437.5 : isMedium ? 375 : 312.5}
+          height={isXLarge ? 500 : isLarge ? 437.5 : isMedium ? 375 : 312.5}
         >
-          {data.map((tag, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={tag.color}
-              strokeWidth={2}
-            />
-          ))}
-        </Pie>
-      </PieChart>
+          <Pie
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={generateLabel}
+            outerRadius={isXLarge ? 240 : isLarge ? 210 : isMedium ? 180 : 150}
+            nameKey="name"
+            dataKey="value"
+            data={data}
+          >
+            {data.map((tag, index) => (
+              <Cell key={`cell-${index}`} fill={tag.color} strokeWidth={2} />
+            ))}
+          </Pie>
+        </PieChart>
+      ) : (
+        <div className="w-full h-[500px] py-10">
+          <p className="fontsize-sm text-center">
+            해당 카테고리의 투표에 참여한 기록이 없어요
+          </p>
+        </div>
+      )}
     </>
   );
 };
