@@ -1,13 +1,14 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-import { useResponsiveQueries } from "../stores/responsiveUtils";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
 
 // API URL 설정
 import API_URL from "../stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "../stores/responsiveUtils";
 
 // 커스텀 스토어를 이용한 상태 관리
 import useModalStore from "../stores/modalState";
@@ -41,6 +42,9 @@ const MainPage = () => {
 
   // ------------------ 로그인 관련 ------------------
 
+  // 사용자 정보
+  const user = useAuthStore((state) => state.user);
+
   // 로그인 여부 및 상태 업데이트 함수
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
@@ -53,9 +57,6 @@ const MainPage = () => {
   const isVoteDetailModalOpened = useModalStore((state) => state.isVoteDetailModalOpened);
   const isVoteSimpleCreateModalOpened = useModalStore((state) => state.isVoteSimpleCreateModalOpened);
   const isVoteProductCreateModalOpened = useModalStore((state) => state.isVoteProductCreateModalOpened);
-
-  // 사용자 정보
-  const user = useAuthStore((state) => state.user);
   
   // 모달 창 열기 함수
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
@@ -159,24 +160,43 @@ const MainPage = () => {
 
   return (
     <>
+      {/* ----------- 투표 버튼 컴포넌트 ----------- */}
       <VoteButton />
+
+      {/* ----------- 메인 콘텐츠 영역 ----------- */}
       <div>
         {isLoading ? (
-          <p>Loading...</p>
+          <>
+            {/* 로딩 중일 떄 */}
+            <p>Loading...</p>
+          </>
         ) : (
-          <div className="bg-gradient-to-tl from-blue-400 to-red-400">
-            <MainWord />
-            <SwipeVote voteList={voteListData} />
-          </div>
+          <>
+            {/* 로딩 완료 시 */}
+            <div className="bg-gradient-to-tl from-blue-400 to-red-400">
+
+              {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
+              <MainWord />
+
+              {/* 스와이프 투표 컴포넌트 */}
+              <SwipeVote voteList={voteListData} />
+            </div>
+
+            {/* 메인 투표 리스트 컴포넌트 */}
+            <MainVoteList />
+          </>
         )}
-        <MainVoteList />
       </div>
+
+      {/* ----------- 로그인, 회원가입, 투표 관련 모달 ----------- */}
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}
-      {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
       {isVoteDetailModalOpened && <TmpModal></TmpModal>}
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
+
+      {/* ----------- 투표 상세 페이지 라우트 ----------- */}
+      {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
     </>
   );
 };
