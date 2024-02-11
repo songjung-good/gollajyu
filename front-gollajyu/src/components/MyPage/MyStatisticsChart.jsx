@@ -19,7 +19,7 @@ const MyStatisticsChart = ({ tagRatio, selectedCategory }) => {
     query: "(max-width:479.98px)",
   });
 
-  // ----------- 데이터 배열 (임시) -----------
+  // ----------- 데이터 -----------
 
   const categoryName = categoryData.find(
     (item) => item.id == selectedCategory
@@ -29,7 +29,10 @@ const MyStatisticsChart = ({ tagRatio, selectedCategory }) => {
   const targetData =
     tagRatio && tagRatio.find((item) => item.category == categoryName);
 
-  // TODO data 형식에 맞게 출력되도록 고쳐야함!!!
+  // 드랍다운 버튼으로 선택한 카테고리의 데이터를 파이차트에 쓸 수 있는 형태의 데이터로 가공
+  // ex) [{name: "가성비", value: 10, color: 태그별 색 코드},
+  //      {name: "소재", value: 50, color: 태그별 색 코드}]
+
   const data =
     targetData &&
     Object.entries(targetData)
@@ -40,7 +43,8 @@ const MyStatisticsChart = ({ tagRatio, selectedCategory }) => {
         color: tagColorData.find((item) => item.name === name).color,
       }));
 
-  console.log(categoryName, data);
+  // console.log(categoryName, data);
+
   // ----------- 라디안과 각도 간의 변환 상수 -----------
   const RADIAN = Math.PI / 180;
 
@@ -86,7 +90,7 @@ const MyStatisticsChart = ({ tagRatio, selectedCategory }) => {
 
   return (
     <>
-      {data.length > 0 ? (
+      {data && data.length > 0 ? (
         <PieChart
           width={isXLarge ? 500 : isLarge ? 437.5 : isMedium ? 375 : 312.5}
           height={isXLarge ? 500 : isLarge ? 437.5 : isMedium ? 375 : 312.5}

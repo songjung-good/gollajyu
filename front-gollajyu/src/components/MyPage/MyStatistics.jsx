@@ -170,6 +170,12 @@ const MyStatistics = () => {
       });
   }, []);
 
+  // ---------------------쇼핑몰 크롤링 관련 코드 ---------------------
+
+  const handleRecommend = () => {
+    // TODO 작은 모달 띄우고, 크롤링한 쇼핑몰을 모달에 랜더링
+  };
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
@@ -578,10 +584,16 @@ const MyStatistics = () => {
     <>
       {/* -------------------------- 카테고리 선호도 -------------------------- */}
       <div style={containerStyle}>
-        <div style={titleContainerStyle}>
+        <div style={titleContainerStyle} className="flex justify-between">
           <span style={titleTextStyle} className="fontsize-xl">
             카테고리 선호도
           </span>
+          <button
+            className="bg-amber-300 rounded-full mx-5 px-5 py-3 fontsize-sm hover:bg-amber-400"
+            onClick={handleRecommend}
+          >
+            쇼핑몰 추천받기
+          </button>
         </div>
         <div style={tagContentsContainerStyle}>
           {/* ------------- 관심있는 카테고리 ------------- */}
