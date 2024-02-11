@@ -1,104 +1,127 @@
-import React, { useState, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
 import VoteCardItem from '../VotePage/VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
 import VoteDetailChat from './VoteDetailChat';
-
-// const VoteDetail = ({ voteId }) => {
-//   const [voteDetail, setVoteDetail] = useState(null);
-
-//   useEffect(() => {
-//     // 여기서 voteId를 이용해 서버에 투표 정보를 요청하는 로직을 작성합니다.
-//     // 요청이 성공하면, setVoteDetail을 이용해 상태를 업데이트합니다.
-//   }, [voteId]);
-
-//   // 나머지 코드...
-// };
-
-// 임시 데이터
-// 필요데이터
-// voteheader: 작성자, 작성일, 투표의 좋아요 수, 투표 참여자 수, 투표 번호
-// votecarditem: 투표
-const voteDetail = {
-  author: 'Emily Jones',
-  createdAt: '2024-01-30',
-  participants: 123,
-  likes: 456,
-  title: '가을 시즌에 어울리는 옷은?',
-  category: '3',
-  items: [
-    {
-      image: 'https://example.com/image1.jpg',
-      text: '옵션1',
-      tagResults: [120, 200, 150, 130],
-    },
-    {
-      image: 'https://example.com/image2.jpg',
-      text: '옵션2',
-      tagResults: [120, 200, 150, 130],
-    },
-    {
-      image: 'https://example.com/image3.jpg',
-      text: '옵션3',
-      tagResults: [120, 200, 150, 130],
-    },
-    {
-      image: 'https://example.com/image4.jpg',
-      text: '옵션4',
-      tagResults: [120, 200, 150, 130],// 각 투표 옵션에 몇 표가 들어갔는지
-    },
-  ],
-  hasVoted: true  // 사용자가 투표에 참여했는지 여부
-};
-
-
+import axios from "axios";
+import API_URL from "../../stores/apiURL";
+import useAuthStore from "../../stores/userState";
+import useModalStore from "../../stores/modalState";
+import { useParams } from 'react-router-dom';
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
-  // 투표상세 링크를 통해 ID값 가지고 들어오게
-  // const { voteId } = useParams();
-
+  const voteId = useParams();
   const [clicked, setClicked] = useState([false, false, false, false]);
+  const [voteDetail, setVoteDetail] = useState();
+  console.log(voteId)
+  // 유저의 이메일정보
+  const user = useAuthStore((state) => state.user);
+  // 유저의 나이대
+  const year = user.birthday.year;
+  const month = user.birthday.month;
+  const day = user.birthday.day;
+  
+  const now = new Date(); // 현재 날짜
+  const currentYear = now.getFullYear(); // 현재 연도
+  const currentMonth = now.getMonth() + 1; // 현재 월
+  const currentDay = now.getDate(); // 현재 일
+  
+  let age = currentYear - year; // 만 나이 계산
 
+  // 생일이 아직 지나지 않았다면 만 나이에서 1을 빼야 합니다.
+if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+  age--;
+}
+
+// 10대부터 50대까지 나이대 계산
+let ageGroup;
+if (age < 10) {
+  ageGroup = '미성년자';
+} else if (age < 20) {
+  ageGroup = '10대';
+} else if (age < 30) {
+  ageGroup = '20대';
+} else if (age < 40) {
+  ageGroup = '30대';
+} else if (age < 50) {
+  ageGroup = '40대';
+} else {
+  ageGroup = '50대 이상';
+}
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    params.append("memberId", user.memberId);
+    params.append("voteId", voteId);
+    params.append("filter.age", ageGroup);
+    params.append("filter.gender", user.gender);
+    params.append("filter.typeId", user.typeId);
+
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get(`${API_URL}/votes/detail`, {
+          params
+        });
+        // 요청 성공 시 응답 데이터를 상태에 저장합니다.
+        setVoteDetail(data.body);
+      } catch (error) {
+        // 요청 실패 시 오류 처리를 수행합니다.
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // 투표 클릭 부분
   const handleClick = (index) => {
     const newClicked = clicked.map((item, i) => (i === index ? !item : item));
     setClicked(newClicked);
   };
 
+  // 모달창 닫는 로직
+  const setVoteDetailModalClose = useModalStore(
+    (state) => state.setVoteDetailModalClose
+    );
   const handleClose = () => {
-    // 모달 닫기 기능 구현
-    // ...
+    setVoteDetailModalClose();
   };
 
   return (
     <div className="bg-white shadow-md rounded-md max-w-5xl mx-auto">
-      <VoteDetailHeader
-        {...voteDetail}
-        onClose={handleClose}
-      />
-      <div className="p-2 flex justify-around items-center h-full" >
-        {/* {Array(voteDetail.items.length).fill(null).map((_, index) => (
-          <VoteCardItem 
-            key={index}
-            src={`1`}
-            product={`Title ${index + 1}`}
-            detail={`detail ${index + 1}`}
-            category={voteDetail.category}
-            path="/VoteDetailPage"
-            clicked={clicked[index]}
-            onClick={() => handleClick(index)}
-          />
-        ))} */}
-      </div>
-      {voteDetail.hasVoted && (
+      {voteDetail && (
         <>
-        <VoteDetailReselt 
-          voteResults={voteDetail.items}
-        />
-        <VoteDetailChat />
-      </>
-      )}
+          <VoteDetailHeader
+            {...voteDetail.voteInfo}
+            onClose={handleClose}
+          />
+          <div className="p-2 flex justify-around items-center h-full">
+            {voteDetail.voteItemListInfo.map((item) => (
+              <VoteCardItem
+                key={item.voteItemId}
+                src={item.voteItemImgUrl}
+                item={item} // 전체 item 객체 전달
+                categoryId={1} // categoryData 객체 전달
+                isSelect={selectedVoteItemId === item.voteItemId} // 선택된 항목 ID 정보 전달
+                onClick={(index) => handleVoteClick(item.voteItemId, index)} // onClick 함수를 전달
+                user={user} // 로그인 사용자 정보 전달
+              />
+            ))}
+          </div>
+          {voteDetail.hasVoted && (
+            <>
+              <VoteDetailReselt
+                totalchoicecnt={voteDetail.voteInfo.totalChoiceCnt}
+                itemchoicecnt={item.choiceCnt}
+                tagCountList={item.tagCountList}
+              />
+              <VoteDetailChat 
+                commentList={voteDetail.commentList} 
+              />
+            </>
+          )}
+        </>
+      )}      
     </div>
   );
 };

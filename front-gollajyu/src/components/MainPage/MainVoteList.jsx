@@ -2,10 +2,20 @@ import React, { useState, useEffect } from 'react';
 import API_URL from "../../stores/apiURL";
 import axios from "axios";
 import { Link } from 'react-router-dom'
+import useModalStore from "../../stores/modalState";
 // import { Responsive } from 'react-responsive';
 
 const MainVoteList = () => {
   const [listsData, setListsData] = useState([]);
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+  
+  const openVoteDetailModal = (voteId) => {
+    setVoteDetailModalOpen();
+    // VoteDetail 컴포넌트가 외부에서 voteId를 받을 수 있도록 전달합니다.
+    console.log('VoteDetail 컴포넌트로 voteId 전달:', voteId); // 전달 방법은 상황에 따라 조정
+  };
 
   useEffect(() => {
     // API를 통해 투표 정보를 가져옵니다.
@@ -76,7 +86,7 @@ const MainVoteList = () => {
           <ul className="flex flex-col gap-2 pl-2">
             {data.items.map((item) => (
               <li key={item.voteId}>
-                <Link to={`/VoteDetail/${item.voteId}`}>
+                <button onClick={() => openVoteDetailModal(item.voteId)}>
                   <div className="flex flex-col">
                     <p className="font-bold text-lg">{item.title}</p>
                     <div className="flex flex-row gap-2">
@@ -84,7 +94,7 @@ const MainVoteList = () => {
                       <p>참여: {item.totalChoiceCnt}</p>
                     </div>
                   </div>
-                </Link>
+                </button>
               </li>
             ))}
           </ul>
@@ -92,6 +102,6 @@ const MainVoteList = () => {
       ))}
     </div>
   );
-}
+};
 
 export default MainVoteList;

@@ -11,9 +11,9 @@ import SignupModal from "../components/SignupForm";
 import VoteButton from "../components/VoteButton";
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
+import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
-import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -125,10 +125,9 @@ const MainPage = () => {
       </div>
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}
-      {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
-      {isVoteDetailModalOpened && <TmpModal></TmpModal>}
-      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
-      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
+      {isVoteDetailModalOpened && <VoteDetail />}
+      {isVoteSimpleCreateModalOpened && <VoteSimple />}
+      {isVoteProductCreateModalOpened && <VoteProduct />}
     </>
   );
 };
