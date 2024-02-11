@@ -176,11 +176,11 @@ public class MemberService {
                 Element linkElement = linkElements.get(i);//.selectFirst("a.lnk_head")
 
                 // 링크 URL 가져오기 lnk_head에 붙어있는 url
-                String linkUrl = (linkElement != null) ? linkElement.selectFirst("a.lnk_url").attr("href") : "";
-                String imageUrl = (linkElement != null) ? linkElement.selectFirst("img.img_thumb").attr("src") : "";
+                String linkUrl = (linkElement.selectFirst("a.lnk_url") != null) ? linkElement.selectFirst("a.lnk_url").attr("href") : "";
+                String imageUrl = (linkElement.selectFirst("img.img_thumb") != null) ? linkElement.selectFirst("img.img_thumb").attr("src") : "";
 
                 // 헤드라인 텍스트 가져오기 이것도 1개만 이건 여러개 해도 가능할 듯?
-                String headlineText = (linkElement != null) ? linkElement.selectFirst("span.lnk_tit:first-child").text() : "";
+                String headlineText = (linkElement.selectFirst("span.lnk_tit:first-child") != null) ? linkElement.selectFirst("span.lnk_tit:first-child").text() : "";
 
                 // 맵 생성 및 매핑
                 Map<String, String> resultMap = new HashMap<>();

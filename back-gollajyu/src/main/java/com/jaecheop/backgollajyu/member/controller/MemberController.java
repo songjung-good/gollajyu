@@ -254,7 +254,7 @@ public class MemberController {
         // Ensure there are at least two elements in the list
         CategoryTagDto secondLargestDto = new CategoryTagDto();
         if (categoryTagDtoList.size() >= 2) {
-            // Sort the list in descending order based on the count
+            // Sort the list in descending order based on (the count
             List<CategoryTagDto> sortedList = categoryTagDtoList.stream()
                     .sorted(Comparator.comparing(CategoryTagDto::getCount).reversed())
                     .toList();
@@ -263,10 +263,10 @@ public class MemberController {
             secondLargestDto = sortedList.get(1);
 
         } else {
-            // Handle the case where there are fewer than two elements in the list
-            // You might want to throw an exception or handle it according to your requirements
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        String categoryNameAndTag = secondLargestDto.getCategory() + " " + secondLargestDto.getTag();
+        String categoryNameAndTag = ((!Objects.equals(secondLargestDto.getCategory(), "전자제품")) ?
+                (secondLargestDto.getTag() + " " +secondLargestDto.getCategory()) : "삼성 가전");
 
         System.out.println(categoryNameAndTag);
         List<Map<String, String>> crawlingResult = memberService.crawlNaverSearchResults(categoryNameAndTag);
