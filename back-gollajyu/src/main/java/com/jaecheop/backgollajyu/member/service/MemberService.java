@@ -136,27 +136,26 @@ public class MemberService {
     }
 
 
-    // myPage 카테고리별 나의 투표 비율
-    public List<List<CategoryTagDto>> makeCategoryInfoMypage(Long memberId, Integer categoryId) {
+    // myPage 카테고리별 나의 투표 비율 ? 뒤가 의미 없는듯
+    public List<CategoryTagDto> makeCategoryInfoMypage(Long memberId, Integer categoryId) {
 
         List<Category> categories = (categoryId != null)
                 ? categoryRepository.findAllById(categoryId) : categoryRepository.findAll(Sort.by(Sort.Order.desc("id")));
 
-        List<List<CategoryTagDto>> sortedList = new ArrayList<>();
+        List<CategoryTagDto> sortedList = new ArrayList<>();
 
+        List<CategoryTagDto> sortedCategoryStatistics = new ArrayList<>();
         for (Category category : categories) {
+            System.out.println("category = " + category + categoryId);
             List<CategoryTagDto> categoryStatistics = voteService.generateStatistics(voteResultRepository.findAllByMemberIdAndCategoryId(memberId, category.getId()), null);
 
-            // Sort the list based on the 'count' property in CategoryTagDto
-            List<CategoryTagDto> sortedCategoryStatistics = categoryStatistics.stream()
+            sortedCategoryStatistics = (categoryId != null) ? categoryStatistics.stream()
                     .sorted(Comparator.comparing(CategoryTagDto::getCount).reversed())
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()) : categoryStatistics;
 
-            // Add the sorted list to the outer list
-            sortedList.add(sortedCategoryStatistics);
         }
 
-        return sortedList;
+        return sortedCategoryStatistics;
     }
 
 
