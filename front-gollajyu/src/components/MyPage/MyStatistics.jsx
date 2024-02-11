@@ -6,10 +6,82 @@ import tagColorData from "/src/stores/tagColorData";
 import axios from "axios";
 import API_URL from "../../stores/apiURL";
 import useAuthStore from "../../stores/userState";
+import { CircularProgress } from "@mui/material";
 
 const filteredCategoryData = categoryData.filter((category) => {
   return category.name !== "전체" && category.name !== "간단";
 });
+
+const RecommendModal = ({ topCategory, closeModal }) => {
+  const user = useAuthStore((state) => state.user);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios
+      .get(API_URL + `/members/${user.memberId}/recommends`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        setData("Error");
+      });
+  }, []);
+  const handleClick = (linkUrl) => {
+    window.open(linkUrl);
+  };
+  return (
+    <div
+      className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center text-center"
+      onClick={() => closeModal()}
+    >
+      <div className="bg-white p-6 rounded-3xl xl:w-[700px] xl:h-[620px] lg:w-[600px] lg:h-[550px] md:w-[460px] md:h-[460px] sm:w-[255px] sm:h-[530px] relative">
+        <div>
+          <h1 className="fontsize-lg">{topCategory.key} 추천 쇼핑몰</h1>
+          <p className="fontsize-xs mb-5">
+            이미지 클릭 시, 쇼핑몰로 이동합니다
+          </p>
+        </div>
+        <button
+          className="absolute right-2 top-2 bg-red-400 rounded-full w-[3.5rem] h-[2.2rem] px-auto py-auto"
+          onClick={() => closeModal()}
+        >
+          닫기
+        </button>
+        {data.length == 0 && (
+          <div className="flex flex-col h-1/2 items-center justify-center">
+            <CircularProgress size={100} sx={{ color: "#FFD257" }} />
+            <p className="my-5">열심히 찾고 있어요...!</p>
+          </div>
+        )}
+
+        {data.length > 0 && data !== "Error" && (
+          <div className="grid grid-cols-3 sm:grid-cols-2 gap-1">
+            {data.slice(0, 6).map((item, index) => (
+              <div
+                key={index}
+                onClick={() => handleClick(item.linkUrl)}
+                className="rounded-3xl w-[12rem] h-[15rem] mx-auto px-3 pt-3 pb-10 cursor-pointer hover:bg-amber-100"
+              >
+                <img
+                  src={item.imageUrl}
+                  alt="사이트 이미지"
+                  className="rounded-3xl w-full"
+                />
+                <p className="fontsize-sm break-keep">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {data === "Error" && (
+          <p className="fontsize-md my-10">
+            투표 이력이 존재하지 않아 사이트 추천이 어렵습니다. <br />
+            투표에 참여해쥬~
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const MyStatistics = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -171,9 +243,16 @@ const MyStatistics = () => {
   }, []);
 
   // ---------------------쇼핑몰 크롤링 관련 코드 ---------------------
+  const [showModal, setShowModal] = useState(false);
 
   const handleRecommend = () => {
     // TODO 작은 모달 띄우고, 크롤링한 쇼핑몰을 모달에 랜더링
+    setShowModal(true);
+    axios.get(API_URL + `/members/${user.memberId}/recommends`);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   // --------------------------------- css 시작 ---------------------------------
@@ -687,7 +766,6 @@ const MyStatistics = () => {
           {/* --------------------------------------- */}
         </div>
       </div>
-
       {/* -------------------------- 태그 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
@@ -772,6 +850,9 @@ const MyStatistics = () => {
           {/* --------------------------------------- */}
         </div>
       </div>
+      {showModal && (
+        <RecommendModal topCategory={topCategory} closeModal={closeModal} />
+      )}
     </>
   );
 };
