@@ -19,7 +19,7 @@ const VotePageHeader = ({ onSort, onSearch, onSearchTerm, onSearchCategory }) =>
   const handleSearchClick = () => {
     onSearch(); // 입력 완료된 검색어를 상위 컴포넌트에 전달
   };
-   
+  
   return (
     <div className="vote-controls container mx-auto my-4 max-w-5xl px-4">
       <div className="flex justify-between">
