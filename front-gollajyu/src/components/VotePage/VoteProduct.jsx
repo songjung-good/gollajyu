@@ -21,25 +21,49 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
   const [previewImages, setPreviewImages] = useState([]);
 
   const handleImageUpload = (event, index) => {
-    const newPreviewImages = previewImages.slice();
+    const newPreviewImages = [...previewImages];
     if (event.target.files.length > 0) {
-      newPreviewImages[index] = URL.createObjectURL(event.target.files[0]);
-    } else {
-      newPreviewImages[index] = null;
-    }
-    setPreviewImages(newPreviewImages);
+        const file = event.target.files[0];
+        newPreviewImages[index] = URL.createObjectURL(file);
+        setPreviewImages(newPreviewImages);
 
-    // 업로드된 이미지 정보를 voteReqDto에 추가
-    const newVoteItemList = voteReqDto.voteItemList.slice();
-    newVoteItemList[index] = {
-      voteItemImg: event.target.files[0],
-      voteItemDesc: '',
-      price: 0,
-    };
-    setVoteReqDto({
-      ...voteReqDto,
-      voteItemList: newVoteItemList,
-    });
+        // items 배열에도 이미지 정보 추가
+        const updatedItems = [...items];
+        if (!updatedItems[index]) {
+            updatedItems[index] = { voteItemImg: file, voteItemDesc: '', price: 0 };
+        } else {
+            updatedItems[index] = {
+                ...updatedItems[index],
+                voteItemImg: file, // 이미지 파일 추가
+            };
+        }
+        setItems(updatedItems);
+
+        // voteReqDto에 이미지 정보 추가
+        const newVoteItemList = voteReqDto.voteItemList.slice();
+        newVoteItemList[index] = {
+            ...newVoteItemList[index],
+            voteItemImg: file,
+        };
+        setVoteReqDto({
+            ...voteReqDto,
+            voteItemList: newVoteItemList,
+        });
+    } else {
+        newPreviewImages[index] = null;
+        setPreviewImages(newPreviewImages);
+    }
+  };
+
+  const handleInputChange = (e, index, field) => {
+    const updatedItems = [...items];
+    const value = field === 'price' ? parseFloat(e.target.value) || 0 : e.target.value;
+    if (updatedItems[index]) {
+        updatedItems[index] = { ...updatedItems[index], [field]: value };
+    } else {
+        updatedItems[index] = { voteItemImg: null, [field]: value };
+    }
+    setItems(updatedItems);
   };
 
   // 사진 첨부 기능
@@ -111,24 +135,25 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
     formData.append('categoryId', category);
     formData.append('memberEmail', user.email);
 
-    const voteItemList = items.map((item) => {
-      return {
-        voteItemImg: item.voteItemImg,
-        voteItemDesc: item.voteItemDesc,
-        price: item.price,
-      };
+    console.log("test2")
+    console.log(items)
+    
+    items.forEach((item, index) => {
+      if (item.voteItemImg) {
+          formData.append(`voteItemList[${index}].voteItemImg`, item.voteItemImg);
+      }
+      formData.append(`voteItemList[${index}].voteItemDesc`, item.voteItemDesc || '');
+      formData.append(`voteItemList[${index}].price`, item.price.toString());
     });
-    formData.append('voteItemList', JSON.stringify(voteItemList));
-
 
     console.log("formData:", formData);
     const formDataObject = Object.fromEntries(formData);
     console.log("formDataObject:", formDataObject);
 
-    axios.post(`${API_URL}/votes`, {
-      data: formDataObject,
+    axios.post(`${API_URL}/votes`, formData, {
+      // data: formDataObject,
       headers: {
-        // 'Content-Type': 'multipart/form-data',
+        'Content-Type': 'multipart/form-data',
         // 'Authorization': `Bearer ${user.accessToken}`
       }
     })
@@ -213,62 +238,67 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
           
           {/* 투표 항목 추가 부분 */}
           {items.map((item, index) => (
-            <div key={index} className="mb-6 pt-4 border-t-2 border-blue-400">
-              <label className="mb-5 block text-xl font-semibold text-[#FF7F50]">
-                투표 항목 추가
+          <div key={index} className="mb-6 pt-4 border-t-2 border-blue-400">
+            <label className="mb-5 block text-xl font-semibold text-[#FF7F50]">
+              투표 항목 추가
+            </label>
+            {previewImages[index] && (
+              <img
+                src={previewImages[index]}
+                alt={`투표 항목 ${index + 1} 이미지`}
+                className="object-cover max-h-[300px] w-full rounded-lg mb-8"
+              />
+            )}
+            {!previewImages[index] && (
+              <div>
+              <input
+                type="file"
+                name={`file-${index}`}
+                id={`file-${index}`}
+                className="sr-only"
+                onChange={(e) => handleImageUpload(e, index)}
+              />
+                <label
+                  htmlFor={`file-${index}`}
+                  className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                >
+                  <div>
+                    <span className="mb-2 block text-xl font-semibold text-[#FF7F50]">
+                      사진을 첨부해주세요
+                    </span>
+                  </div>
+                </label>
+              </div>
+            )}
+            <div className="mb-5">
+              <label htmlFor={`price-${index}`} className="mb-3 block text-base font-medium text-[#FF7F50]">
+                가격:
               </label>
-              {previewImages[index] && (
-                <img
-                  src={previewImages[index]}
-                  alt={`투표 항목 ${index + 1} 이미지`}
-                  className="object-cover max-h-[300px] w-full rounded-lg mb-8"
-                />
-              )}
-              {!previewImages[index] && (
-                <div>
-                <input
-                  type="file"
-                  name={`file-${index}`}
-                  id={`file-${index}`}
-                  className="sr-only"
-                  onChange={(e) => handleImageUpload(e, index)}
-                />
-                  <label
-                    htmlFor={`file-${index}`}
-                    className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
-                  >
-                    <div>
-                      <span className="mb-2 block text-xl font-semibold text-[#FF7F50]">
-                        사진을 첨부해주세요
-                      </span>
-                    </div>
-                  </label>
-                </div>
-              )}
-              <div className="mb-5">
-                <label htmlFor="price" className="mb-3 block text-base font-medium text-[#FF7F50]">
-                  가격:
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  id="price"
-                  placeholder="가격을 입력하세요"
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
-                />
-              </div>
-              <div className="mb-5">
-                <label htmlFor="content" className="mb-3 block text-base font-medium text-[#FF7F50]">
-                  내용 설명:
-                </label>
-                <textarea
-                  name="content"
-                  id="content"
-                  placeholder="내용을 입력하세요"
-                  className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md" />
-              </div>
+              <input
+                type="number"
+                name={`price-${index}`}
+                id={`price-${index}`}
+                placeholder="가격을 입력하세요"
+                value={item.price || ''}
+                onChange={(e) => handleInputChange(e, index, 'price')}
+                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
+              />
             </div>
-          ))}
+            <div className="mb-5">
+              <label htmlFor={`content-${index}`} className="mb-3 block text-base font-medium text-[#FF7F50]">
+                내용 설명:
+              </label>
+              <textarea
+                name={`content-${index}`}
+                id={`content-${index}`}
+                placeholder="내용을 입력하세요"
+                value={item.voteItemDesc || ''}
+                onChange={(e) => handleInputChange(e, index, 'voteItemDesc')}
+                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
+              />
+            </div>
+          </div>
+        ))}
 
           {/* 투표 항목 추가 버튼 */}
           <div className="mb-5">
