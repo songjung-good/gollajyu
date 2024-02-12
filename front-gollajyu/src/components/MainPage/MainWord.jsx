@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import tagColorData from '../../stores/tagColorData';
+import tagColorData from '/src/stores/tagColorData';
 
 // 임시 데이터
 const categories = ['의류', '가구', '신발', '전자제품']
@@ -33,11 +33,11 @@ const generateSentence = () => {
 
 // 색상 지정
 const colors = {
-  의류: '#FF595E',
-  가구: '#FFCA3A',
-  신발: '#8AC926',
-  전자제품: '#1982C4',
-  // 기능성: '#5EC4DC',
+  // 의류: '#FF595E',
+  // 가구: '#FFCA3A',
+  // 신발: '#8AC926',
+  // 전자제품: '#1982C4',
+  // // 기능성: '#5EC4DC',
   // 브랜드: '#D395D0',
   // 소재: '#CDE05A',
   // 색감: '#FFA959',
