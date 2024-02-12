@@ -515,9 +515,9 @@ public class VoteService {
 
         // 이 사용자의 투표 참여 여부
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(member.getId(), vote.getId());
-        if (optionalVoteResult.isEmpty()) {
-            return  new ServiceResult<>().fail("투표하지 않은 사용자입니다.");
-        }
+//        if (optionalVoteResult.isEmpty()) {
+//            return  new ServiceResult<>().fail("투표하지 않은 사용자입니다.");
+//        }
         VoteResult voteResult = optionalVoteResult.get();
 
         // 상세정보 - 나이, 성별, 성향 별
