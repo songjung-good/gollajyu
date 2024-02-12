@@ -53,6 +53,12 @@ const MainPage = () => {
   const isVoteSimpleCreateModalOpened = useModalStore((state) => state.isVoteSimpleCreateModalOpened);
   const isVoteProductCreateModalOpened = useModalStore((state) => state.isVoteProductCreateModalOpened);
   
+  // 상세페이지
+  const setVoteDetailModalOpen  = useModalStore((state) => state.setVoteDetailModalOpen)
+  const transferVoteId = (voteId) => {
+    // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
+    setVoteDetailModalOpen(voteId);
+  };
   // 모달 창 열기 함수
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -169,7 +175,7 @@ const MainPage = () => {
             </div>
 
             {/* 메인 투표 리스트 컴포넌트 */}
-            <MainVoteList />
+            <MainVoteList transferVoteId={transferVoteId}/>
           </>
         )}
       </div>

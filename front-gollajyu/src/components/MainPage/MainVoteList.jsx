@@ -1,20 +1,18 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import API_URL from "../../stores/apiURL";
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
-import { Link } from "react-router-dom";
-import useModalStore from "../../stores/modalState";
-// import { Responsive } from 'react-responsive';
 
-const MainVoteList = () => {
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+const MainVoteList = ({ transferVoteId }) => {
   const [listsData, setListsData] = useState([]);
-  const setVoteDetailModalOpen = useModalStore(
-    (state) => state.setVoteDetailModalOpen
-  );
 
+  // 메인페이지로 값 전송
   const openVoteDetailModal = (voteId) => {
-    setVoteDetailModalOpen(voteId);
-    // VoteDetail 컴포넌트가 외부에서 voteId를 받을 수 있도록 전달합니다.
-    console.log("VoteDetail 컴포넌트로 voteId 전달:", voteId); // 전달 방법은 상황에 따라 조정
+    transferVoteId(voteId)
   };
 
   useEffect(() => {
@@ -103,7 +101,6 @@ const MainVoteList = () => {
           </ul>
         </div>
       ))}
-            {/* {isVoteDetailModalOpened && <VoteDetail />} */}
     </div>
   );
 };

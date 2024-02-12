@@ -63,6 +63,7 @@ if (age < 20) {
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
+        console.log(data.body.);
       } catch (error) {
         // 요청 실패 시 오류 처리를 수행합니다.
         console.error(error);
@@ -80,9 +81,17 @@ if (age < 20) {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-md max-w-5xl mx-auto">
+    <div
+      id="outer-layer"
+      className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50"
+      onClick={(e) => {
+        if (e.target.id == "outer-layer") {
+          setVoteDetailModalClose();
+        }
+      }}
+    >
       {voteDetail && (
-        <>
+        <div className="mx-auto max-h-[800px] w-full max-w-[1000px] bg-white overflow-y-10">
           <VoteDetailHeader
             {...voteDetail.voteInfo}
             onClose={handleClose}
@@ -95,7 +104,7 @@ if (age < 20) {
                 categoryId={1} // categoryData 객체 전달
                 voteId={voteDetail.voteInfo.voteId}
 
-                onClick={() => handleClick(itemIndex)} // onClick 함수를 전달
+                onClick={() => setClicked(itemIndex)} // onClick 함수를 전달
                 isSelect={clicked} // 선택된 항목 ID 정보 전달
               />
             ))}
@@ -103,16 +112,14 @@ if (age < 20) {
           {voteDetail.hasVoted && (
             <>
               <VoteDetailReselt
-                totalchoicecnt={voteDetail.voteInfo.totalChoiceCnt}
-                itemchoicecnt={item.choiceCnt}
-                tagCountList={item.tagCountList}
+                voteResults={item}
               />
               <VoteDetailChat 
                 commentList={voteDetail.commentList}
               />
             </>
           )}
-        </>
+        </div>
       )}      
     </div>
   );
