@@ -1,5 +1,9 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from 'react';
 import tagColorData from '/src/stores/tagColorData';
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "../../stores/responsiveUtils";
+
 
 // 임시 데이터
 const categories = ['의류', '가구', '신발', '전자제품']
