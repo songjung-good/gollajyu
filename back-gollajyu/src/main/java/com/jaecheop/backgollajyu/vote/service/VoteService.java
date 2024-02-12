@@ -514,11 +514,12 @@ public class VoteService {
         Vote vote = optionalVote.get();
 
         // 이 사용자의 투표 참여 여부
+        Long chosenItemId = null; // 사용자가 선택한 투표 아이템 ID를 저장할 변수, 참여하지 않았다면 null 상태 유지
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(member.getId(), vote.getId());
-//        if (optionalVoteResult.isEmpty()) {
-//            return  new ServiceResult<>().fail("투표하지 않은 사용자입니다.");
-//        }
-        VoteResult voteResult = optionalVoteResult.get();
+        if (optionalVoteResult.isPresent()) {
+            // 투표에 참여한 경우, 선택한 투표 아이템의 ID 할당
+            chosenItemId = optionalVoteResult.get().getVoteItem().getId();
+        }
 
         // 상세정보 - 나이, 성별, 성향 별
         // 1. 투표 관련 정보 + 총 투표 수 + 좋아요
@@ -573,7 +574,7 @@ public class VoteService {
         List<Comment> commentList = commentRepository.findByVoteId(vote.getId());
 
         VoteDetailResDto voteDetailResDto = VoteDetailResDto.builder()
-                .chosenItem(voteResult.getId())
+                .chosenItem(chosenItemId)
                 .voteInfo(voteInfoDto)
                 .voteItemListInfo(voteItemInfoDtoList)
                 .commentList(commentList)
