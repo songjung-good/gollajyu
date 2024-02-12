@@ -15,6 +15,11 @@ const VoteDetail = () => {
   const [clicked, setClicked] = useState([false, false, false, false]);
   const [voteDetail, setVoteDetail] = useState();
 
+  const handleClick = (index, selection) => {
+    setClicked(false)
+    console.log(`선택지 ${index + 1}: ${selection}`);
+  };
+
   // 유저의 이메일정보
   const user = useAuthStore((state) => state.user);
 
@@ -73,12 +78,6 @@ if (age < 20) {
     fetchData();
   }, []);
 
-  // 투표 클릭 부분
-  const handleClick = (index) => {
-    const newClicked = clicked.map((item, i) => (i === index ? !item : item));
-    setClicked(newClicked);
-  };
-
   // 모달창 닫는 로직
   const setVoteDetailModalClose = useModalStore(
     (state) => state.setVoteDetailModalClose
@@ -96,17 +95,17 @@ if (age < 20) {
             onClose={handleClose}
           />
           <div className="p-2 flex justify-around items-center h-full">
-            {/* {voteDetail.voteItemListInfo.map((item) => (
+            {voteDetail.voteItemListInfo.map((item, itemIndex) => (
               <VoteCardItem
                 key={item.voteItemId}
-                src={item.voteItemImgUrl}
                 item={item} // 전체 item 객체 전달
                 categoryId={1} // categoryData 객체 전달
-                isSelect={selectedVoteItemId === item.voteItemId} // 선택된 항목 ID 정보 전달
-                onClick={(index) => handleClick(item.voteItemId, index)} // onClick 함수를 전달
-                user={user} // 로그인 사용자 정보 전달
+                voteId={vote.voteId}
+
+                onClick={() => handleClick(itemIndex)} // onClick 함수를 전달
+                isSelect={clicked} // 선택된 항목 ID 정보 전달
               />
-            ))} */}
+            ))}
           </div>
           {voteDetail.hasVoted && (
             <>
