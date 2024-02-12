@@ -1,16 +1,12 @@
 package com.jaecheop.backgollajyu.member.controller;
 
-import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
-import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
 import com.jaecheop.backgollajyu.member.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.member.service.MemberService;
-import com.jaecheop.backgollajyu.socialLogin.PrincipalDetails;
 import com.jaecheop.backgollajyu.vote.entity.Category;
-import com.jaecheop.backgollajyu.vote.entity.VoteResult;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.CategoryRepository;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
@@ -20,6 +16,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,16 +24,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.jaecheop.backgollajyu.member.service.MemberService;
 import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.net.http.HttpResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -229,15 +221,21 @@ public class MemberController {
     // 카테고리별 통계?
     @GetMapping("/{memberId}/votes/statistics")
     @Operation(summary = "카테고리별 통계", description = "returns CategoryInfoMap")
-    public ResponseEntity<Map<String, List<List<CategoryTagDto>>>> statisticMemberResult(
+    public ResponseEntity<Map<String, List<CategoryTagDto>>> statisticMemberResult(
             @PathVariable Long memberId) {
-        Map<String, List<List<CategoryTagDto>>> categoryInfoMap = new HashMap<>();
+        Map<String, List<CategoryTagDto>> categoryInfoMap = new HashMap<>();
         List<Category> categories = categoryRepository.findAll();
+        int i = 0;
         for (Category category : categories) {
-            List<List<CategoryTagDto>> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
+            if (i > 3) {
+                break;
+            }
+            System.out.println("category = " + category);
+            List<CategoryTagDto> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
 
             // <category.getName(), categoryInfoResDtoList>
             categoryInfoMap.put(category.getCategoryName(), categoryInfoList);
+            i++;
         }
         if (categoryInfoMap.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -245,6 +243,7 @@ public class MemberController {
             return new ResponseEntity<>(categoryInfoMap, HttpStatus.OK);
         }
     }
+
 
     @GetMapping("/{memberId}/recommends")
     @Operation(summary = "크롤링", description = "returns crawlingResult : 멤버 아이디 기반 추천 사이트 크롤링")
@@ -255,7 +254,7 @@ public class MemberController {
         // Ensure there are at least two elements in the list
         CategoryTagDto secondLargestDto = new CategoryTagDto();
         if (categoryTagDtoList.size() >= 2) {
-            // Sort the list in descending order based on the count
+            // Sort the list in descending order based on (the count
             List<CategoryTagDto> sortedList = categoryTagDtoList.stream()
                     .sorted(Comparator.comparing(CategoryTagDto::getCount).reversed())
                     .toList();
@@ -264,10 +263,10 @@ public class MemberController {
             secondLargestDto = sortedList.get(1);
 
         } else {
-            // Handle the case where there are fewer than two elements in the list
-            // You might want to throw an exception or handle it according to your requirements
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        String categoryNameAndTag = secondLargestDto.getCategory() + " " + secondLargestDto.getTag();
+        String categoryNameAndTag = ((!Objects.equals(secondLargestDto.getCategory(), "전자제품")) ?
+                (secondLargestDto.getTag() + " " +secondLargestDto.getCategory()) : "삼성 가전");
 
         System.out.println(categoryNameAndTag);
         List<Map<String, String>> crawlingResult = memberService.crawlNaverSearchResults(categoryNameAndTag);
