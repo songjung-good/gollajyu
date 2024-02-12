@@ -15,6 +15,8 @@ import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -624,7 +626,10 @@ public class VoteService {
 
     }
 
-    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession, Long memberId) {
+    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession, Long memberId, int pageNo) {
+        // pageable
+        Pageable pageable = PageRequest.of(pageNo, 10);
+
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
         // 로그인 하지 않은 사용자
@@ -639,7 +644,7 @@ public class VoteService {
                         .build();
                 // 단일 투표의 상세 리스트
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByOrderByCreateAtDesc()
+                        .findAllByOrderByCreateAtDesc(pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v)).toList();
                 makeVoteDetail(allVoteList);
@@ -668,7 +673,7 @@ public class VoteService {
 
                 // 해당 카테고리 투표 리스트 최신순으로 담기
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId)
+                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId, pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
@@ -688,7 +693,7 @@ public class VoteService {
             if (categoryId == 0) {
                 // 전체 투표에서 투표 한 투표 거르기
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByOrderByCreateAtDesc()
+                        .findAllByOrderByCreateAtDesc(pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
@@ -742,7 +747,7 @@ public class VoteService {
                 // 해당 카테고리 투표 리스트 최신순으로 담기
                 // 참여한 투표 거르기
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId)
+                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId, pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
