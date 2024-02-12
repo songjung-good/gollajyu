@@ -171,8 +171,8 @@ const StatisticPage = () => {
   const dropdownContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
-    alignItems: isXLarge || isLarge ? "center" : "flex-start",
-    flexDirection: isXLarge || isLarge ? "row" : "column",
+    alignItems: isXLarge ? "center" : "flex-start",
+    flexDirection: isXLarge ? "row" : "column",
   };
 
   // ----------- 서브 제목 스타일 -----------
@@ -332,7 +332,7 @@ const StatisticPage = () => {
             {/* ------------- 드롭다운 버튼 ------------- */}
             <div style={dropdownContainerStyle}>
               <div style={flexContainerStyle}>
-                <div style={subTitleStyle} className="fontsize-md">다른 사람들은</div>
+                <div style={subTitleStyle} className="fontsize-lg">다른 사람들은</div>
                 <div style={relativeContainerStyle}>
                   <div
                     onClick={toggleDropdown}
@@ -362,10 +362,10 @@ const StatisticPage = () => {
                     </div>
                   )}
                 </div>
-                <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
-                <div style={restStyle} className="fontsize-md">,</div>
+                <div style={subTitleStyle} className="fontsize-lg">을(를) 구매 할 때</div>
+                <div style={restStyle} className="fontsize-lg">,</div>
               </div>
-              <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
+              <div style={subTitleStyle} className="fontsize-lg">어떤 요소를 중요하게 생각할까?</div>
             </div>
             {/* --------------------------------------- */}
 
