@@ -5,14 +5,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // API URL 설정
-import API_URL from "../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 
 // 반응형 웹 디자인을 위한 유틸리티 함수
-import { useResponsiveQueries } from "../stores/responsiveUtils";
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 // 커스텀 스토어를 이용한 상태 관리
-import useModalStore from "../stores/modalState";
-import useAuthStore from "../stores/userState";
+import useModalStore from "/src/stores/modalState";
+import useAuthStore from "/src/stores/userState";
 
 // 메인 페이지 컴포넌트
 import MainVoteList from "../components/MainPage/MainVoteList";
