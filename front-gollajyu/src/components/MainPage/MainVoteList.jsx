@@ -1,12 +1,31 @@
-import React, { useState, useEffect } from "react";
-import API_URL from "../../stores/apiURL";
+// 리액트 및 훅/라이브러리
+import React, { useState, useEffect } from 'react';
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
-import { Link } from "react-router-dom";
-import useModalStore from "../../stores/modalState";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useModalStore from "/src/stores/modalState";
+
+// import { Link } from "react-router-dom";
 // import { Responsive } from 'react-responsive';
 
+
 const MainVoteList = () => {
+  
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  // 투표 목록 데이터 상태
   const [listsData, setListsData] = useState([]);
+  
+  // 투표 상세 모달 열기 함수 가져오기
   const setVoteDetailModalOpen = useModalStore(
     (state) => state.setVoteDetailModalOpen
   );
@@ -75,35 +94,95 @@ const MainVoteList = () => {
     });
   }, []);
 
+
+  // --------------------------------- css 시작 ---------------------------------
+
+  // ----------- body 스타일 -----------
+  const bodyStyle = {
+    // 디자인
+    margin: "0 auto", // 가로 중앙 정렬
+    width:
+      isXLarge ? "1000px" :
+      isLarge ? "740px" :
+      isMedium ? "470px" : "375px",
+  };
+
+  // ----------- 투표 리스트 컨테이너 스타일 -----------
+  const voteListContainerStyle = {
+    // 디자인
+    marginTop:
+      isXLarge ? "50px" :
+      isLarge ? "40px" :
+      isMedium ? "30px" : "20px",
+    padding: "10px",
+    width: isXLarge || isLarge ? "45%" : "90%",
+
+  }
+
+  // ----------- 버튼 스타일 -----------
+  const buttonStyle = {
+    // 디자인
+    width: "100%",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  }
+
+  // ----------- 좋아요 스타일 -----------
+  const likeStyle = {
+    // 디자인
+    marginRight:
+      isXLarge ? "10px" :
+      isLarge ? "8px" :
+      isMedium ? "6px" : "4px",
+
+    // 글자
+    color: "#FF595E",
+  }
+
+  // --------------------------------- css 끝 ---------------------------------
+
+
   return (
-    <div className="flex flex-wrap justify-center">
-      {listsData.map((data, index) => (
-        <div
-          key={data.key}
-          className="max-w-sm mx-2 mt-20 p-4 shadow-md rounded-lg 
-        border-t-2 border-teal-400 w-1/2"
-        >
-          <div className="flex justify-between pb-4">
-            <p className="font-bold text-xl">{data.subject}</p>
-          </div>
-          <ul className="flex flex-col gap-2 pl-2">
-            {data.items.map((item) => (
-              <li key={item.voteId}>
-                <button onClick={() => openVoteDetailModal(item.voteId)}>
-                  <div className="flex flex-col">
-                    <p className="font-bold text-lg">{item.title}</p>
-                    <div className="flex flex-row gap-2">
-                      <p>좋아요: {item.likesCnt}</p>
-                      <p>참여: {item.totalChoiceCnt}</p>
+    <>
+      <div style={bodyStyle} className="flex flex-wrap justify-center gap-6">
+        {listsData.map((data, index) => (
+          <div
+            key={data.key}
+            style={voteListContainerStyle}
+            className="border-t-2 border-amber-400"
+          >
+            <div className="flex items-center justify-between border-b border-gray-300 pb-2">
+              <p className="font-bold fontsize-md">{data.subject}</p>
+              <div className="flex items-center justify-center w-10">
+                <p>📝</p>
+              </div>
+            </div>
+            <ul className="flex flex-col">
+              {data.items.map((item) => (
+                <li key={item.voteId} className="border-b border-gray-300">
+                  <button
+                    style={buttonStyle}
+                    onClick={() => openVoteDetailModal(item.voteId)}
+                    className="hover:bg-gray-200 py-2"
+                  >
+                    <div className="flex items-center">
+                      <p style={likeStyle} className="fontsize-xs">❤ {item.likesCnt}</p>
+                      <p className="fontsize-sm">{item.title}</p>
                     </div>
-                  </div>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
+                    <div className="flex items-center justify-center w-10">
+                      <p className="fontsize-xs text-gray-500">{item.totalChoiceCnt}</p>
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </>
   );
 };
 

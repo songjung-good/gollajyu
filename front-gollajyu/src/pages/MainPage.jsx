@@ -27,7 +27,6 @@ import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
 
-
 const MainPage = () => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
@@ -35,7 +34,7 @@ const MainPage = () => {
 
   // ------------------ 로그인 관련 ------------------
 
-  // 사용자 정보
+  // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
 
   // 로그인 여부 및 상태 업데이트 함수
@@ -133,12 +132,14 @@ const MainPage = () => {
 
   // --------------------------------- css 시작 ---------------------------------
 
-  // ----------- body 스타일 -----------
-  const body = {
+  // ----------- 로딩중 스타일 -----------
+  const loadingStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    padding: "50px 0", // 상하단 여백: 50px
-    // (반응형) 컨텐츠 가로 길이
+    height:
+      isXLarge ? "1000px" :
+      isLarge ? "900px" :
+      isMedium ? "800px" : "700px",
   };
 
   // --------------------------------- css 끝 ---------------------------------
@@ -154,7 +155,9 @@ const MainPage = () => {
         {isLoading ? (
           <>
             {/* 로딩 중일 떄 */}
-            <p>Loading...</p>
+            <div style={loadingStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
+              <p>Loading...</p>
+            </div>
           </>
         ) : (
           <>

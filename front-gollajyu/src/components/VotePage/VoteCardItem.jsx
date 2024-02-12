@@ -1,28 +1,55 @@
-import React, { useState } from "react";
-import { Container } from "@mui/system";
-import categoryData from "../../stores/categoryData";
-import useAuthStore from "../../stores/userState";
+// 리액트 및 훅/라이브러리
+import React, { useState } from 'react';
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
-import API_URL from "../../stores/apiURL";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// Material-UI의 Container 컴포넌트
+import { Container } from '@mui/system';
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+
+// 카테고리 데이터 불러오기
+import categoryData from '/src/stores/categoryData';
+
 
 // 각 투표에 관한 정보를 받아서 출력하는 곳
-function VoteCardItem(props) {
+const VoteCardItem = (props) => {
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+  
+  // Props에서 필요한 값 추출
   const { item, categoryId, voteId, onClick, isSelect } = props;
-  const [hover, setHover] = useState(false);
-  const [clicked, setClicked] = useState(0);
+
+  // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
 
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
   // console.log(isSelect, clicked, "cliked")
+  
+  // 선택된 카테고리의 태그 가져오기
   const selection = categoryData[categoryId].tags;
 
+  // 상태 변수 선언
+  const [hover, setHover] = useState(false);
+  const [clicked, setClicked] = useState(0);
   const [memberId, setMemberId] = useState(0);
   const voteItemId = item.voteItemId;
-  const doVote = useAuthStore((state) => state.doVote);
+  
+  // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
+  // console.log(isSelect, clicked, "cliked")
 
-  // 투표하기 기능~~~~~ TODO 비로그인시 로그인 창 띄우면 좋을듯
+  // 투표하기 기능
   const onTagClick = (index) => {
-    console.log("onTagClick" + index);
+    // console.log("onTagClick"+index)
     const dto = {
       memberId: user.memberId,
       voteId: voteId,
@@ -44,6 +71,9 @@ function VoteCardItem(props) {
         console.error("Axios request failed:", error);
       });
   };
+
+  // TODO: 비로그인 상태에서 로그인 창 띄우기
+
 
   return (
     // 카드 하나의 사이즈
@@ -106,7 +136,7 @@ function VoteCardItem(props) {
         </h2>
         <p>{item.voteItemDesc}</p>
       </div>
-    </div>
+    </>
   );
 }
 

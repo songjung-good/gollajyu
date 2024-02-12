@@ -25,7 +25,7 @@ const MyPage = () => {
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- body 스타일 -----------
-  const body = {
+  const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "50px 0", // 상하단 여백: 50px
@@ -40,7 +40,7 @@ const MyPage = () => {
 
   return (
     <>
-      <div style={body}>
+      <div style={bodyStyle}>
         <Routes>
           <Route path="/" element={<MyProfile />} />
           <Route path="/MyActivities/*" element={<MyActivities />} />
