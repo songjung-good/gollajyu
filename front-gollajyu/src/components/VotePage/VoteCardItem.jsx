@@ -7,9 +7,9 @@ import API_URL from '../../stores/apiURL';
 
 // 각 투표에 관한 정보를 받아서 출력하는 곳
 function VoteCardItem(props) {
+  const { item, categoryId, voteId, onClick, isSelect } = props;
   const [hover, setHover] = useState(false);
   const [clicked, setClicked] = useState(0);
-  const { item, categoryId, voteId, onClick, isSelect } = props;
   const user = useAuthStore((state) => state.user);
 
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??

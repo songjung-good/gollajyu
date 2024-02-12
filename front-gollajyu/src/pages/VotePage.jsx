@@ -94,22 +94,29 @@ const fetchData = async (categoryId, keyword) => {
 
 
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <VoteButton />
-      <VotePageHeader onSort={handleSort} onSearchTerm={setSearchTerm} onSearchCategory={setSearchCategory} onSearch={handleSearch} />{" "}
+      <VotePageHeader 
+        onSort={handleSort}
+        onSearchTerm={setSearchTerm} 
+        onSearchCategory={setSearchCategory} 
+        onSearch={handleSearch} 
+      />
+        {" "}
       {/* 정렬 함수를 props로 전달 */}
-      <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       {isLoading ? (
-          <p>Loading...</p>
+          <p className="text-center">Loading...</p>
         ) : (
-        <div><VotePageList voteList={voteListData}/>{" "}
+        <div><VotePageList voteList={voteListData}/>
+          {" "}
         </div>
         )
       }</div>
       {/* 정렬 상태를 props로 전달 */}
-      {isVoteDetailModalOpened && <TmpModal></TmpModal>}
-      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
-      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
+      {isVoteDetailModalOpened && <TmpModal />}
+      {isVoteSimpleCreateModalOpened && <VoteSimple />}
+      {isVoteProductCreateModalOpened && <VoteProduct />}
     </div>
   );
 };

@@ -216,8 +216,8 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
             >
               <option value="">카테고리를 선택하세요</option>
               <option value="1">의류</option>
-              <option value="2">신발</option>
-              <option value="3">가구</option>
+              <option value="2">가구</option>
+              <option value="3">신발</option>
               <option value="4">전자제품</option>
               <option value="5">기타</option>
             </select>

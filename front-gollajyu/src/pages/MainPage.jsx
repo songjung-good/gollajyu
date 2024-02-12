@@ -23,16 +23,9 @@ import VoteButton from "../components/VoteButton";
 // 투표 관련 컴포넌트
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
+import VoteDetail from "../components/VoteDetailPage/VoteDetail";
+import TmpModal from "../components/TmpModal"; // 임시 모달
 
-// 로그인 및 회원가입 모달 컴포넌트
-import LoginModal from "../components/LoginForm";
-import SignupModal from "../components/SignupForm";
-
-// 임시 모달 컴포넌트
-import TmpModal from "../components/TmpModal";
-
-// 리액트 라우터 Link 컴포넌트
-import { Link } from "react-router-dom";
 
 
 const MainPage = () => {
@@ -184,12 +177,9 @@ const MainPage = () => {
       {/* ----------- 로그인, 회원가입, 투표 관련 모달 ----------- */}
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}
-      {isVoteDetailModalOpened && <TmpModal></TmpModal>}
-      {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
-      {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
-
-      {/* ----------- 투표 상세 페이지 라우트 ----------- */}
-      {/* <Route path="/VoteDetail/:voteId" element={<VoteDetail />} /> */}
+      {isVoteDetailModalOpened && <VoteDetail />}
+      {isVoteSimpleCreateModalOpened && <VoteSimple />}
+      {isVoteProductCreateModalOpened && <VoteProduct />}
     </>
   );
 };
