@@ -43,6 +43,7 @@ const CreateVideoRoom = () => {
   const [previewThumbnail, setPreviewThumbnail] = useState("");
   const thumbnailRef = useRef();
   const [isEnoughSize, setIsEnoughSize] = useState(true);
+  const createVote = useAuthStore((state) => state.createVote);
 
   // 서버로 지금골라쥬 방의 정보를 보내는 함수
   const sendRoomInfo = async (
@@ -124,6 +125,7 @@ const CreateVideoRoom = () => {
       // console.log(liveId);
       if (liveId !== false) {
         console.log("방송 생성 성공");
+        createVote();
         navigate("/EnterVideoRoom", {
           state: {
             sessionId: sessionId,
