@@ -76,66 +76,68 @@ const VoteCardItem = (props) => {
 
 
   return (
-    // 카드 하나의 사이즈
-    <div
-      className="flex flex-col w-full h-full"
-      style={{ width: "280px", height: "450px" }}
-    >
-      {" "}
-      {/* 높이를 조정했습니다. */}
-      {/* 이미지를 띄워지는 배경 */}
-      <Container
-        className="h-4/5 w-full p-2 relative rounded-xl"
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        style={{ maxWidth: "100%" }}
+    <>
+      <div
+        className="flex flex-col w-full h-full"
+        style={{ width: "280px", height: "450px" }}
       >
-        {/* 호버 시 */}
-        {(clicked || isSelect) && (hover || clicked) ? (
-          <div
-            className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
-            onMouseLeave={() => {}}
-          >
-            {/* 선택지의 묶음 */}
-            {selection.map((tag, index) => (
-              <button
-                key={index}
-                className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${
-                  clicked - 1 === index
-                    ? "text-white bg-blue-500"
-                    : "text-black"
-                } border-t-2 border-white text-max-xl`}
-                onClick={() => {
-                  if (clicked === 0 && user.memberId != null) {
-                    setClicked(index + 1);
-                    onTagClick(index);
-                    onClick(index);
-                  } else {
-                    console.log("비회원");
-                    // Login Modal
-                  }
-                }}
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        ) : null}
+        {" "}
+        {/* 높이를 조정했습니다. */}
+        {/* 이미지를 띄워지는 배경 */}
+        <Container
+          className="h-4/5 w-full p-2 relative rounded-xl"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          style={{ maxWidth: "100%" }}
+        >
+          {/* 호버 시 */}
+          {(clicked || isSelect) && (hover || clicked) ? (
+            <div
+              className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
+              onMouseLeave={() => {}}
+            >
+              {/* 선택지의 묶음 */}
+              {selection.map((tag, index) => (
+                <button
+                  key={index}
+                  className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${
+                    clicked - 1 === index
+                      ? "text-white bg-blue-500"
+                      : "text-black"
+                  } border-t-2 border-white text-max-xl`}
+                  onClick={() => {
+                    if (clicked === 0 && user.memberId != null) {
+                      setClicked(index + 1);
+                      onTagClick(index);
+                      onClick(index);
+                    } else {
+                      console.log("비회원");
+                      // Login Modal
+                    }
+                  }}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          ) : null}
 
-        {/* 투표 이미지 */}
-        <img
-          className="h-full w-full object-cover"
-          alt="Vote Image"
-          src={item.voteItemImgUrl}
-        />
-      </Container>
-      {/* 버튼을 누르면 생기는 상세페이지 */}
-      <div className="h-1/3 w-full flex flex-col justify-center items-center">
-        <h2 className="text-lg font-bold mb-2">
-          {item.price ? `${item.price.toLocaleString()}원` : ""}
-        </h2>
-        <p>{item.voteItemDesc}</p>
-      </div>
+          {/* 투표 이미지 */}
+          <img
+            className="h-full w-full object-cover"
+            alt="Vote Image"
+            src={item.voteItemImgUrl}
+          />
+        </Container>
+        </div>
+        
+        {/* 버튼을 누르면 생기는 상세페이지 */}
+        <div className="h-1/3 w-full flex flex-col justify-center items-center">
+          <h2 className="text-lg font-bold mb-2">
+            {item.price ? `${item.price.toLocaleString()}원` : ""}
+          </h2>
+          <p>{item.voteItemDesc}</p>
+        </div>
     </>
   );
 }
