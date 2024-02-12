@@ -10,8 +10,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import categoryData from "/src/stores/categoryData";
-import sobiTIData from "../../stores/testResultData";
-import API_URL from "../../stores/apiURL";
+import sobiTIData from "/src/stores/testResultData";
+import API_URL from "/src/stores/apiURL";
 import axios from "axios";
 
 const StatisticPageChart = ({
@@ -20,6 +20,7 @@ const StatisticPageChart = ({
   selectedRadioValues,
   selectedDropdownValues,
 }) => {
+
   // ----------- 반응형 웹페이지 구현 -----------
   const isXLarge = useMediaQuery({
     query: "(min-width:1024px)",
@@ -37,9 +38,6 @@ const StatisticPageChart = ({
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A"];
 
-  // ----------- 최대값 초기화 -----------
-  const [maxTagRatio, setMaxTagRatio] = useState(0);
-
   // ----------- 선택한 카테고리에 대한 태그 통계 배열 초기화 -----------
   const [selectedTagDataArray, setSelectedTagDataArray] = useState(
     categoryData[selectedCategoryId].tags.map((tag) => ({
@@ -55,7 +53,6 @@ const StatisticPageChart = ({
   const fetchData = async () => {
     // ----------- 응답 데이터를 담을 배열 -----------
     const responseDataArray = [];
-
     // ----------- itemCount 수 만큼 반복 -----------
     for (let i = 1; i <= itemCount; i++) {
       const requestData = {
@@ -88,6 +85,7 @@ const StatisticPageChart = ({
       responseData.slice(1, 6).forEach((tagData, tagIndex) => {
         const tagRatio = (tagData.count / responseData[0].count) * 100;
         updatedDataArray[tagIndex][`userType${userType + 1}`] = tagRatio;
+        updatedDataArray[tagIndex]["tag"] = tagData.tag;
       });
     });
 
@@ -96,15 +94,6 @@ const StatisticPageChart = ({
 
     // ----------- 배열 업데이트 -----------
     setSelectedTagDataArray([...updatedDataArray]);
-
-    // ----------- tag 최대 값 업데이트 -----------
-    let tagRatio = 0;
-    selectedTagDataArray.forEach((tagData) => {
-      for (let i = 1; i <= 5; i++) {
-        tagRatio = Math.max(tagRatio, tagData[i]);
-      }
-    });
-    setMaxTagRatio(tagRatio);
   };
 
   // ----------- 값이 변경될 때 fetchData 함수 호출 -----------
@@ -169,6 +158,7 @@ const StatisticPageChart = ({
 
   // --------------------------------- css 끝 ---------------------------------
 
+
   // ----------- itemCount 수 만큼 Radar를 생성 -----------
   const radars = [];
   for (let i = 1; i <= itemCount; i++) {
@@ -179,7 +169,7 @@ const StatisticPageChart = ({
     const ageValue =
       ageId == 0 ? "전체" : ageId == 5 ? "50대 이상" : `${ageId}0대`;
     const genderValue =
-      genderId == 0 ? "전체" : genderId == 1 ? "남자" : "여자";
+      genderId == 0 ? "전체" : genderId == 1 ? "남성" : "여성";
     const testValue = testId == 0 ? "전체" : sobiTIData[testId - 1].title;
 
     radars.push(
@@ -230,7 +220,6 @@ const StatisticPageChart = ({
             <PolarAngleAxis dataKey="tag" />
             <PolarRadiusAxis
               angle={54}
-              domain={[0, maxTagRatio]}
               tickFormatter={(value) => `${value.toFixed(1)}%`}
             />
             {radars}
