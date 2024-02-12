@@ -103,6 +103,7 @@ const MainVoteList = () => {
           </ul>
         </div>
       ))}
+            {/* {isVoteDetailModalOpened && <VoteDetail />} */}
     </div>
   );
 };

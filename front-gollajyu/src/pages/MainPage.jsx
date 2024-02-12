@@ -19,6 +19,8 @@ import MainVoteList from "../components/MainPage/MainVoteList";
 import MainWord from "../components/MainPage/MainWord";
 import SwipeVote from "../components/MainPage/SwipeVote";
 import VoteButton from "../components/VoteButton";
+import LoginModal from "../components/LoginForm";
+import SignupModal from "../components/SignupForm";
 
 // 투표 관련 컴포넌트
 import VoteSimple from "../components/VotePage/VoteSimple";
@@ -118,10 +120,8 @@ const MainPage = () => {
       });
       setVoteListData(response.data);
       setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
-      console.log("Axios 요청 성공", response.data);
     } catch (error) {
       setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
-      console.error("Axios 요청 오류", error);
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import VoteCardItem from '../VotePage/VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
@@ -11,12 +11,13 @@ import { useParams } from 'react-router-dom';
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
-  const voteId = useParams();
+  const { voteId } = useParams();
   const [clicked, setClicked] = useState([false, false, false, false]);
   const [voteDetail, setVoteDetail] = useState();
-  console.log(voteId)
+
   // 유저의 이메일정보
   const user = useAuthStore((state) => state.user);
+
   // 유저의 나이대
   const year = user.birthday.year;
   const month = user.birthday.month;
@@ -36,33 +37,32 @@ if (currentMonth < month || (currentMonth === month && currentDay < day)) {
 
 // 10대부터 50대까지 나이대 계산
 let ageGroup;
-if (age < 10) {
-  ageGroup = '미성년자';
-} else if (age < 20) {
-  ageGroup = '10대';
+if (age < 20) {
+  ageGroup = 1;
 } else if (age < 30) {
-  ageGroup = '20대';
+  ageGroup = 2;
 } else if (age < 40) {
-  ageGroup = '30대';
+  ageGroup = 3;
 } else if (age < 50) {
-  ageGroup = '40대';
+  ageGroup = 4;
 } else {
-  ageGroup = '50대 이상';
+  ageGroup = 5;
 }
 
   useEffect(() => {
     const params = new URLSearchParams();
     params.append("memberId", user.memberId);
-    params.append("voteId", voteId);
+    params.append("voteId", 85);
     params.append("filter.age", ageGroup);
-    params.append("filter.gender", user.gender);
-    params.append("filter.typeId", user.typeId);
+    params.append("filter.gender", 'MALE');
+    params.append("filter.typeId", 2);
 
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API_URL}/votes/detail`, {
           params
         });
+        console.log(voteId)
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
       } catch (error) {
@@ -96,17 +96,17 @@ if (age < 10) {
             onClose={handleClose}
           />
           <div className="p-2 flex justify-around items-center h-full">
-            {voteDetail.voteItemListInfo.map((item) => (
+            {/* {voteDetail.voteItemListInfo.map((item) => (
               <VoteCardItem
                 key={item.voteItemId}
                 src={item.voteItemImgUrl}
                 item={item} // 전체 item 객체 전달
                 categoryId={1} // categoryData 객체 전달
                 isSelect={selectedVoteItemId === item.voteItemId} // 선택된 항목 ID 정보 전달
-                onClick={(index) => handleVoteClick(item.voteItemId, index)} // onClick 함수를 전달
+                onClick={(index) => handleClick(item.voteItemId, index)} // onClick 함수를 전달
                 user={user} // 로그인 사용자 정보 전달
               />
-            ))}
+            ))} */}
           </div>
           {voteDetail.hasVoted && (
             <>
@@ -116,7 +116,7 @@ if (age < 10) {
                 tagCountList={item.tagCountList}
               />
               <VoteDetailChat 
-                commentList={voteDetail.commentList} 
+                commentList={voteDetail.commentList}
               />
             </>
           )}
