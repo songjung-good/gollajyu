@@ -104,7 +104,7 @@ const StatisticPage = () => {
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- body 스타일 -----------
-  const body = {
+  const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "50px 0", // 상하단 여백: 50px
@@ -196,6 +196,7 @@ const StatisticPage = () => {
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
     // 디자인
+    width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     border: "1px solid #ccc",
     borderRadius: "4px",
@@ -318,7 +319,7 @@ const StatisticPage = () => {
   return (
     <>
       <VoteButton />
-      <div style={body}>
+      <div style={bodyStyle}>
         {/* ------------- 사용자별 선호 태그 통계 ------------- */}
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
