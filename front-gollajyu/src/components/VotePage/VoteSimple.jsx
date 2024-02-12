@@ -46,6 +46,22 @@ const VoteSimple = () => {
       : (newPreviewImages[index] = null);
     setPreviewImages(newPreviewImages);
   };
+
+  // 투표 항목 삭제 함수 (마지막 항목 삭제)
+  const removeVoteItem = () => {
+    if (voteItems.length === 0) {
+      return;
+    }
+    const updatedItems = [...voteItems];
+    updatedItems.pop(); // 마지막 항목 삭제
+    setVoteItems(updatedItems);
+
+    const updatedPreviewImages = [...previewImages];
+    updatedPreviewImages.pop(); // 마지막 항목에 해당하는 이미지 삭제
+    setPreviewImages(updatedPreviewImages);
+  };
+
+
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -165,12 +181,19 @@ const VoteSimple = () => {
               </div>
             ))}
           </div>
-          <div>
-            <button type="button" onClick={addVoteItem}>
-              Add Vote Item
-            </button>
-            <br />
-            <br />
+          <div className="mb-5">
+          <button type="button" onClick={addVoteItem}
+            className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
+            투표 항목 추가하기
+          </button>
+          </div>
+          <div className="mb-5">
+          <button
+                type="button"
+                onClick={removeVoteItem}
+                className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
+                투표 항목 삭제하기
+          </button>
           </div>
           {/* 투표 올리기, 취소하기 버튼 */}
           <div className="flex justify-between">
