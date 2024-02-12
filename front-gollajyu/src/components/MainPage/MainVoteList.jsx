@@ -12,7 +12,7 @@ const MainVoteList = () => {
   );
 
   const openVoteDetailModal = (voteId) => {
-    setVoteDetailModalOpen();
+    setVoteDetailModalOpen(voteId);
     // VoteDetail 컴포넌트가 외부에서 voteId를 받을 수 있도록 전달합니다.
     console.log("VoteDetail 컴포넌트로 voteId 전달:", voteId); // 전달 방법은 상황에 따라 조정
   };

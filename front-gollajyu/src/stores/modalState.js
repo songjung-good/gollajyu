@@ -42,13 +42,14 @@ const store = (set) => ({
     })),
 
   // 투표 상세페이지 모달 열립니다
-  setVoteDetailModalOpen: () =>
+  setVoteDetailModalOpen: (voteId) =>
     set(() => ({
       isLoginModalOpened: false,
       isSignupModalOpened: false,
       isVoteDetailModalOpened: true,
       isVoteSimpleCreateModalOpened: false,
       isVoteProductCreateModalOpened: false,
+      detailVoteId: voteId, // voteId를 설정
     })),
 
   // 투표 상세페이지 모달 닫힙니다

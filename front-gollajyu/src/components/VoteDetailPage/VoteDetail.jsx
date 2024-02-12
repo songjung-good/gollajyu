@@ -11,15 +11,9 @@ import { useParams } from 'react-router-dom';
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
-  const { voteId } = useParams();
+  const detailVoteId = useModalStore((state) => state.detailVoteId);
   const [clicked, setClicked] = useState([false, false, false, false]);
   const [voteDetail, setVoteDetail] = useState();
-
-  const handleClick = (index, selection) => {
-    setClicked(false)
-    console.log(`선택지 ${index + 1}: ${selection}`);
-  };
-
   // 유저의 이메일정보
   const user = useAuthStore((state) => state.user);
 
@@ -57,17 +51,16 @@ if (age < 20) {
   useEffect(() => {
     const params = new URLSearchParams();
     params.append("memberId", user.memberId);
-    params.append("voteId", 85);
+    params.append("voteId", detailVoteId);
     params.append("filter.age", ageGroup);
-    params.append("filter.gender", 'MALE');
-    params.append("filter.typeId", 2);
+    params.append("filter.gender", user.gender);
+    params.append("filter.typeId", user.typeId);
 
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API_URL}/votes/detail`, {
           params
         });
-        console.log(voteId)
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
       } catch (error) {
@@ -76,7 +69,7 @@ if (age < 20) {
       }
     };
     fetchData();
-  }, []);
+  }, [detailVoteId]);
 
   // 모달창 닫는 로직
   const setVoteDetailModalClose = useModalStore(
@@ -100,7 +93,7 @@ if (age < 20) {
                 key={item.voteItemId}
                 item={item} // 전체 item 객체 전달
                 categoryId={1} // categoryData 객체 전달
-                voteId={vote.voteId}
+                voteId={voteDetail.voteInfo.voteId}
 
                 onClick={() => handleClick(itemIndex)} // onClick 함수를 전달
                 isSelect={clicked} // 선택된 항목 ID 정보 전달
