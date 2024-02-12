@@ -19,7 +19,7 @@ const VotePageHeader = ({ onSort, onSearch, onSearchTerm, onSearchCategory }) =>
   const handleSearchClick = () => {
     onSearch(); // 입력 완료된 검색어를 상위 컴포넌트에 전달
   };
-   
+  
   return (
     <div className="vote-controls container mx-auto my-4 max-w-5xl px-4">
       <div className="flex justify-between">
@@ -42,17 +42,19 @@ const VotePageHeader = ({ onSort, onSearch, onSearchTerm, onSearchCategory }) =>
             </option>
           ))}
         </select>
-        <input
-          type="search"
-          placeholder="투표 검색..."
-          onChange={handleChange}
-          className="border p-1 mt-4 fontsize-md"
-        />
-        <button 
-          onClick={handleSearchClick}
-          className="ml-2 border border-orange-500 mt-4 fontsize-max-sm rounded-full px-4 py-2 hover:bg-orange-500 hover:text-white active:bg-orange-600 active:text-white">
-          검색
-        </button>
+        <div className="flex items-center justify-center w-max-30 md:w-auto">
+          <input
+            type="text"
+            placeholder="검색어를 입력하세요"
+            className="w-auto border border-gray-300 rounded-md py-2 px-4 text-sm focus:outline-none focus:border-blue-500"
+          />
+          <button
+            type="button"
+            className="ml-4 bg-blue-500 text-white rounded-md py-2 px-4 text-sm focus:outline-none"
+          >
+            검색
+          </button>
+        </div>
       </div>
     </div>
   );
