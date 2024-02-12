@@ -129,7 +129,8 @@ public class VoteController {
     public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(
             @RequestParam(value = "categoryId") int categoryId,
             HttpSession session,
-            @RequestParam(value = "memberId", required = false) Long memberId
+            @RequestParam(value = "memberId", required = false) Long memberId,
+            @RequestParam(value  = "pageNo", defaultValue = "0") int pageNo
     ) {
 
         System.out.println("categoryId = " + categoryId);
@@ -139,7 +140,7 @@ public class VoteController {
         System.out.println("session 잘 되어 있나요---(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
 
-        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId);
+        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId, pageNo);
 //        System.out.println("result = " + result);
 
         if (!result.isResult()) {
