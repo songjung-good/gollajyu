@@ -4,177 +4,120 @@ import axios from "axios";
 import useAuthStore from "../../stores/userState";
 import useModalStore from "../../stores/modalState";
 
-const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
-  // 제목 state
-  const [title, setTitle] = useState('');
+const VoteProduct = () => {
   // 설명 state 추가
   const [description, setDescription] = useState('');
+  const [title, setTitle] = useState('');
   // 카테고리 상태 변수 추가
   const [category, setCategory] = useState('');
-  // 투표 항목 state
-  const [items, setItems] = useState([{}, {}]);
   // 모달창 닫기
   const setVoteProductCreateModalClose = useModalStore((state) => state.setVoteProductCreateModalClose);
-  // 사용자 ID를 저장할 state 변수 추가
-  const user = useAuthStore((state) => state.user);
-  // 사진 첨부 미리보기 관련 state 추가
+
+  const [voteItems, setVoteItems] = useState([{ voteItemImg: null, voteItemDesc: '', price: '' }, { voteItemImg: null, voteItemDesc: '', price: '' }]);
   const [previewImages, setPreviewImages] = useState([]);
 
-  const handleImageUpload = (event, index) => {
-    const newPreviewImages = [...previewImages];
-    if (event.target.files.length > 0) {
-        const file = event.target.files[0];
-        newPreviewImages[index] = URL.createObjectURL(file);
-        setPreviewImages(newPreviewImages);
+  // 사용자 ID를 저장할 state 변수 추가
+  const user = useAuthStore((state) => state.user);
+  // 모달창 닫는 로직
+  const setVoteProductModalClose = useModalStore((state) => state.setVoteProductCreateModalClose);
 
-        // items 배열에도 이미지 정보 추가
-        const updatedItems = [...items];
-        if (!updatedItems[index]) {
-            updatedItems[index] = { voteItemImg: file, voteItemDesc: '', price: 0 };
-        } else {
-            updatedItems[index] = {
-                ...updatedItems[index],
-                voteItemImg: file, // 이미지 파일 추가
-            };
-        }
-        setItems(updatedItems);
-
-        // voteReqDto에 이미지 정보 추가
-        const newVoteItemList = voteReqDto.voteItemList.slice();
-        newVoteItemList[index] = {
-            ...newVoteItemList[index],
-            voteItemImg: file,
-        };
-        setVoteReqDto({
-            ...voteReqDto,
-            voteItemList: newVoteItemList,
-        });
-    } else {
-        newPreviewImages[index] = null;
-        setPreviewImages(newPreviewImages);
-    }
-  };
-
+  
   const handleInputChange = (e, index, field) => {
-    const updatedItems = [...items];
+    const updatedItems = [...voteItems];
     const value = field === 'price' ? parseFloat(e.target.value) || 0 : e.target.value;
     if (updatedItems[index]) {
         updatedItems[index] = { ...updatedItems[index], [field]: value };
     } else {
         updatedItems[index] = { voteItemImg: null, [field]: value };
     }
-    setItems(updatedItems);
+    setVoteItems(updatedItems);
   };
 
-  // 사진 첨부 기능
-  const handleImageChange = (e, index) => {
-    const newImages = images.slice();
-    newImages[index] = e.target.files[0];
-    setImages(newImages);
-  
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImages([...previewImages, reader.result]);
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    } else {
-      // 기존 이미지 삭제
-      const voteItemList = [...voteReqDto.voteItemList];
-      voteItemList[index].voteItemImg = null;
-      setVoteReqDto({
-        ...voteReqDto,
-        voteItemList,
-      });
-      setPreviewImages([...previewImages.slice(0, index), ...previewImages.slice(index + 1)]);
+  const addVoteItem = () => {
+    if (voteItems.length > 3) {
+      alert('최대 개수를 초과하였습니다.');
+      return
     }
+    setVoteItems(prevState => [...prevState, { voteItemImg: null, voteItemDesc: '', price: '' }]);
+    setPreviewImages(prevState => [...prevState, null]);
+
+  };
+  // Function to handle changing voting item image
+  const handleVoteItemImageChange = (index, event) => {
+    const newVoteItems = [...voteItems];
+    // 여기서 취소를 눌러도 유지되게끔 바꿀 수도 있음.
+    newVoteItems[index].voteItemImg = event.target.files[0];
+    setVoteItems(newVoteItems)
+
+    const newPreviewImages = [...previewImages];
+    // 그림을 넣으려다 취소를 눌렀을 때 제거되기 때문에 보관하던 이미지도 제거했다.
+    (event.target.files[0]) ? newPreviewImages[index] = URL.createObjectURL(event.target.files[0])
+    : newPreviewImages[index] = null;
+    setPreviewImages(newPreviewImages);
   };
 
-  // 항목 추가 기능
-  const handleAddItem = () => {
-    if (items.length < 4) {
-      setItems([...items, {}]);
-      // voteReqDto 객체 업데이트
-      const voteItemList = [...voteReqDto.voteItemList];
-      voteItemList.push({
-        "voteItemImg": "",
-        "voteItemDesc": null,
-        "price": 0
-      });
-      setVoteReqDto({
-        ...voteReqDto,
-        voteItemList,
-      });
-    } else {
-      alert('최대 4개의 투표 항목까지만 추가할 수 있습니다.');
+  // 투표 항목 삭제 함수 (마지막 항목 삭제)
+  const removeVoteItem = () => {
+    if (voteItems.length === 0) {
+      return;
     }
+    const updatedItems = [...voteItems];
+    updatedItems.pop(); // 마지막 항목 삭제
+    setVoteItems(updatedItems);
+
+    const updatedPreviewImages = [...previewImages];
+    updatedPreviewImages.pop(); // 마지막 항목에 해당하는 이미지 삭제
+    setPreviewImages(updatedPreviewImages);
   };
 
-  // 제출 내용 확인
-  const handleSubmit = (event) => {
+
+
+  // Function to handle form submission
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // 이미지 갯수와 제목, 카테고리 확인
-    const imageCount = items.filter((item) => item.voteItemImg !== null && item.voteItemImg !== '').length;
+
     if (title === '') {
-      alert('제목을 입력해주세요!');
-      return;
-    }
-    if (category === '') {
-      alert('카테고리를 선택해주세요!');
-      return;
-    }
-    if (imageCount < 2) {
-      alert('최소 2개 이상의 사진을 첨부해주세요!');
+      alert('제목을 입력해쥬!');
       return;
     }
 
-    // 데이터 전송
+    if (voteItems && voteItems.length<2) {
+      alert('최소 2개 이상의 사진을 첨부해쥬!');
+      return;
+    }
+
+    if (event.target.category.value === '') {
+      alert('카테고리를 선택해쥬!')
+      return;
+    }
+
+    if (event.target.description.value === '') {
+      alert('내용을 입력해쥬!')
+      return;
+    }
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('categoryId', category);
     formData.append('memberEmail', user.email);
-
-    console.log("test2")
-    console.log(items)
+    formData.append('title', event.target.title.value);
+    formData.append('description', event.target.description.value);
+    formData.append('categoryId', event.target.category.value);
+    voteItems.forEach((item, index) => {
+      formData.append(`voteItemList[${index}].voteItemImg`, item.voteItemImg);
+      formData.append(`voteItemList[${index}].voteItemDesc`, item.voteItemDesc);
+      formData.append(`voteItemList[${index}].price`, item.price);
+    });
     
-    items.forEach((item, index) => {
-      if (item.voteItemImg) {
-          formData.append(`voteItemList[${index}].voteItemImg`, item.voteItemImg);
-      }
-      formData.append(`voteItemList[${index}].voteItemDesc`, item.voteItemDesc || '');
-      formData.append(`voteItemList[${index}].price`, item.price.toString());
-    });
-
-    console.log("formData:", formData);
-    const formDataObject = Object.fromEntries(formData);
-    console.log("formDataObject:", formDataObject);
-
-    axios.post(`${API_URL}/votes`, formData, {
-      // data: formDataObject,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        // 'Authorization': `Bearer ${user.accessToken}`
-      }
-    })
-    .then((response) => {
-      console.log(response);
-      // API 호출 성공
-      if (response.status === 200) {
-        // 투표 게시 성공
-        alert('투표 생성에 성공했쥬!');
-        setVoteProductCreateModalClose(true); // 모달창 닫기
-      } else {
-        // API 호출 실패
-        alert('투표 생성에 실패했습니다. 다시 시도해주세요.');
-        console.error(response.data);
-      }
-    })
-    .catch((error) => {
-      // 에러 발생
+    try {
+      const response = await axios.post(API_URL+'/votes', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
+      setVoteProductModalClose();
+    } catch (error) {
       console.error(error);
-      alert('투표 생성에 실패했습니다. 잠시 후 다시 시도해주세요.');
-    });
+      alert('Failed to create poll.');
+    }
   };
 
   return (
@@ -219,7 +162,6 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
               <option value="2">신발</option>
               <option value="3">가구</option>
               <option value="4">전자제품</option>
-              <option value="5">기타</option>
             </select>
           </div>
           <div className="mb-5">
@@ -237,49 +179,46 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
           </div>
           
           {/* 투표 항목 추가 부분 */}
-          {items.map((item, index) => (
-          <div key={index} className="mb-6 pt-4 border-t-2 border-blue-400">
-            <label className="mb-5 block text-xl font-semibold text-[#FF7F50]">
-              투표 항목 추가
-            </label>
-            {previewImages[index] && (
-              <img
-                src={previewImages[index]}
-                alt={`투표 항목 ${index + 1} 이미지`}
-                className="object-cover max-h-[300px] w-full rounded-lg mb-8"
-              />
-            )}
-            {!previewImages[index] && (
-              <div>
+          {voteItems.map((voteItem, index) => (
+            <div key={index} className="mb-6 pt-4 border-t-2 border-blue-400">              <div className="flex rounded-lg h-full bg-[#8DB600] p-8 flex-col">
+            <div className="mb-8">
+              <label htmlFor={`voteItem${index + 1}`} className="relative">
               <input
                 type="file"
-                name={`file-${index}`}
-                id={`file-${index}`}
-                className="sr-only"
-                onChange={(e) => handleImageUpload(e, index)}
-              />
-                <label
-                  htmlFor={`file-${index}`}
-                  className="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
-                >
-                  <div>
-                    <span className="mb-2 block text-xl font-semibold text-[#FF7F50]">
-                      사진을 첨부해주세요
-                    </span>
-                  </div>
-                </label>
-              </div>
-            )}
+                name={`voteItemImgs`}
+                id={`voteItem${index + 1}`}
+                onChange={(e) => handleVoteItemImageChange(index, e)} multiple />
+              {previewImages[index] && (
+                  <img src={previewImages[index]} 
+                    alt="" 
+                    className="object-cover h-full w-full rounded-lg"
+                  />
+              )}
+              </label>
+
+              {!previewImages[index] && (
+              <label htmlFor={`voteItem${index + 1}`}
+                className="relative flex items-center justify-center 
+                rounded-md border border-dashed border-[#e0e0e0] p-6 text-center">
+                <div className="max-w-[200px] h-[200px]">
+                  <span className="mb-2 block text-xl font-semibold text-white">
+                    사진을 첨부해주세요
+                  </span>
+                </div>
+              </label>
+              )}
+            </div>
+          
+          </div>
             <div className="mb-5">
               <label htmlFor={`price-${index}`} className="mb-3 block text-base font-medium text-[#FF7F50]">
                 가격:
               </label>
               <input
-                type="number"
                 name={`price-${index}`}
                 id={`price-${index}`}
                 placeholder="가격을 입력하세요"
-                value={item.price || ''}
+                value={voteItem.price || ''}
                 onChange={(e) => handleInputChange(e, index, 'price')}
                 className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
               />
@@ -292,7 +231,7 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
                 name={`content-${index}`}
                 id={`content-${index}`}
                 placeholder="내용을 입력하세요"
-                value={item.voteItemDesc || ''}
+                value={voteItem.voteItemDesc || ''}
                 onChange={(e) => handleInputChange(e, index, 'voteItemDesc')}
                 className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
               />
@@ -302,17 +241,28 @@ const VoteProduct = ({ voteReqDto, setVoteReqDto }) => {
 
           {/* 투표 항목 추가 버튼 */}
           <div className="mb-5">
-            <button type="button" onClick={handleAddItem}
-              className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-              투표 항목 추가하기
-            </button>
+          <button type="button" onClick={addVoteItem}
+            className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
+            투표 항목 추가하기
+          </button>
           </div>
+          <div className="mb-5">
+          <button
+                type="button"
+                onClick={removeVoteItem}
+                className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
+                투표 항목 삭제하기
+          </button>
+          </div>
+          
           <div className="flex justify-between">
             <button
+              type="submit"
               className="hover:shadow-form w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none mb-3 mr-2">
               투표 올리기
             </button>
             <button
+              onClick={setVoteProductModalClose}
               className="hover:shadow-form w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none mb-3 mr-2">
               취소하기
             </button>
