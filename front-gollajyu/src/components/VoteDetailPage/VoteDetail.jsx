@@ -96,6 +96,7 @@ if (age < 20) {
             onClose={handleClose}
           />
           <div className="p-2 flex justify-around items-center h-full">
+            {/* 투표한 안한 사람( voteDetail.chosenItem = null )은 투표가 가능하게  */}
             {voteDetail.voteItemListInfo.map((item, itemIndex) => (
               <VoteCardItem
                 key={item.voteItemId}
@@ -115,6 +116,8 @@ if (age < 20) {
               />
               <VoteDetailChat 
                 commentList={voteDetail.commentList}
+                chosenItem={voteDetail.chosenItem}
+                userId={user.}
               />
             </>
           )}

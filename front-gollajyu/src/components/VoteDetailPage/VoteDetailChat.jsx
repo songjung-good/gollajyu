@@ -3,19 +3,19 @@ import React, { useState, useEffect } from 'react'
 import ChatForm from './ChatForm';
 import ChatList from './ChatList';
 
-const VoteDetailChat = () => {
+const VoteDetailChat = ({commentList, chosenItem}) => {
   // state 설정
   const [list, setList] = useState([]);
   const [likes, setLikes] = useState({}); // 좋아요를 누른 계정 추적 상태
   const [userid, setUserid] = useState('새로운댓글'); // 사용자 아이디
-  const [choiced, setChoiced] = useState('002'); // 사용자 선택지
+  const [choiced, setChoiced] = useState(chosenItem); // 사용자 선택지
   // const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   // const [totalPage, setTotalPage] = useState(1); // 총 페이지 수
 
   // 기존의 댓글 데이터
   // userid:아이디, content:대화 내용, date: 작성일자, liked: 좋아요 수, choiced: 선택지
   useEffect(() => {
-    // 페이지네이션 기능
+  // 페이지네이션 기능
   //   const fetchData = async () => {
   //     const response = await fetch(`/api/comments?page=${currentPage}&limit=20`);
   //     const data = await response.json();

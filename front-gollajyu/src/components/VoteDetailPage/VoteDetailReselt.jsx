@@ -18,8 +18,8 @@ const VoteDetailResult = ({voteResults}) => {
           <button onClick={() => handleClick(index)}>▼</button>
           {selectedOptions[index] && (
             <div>
-              {result.tagCountList.map(([tagName, count]) => (
-                <p key={tagName}>{tagName}: {count}%</p>
+              {result.tagCountList.map((tag) => (
+                <p key={tag.tagName}>{tag.tagName}: {tag.count}%</p>
               ))}
             </div>
           )}
