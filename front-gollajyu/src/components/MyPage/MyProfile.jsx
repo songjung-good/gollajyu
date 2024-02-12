@@ -32,12 +32,28 @@ const MyProfile = () => {
   const [matchingData, setMatchingData] = useState({});
 
   // ----------- result가 변경될 때마다 실행되는 함수 -----------
-  const user = useAuthStore((state) => state.user); // local storage에 로그인 시 저장된 user 데이터를 가져옴 -> 네비게이션바에서도 이렇게 사용가능 (위의 import 참고)
+  const user = useAuthStore((state) => state.user);
   useEffect(() => {
     setResult(user.typeId);
     setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
   }, []);
 
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [changedNickname, setChangedNickname] = useState(user.nickname);
+  const updateNickname = useAuthStore((state) => state.updateNickname);
+  const handleEditToggle = () => {
+    if (isEditMode) {
+      const data = {
+        ...user,
+        nickname: changedNickname,
+      };
+      axios.put(API_URL + "/members", data).then((res) => {
+        // console.log("닉네임 변경");
+        updateNickname(changedNickname);
+      });
+    }
+    setIsEditMode(!isEditMode);
+  };
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
@@ -236,14 +252,6 @@ const MyProfile = () => {
           <span style={titleStyle} className="fontsize-xl">
             기본정보
           </span>
-          <button
-            style={buttonStyle}
-            className="fontsize-sm"
-            onMouseOver={() => setButtonHovered(true)}
-            onMouseOut={() => setButtonHovered(false)}
-          >
-            수정하기
-          </button>
         </div>
         <div style={contentContainerStyle}>
           <div style={flexContainerStyle}>
@@ -258,9 +266,48 @@ const MyProfile = () => {
               style={profileImageStyle}
             />
             <div>
-              <div style={profileTextStyle} className="fontsize-lg">
-                {user.nickname}
-              </div>
+              {isEditMode ? (
+                <div className="flex">
+                  <input
+                    type="text"
+                    value={changedNickname}
+                    onChange={(e) => {
+                      if (e.target.value.length > 6) {
+                        window.alert("닉네임은 6글자까지만 가능해요");
+                        setChangedNickname(e.target.value.slice(0, 6));
+                      } else {
+                        setChangedNickname(e.target.value);
+                      }
+                    }}
+                  />
+                  <button
+                    className="mx-4 px-3 py-1 border-2 border-zinc-400 rounded-md fontsize-sm text-zinc-500 bg-zinc-200 hover:bg-white"
+                    onClick={handleEditToggle}
+                  >
+                    수정완료
+                  </button>
+                </div>
+              ) : (
+                <div className="flex">
+                  <div style={profileTextStyle} className="fontsize-lg">
+                    {user.nickname}
+                  </div>
+                  <button
+                    className="relative mx-4 mt-3 px-3 py-1 h-10 border-2 border-zinc-400 rounded-md fontsize-sm text-zinc-500 bg-white hover:bg-zinc-200"
+                    onMouseOver={() => setButtonHovered(true)}
+                    onMouseOut={() => setButtonHovered(false)}
+                    onClick={handleEditToggle}
+                  >
+                    {buttonHovered && (
+                      <p className="absolute left-1 -top-6 text-amber-400">
+                        100p가 사용됩니다
+                      </p>
+                    )}
+                    닉네임 수정하기
+                  </button>
+                </div>
+              )}
+
               <div style={profileTextStyle} className="fontsize-md">
                 {user.email}
               </div>

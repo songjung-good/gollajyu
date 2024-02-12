@@ -345,7 +345,8 @@ const StatisticPage = () => {
                   {isOpen && (
                     <div style={dropdownMenuStyle}>
                       {categoryData.map((category) => (
-                        category.id !== 0 && ( // 첫 번째 항목(전체)는 포함하지 않음
+                        // 첫 번째(전체), 마지막(간단) 투표 항목은 포함하지 않음
+                        (category.id !== 0 && category.id !== 5) && (
                           <div
                             key={category.id}
                             onClick={() => handleCategoryChange({ target: { value: category.id } })}

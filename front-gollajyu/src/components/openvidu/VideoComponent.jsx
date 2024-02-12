@@ -466,7 +466,11 @@ export default function VideoComponent() {
                     </button>
                   </div>
                 ) : (
-                  <div id="session-header" className="flex justify-end mb-2">
+                  <div
+                    id="session-header"
+                    className="flex justify-between mb-2"
+                  >
+                    <p className="fontsize-md">지금골라쥬 시청중</p>
                     <button
                       className={`bg-red-500 hover:bg-red-700 ${settingButton}`}
                       id="buttonLeaveSession"
@@ -493,15 +497,25 @@ export default function VideoComponent() {
                         <UserVideoComponent streamManager={publisher} />
                       </div>
                     )}
-                    {!isHost && (
-                      <div
-                        id="main-video"
-                        className="basis-4/5 w-full h-full rounded-md flex flex-col justify-center"
-                        style={{ transform: "scaleX(-1)" }}
-                      >
-                        <UserVideoComponent streamManager={subscribers[0]} />
-                      </div>
-                    )}
+                    {!isHost &&
+                      (subscribers[0] ? (
+                        <div
+                          id="main-video"
+                          className="basis-4/5 w-full h-full rounded-md flex flex-col justify-center"
+                          style={{ transform: "scaleX(-1)" }}
+                        >
+                          <UserVideoComponent streamManager={subscribers[0]} />
+                        </div>
+                      ) : (
+                        <div
+                          id="main-video"
+                          className="basis-4/5 w-full h-full rounded-md flex flex-col justify-center"
+                        >
+                          <p className="text-center fontsize-lg">
+                            방송이 종료되었습니다
+                          </p>
+                        </div>
+                      ))}
                     <div
                       id="detail"
                       className="basis-1/5 rounded-md p-3 space-y-3 bg-gray-100"
