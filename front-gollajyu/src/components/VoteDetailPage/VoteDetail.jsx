@@ -63,7 +63,6 @@ if (age < 20) {
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
-        console.log(data.body.);
       } catch (error) {
         // 요청 실패 시 오류 처리를 수행합니다.
         console.error(error);
@@ -109,10 +108,10 @@ if (age < 20) {
               />
             ))}
           </div>
-          {voteDetail.hasVoted && (
+          {voteDetail.chosenItem && (
             <>
               <VoteDetailReselt
-                voteResults={item}
+                voteResults={voteDetail.voteItemListInfo}
               />
               <VoteDetailChat 
                 commentList={voteDetail.commentList}
