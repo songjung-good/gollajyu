@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
+// 리액트 및 훅/라이브러리
+import React, { useState, useEffect } from "react";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "../../stores/responsiveUtils";
 
 // 임시 데이터
 const categories = ['가구', '의류', '신발', '전자제품']
 const tags1 = ['소재', '가성비', '색감', '모양', '브랜드']
 const tags2 = ['소재', '기능성', '내구성', '디자인', '브랜드']
-const userInfo1 = ['남성', '여성']
+const userInfo1 = ['남자', '여자']
 const userInfo2 =['20대', '30대', '40대', '50대']
 const userInfo3 = ['프렌치 마카롱', '티라미수', '포춘쿠키', 
                     '지하철 만쥬', '곤약젤리', '오곡라떼', 
