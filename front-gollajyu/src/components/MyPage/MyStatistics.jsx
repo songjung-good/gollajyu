@@ -666,7 +666,7 @@ const MyStatistics = () => {
       <div style={containerStyle}>
         <div style={titleContainerStyle} className="flex justify-between">
           <span style={titleTextStyle} className="fontsize-xl">
-            카테고리 선호도
+            # 카테고리 선호도
           </span>
           <button
             className="bg-amber-300 rounded-full mx-5 px-5 py-3 fontsize-sm hover:bg-amber-400"
@@ -771,7 +771,7 @@ const MyStatistics = () => {
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">
-            태그 선호도
+            # 태그 선호도
           </span>
         </div>
         <div style={tagContentsContainerStyle}>

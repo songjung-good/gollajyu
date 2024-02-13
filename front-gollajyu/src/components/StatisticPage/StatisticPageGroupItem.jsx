@@ -18,10 +18,10 @@ const StatisticPageGroupItem = ({ number, onRadioChange, onDropdownChange }) => 
     query : "(max-width:479.98px)"
   });
 
-  // ----------- 예시 데이터 -----------
+  // ----------- 유저 정보 데이터 -----------
   const userTypes = [
     { label: "나이", options: ['전체', '10대', '20대', '30대', '40대', '50대 이상'], type: "radio" },
-    { label: "성별", options: ['전체', '남자', '여자'], type: "radio" },
+    { label: "성별", options: ['전체', '남성', '여성'], type: "radio" },
     { label: "소비성향", options: ['전체', ...sobiTIData.map(item => item.title)], type: "dropdown" },
   ];
 

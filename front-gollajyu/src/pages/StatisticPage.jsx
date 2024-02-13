@@ -8,6 +8,7 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
+import { Helmet } from "react-helmet-async";
 
 const StatisticPage = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -170,8 +171,8 @@ const StatisticPage = () => {
   const dropdownContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
-    alignItems: isXLarge || isLarge ? "center" : "flex-start",
-    flexDirection: isXLarge || isLarge ? "row" : "column",
+    alignItems: isXLarge ? "center" : "flex-start",
+    flexDirection: isXLarge ? "row" : "column",
   };
 
   // ----------- 서브 제목 스타일 -----------
@@ -312,12 +313,15 @@ const StatisticPage = () => {
   return (
     <>
       <VoteButton />
+      <Helmet>
+        <title>통계보여쥬</title>
+      </Helmet>
       <div style={bodyStyle}>
         {/* ------------- 사용자별 선호 태그 통계 ------------- */}
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-xl">
-              사용자별 선호 태그 통계
+              # 사용자별 선호 태그 통계
             </span>
           </div>
           <div style={contentsContainerStyle}>

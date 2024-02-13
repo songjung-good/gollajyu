@@ -251,7 +251,7 @@ const MyProfile = () => {
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleStyle} className="fontsize-xl">
-            기본정보
+            # 기본정보
           </span>
         </div>
         <div style={contentContainerStyle}>
@@ -339,7 +339,7 @@ const MyProfile = () => {
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleStyle} className="fontsize-xl">
-            소비성향
+            # 소비성향
           </span>
         </div>
         <div style={testContainerStyle}>

@@ -9,6 +9,7 @@ import sobiTIData from "../stores/testResultData.js";
 import useModalStore from "../stores/modalState";
 import useAuthStore from "../stores/userState";
 import { debounce } from "lodash";
+import { Helmet } from "react-helmet-async";
 
 const items = [
   "프렌치 마카롱",
@@ -63,6 +64,9 @@ const TestResultPage = () => {
   return (
     <>
       <VoteButton />
+      <Helmet>
+        <title>소비성향알려쥬</title>
+      </Helmet>
       <div className="p-5">
         <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] md:w-[330px] lg:w-[380px] xl:w-[550px] flex flex-col items-center relative">
           {isMyResult ? (

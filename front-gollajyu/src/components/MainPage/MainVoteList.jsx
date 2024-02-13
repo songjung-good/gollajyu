@@ -9,21 +9,13 @@ import axios from "axios";
 // API URL 설정
 import API_URL from "/src/stores/apiURL";
 
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
 const MainVoteList = ({ transferVoteId }) => {
 
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   
   const [listsData, setListsData] = useState([]);
 
@@ -93,6 +85,39 @@ const MainVoteList = ({ transferVoteId }) => {
 
   // --------------------------------- css 시작 ---------------------------------
 
+  // ----------- 문구 컨테이너 스타일 -----------
+  const textContainerStyle = {
+    // 디자인
+    marginBottom: isXLarge || isLarge ? "50px" : "20px",
+    padding: "0 20px",
+    width: "100%",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  }
+
+  // ----------- 보조 제목 스타일 -----------
+  const subTitleStyle = {
+    // 디자인
+    marginBottom: "20px",
+    padding: "8px 20px 4px",
+    width: isXLarge || isLarge ? "500px" : "350px",
+    backgroundColor: "#FFA8A8",
+
+    // 글자
+    fontSize: isXLarge || isLarge ? "32px" : "24px",
+    fontWeight: "bold",
+  }
+
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 글자
+    fontSize: isXLarge || isLarge ? "22px" : "14px",
+    color: "#4A4A4A",
+  }
+  
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
@@ -143,6 +168,10 @@ const MainVoteList = ({ transferVoteId }) => {
 
   return (
     <>
+      <div style={textContainerStyle}>
+        <p style={subTitleStyle}># 핫한 투표 리스트</p>
+        <p style={descriptionStyle}>어떤 투표들이 인기있는지 확인해보아요</p>
+      </div>
       <div style={bodyStyle} className="flex flex-wrap justify-center gap-6">
         {listsData.map((data, index) => (
           <div
