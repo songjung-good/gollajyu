@@ -19,6 +19,8 @@ import MainVoteList from "../components/MainPage/MainVoteList";
 import MainWord from "../components/MainPage/MainWord";
 import SwipeVote from "../components/MainPage/SwipeVote";
 import VoteButton from "../components/VoteButton";
+import LoginModal from "../components/LoginForm";
+import SignupModal from "../components/SignupForm";
 
 // 투표 관련 컴포넌트
 import VoteSimple from "../components/VotePage/VoteSimple";
@@ -46,16 +48,16 @@ const MainPage = () => {
   );
 
   // 투표 모달 창 상태
-  const isVoteDetailModalOpened = useModalStore(
-    (state) => state.isVoteDetailModalOpened
-  );
-  const isVoteSimpleCreateModalOpened = useModalStore(
-    (state) => state.isVoteSimpleCreateModalOpened
-  );
-  const isVoteProductCreateModalOpened = useModalStore(
-    (state) => state.isVoteProductCreateModalOpened
-  );
-
+  const isVoteDetailModalOpened = useModalStore((state) => state.isVoteDetailModalOpened);
+  const isVoteSimpleCreateModalOpened = useModalStore((state) => state.isVoteSimpleCreateModalOpened);
+  const isVoteProductCreateModalOpened = useModalStore((state) => state.isVoteProductCreateModalOpened);
+  
+  // 상세페이지
+  const setVoteDetailModalOpen  = useModalStore((state) => state.setVoteDetailModalOpen)
+  const transferVoteId = (voteId) => {
+    // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
+    setVoteDetailModalOpen(voteId);
+  };
   // 모달 창 열기 함수
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -123,10 +125,8 @@ const MainPage = () => {
       });
       setVoteListData(response.data);
       setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
-      console.log("Axios 요청 성공", response.data);
     } catch (error) {
       setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
-      console.error("Axios 요청 오류", error);
     }
   };
 
@@ -182,7 +182,7 @@ const MainPage = () => {
             </div>
 
             {/* 메인 투표 리스트 컴포넌트 */}
-            <MainVoteList />
+            <MainVoteList transferVoteId={transferVoteId}/>
           </>
         )}
       </div>

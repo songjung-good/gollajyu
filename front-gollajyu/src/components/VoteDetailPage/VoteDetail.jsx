@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import VoteCardItem from '../VotePage/VoteCardItem';
 import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
@@ -11,12 +11,12 @@ import { useParams } from 'react-router-dom';
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
-  const voteId = useParams();
+  const detailVoteId = useModalStore((state) => state.detailVoteId);
   const [clicked, setClicked] = useState([false, false, false, false]);
   const [voteDetail, setVoteDetail] = useState();
-  console.log(voteId)
   // 유저의 이메일정보
   const user = useAuthStore((state) => state.user);
+
   // 유저의 나이대
   const year = user.birthday.year;
   const month = user.birthday.month;
@@ -36,24 +36,22 @@ if (currentMonth < month || (currentMonth === month && currentDay < day)) {
 
 // 10대부터 50대까지 나이대 계산
 let ageGroup;
-if (age < 10) {
-  ageGroup = '미성년자';
-} else if (age < 20) {
-  ageGroup = '10대';
+if (age < 20) {
+  ageGroup = 1;
 } else if (age < 30) {
-  ageGroup = '20대';
+  ageGroup = 2;
 } else if (age < 40) {
-  ageGroup = '30대';
+  ageGroup = 3;
 } else if (age < 50) {
-  ageGroup = '40대';
+  ageGroup = 4;
 } else {
-  ageGroup = '50대 이상';
+  ageGroup = 5;
 }
 
   useEffect(() => {
     const params = new URLSearchParams();
     params.append("memberId", user.memberId);
-    params.append("voteId", voteId);
+    params.append("voteId", detailVoteId);
     params.append("filter.age", ageGroup);
     params.append("filter.gender", user.gender);
     params.append("filter.typeId", user.typeId);
@@ -71,13 +69,7 @@ if (age < 10) {
       }
     };
     fetchData();
-  }, []);
-
-  // 투표 클릭 부분
-  const handleClick = (index) => {
-    const newClicked = clicked.map((item, i) => (i === index ? !item : item));
-    setClicked(newClicked);
-  };
+  }, [detailVoteId]);
 
   // 모달창 닫는 로직
   const setVoteDetailModalClose = useModalStore(
@@ -88,39 +80,50 @@ if (age < 10) {
   };
 
   return (
-    <div className="bg-white shadow-md rounded-md max-w-5xl mx-auto">
+    <div
+      id="outer-layer"
+      className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50"
+      onClick={(e) => {
+        if (e.target.id == "outer-layer") {
+          setVoteDetailModalClose();
+        }
+      }}
+    >
       {voteDetail && (
-        <>
+        <div className="mx-auto max-h-[800px] w-full max-w-[1000px] bg-white overflow-y-10">
           <VoteDetailHeader
             {...voteDetail.voteInfo}
             onClose={handleClose}
           />
           <div className="p-2 flex justify-around items-center h-full">
-            {voteDetail.voteItemListInfo.map((item) => (
+            {/* 투표한 안한 사람( voteDetail.chosenItem = null )은 투표가 가능하게  */}
+            {voteDetail.voteItemListInfo.map((item, itemIndex) => (
               <VoteCardItem
                 key={item.voteItemId}
-                src={item.voteItemImgUrl}
                 item={item} // 전체 item 객체 전달
                 categoryId={1} // categoryData 객체 전달
-                isSelect={selectedVoteItemId === item.voteItemId} // 선택된 항목 ID 정보 전달
-                onClick={(index) => handleVoteClick(item.voteItemId, index)} // onClick 함수를 전달
-                user={user} // 로그인 사용자 정보 전달
+                voteId={voteDetail.voteInfo.voteId}
+
+                onClick={() => setClicked(itemIndex)} // onClick 함수를 전달
+                isSelect={clicked} // 선택된 항목 ID 정보 전달
               />
             ))}
           </div>
-          {voteDetail.hasVoted && (
+          {voteDetail.chosenItem && (
             <>
               <VoteDetailReselt
-                totalchoicecnt={voteDetail.voteInfo.totalChoiceCnt}
-                itemchoicecnt={item.choiceCnt}
-                tagCountList={item.tagCountList}
+                voteResults={voteDetail.voteItemListInfo}
               />
               <VoteDetailChat 
-                commentList={voteDetail.commentList} 
+                commentList={voteDetail.commentList}
+                chosenItem={voteDetail.chosenItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
+                userId={user.memberId}
+                commentLikes={voteDetail.commentLikes}
+                voteId={detailVoteId}
               />
             </>
           )}
-        </>
+        </div>
       )}      
     </div>
   );
