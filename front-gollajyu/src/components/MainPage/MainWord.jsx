@@ -11,7 +11,7 @@ import tagColorData from '/src/stores/tagColorData';
 
 // 카테고리, 태그 및 유저 정보 데이터
 const categories = ['의류', '가구', '신발', '전자제품']
-const tagTypes1 = ['기능성', '브랜드', '소재', '색감', '모양']
+const tagTypes1 = ['가성비', '브랜드', '소재', '색감', '모양']
 const tagTypes2 = ['가성비', '브랜드', '디자인', '기능성', '내구성']
 const ageTypes = ['10대','20대', '30대', '40대', '50대 이상']
 const genderTypes = ['남성', '여성']
@@ -21,14 +21,6 @@ const testTypes = [
   '콜라', '고구마 말랭이', '붕어빵', 
   '나초', '에너지바', '슈크림', '식빵', 
   '민트초코', '초코파이', '초코잼'
-]
-
-// 각 태그 및 소비성향 별 접미사 정보 데이터
-const tagsSuffix1 = ['을', '를', '를', '을', '을']
-const tagsSuffix2 = ['를', '를', '을', '을', '을']
-const userInfoSuffix = [
-  '은', '는', '는', '는', '는', '는', '는', '는',
-  '은', '는', '는', '은', '은', '는', '는', '은'
 ]
 
 // 랜덤 인덱스 반환 함수
@@ -54,19 +46,17 @@ const secondTagIndex = Math.floor(Math.random() * 5);
 // ------------------ 문장 생성 함수 ------------------
 const generateSentence = () => {
 
-  // 카테고리 종류에 따라 태그 및 접미사 종류 변경
+  // 카테고리 종류에 따라 태그 종류 변경
   const firstTagTypes = firstCategoryIndex < 2 ? tagTypes1 : tagTypes2;
   const secondTagTypes = secondCategoryIndex < 2 ? tagTypes1 : tagTypes2;
-  const firstTagSuffix = firstCategoryIndex < 2 ? tagsSuffix1 : tagsSuffix2;
-  const secondSuffix = secondCategoryIndex < 2 ? tagsSuffix1 : tagsSuffix2;
 
   // 랜덤 유저 정보 생성
   const userInfo = [ageTypes, genderTypes, testTypes].map(getRandomItem);
 
   // 문장 생성 및 반환
-  const words = `${categories[firstCategoryIndex]} 에서 ${firstTagTypes[firstTagIndex]} ${firstTagSuffix[firstTagIndex]} 선호하는
-    “ ${userInfo[0]} ${userInfo[1]} ${userInfo[2]} ” ${userInfoSuffix[testTypes.indexOf(userInfo[2])]}
-    ${categories[secondCategoryIndex]} 에서 ${secondTagTypes[secondTagIndex]} ${secondSuffix[secondTagIndex]} 선호해요`;
+  const words = `${categories[firstCategoryIndex]} 에서 ${firstTagTypes[firstTagIndex]} ${['가성비', '브랜드', '소재'].includes(firstTagTypes[firstTagIndex]) ? '를' : '을'} 선호하는
+    “ ${userInfo[0]} ${userInfo[1]} ${userInfo[2]} ” ${['프렌치 마카롱', '붕어빵', '슈크림', '식빵', '초코잼'].includes(userInfo[2]) ? '은' : '는'}
+    ${categories[secondCategoryIndex]} 에서 ${secondTagTypes[secondTagIndex]} ${['가성비', '브랜드', '소재'].includes(secondTagTypes[secondTagIndex]) ? '를' : '을'} 선호해요`;
 
   return words;
 };

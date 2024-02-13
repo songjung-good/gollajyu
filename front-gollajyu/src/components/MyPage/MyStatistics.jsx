@@ -664,9 +664,7 @@ const MyStatistics = () => {
 
           {/* ------------- 랜덤 선호도 비교 ------------- */}
           <div style={randomContainerStyle}>
-            <div style={quotesStyle} className="fontsize-xl">
-              "
-            </div>
+            <div style={quotesStyle} className="fontsize-xl">“</div>
             <div style={mentContainerStyle}>
               <div style={flexContainerStyle}>
                 <div style={mentDataStyle} className="fontsize-md">
@@ -689,7 +687,9 @@ const MyStatistics = () => {
                 <div style={mentDataStyle} className="fontsize-md">
                   " {topCategory.key} "
                 </div>
-                <div className="fontsize-md">를 고를 때</div>
+                <div className="fontsize-md">
+                  {['의류', '가구'].includes(topCategory.key) ? '를' : '을'} 고를 때
+                </div>
                 <div
                   style={{
                     ...mentDataStyle,
@@ -703,12 +703,12 @@ const MyStatistics = () => {
                 >
                   {othersTopTag.key}
                 </div>
-                <div className="fontsize-md">을 눈여겨봐요!</div>
+                <div className="fontsize-md">
+                  {['가성비', '브랜드', '소재'].includes(othersTopTag.key) ? '를' : '을'} 눈여겨봐요!
+                </div>
               </div>
             </div>
-            <div style={quotesStyle} className="fontsize-xl">
-              "
-            </div>
+            <div style={quotesStyle} className="fontsize-xl">”</div>
           </div>
 
         </div>
@@ -766,7 +766,7 @@ const MyStatistics = () => {
                 )}
               </div>
               <div style={subTitleStyle} className="fontsize-md">
-                을(를) 구매 할 때
+                {selectedCategory === 1 || selectedCategory === 2 ? "를" : "을"} 구매 할 때
               </div>
               <div style={restStyle} className="fontsize-md">
                 ,

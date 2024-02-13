@@ -383,7 +383,7 @@ const StatisticPage = () => {
                   )}
                 </div>
                 <div style={subTitleStyle} className="fontsize-md">
-                  을(를) 구매 할 때
+                  {selectedCategoryId === 1 || selectedCategoryId === 2 ? "를" : "을"} 구매 할 때
                 </div>
                 <div style={restStyle} className="fontsize-md">
                   ,
