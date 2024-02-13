@@ -106,6 +106,12 @@ const VoteButton = () => {
   };
 
   // ----------- 투표 상세 설명 박스 스타일 -----------
+  const xButtonStyle = {
+    // 디자인
+    paddingTop: "2px",
+  }
+
+  // ----------- 투표 상세 설명 박스 스타일 -----------
   const boxStyle = {
     // 위치
     position: "absolute", // relative를 기준 위치로
@@ -124,7 +130,7 @@ const VoteButton = () => {
       isLarge ? "54px" :
       isMedium ? "48px" : "42px",
     borderRadius: "50px",
-    backgroundColor: "#F0F0F0", 
+    backgroundColor: "#F0F0F0",
     boxShadow: "0 0 8px rgba(0, 0, 0, 0.5)", // 그림자 추가
 
     // 컨텐츠 정렬
@@ -310,7 +316,10 @@ const VoteButton = () => {
         onMouseLeave={() => button.mouseLeave()}
       >
         {button.hovered && buttonHovered && (
-          <div style={{ ...boxStyle, bottom: `${button.boxBottom}px` }}>
+          <div style={{
+            ...boxStyle,
+            bottom: `${button.boxBottom}px`,
+          }}>
             <div style={textContainerStyle}>
               <div style={textStyle} className="fontsize-sm">{button.label}</div>
               <div style={textPointStyle} className="fontsize-xs">(10P 차감됩니다)</div>
@@ -340,13 +349,16 @@ const VoteButton = () => {
           onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
         >
           {/* ------------- 투표 버튼 ------------- */}
-          <button style={voteButtonStyle} className="fontsize-sm">
-            {buttonHovered ? "X" : (
-              <>
+          <button style={voteButtonStyle}>
+            {buttonHovered ? 
+              <p style={xButtonStyle} className="fontsize-md">
+                &#10006;
+              </p> : (
+              <p className="fontsize-sm">
                 투표
                 <br />
                 생성
-              </>
+              </p>
             )}
 
             {/* ------------- 버튼 렌더링 함수 호출 ------------- */}
