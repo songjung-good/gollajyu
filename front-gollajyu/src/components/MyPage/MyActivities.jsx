@@ -317,10 +317,10 @@ const MyActivities = () => {
     // 디자인
     marginRight: isXLarge ? "10px" : isLarge ? "8px" : isMedium ? "6px" : "4px",
     paddingTop: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
-    width: !isSmall ? "20%" : "25%",
+    width: isXLarge || isLarge ? "20%" : isMedium ? "22%" : "25%",
     height: isXLarge ? "60px" : isLarge ? "50px" : "40px",
-    borderTopLeftRadius: !isSmall ? "20px" : "10px",
-    borderTopRightRadius: !isSmall ? "20px" : "10px",
+    borderTopLeftRadius: isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
+    borderTopRightRadius: isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
     background: "#D9D9D9",
 
     // 글자
@@ -356,9 +356,9 @@ const MyActivities = () => {
   const historyContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    // 최소 높이
-    minHeight: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "560px" : "375px",
-    borderBottomRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    minHeight: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    borderBottomLeftRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderBottomRightRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     borderTopLeftRadius: "0",
     borderTopRightRadius: !isSmall ? "50px" : "0",
     background: "#FFFFFF",
