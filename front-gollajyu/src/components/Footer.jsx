@@ -16,7 +16,7 @@ const Footer = () => {
   // ----------- body 스타일 -----------
   const body = {
     // 디자인
-    padding: "52px 40px 44px",
+    padding: "52px 30px 44px",
     width: "100%",
     height: "240px",
     borderTop: "1px solid #BBBBBB",
@@ -63,8 +63,9 @@ const Footer = () => {
   const teamContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
-    justifyContent: "flex-end",  // 수정된 부분
+    justifyContent: "flex-end",
   }
+
   // ----------- 팀명 스타일 -----------
   const teamStyle = {
     // 디자인
@@ -77,9 +78,11 @@ const Footer = () => {
   // ----------- 이름 스타일 -----------
   const nameStyle = {
     // 디자인
-    marginLeft: "10px",
+    marginLeft: "5px",
+
     // 글자
-    fontSize: "16px",
+    fontSize: "14px",
+    whiteSpace: "nowrap",
   }
 
   // --------------------------------- css 끝 ---------------------------------
