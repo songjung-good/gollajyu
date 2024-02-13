@@ -17,7 +17,7 @@ import { Container } from "@mui/system";
 import useAuthStore from "/src/stores/userState";
 
 // 카테고리 데이터 불러오기
-import categoryData from "/src/stores/categoryData";
+import categoryData from '/src/stores/categoryData';
 
 // 각 투표에 관한 정보를 받아서 출력하는 곳
 const VoteCardItem = (props) => {
@@ -25,7 +25,7 @@ const VoteCardItem = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // Props에서 필요한 값 추출
-  const { item, categoryId, voteId, onClick, isSelect } = props;
+  const { item, categoryId, voteId, onClick, totalCount, count, selectedVoteItem } = props;
 
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
@@ -41,6 +41,7 @@ const VoteCardItem = (props) => {
   const [clicked, setClicked] = useState(0);
   const [memberId, setMemberId] = useState(0);
   const voteItemId = item.voteItemId;
+  const doVote = useAuthStore((state) => state.doVote);
 
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
   // console.log(isSelect, clicked, "cliked")
@@ -55,6 +56,7 @@ const VoteCardItem = (props) => {
       categoryId: categoryId,
       tagId: (categoryId - 1) * 5 + index + 1,
     };
+
 
     // Send axios request
     axios
@@ -88,7 +90,7 @@ const VoteCardItem = (props) => {
           style={{ maxWidth: "100%" }}
         >
           {/* 호버 시 */}
-          {(clicked || isSelect) && (hover || clicked) ? (
+          {((selectedVoteItem === 0) && hover) ? (
             <div
               className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
               onMouseLeave={() => {}}
@@ -98,7 +100,7 @@ const VoteCardItem = (props) => {
                 <button
                   key={index}
                   className={`h-1/5 w-full flex items-center justify-center cursor-pointer ${
-                    clicked - 1 === index
+                    (clicked - 1 === index)
                       ? "text-white bg-blue-500"
                       : "text-black"
                   } border-t-2 border-white text-max-xl`}
@@ -106,10 +108,8 @@ const VoteCardItem = (props) => {
                     if (clicked === 0 && user.memberId != null) {
                       setClicked(index + 1);
                       onTagClick(index);
-                      onClick(index);
+                      onClick(voteItemId);
                     } else {
-                      console.log("비회원");
-                      // Login Modal
                     }
                   }}
                 >
@@ -117,7 +117,11 @@ const VoteCardItem = (props) => {
                 </button>
               ))}
             </div>
-          ) : null}
+          ) : (selectedVoteItem === voteItemId) ?
+          (<div>
+            당신이 선택한 아이템
+          </div>
+            ) : null}
 
           {/* 투표 이미지 */}
           <img
@@ -128,6 +132,9 @@ const VoteCardItem = (props) => {
         </Container>
         {/* 버튼을 누르면 생기는 상세페이지 */}
         <div className="h-1/3 w-full flex flex-col justify-center items-center">
+          <p>
+          {selectedVoteItem !== 0 ? `${(count / totalCount * 100).toFixed(2)}%` : '%'}
+          </p>
           <h2 className="text-lg font-bold mb-2">
             {item.price ? `${item.price.toLocaleString()}원` : ""}
           </h2>
