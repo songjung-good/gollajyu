@@ -1,27 +1,30 @@
+// 리액트 및 훅/라이브러리
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+
+// 소비성향 데이터 불러오기
+import sobiTIData from "/src/stores/testResultData.js";
+
+// 소비성향 조사 결과 컴포넌트
 import TestResultHeader from "../TestResultHeader";
-import sobiTIData from "../../stores/testResultData.js";
-import useAuthStore from "../../stores/userState";
-import API_URL from "../../stores/apiURL";
-import DefaultProfileImage from "/assets/images/default_profile_img.png";
+
 
 const MyProfile = () => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
@@ -55,18 +58,14 @@ const MyProfile = () => {
     }
     setIsEditMode(!isEditMode);
   };
+
   // --------------------------------- css 시작 ---------------------------------
+
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge
-      ? "50px"
-      : isLarge
-      ? "45px"
-      : isMedium
-      ? "40px"
-      : "35px",
+    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -92,33 +91,11 @@ const MyProfile = () => {
     marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
   };
 
-  // ----------- 버튼 스타일 -----------
-  const buttonStyle = {
-    // 디자인
-    marginLeft: "20px",
-    width: isXLarge ? "100px" : isLarge ? "90px" : isMedium ? "80px" : "70px",
-    height: isXLarge ? "40px" : isLarge ? "36px" : isMedium ? "32px" : "28px",
-    border: "3px solid",
-    borderRadius: "5px",
-    borderColor: "#BEBEBE",
-    background: buttonHovered ? "#D9D9D9" : "#FFFFFF", // 마우스 호버 시 배경 색상 변경
-    transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
-
-    // 글자
-    color: "#9C9C9C", // 글자 색: 연한 회색
-  };
-
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge
-      ? "50px"
-      : isLarge
-      ? "40px"
-      : isMedium
-      ? "30px"
-      : "20px",
+    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     background: "#FFFFFF",
   };
 
@@ -140,13 +117,7 @@ const MyProfile = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge
-      ? "30px 0"
-      : isLarge
-      ? "25px 0"
-      : isMedium
-      ? "20px 0"
-      : "15px 0",
+    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -168,13 +139,7 @@ const MyProfile = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding: isXLarge
-      ? "10px 20px"
-      : isLarge
-      ? "8px 18px"
-      : isMedium
-      ? "6px 16px"
-      : "4px 14px",
+    padding: isXLarge ? "10px 20px" : isLarge ? "8px 18px" : isMedium ? "6px 16px" : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
     height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
@@ -227,13 +192,7 @@ const MyProfile = () => {
 
     // 디자인
     marginTop: "10px",
-    width: isXLarge
-      ? "300px"
-      : isLarge
-      ? "270px"
-      : isMedium
-      ? "240px"
-      : "210px",
+    width: isXLarge ? "300px" : isLarge ? "270px" : isMedium ? "240px" : "210px",
     height: isXLarge ? "70px" : isLarge ? "60px" : isMedium ? "50px" : "40px",
     borderRadius: "50px",
     background: testButtonHovered ? "#E6BE3D" : "#FFD257", // 마우스 호버 시 배경 색상 변경
@@ -245,6 +204,7 @@ const MyProfile = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
+  
   return (
     <>
       {/* ------------- 기본정보 ------------- */}

@@ -19,8 +19,6 @@ import MainVoteList from "../components/MainPage/MainVoteList";
 import MainWord from "../components/MainPage/MainWord";
 import SwipeVote from "../components/MainPage/SwipeVote";
 import VoteButton from "../components/VoteButton";
-import LoginModal from "../components/LoginForm";
-import SignupModal from "../components/SignupForm";
 
 // 투표 관련 컴포넌트
 import VoteSimple from "../components/VotePage/VoteSimple";
@@ -28,9 +26,11 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
-import TmpModal from "../components/TmpModal"; // 임시 모달
+import LoginModal from "../components/LoginForm";
+import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
+
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 

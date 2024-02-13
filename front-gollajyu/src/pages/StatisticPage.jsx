@@ -1,28 +1,29 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect, useRef } from "react";
-import { useMediaQuery } from "react-responsive";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useModalStore from "/src/stores/modalState";
+
+// 카테고리 데이터 불러오기
+import categoryData from "/src/stores/categoryData";
+
+// 통계 페이지 관련 컴포넌트
 import StatisticPageChart from "../components/StatisticPage/StatisticPageChart";
 import StatisticPageGroupItem from "../components/StatisticPage/StatisticPageGroupItem";
-import categoryData from "/src/stores/categoryData";
-import TmpModal from "../components/TmpModal"; // 임시 모달
+
+// 투표 페이지 관련 컴포넌트
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
-import useModalStore from "../stores/modalState";
+
 
 const StatisticPage = () => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
@@ -100,33 +101,63 @@ const StatisticPage = () => {
     }
   };
 
+
   // --------------------------------- css 시작 ---------------------------------
+
+  // ----------- 해더 스타일 -----------
+  const headerStyle = {
+    // 디자인
+    margin: "0 auto", // 가로 중앙 정렬
+    width: "100%",
+    height: isXLarge || isLarge ? "260px" : "160px",
+    whiteSpace: "nowrap", // 줄바꿈 방지
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "center",
+  }
+
+  // ----------- 해더 컨테이너 스타일 -----------
+  const headerContainerStyle = {
+    // 디자인
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+    alignItems: isXLarge || isLarge ? "flex-start" : "center",
+    justifyContent: "center",
+  }
+
+  // ----------- 해더 제목 스타일 -----------
+  const headerTitleStyle = {
+    // 디자인
+    marginBottom: "20px",
+
+    // 글자
+    fontSize: isXLarge || isLarge ? "32px" : "24px",
+    color: "#FFFFFF",
+  }
+
+  // ----------- 해더 링크 컨테이너 스타일 -----------
+  const headerLinkContainerStyle = {
+    height: "28.5px",
+  }
 
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "50px 0", // 상하단 여백: 50px
-    // (반응형) 컨텐츠 가로 길이
-    width: isXLarge
-      ? "1000px"
-      : isLarge
-      ? "740px"
-      : isMedium
-      ? "560px"
-      : "375px",
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    whiteSpace: "nowrap", // 줄바꿈 방지
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge
-      ? "50px"
-      : isLarge
-      ? "45px"
-      : isMedium
-      ? "40px"
-      : "35px",
+    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "375px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -156,13 +187,7 @@ const StatisticPage = () => {
   const contentsContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge
-      ? "50px"
-      : isLarge
-      ? "40px"
-      : isMedium
-      ? "30px"
-      : "20px",
+    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     background: "#FFFFFF",
   };
 
@@ -186,13 +211,7 @@ const StatisticPage = () => {
     position: "relative",
 
     // 디자인
-    margin: isXLarge
-      ? "0 10px"
-      : isLarge
-      ? "0 8px"
-      : isMedium
-      ? "0 6px"
-      : "0 4px",
+    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
   };
 
   // ----------- 드롭다운 버튼 스타일 -----------
@@ -214,13 +233,7 @@ const StatisticPage = () => {
 
     // 디자인
     marginTop: "4px",
-    padding: isXLarge
-      ? "0 8px"
-      : isLarge
-      ? "0 7px"
-      : isMedium
-      ? "0 6px"
-      : "0 5px",
+    padding: isXLarge ? "0 8px" : isLarge ? "0 7px" : isMedium ? "0 6px" : "0 5px",
     width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
     border: "1px solid #ccc",
     borderRadius: "4px",
@@ -230,13 +243,7 @@ const StatisticPage = () => {
   // ----------- 드롭다운 아이템 스타일 -----------
   const dropdownItemStyle = {
     // 디자인
-    margin: isXLarge
-      ? "8px 0"
-      : isLarge
-      ? "7px 0"
-      : isMedium
-      ? "6px 0"
-      : "5px 0",
+    margin: isXLarge ? "8px 0" : isLarge ? "7px 0" : isMedium ? "6px 0" : "5px 0",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     cursor: "pointer",
   };
@@ -250,13 +257,7 @@ const StatisticPage = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge
-      ? "30px 0"
-      : isLarge
-      ? "25px 0"
-      : isMedium
-      ? "20px 0"
-      : "15px 0",
+    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -301,6 +302,7 @@ const StatisticPage = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
+
   // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
   const isVoteSimpleCreateModalOpened = useModalStore(
     (state) => state.isVoteSimpleCreateModalOpened
@@ -311,9 +313,20 @@ const StatisticPage = () => {
 
   return (
     <>
+      {/* ------------- 투표 버튼 ------------- */}
       <VoteButton />
+
+      {/* ------------- Header ------------- */}
+      <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
+        <div style={headerContainerStyle}>
+          <p style={headerTitleStyle}>통계 보여쥬</p>
+          <div style={headerLinkContainerStyle}>
+          </div>
+        </div>
+      </div>
+
+      {/* ------------- Body ------------- */}
       <div style={bodyStyle}>
-        {/* ------------- 사용자별 선호 태그 통계 ------------- */}
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-xl">
@@ -321,6 +334,7 @@ const StatisticPage = () => {
             </span>
           </div>
           <div style={contentsContainerStyle}>
+
             {/* ------------- 드롭다운 버튼 ------------- */}
             <div style={dropdownContainerStyle}>
               <div style={flexContainerStyle}>
@@ -379,7 +393,6 @@ const StatisticPage = () => {
                 어떤 요소를 중요하게 생각할까?
               </div>
             </div>
-            {/* --------------------------------------- */}
 
             {/* ------------- 차트 그래프 ------------- */}
             <div style={chartContainerStyle}>
@@ -390,7 +403,6 @@ const StatisticPage = () => {
                 selectedDropdownValues={selectedDropdownValues}
               />
             </div>
-            {/* --------------------------------------- */}
 
             <div style={barStyle}></div>
 
@@ -431,7 +443,7 @@ const StatisticPage = () => {
                 )}
               </div>
             </div>
-            {/* --------------------------------------- */}
+
           </div>
         </div>
       </div>
