@@ -573,12 +573,19 @@ public class VoteService {
         }
         // 3. 댓글
         List<Comment> commentList = commentRepository.findByVoteId(vote.getId());
+        List<CommentDto> commentDtoList = new ArrayList<>();
 
+        // 각 댓글을 DTO로 변환
+        for(Comment comment : commentList){
+            commentDtoList.add(CommentDto.convertToDto(comment, voteDetailReqDto.getMemberId()));
+        }
+
+        // req로 받은 사용자의 좋아요 여부 추가
         VoteDetailResDto voteDetailResDto = VoteDetailResDto.builder()
                 .chosenItem(voteResult.getId())
                 .voteInfo(voteInfoDto)
                 .voteItemListInfo(voteItemInfoDtoList)
-                .commentList(commentList)
+                .commentList(commentDtoList)
                 .build();
 
         return  new ServiceResult<VoteDetailResDto>().success(voteDetailResDto);
