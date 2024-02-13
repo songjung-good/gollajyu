@@ -1,5 +1,9 @@
+// 리액트
 import React from "react";
+
+// 내 투표 컴포넌트
 import MyActivitiesVoteItem from "./MyActivitiesVoteItem";
+
 
 const MyActivitiesParticipated = ({ props }) => {
   // console.log("참여한 투표:", props);
