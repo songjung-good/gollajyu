@@ -3,16 +3,22 @@ package com.jaecheop.backgollajyu.vote.model;
 import com.jaecheop.backgollajyu.vote.entity.Category;
 import com.jaecheop.backgollajyu.vote.entity.Tag;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
+import com.jaecheop.backgollajyu.vote.entity.VoteResult;
+import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
 import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Builder
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @ToString
 public class ListVoteDto {
+
+    private static VoteResultRepository voteResultRepository;
+
     private Long voteId;
     private String voteTitle;
     private int categoryId;
@@ -24,6 +30,9 @@ public class ListVoteDto {
     // 멤버의 해당 투표 좋아요 여부
     private boolean isLiked;
 
+    // 멤버가 고른 해당 투표 투표 아이템
+    private Long chosenItemId;
+
     public void updateVoteItemList(List<ListVoteItemDto> voteItemList) {
         this.voteItemList = voteItemList;
     }
@@ -32,6 +41,7 @@ public class ListVoteDto {
         this.tagList = tagList;
     }
     public static ListVoteDto convertToDto(Vote vote){
+
         return ListVoteDto.builder()
                 .voteId(vote.getId())
                 .voteTitle(vote.getTitle())
@@ -44,5 +54,16 @@ public class ListVoteDto {
     public void updateIsLiked(){
         this.isLiked = true;
     }
+
+    public void updateChosenItem(Long voteId, Long memberId){
+        Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(memberId, voteId);
+        if(optionalVoteResult.isEmpty()){
+            this.chosenItemId = 0L;
+        } else{
+            this.chosenItemId = optionalVoteResult.get().getVoteItem().getId();
+        }
+    }
+
+
 
 }
