@@ -1,26 +1,23 @@
+// 리액트
 import React from "react";
-import { useMediaQuery } from "react-responsive";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// Recharts 라이브러리
 import { PieChart, Pie, Cell } from "recharts";
+
+// 카테고리 및 소비성향 데이터 불러오기
 import categoryData from "/src/stores/categoryData";
 import tagColorData from "/src/stores/tagColorData";
 
+
 const MyStatisticsChart = ({ tagRatio, selectedCategory }) => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 데이터 -----------
-
   const categoryName = categoryData.find(
     (item) => item.id == selectedCategory
   ).name;

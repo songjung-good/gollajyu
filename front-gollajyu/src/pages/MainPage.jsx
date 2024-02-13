@@ -31,6 +31,7 @@ import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
+
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 

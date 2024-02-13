@@ -5,9 +5,9 @@ import TestResultHeader from "../components/TestResultHeader";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
-import sobiTIData from "../stores/testResultData.js";
-import useModalStore from "../stores/modalState";
-import useAuthStore from "../stores/userState";
+import sobiTIData from "/src/stores/testResultData.js";
+import useModalStore from "/src/stores/modalState";
+import useAuthStore from "/src/stores/userState";
 import { debounce } from "lodash";
 import { Helmet } from "react-helmet-async";
 

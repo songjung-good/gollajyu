@@ -1,12 +1,28 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-import MyStatisticsChart from "./MyStatisticsChart";
+
+// HTTP 요청을 위한 Axios 라이브러리
+import axios from "axios";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+
+// 카테고리 및 소비성향 데이터 불러오기
 import categoryData from "/src/stores/categoryData";
 import tagColorData from "/src/stores/tagColorData";
-import axios from "axios";
-import API_URL from "../../stores/apiURL";
-import useAuthStore from "../../stores/userState";
+
+// 차트 컴포넌트
+import MyStatisticsChart from "./MyStatisticsChart";
+
+// Material-UI의 CircularProgress 컴포넌트
 import { CircularProgress } from "@mui/material";
+
 
 const filteredCategoryData = categoryData.filter((category) => {
   return category.name !== "전체" && category.name !== "간단";
@@ -83,20 +99,11 @@ const RecommendModal = ({ topCategory, closeModal }) => {
   );
 };
 
+
 const MyStatistics = () => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
@@ -243,7 +250,7 @@ const MyStatistics = () => {
       });
   }, []);
 
-  // ---------------------쇼핑몰 크롤링 관련 코드 ---------------------
+  // --------------------- 쇼핑몰 크롤링 관련 코드 ---------------------
   const [showModal, setShowModal] = useState(false);
 
   const handleRecommend = () => {
@@ -256,18 +263,13 @@ const MyStatistics = () => {
     setShowModal(false);
   };
 
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge
-      ? "50px"
-      : isLarge
-      ? "45px"
-      : isMedium
-      ? "40px"
-      : "35px",
+    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -297,13 +299,7 @@ const MyStatistics = () => {
   const contentsContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge
-      ? "50px"
-      : isLarge
-      ? "40px"
-      : isMedium
-      ? "30px"
-      : "20px",
+    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     background: "#FFFFFF",
   };
 
@@ -357,13 +353,7 @@ const MyStatistics = () => {
   // ----------- 설명 데이터 글자 스타일 -----------
   const descriptionDataStyle = {
     // 디자인
-    margin: isXLarge
-      ? "0 10px"
-      : isLarge
-      ? "0 8px"
-      : isMedium
-      ? "0 6px"
-      : "0 4px",
+    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
 
     // 글자
     color: "#FF595E",
@@ -378,13 +368,7 @@ const MyStatistics = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge
-      ? "30px 0"
-      : isLarge
-      ? "25px 0"
-      : isMedium
-      ? "20px 0"
-      : "15px 0",
+    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -410,13 +394,7 @@ const MyStatistics = () => {
   // ----------- 멘트 데이터 스타일 -----------
   const mentDataStyle = {
     // 디자인
-    margin: isXLarge
-      ? "0 10px"
-      : isLarge
-      ? "0 8px"
-      : isMedium
-      ? "0 6px"
-      : "0 4px",
+    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
 
     // 글자
     color: "#FF595E",
@@ -455,18 +433,13 @@ const MyStatistics = () => {
     position: "relative",
 
     // 디자인
-    margin: isXLarge
-      ? "0 10px"
-      : isLarge
-      ? "0 8px"
-      : isMedium
-      ? "0 6px"
-      : "0 4px",
+    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
   };
 
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
     // 디자인
+    width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     border: "1px solid #ccc",
     borderRadius: "4px",
@@ -482,13 +455,7 @@ const MyStatistics = () => {
 
     // 디자인
     marginTop: "4px",
-    padding: isXLarge
-      ? "0 8px"
-      : isLarge
-      ? "0 7px"
-      : isMedium
-      ? "0 6px"
-      : "0 5px",
+    padding: isXLarge ? "0 8px" : isLarge ? "0 7px" : isMedium ? "0 6px" : "0 5px",
     width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
     border: "1px solid #ccc",
     borderRadius: "4px",
@@ -498,13 +465,7 @@ const MyStatistics = () => {
   // ----------- 드롭다운 아이템 스타일 -----------
   const dropdownItemStyle = {
     // 디자인
-    margin: isXLarge
-      ? "8px 0"
-      : isLarge
-      ? "7px 0"
-      : isMedium
-      ? "6px 0"
-      : "5px 0",
+    margin: isXLarge ? "8px 0" : isLarge ? "7px 0" : isMedium ? "6px 0" : "5px 0",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     cursor: "pointer",
   };
@@ -540,13 +501,7 @@ const MyStatistics = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding: isXLarge
-      ? "10px 20px"
-      : isLarge
-      ? "8px 18px"
-      : isMedium
-      ? "6px 16px"
-      : "4px 14px",
+    padding: isXLarge ? "10px 20px" : isLarge ? "8px 18px" : isMedium ? "6px 16px" : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
     height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
@@ -588,6 +543,7 @@ const MyStatistics = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
+
   // ----------- 배열에서 가장 높은 세 Tag를 찾는 함수 -----------
   const findTop3Tags = (obj) => {
     const sortedTags = Object.entries(obj).sort((a, b) => b[1] - a[1]);
@@ -611,7 +567,7 @@ const MyStatistics = () => {
               <div style={itemLeftStyle}>
                 <div className="fontsize-md">{item.category}</div>
                 <div style={flexContainerStyle}>
-                  {top3Left.map((tag, i) => (
+                  {top3Left.map((tag, index) => (
                     <div
                       style={{
                         ...tagItemStyle,
@@ -621,7 +577,7 @@ const MyStatistics = () => {
                             .color,
                       }}
                       className="fontsize-sm"
-                      key={i}
+                      key={index}
                     >
                       {tag.key}
                     </div>
@@ -676,6 +632,7 @@ const MyStatistics = () => {
           </button>
         </div>
         <div style={tagContentsContainerStyle}>
+
           {/* ------------- 관심있는 카테고리 ------------- */}
           <div style={subTitleContainerStyle}>
             <div style={subTitleStyle} className="fontsize-lg">
@@ -687,16 +644,6 @@ const MyStatistics = () => {
           </div>
           <div style={descriptionContainerStyle}>
             <div style={responsiveDescriptionContainerStyle}>
-              {/* 투표 통계가 참여한 투표에 대한 것만 응답으로 와서, 이 문구는 제외했습니다. */}
-              {/* <div style={responsiveDescriptionSubContainerStyle}>
-                <div className="fontsize-sm">작성한 투표의</div>
-                <div style={descriptionDataStyle} className="fontsize-sm">
-                  [40]%
-                </div>
-                <div style={restStyle} className="fontsize-sm">
-                  ,
-                </div>
-              </div> */}
               <div style={responsiveDescriptionSubContainerStyle}>
                 <div className="fontsize-sm">참여한 투표의</div>
                 <div style={descriptionDataStyle} className="fontsize-sm">
@@ -712,15 +659,12 @@ const MyStatistics = () => {
               <div className="fontsize-sm">카테고리에 속해있어요!</div>
             </div>
           </div>
-          {/* --------------------------------------- */}
 
           <div style={barStyle}></div>
 
           {/* ------------- 랜덤 선호도 비교 ------------- */}
           <div style={randomContainerStyle}>
-            <div style={quotesStyle} className="fontsize-xl">
-              "
-            </div>
+            <div style={quotesStyle} className="fontsize-xl">“</div>
             <div style={mentContainerStyle}>
               <div style={flexContainerStyle}>
                 <div style={mentDataStyle} className="fontsize-md">
@@ -743,7 +687,9 @@ const MyStatistics = () => {
                 <div style={mentDataStyle} className="fontsize-md">
                   " {topCategory.key} "
                 </div>
-                <div className="fontsize-md">를 고를 때</div>
+                <div className="fontsize-md">
+                  {['의류', '가구'].includes(topCategory.key) ? '를' : '을'} 고를 때
+                </div>
                 <div
                   style={{
                     ...mentDataStyle,
@@ -757,16 +703,17 @@ const MyStatistics = () => {
                 >
                   {othersTopTag.key}
                 </div>
-                <div className="fontsize-md">을 눈여겨봐요!</div>
+                <div className="fontsize-md">
+                  {['가성비', '브랜드', '소재'].includes(othersTopTag.key) ? '를' : '을'} 눈여겨봐요!
+                </div>
               </div>
             </div>
-            <div style={quotesStyle} className="fontsize-xl">
-              "
-            </div>
+            <div style={quotesStyle} className="fontsize-xl">”</div>
           </div>
-          {/* --------------------------------------- */}
+
         </div>
       </div>
+
       {/* -------------------------- 태그 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
@@ -775,6 +722,7 @@ const MyStatistics = () => {
           </span>
         </div>
         <div style={tagContentsContainerStyle}>
+
           {/* ------------- 드롭다운 버튼 ------------- */}
           <div style={dropdownContainerStyle}>
             <div style={flexContainerStyle}>
@@ -818,7 +766,7 @@ const MyStatistics = () => {
                 )}
               </div>
               <div style={subTitleStyle} className="fontsize-md">
-                을(를) 구매 할 때
+                {selectedCategory === 1 || selectedCategory === 2 ? "를" : "을"} 구매 할 때
               </div>
               <div style={restStyle} className="fontsize-md">
                 ,
@@ -828,7 +776,6 @@ const MyStatistics = () => {
               어떤 요소를 중요하게 생각할까?
             </div>
           </div>
-          {/* --------------------------------------- */}
 
           {/* ------------- 차트 그래프 ------------- */}
           <div style={chartContainerStyle}>
@@ -839,7 +786,6 @@ const MyStatistics = () => {
               />
             )}
           </div>
-          {/* --------------------------------------- */}
 
           <div style={barStyle}></div>
 
@@ -848,7 +794,7 @@ const MyStatistics = () => {
             카테고리별 선호 태그 TOP 3
           </div>
           {tagRatio.length > 0 && renderTop3Categories}
-          {/* --------------------------------------- */}
+
         </div>
       </div>
       {showModal && (

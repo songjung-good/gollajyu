@@ -4,9 +4,9 @@ import VoteDetailHeader from './VoteDetailHeader';
 import VoteDetailReselt from './VoteDetailReselt';
 import VoteDetailChat from './VoteDetailChat';
 import axios from "axios";
-import API_URL from "../../stores/apiURL";
-import useAuthStore from "../../stores/userState";
-import useModalStore from "../../stores/modalState";
+import API_URL from "/src/stores/apiURL";
+import useAuthStore from "/src/stores/userState";
+import useModalStore from "/src/stores/modalState";
 import { useParams } from 'react-router-dom';
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)

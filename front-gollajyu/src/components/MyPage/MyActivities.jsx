@@ -1,15 +1,29 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
-import useAuthStore from "../../stores/userState";
-import API_URL from "../../stores/apiURL";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+
+// 내 활동 컴포넌트
 import MyActivitiesCreated from "./MyActivitiesCreated";
 import MyActivitiesParticipated from "./MyActivitiesParticipated";
 import MyActivitiesLiked from "./MyActivitiesLiked";
 import MyActivitiesCommented from "./MyActivitiesCommented";
+
+// 포인트 이미지 가져오기
 import PointImage from "/assets/images/point_img.png";
+
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -34,20 +48,11 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
   </NavLink>
 );
 
+
 const MyActivities = () => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 링크 메뉴 hover -----------
   const [CreatedHovered, CreatedMouseEnter, CreatedMouseLeave] =
@@ -59,8 +64,11 @@ const MyActivities = () => {
     ParticipatedPageMouseLeave,
   ] = useHoverState();
 
-  const [LikedPageHovered, LikedPageMouseEnter, LikedPageMouseLeave] =
-    useHoverState();
+  const [
+    LikedPageHovered,
+    LikedPageMouseEnter,
+    LikedPageMouseLeave
+  ] = useHoverState();
 
   const [
     CommentedPageHovered,
@@ -165,18 +173,13 @@ const MyActivities = () => {
     },
   ];
 
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge
-      ? "50px"
-      : isLarge
-      ? "45px"
-      : isMedium
-      ? "40px"
-      : "35px",
+    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -206,26 +209,14 @@ const MyActivities = () => {
   const contentsContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge
-      ? "50px"
-      : isLarge
-      ? "40px"
-      : isMedium
-      ? "30px"
-      : "20px",
+    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     background: "#FFFFFF",
   };
 
   // ----------- 포인트 이미지 스타일 -----------
   const pointImageStyle = {
     // 디자인
-    marginRight: isXLarge
-      ? "20px"
-      : isLarge
-      ? "17px"
-      : isMedium
-      ? "14px"
-      : "11px",
+    marginRight: isXLarge ? "20px" : isLarge ? "17px" : isMedium ? "14px" : "11px",
     width: isXLarge ? "45px" : isLarge ? "39px" : isMedium ? "33px" : "27px",
     height: isXLarge ? "45px" : isLarge ? "39px" : isMedium ? "33px" : "27px",
     borderRadius: "50%",
@@ -250,13 +241,7 @@ const MyActivities = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge
-      ? "30px 0"
-      : isLarge
-      ? "25px 0"
-      : isMedium
-      ? "20px 0"
-      : "15px 0",
+    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -281,13 +266,7 @@ const MyActivities = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding: isXLarge
-      ? "10px 20px"
-      : isLarge
-      ? "8px 18px"
-      : isMedium
-      ? "6px 16px"
-      : "4px 14px",
+    padding: isXLarge ? "10px 20px" : isLarge ? "8px 18px" : isMedium ? "6px 16px" : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
     height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
@@ -338,10 +317,10 @@ const MyActivities = () => {
     // 디자인
     marginRight: isXLarge ? "10px" : isLarge ? "8px" : isMedium ? "6px" : "4px",
     paddingTop: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
-    width: !isSmall ? "20%" : "25%",
+    width: isXLarge || isLarge ? "20%" : isMedium ? "22%" : "25%",
     height: isXLarge ? "60px" : isLarge ? "50px" : "40px",
-    borderTopLeftRadius: !isSmall ? "20px" : "10px",
-    borderTopRightRadius: !isSmall ? "20px" : "10px",
+    borderTopLeftRadius: isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
+    borderTopRightRadius: isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
     background: "#D9D9D9",
 
     // 글자
@@ -377,27 +356,16 @@ const MyActivities = () => {
   const historyContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    // 최소 높이
-    minHeight: isXLarge
-      ? "1000px"
-      : isLarge
-      ? "740px"
-      : isMedium
-      ? "560px"
-      : "375px",
-    borderBottomRadius: isXLarge
-      ? "50px"
-      : isLarge
-      ? "40px"
-      : isMedium
-      ? "30px"
-      : "20px",
+    minHeight: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    borderBottomLeftRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderBottomRightRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     borderTopLeftRadius: "0",
     borderTopRightRadius: !isSmall ? "50px" : "0",
     background: "#FFFFFF",
   };
 
   // --------------------------------- css 끝 ---------------------------------
+
 
   // ----------- 활동정보 렌더링 함수 -----------
   const renderInfoItems = infoItems.map((item, index) => {

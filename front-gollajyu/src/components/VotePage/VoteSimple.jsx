@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import API_URL from "../../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 import axios from "axios";
-import useAuthStore from "../../stores/userState";
-import useModalStore from "../../stores/modalState";
+import useAuthStore from "/src/stores/userState";
+import useModalStore from "/src/stores/modalState";
 
 const VoteSimple = () => {
   const [voteItems, setVoteItems] = useState([

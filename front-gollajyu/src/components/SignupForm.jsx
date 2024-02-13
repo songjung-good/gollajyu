@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import dayjs from "dayjs";
-import API_URL from "../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import useAuthStore from "../stores/userState";
-import useModalStore from "../stores/modalState";
+import useAuthStore from "/src/stores/userState";
+import useModalStore from "/src/stores/modalState";
 
 const SignupModal = () => {
   const setSignupModalClose = useModalStore(
