@@ -30,10 +30,7 @@ const Footer = () => {
   // ----------- footer 컨테이너 스타일 -----------
   const footerContainerStyle = {
     // 디자인
-    width:
-      isXLarge ? "1000px" :
-      isLarge ? "740px" :
-      isMedium ? "460px" : "375px",
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
 
     // 글자
     color: "#4A4A4A",

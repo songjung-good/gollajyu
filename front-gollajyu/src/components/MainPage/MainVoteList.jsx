@@ -120,19 +120,13 @@ const MainVoteList = ({ transferVoteId }) => {
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    width:
-      isXLarge ? "1000px" :
-      isLarge ? "740px" :
-      isMedium ? "470px" : "375px",
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
   };
 
   // ----------- 투표 리스트 컨테이너 스타일 -----------
   const voteListContainerStyle = {
     // 디자인
-    marginTop:
-      isXLarge ? "50px" :
-      isLarge ? "40px" :
-      isMedium ? "30px" : "20px",
+    marginTop: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     padding: "10px",
     width: isXLarge || isLarge ? "45%" : "90%",
 
@@ -152,10 +146,7 @@ const MainVoteList = ({ transferVoteId }) => {
   // ----------- 좋아요 스타일 -----------
   const likeStyle = {
     // 디자인
-    marginRight:
-      isXLarge ? "10px" :
-      isLarge ? "8px" :
-      isMedium ? "6px" : "4px",
+    marginRight: isXLarge ? "10px" : isLarge ? "8px" : isMedium ? "6px" : "4px",
 
     // 글자
     color: "#FF595E",
