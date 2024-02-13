@@ -1,11 +1,23 @@
+// 리액트 및 훅/라이브러리
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
-import DefaultProfileImage from "/assets/images/default_profile_img.png";
-import useAuthStore from "../stores/userState";
-import useModalStore from "../stores/modalState";
-import API_URL from "../stores/apiURL";
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useModalStore from "/src/stores/modalState";
+import useAuthStore from "/src/stores/userState";
+
+// 기본 프로필 이미지 불러오기
+import DefaultProfileImage from "/assets/images/default_profile_img.png";
+
 
 // ----------- 커스텀 훅 -----------
 const useHoverState = () => {
@@ -55,26 +67,18 @@ const ButtonItem = ({ label, style, hoverState, onClick }) => (
 );
 
 const NavigationBar = () => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 메인 메뉴 hover -----------
-  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
-    useHoverState();
-
   const [
-    broadcastPageHovered,
+    votePageHovered,
+    votePageMouseEnter,
+    votePageMouseLeave
+  ] = useHoverState();
+
+  const [broadcastPageHovered,
     broadcastPageMouseEnter,
     broadcastPageMouseLeave,
   ] = useHoverState();
@@ -90,10 +94,6 @@ const NavigationBar = () => {
     testResultPageMouseEnter,
     testResultPageMouseLeave,
   ] = useHoverState();
-
-  // ----------- 프로필 버튼 hover -----------
-  const [profileHovered, profileMouseEnter, profileMouseLeave, profileClick] =
-    useHoverState();
 
   // ----------- 프로필 아이템 hover -----------
   const [myProfileHovered, myProfileMouseEnter, myProfileMouseLeave] =
@@ -115,13 +115,8 @@ const NavigationBar = () => {
   const [signupButtonHovered, signupButtonMouseEnter, signupButtonMouseLeave] =
     useHoverState();
 
-  // ----------- 햄버거 버튼 hover -----------
-  const [
-    hamburgerHovered,
-    hamburgerMouseEnter,
-    hamburgerMouseLeave,
-    hamburgerClick,
-  ] = useHoverState();
+  // ----------- 사이드 메뉴 버튼 open 여부 -----------
+  const [isSideMenuOpend, setIsSideMenuOpend] = useState(false);
 
   // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
   const setLogout = useAuthStore((state) => state.setLogout);
@@ -144,7 +139,7 @@ const NavigationBar = () => {
   const checkLoggedIn = (event) => {
     // TODO :: 비로그인 사용자의 네비게이션 바 이용 막아야함
     if (!isLoggedIn) {
-      console.log(event.target);
+      // console.log(event.target);
       // console.log(isLoggedIn);
       setLoginModalOpen();
     }
@@ -175,8 +170,24 @@ const NavigationBar = () => {
 
     // 디자인
     width: "100%", // 내비게이션 바 배경 넓이
-    height: "100px", // 내비게이션 바 높이
+    height: isXLarge || isLarge ? "110px" : "70px", // 내비게이션 바 높이
     background: "#FFFFFF",
+  };
+
+  // ----------- 내비게이션 바 스타일 -----------
+  const navigationBarStyle = {
+    // 상속
+    ...navigationBarBackgroundStyle,
+
+    // 위치
+    left: "50%", // 화면 가로 중앙으로 이동
+    transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
+
+    // 디자인
+    padding: "0 20px",
+    maxWidth: "1200px",
+    minWidth: "240px",
+    width: "100%",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -186,34 +197,116 @@ const NavigationBar = () => {
     alignItems: "center",
   };
 
-  // ----------- 내비게이션 바 스타일 -----------
-  const navigationBarStyle = {
+  // ----------- 버튼 컨테이너 스타일 -----------
+  const buttonContainerStyle = {
     // 상속
-    ...navigationBarBackgroundStyle,
     ...flexContainerStyle,
 
-    // 위치
-    left: "50%", // 화면 가로 중앙으로 이동
-    transform: "translateX(-50%)", // 화면 가로 중앙으로 이동
+    // 디자인
+    height: "40px",
+
+    // 컨텐츠 정렬
+    justifyContent: "flex-end",
+  };
+
+  // ----------- 프로필 버튼 스타일 -----------
+  const myPageStyle = {
+    // 상속
+    ...flexContainerStyle,
 
     // 디자인
-    width: isXLarge ? "95%" : isLarge ? "850px" : isMedium ? "600px" : "375px",
+    marginRight: "10px",
+    height: "40px",
+  };
+
+  // ----------- 프로필 이미지 스타일 -----------
+  const profileImageStyle = {
+    // 디자인
+    width: "35px", // 이미지 가로 길이
+    height: "35px", // 이미지 세로 길이
+    borderRadius: "50%", // 둥근 테두리: 50% (원)
+  };
+
+  // ----------- 프로필 닉네임 스타일 -----------
+  const nickNameStyle = {
+    // 디자인
+    marginTop: "5px",
+    width: "110px",
+
+    // 글자
+    fontSize: "14px",
+  };
+
+  // ----------- 포인트 스타일 -----------
+  const pointStyle = {
+    // 디자인
+    marginTop: "5px",
+
+    // 글자
+    fontSize: "14px",
+    color: "#FFA500", // 글자 색: 주황
+  };
+
+  // ----------- 버튼 공통 스타일 -----------
+  const buttonStyle = {
+    // 디자인
+    marginTop: "5px",
+    width: "70px", // 버튼 넓이
+    height: "35px", // 버튼 높이
+    transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
+
+    // 글자
+    fontSize: "14px", // 버튼 안 글자 크기 고정
+    color: "#4A4A4A", // 글자 색: 회색
+  };
+
+  // ----------- 로그아웃 버튼 스타일 -----------
+  const logoutButtonStyle = {
+    // 상속
+    ...buttonStyle, // 버튼 공통 스타일 상속
+
+    // 글자
+    color: "#9C9C9C",
+  };
+
+  // ----------- 로그아웃 버튼 hover 스타일 -----------
+  const logoutButtonHoverStyle = {
+    // 글자
+    color: "#4A4A4A",
+  };
+
+  // ----------- 로그인 버튼 hover 스타일 -----------
+  const loginButtonHoverStyle = {
+    // 글자
+    color: "#FF595E",
+  };
+
+  // ----------- 회원가입 버튼 hover 스타일 -----------
+  const signupButtonHoverStyle = {
+    // 글자
+    color: "#FFA500",
+  };
+
+  // ----------- 메인 링크 컨테이너 스타일 -----------
+  const mainLinkContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
 
     // 컨텐츠 정렬
     justifyContent: "space-between",
-  };
+  }
 
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: isXLarge ? "200px" : isLarge ? "170px" : "140px",
+    width: "100px",
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
-    fontSize: isXLarge ? "48px" : isLarge ? "44px" : isMedium ? "40px" : "38px",
+    fontSize: "36px",
     color: "#FFD257", // 로고 글자 색: 노란색
   };
 
@@ -236,7 +329,7 @@ const NavigationBar = () => {
 
     // 디자인
     paddingTop: "8px",
-    height: "100px",
+    height: "70px",
 
     // 글자
     color: "#4A4A4A",
@@ -256,92 +349,70 @@ const NavigationBar = () => {
   const itemHoverStyle = {
     // 디자인
     width: "100%",
-    height: isXLarge ? "4.5px" : isLarge ? "4px" : "3.5px",
+    height: "4px",
     background: "#FFD257",
   };
 
-  // ----------- 버튼 컨테이너 스타일 -----------
-  const buttonContainerStyle = {
+  // ----------- 사이드 메뉴 컨테이너 스타일 -----------
+  const sideMenuContainerStyle = {
     // 상속
     ...flexContainerStyle,
 
     // 디자인
-    height: "100px",
-
+    width: "100px",
+    
     // 컨텐츠 정렬
     justifyContent: "flex-end",
   };
 
-  // ----------- 프로필 컨테이너 스타일 -----------
-  const profileContainerStyle = {
-    // 위치
-    position: "relative", // 기준 위치
-  };
-
-  // ----------- 프로필 버튼 스타일 -----------
-  const myPageStyle = {
-    // 상속
-    ...flexContainerStyle,
-
+  // ----------- 햄버거 버튼 스타일 -----------
+  const hamburgerStyle = {
     // 디자인
-    marginRight: "10px",
-    height: "100px",
-  };
+    paddingTop: "5px",
+    width: "30px", // 버튼 가로 길이
+    height: "70px", // 버튼 세로 길이
 
-  // ----------- 프로필 이미지 스타일 -----------
-  const profileImageStyle = {
-    // 디자인
-    width: "35px", // 이미지 가로 길이
-    height: "35px", // 이미지 세로 길이
-    borderRadius: "50%", // 둥근 테두리: 50% (원)
-  };
-
-  // ----------- 프로필 정보 컨테이너 스타일 -----------
-  const infoContainerStyle = {
-    // 디자인
-    paddingTop: isXLarge ? "9px" : "7px",
-
-    // (반응형) 작은 화면에서 닉네임 렌더링 하지 않음
-    display: isXLarge || isLarge ? undefined : "none",
-  };
-
-  // ----------- 프로필 닉네임 스타일 -----------
-  const nickNameStyle = {
-    // 디자인
-    width: isXLarge ? "100px" : "85px",
-  };
-
-  // ----------- 포인트 스타일 -----------
-  const pointStyle = {
     // 글자
-    color: "#FFA500", // 글자 색: 주황
+    fontSize: "28px", // 햄버거 버튼 사이즈
+    color: "#4A4A4A", // 햄버거 버튼 색
   };
 
-  // ----------- 공통 메뉴 스타일 -----------
-  const commonMenuStyle = {
+  // ----------- 사이드 메뉴 스타일 -----------
+  const sideMenuStyle = {
     // 위치
     position: "absolute", // 메뉴 위치 기준
-    top: "100px", // 상단 여백
+    top: isXLarge || isLarge ? "110px" : "70px",
     right: "0px", // 오른쪽 여백
-    paddingTop: isXLarge ? "4px" : isLarge ? "3px" : isMedium ? "2px" : "1px",
 
     // 디자인
+    width:
+      isXLarge ? "30%" :
+      isLarge ? "50%" : 
+      isMedium ? "70%" : "100%",
+    height: "600px",
     background: "#FFFFFF", // 메뉴 배경 색: 흰색
     boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
 
     // 컨텐츠 정렬
+    display: isSideMenuOpend ? "flex" : "none", // 메뉴 오픈 여부
     flexDirection: "column", // 아이템 세로 방향으로 배치
-    alignItems: "flex-end", // 아이템 오른쪽 정렬
   };
 
-  // ----------- 프로필 메뉴 스타일 -----------
-  const profileMenuStyle = {
-    // 상속
-    ...commonMenuStyle, // 공통 메뉴 스타일 상속
-
-    // 컨텐츠 정렬
-    display: profileHovered ? "flex" : "none", // 메뉴 오픈 여부
+  // ----------- 프로필 컨테이너 스타일 -----------
+  const profileContainerStyle = {
+    // 디자인
+    padding: "20px",
   };
+
+  // ----------- 메뉴 서브 컨테이너 스타일 -----------
+  const menuSubTitleStyle = {
+    // 디자인
+    height: "60px",
+    paddingLeft: "5px",
+
+    // 글자
+    fontSize: "22px",
+  }
 
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
@@ -349,21 +420,13 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    paddingRight: isXLarge
-      ? "15px"
-      : isLarge
-      ? "13px"
-      : isMedium
-      ? "11px"
-      : "9px",
-    width: isXLarge ? "150px" : isLarge ? "130px" : isMedium ? "110px" : "90px",
-    height: isXLarge ? "50px" : isLarge ? "46px" : isMedium ? "42px" : "38px",
+    paddingLeft: "30px",
+    width: "100%",
+    height: isXLarge || isLarge ? "60px" : "40px",
 
     // 글자
+    fontSize: "16px",
     color: "#4A4A4A", // 글자 색: 회색
-
-    // 컨텐츠 정렬
-    justifyContent: "flex-end",
   };
 
   // ----------- 메뉴 아이템 active 스타일 -----------
@@ -376,97 +439,9 @@ const NavigationBar = () => {
     color: "#000000", // 글자 색: 검정
   };
 
-  // ----------- 버튼 공통 스타일 -----------
-  const buttonStyle = {
-    // 디자인
-    marginRight: "10px", // 버튼 오른쪽 margin
-    width: "70px", // 버튼 넓이
-    height: "35px", // 버튼 높이
-    borderRadius: "5px", // 둥근 테두리
-    transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
-
-    // 글자
-    fontSize: "14px", // 버튼 안 글자 크기 고정
-    color: "#4A4A4A", // 글자 색: 회색
-  };
-
-  // ----------- 로그아웃 버튼 스타일 -----------
-  const logoutButtonStyle = {
-    // 상속
-    ...buttonStyle, // 버튼 공통 스타일 상속
-
-    // 디자인
-    border: "3px solid", // 테두리 스타일
-    borderColor: "#BEBEBE", // 테두리 색: 연한 회색
-
-    // 글자
-    color: "#9C9C9C", // 글자 색: 회색
-  };
-
-  // ----------- 로그아웃 버튼 hover 스타일 -----------
-  const logoutButtonHoverStyle = {
-    // 디자인
-    background: "#D9D9D9", // 마우스 호버 시 배경 색상 변경
-  };
-
-  // ----------- 로그인 버튼 스타일 -----------
-  const loginButtonStyle = {
-    // 상속
-    ...buttonStyle, // 버튼 공통 스타일 상속
-
-    // 디자인
-    background: "#CEFA70", // 마우스 호버 시 배경 색상 변경
-  };
-
-  // ----------- 로그인 버튼 hover 스타일 -----------
-  const loginButtonHoverStyle = {
-    // 디자인
-    background: "#ACD145", // 마우스 호버 시 배경 색상 변경
-  };
-
-  // ----------- 회원가입 버튼 스타일 -----------
-  const signupButtonStyle = {
-    // 상속
-    ...buttonStyle, // 버튼 공통 스타일 상속
-
-    // 디자인
-    background: "#FFD257", // 마우스 호버 시 배경 색상 변경
-  };
-
-  // ----------- 회원가입 버튼 hover 스타일 -----------
-  const signupButtonHoverStyle = {
-    // 디자인
-    background: "#E6BE3D", // 마우스 호버 시 배경 색상 변경
-  };
-
-  // ----------- 햄버거 컨테이너 스타일 -----------
-  const hamburgerContainerStyle = {
-    position: "relative", // 기준 위치
-  };
-
-  // ----------- 햄버거 버튼 스타일 -----------
-  const hamburgerStyle = {
-    // 디자인
-    paddingTop: "5px",
-    width: "30px", // 버튼 가로 길이
-    height: "100px", // 버튼 세로 길이
-
-    // 글자
-    fontSize: "28px", // 햄버거 버튼 사이즈
-    color: "#4A4A4A", // 햄버거 버튼 색
-  };
-
-  // ----------- 햄버거 메뉴 스타일 -----------
-  const hamburgerMenuStyle = {
-    // 상속
-    ...commonMenuStyle, // 공통 메뉴 스타일 상속
-
-    // 컨텐츠 정렬
-    display: hamburgerHovered ? "flex" : "none", // 메뉴 오픈 여부
-  };
-
   // --------------------------------- css 끝 ---------------------------------
 
+  
   // ----------- 링크 아이템 목록 -----------
   const linkItems = [
     {
@@ -512,7 +487,7 @@ const NavigationBar = () => {
     },
     {
       label: "로그인",
-      style: loginButtonStyle,
+      style: buttonStyle,
       hovered: loginButtonHovered,
       mouseEnter: loginButtonMouseEnter,
       mouseLeave: loginButtonMouseLeave,
@@ -521,7 +496,7 @@ const NavigationBar = () => {
     },
     {
       label: "회원가입",
-      style: signupButtonStyle,
+      style: buttonStyle,
       hovered: signupButtonHovered,
       mouseEnter: signupButtonMouseEnter,
       mouseLeave: signupButtonMouseLeave,
@@ -555,60 +530,17 @@ const NavigationBar = () => {
     },
   ];
 
-  return (
-    <>
-      <div style={navigationBarBackgroundStyle}></div>
-      <nav style={navigationBarStyle}>
-        {/* --------------------------------- 로고 --------------------------------- */}
-        <div style={logoContainerStyle}>
-          <NavLink to="/" style={logoStyle}>
-            골라쥬
-          </NavLink>
-        </div>
-
-        {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
-        {(isXLarge || isLarge) && ( // (반응형) isLarge 크기 이상일 경우
-          <>
-            <div style={linkContainerStyle}>
-              {linkItems.map((item, index) => (
-                <MenuItem
-                  key={index}
-                  to={item.to}
-                  style={linkItemStyle}
-                  activeStyle={linkItemActiveStyle}
-                  hoverState={{
-                    hovered: item.hovered,
-                    handleMouseEnter: item.mouseEnter,
-                    handleMouseLeave: item.mouseLeave,
-                  }}
-                >
-                  <div>
-                    <div className="fontsize-sm">{item.label}</div>
-                    <div
-                      style={{
-                        ...itemHoverStyle,
-                        visibility: item.hovered ? "visible" : "hidden",
-                      }}
-                    ></div>
-                  </div>
-                </MenuItem>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* --------------------------------- 프로필, 회원관리 --------------------------------- */}
+  // --------------------------------- 프로필, 버튼 렌더링 함수 ---------------------------------
+  const renderButton = () => {
+    return (
+      <>
         <div style={buttonContainerStyle}>
           {isLoggedIn ? ( // ------------- 로그인 시 -------------
             <>
-              <div
-                style={profileContainerStyle}
-                onMouseLeave={profileMouseLeave}
-              >
+              <div>
                 <button
                   style={myPageStyle}
-                  onMouseEnter={profileMouseEnter}
-                  onClick={profileClick}
+                  onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
                 >
                   <img
                     src={
@@ -620,44 +552,16 @@ const NavigationBar = () => {
                     alt="사진"
                     style={profileImageStyle}
                   />
-                  <div style={infoContainerStyle}>
-                    <p style={nickNameStyle} className="fontsize-xs">
+                    <p style={nickNameStyle}>
                       {user.nickname.length <= 6
                         ? user.nickname
                         : user.nickname.slice(0, 6) + "..."}
                       님
                     </p>
-                    <p style={pointStyle} className="fontsize-xs">
+                    <p style={pointStyle}>
                       {user.point} P
                     </p>
-                  </div>
                 </button>
-                <div style={profileMenuStyle}>
-                  {profileItems.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      to={item.to}
-                      style={menuItemStyle}
-                      activeStyle={menuItemActiveStyle}
-                      onClick={profileClick}
-                      hoverState={{
-                        hovered: item.hovered,
-                        handleMouseEnter: item.mouseEnter,
-                        handleMouseLeave: item.mouseLeave,
-                      }}
-                    >
-                      <div>
-                        <div className="fontsize-xs">{item.label}</div>
-                        <div
-                          style={{
-                            ...itemHoverStyle,
-                            visibility: item.hovered ? "visible" : "hidden",
-                          }}
-                        ></div>
-                      </div>
-                    </MenuItem>
-                  ))}
-                </div>
               </div>
               <ButtonItem
                 style={buttonItems[0].style}
@@ -691,50 +595,133 @@ const NavigationBar = () => {
               ))}
             </>
           )}
+        </div>
+      </>
+    );
+  };
 
-          {/* ------------- 내비게이션 메뉴 -------------  */}
-          {!(isXLarge || isLarge) && ( // (반응형) isLarge 크기 아래에서 링크를 햄버거 버튼으로 대체
+  return (
+    <>
+      <div style={navigationBarBackgroundStyle}></div>
+      <nav style={navigationBarStyle}>
+        {(isXLarge || isLarge) && renderButton()}
+
+        <div style={mainLinkContainerStyle}>
+
+          {/* --------------------------------- 로고 --------------------------------- */}
+          <div style={logoContainerStyle}>
+            <NavLink to="/" style={logoStyle}>
+              골라쥬
+            </NavLink>
+          </div>
+
+          {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
+          {isXLarge && ( // (반응형) isXLarge 크기 이상일 경우
             <>
-              <div
-                style={hamburgerContainerStyle}
-                onMouseLeave={hamburgerMouseLeave}
-              >
-                <button
-                  style={hamburgerStyle}
-                  onMouseEnter={hamburgerMouseEnter}
-                  onClick={hamburgerClick}
-                >
-                  &#9776;
-                </button>
-                <div style={hamburgerMenuStyle}>
-                  {linkItems.map((item, index) => (
-                    <MenuItem
-                      key={index}
-                      to={item.to}
-                      style={menuItemStyle}
-                      activeStyle={menuItemActiveStyle}
-                      onClick={hamburgerClick}
-                      hoverState={{
-                        hovered: item.hovered,
-                        handleMouseEnter: item.mouseEnter,
-                        handleMouseLeave: item.mouseLeave,
-                      }}
-                    >
-                      <div>
-                        <div className="fontsize-xs">{item.label}</div>
-                        <div
-                          style={{
-                            ...itemHoverStyle,
-                            visibility: item.hovered ? "visible" : "hidden",
-                          }}
-                        ></div>
-                      </div>
-                    </MenuItem>
-                  ))}
-                </div>
+              <div style={linkContainerStyle}>
+                {linkItems.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    to={item.to}
+                    style={linkItemStyle}
+                    activeStyle={linkItemActiveStyle}
+                    hoverState={{
+                      hovered: item.hovered,
+                      handleMouseEnter: item.mouseEnter,
+                      handleMouseLeave: item.mouseLeave,
+                    }}
+                  >
+                    <div>
+                      <div style={{fontSize: "16px"}}>{item.label}</div>
+                      <div
+                        style={{
+                          ...itemHoverStyle,
+                          visibility: item.hovered ? "visible" : "hidden",
+                        }}
+                      ></div>
+                    </div>
+                  </MenuItem>
+                ))}
               </div>
             </>
           )}
+
+          {/* ------------- 사이드 메뉴 -------------  */}
+          <div style={sideMenuContainerStyle}>
+            {isSideMenuOpend ? (
+              <button
+              style={hamburgerStyle}
+              onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+              >
+                &#10006;
+              </button>
+            ) : (
+              <button
+                style={hamburgerStyle}
+                onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+              >
+                &#9776;
+              </button>
+            )}
+            
+            <div style={sideMenuStyle}>
+              <div style={profileContainerStyle}>
+                <div style={menuSubTitleStyle}>마이 페이지</div>
+                {profileItems.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    to={item.to}
+                    style={menuItemStyle}
+                    activeStyle={menuItemActiveStyle}
+                    onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+                    hoverState={{
+                      hovered: item.hovered,
+                      handleMouseEnter: item.mouseEnter,
+                      handleMouseLeave: item.mouseLeave,
+                    }}
+                  >
+                    <div>
+                      <div>{item.label}</div>
+                      <div
+                        style={{
+                          ...itemHoverStyle,
+                          visibility: item.hovered ? "visible" : "hidden",
+                        }}
+                      ></div>
+                    </div>
+                  </MenuItem>
+                ))}
+              </div>
+
+              <div style={profileContainerStyle}>
+                <div style={menuSubTitleStyle}>메인 메뉴</div>
+                {linkItems.map((item, index) => (
+                  <MenuItem
+                    key={index}
+                    to={item.to}
+                    style={menuItemStyle}
+                    activeStyle={menuItemActiveStyle}
+                    onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+                    hoverState={{
+                      hovered: item.hovered,
+                      handleMouseEnter: item.mouseEnter,
+                      handleMouseLeave: item.mouseLeave,
+                    }}
+                  >
+                    <div>
+                      <div>{item.label}</div>
+                      <div
+                        style={{
+                          ...itemHoverStyle,
+                          visibility: item.hovered ? "visible" : "hidden",
+                        }}
+                      ></div>
+                    </div>
+                  </MenuItem>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </nav>
     </>

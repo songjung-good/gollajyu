@@ -170,8 +170,8 @@ const StatisticPage = () => {
   const dropdownContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
-    alignItems: isXLarge || isLarge ? "center" : "flex-start",
-    flexDirection: isXLarge || isLarge ? "row" : "column",
+    alignItems: isXLarge ? "center" : "flex-start",
+    flexDirection: isXLarge ? "row" : "column",
   };
 
   // ----------- 서브 제목 스타일 -----------
@@ -317,7 +317,7 @@ const StatisticPage = () => {
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-xl">
-              사용자별 선호 태그 통계
+              # 사용자별 선호 태그 통계
             </span>
           </div>
           <div style={contentsContainerStyle}>

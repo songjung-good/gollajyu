@@ -26,7 +26,11 @@ import SignupModal from "../components/SignupForm";
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
+
+// 모달 컴포넌트
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import SignupModal from "../components/SignupForm";
+import LoginModal from "../components/LoginForm";
 
 const MainPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
@@ -138,18 +142,41 @@ const MainPage = () => {
 
   // --------------------------------- css 시작 ---------------------------------
 
+  // ----------- body 스타일 -----------
+  const bodyStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "center",
+  };
+  
   // ----------- 로딩중 스타일 -----------
   const loadingStyle = {
     // 디자인
-    margin: "0 auto", // 가로 중앙 정렬
-    height: isXLarge
-      ? "1000px"
-      : isLarge
-      ? "900px"
-      : isMedium
-      ? "800px"
-      : "700px",
+    width: "100%",
+    height: "604px",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
+
+  // ----------- 문구 컨테이너 스타일 -----------
+  const mainWordContainerStyle = {
+    // 디자인
+    padding: "100px 0",
+    width: "100%",
+    background: "#FFFFFF",
+  }
+  
+  // ----------- 투표 리스트 컨테이너 스타일 -----------
+  const mainVoteListContainerStyle = {
+    // 디자인
+    padding: "100px 0",
+    width: "100%",
+  }
 
   // --------------------------------- css 끝 ---------------------------------
 
@@ -159,7 +186,7 @@ const MainPage = () => {
       <VoteButton />
 
       {/* ----------- 메인 콘텐츠 영역 ----------- */}
-      <div>
+      <div style={bodyStyle}>
         {isLoading ? (
           <>
             {/* 로딩 중일 떄 */}
@@ -174,15 +201,19 @@ const MainPage = () => {
           <>
             {/* 로딩 완료 시 */}
             <div className="bg-gradient-to-tl from-blue-400 to-red-400">
-              {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
-              <MainWord />
-
               {/* 스와이프 투표 컴포넌트 */}
               <SwipeVote voteList={voteListData} />
             </div>
 
+            {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
+            <div style={mainWordContainerStyle}>
+              <MainWord />
+            </div>
+            
             {/* 메인 투표 리스트 컴포넌트 */}
-            <MainVoteList transferVoteId={transferVoteId}/>
+            <div style={mainVoteListContainerStyle}>
+              <MainVoteList />
+            </div>
           </>
         )}
       </div>

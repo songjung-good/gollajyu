@@ -77,10 +77,7 @@ const VoteCardItem = (props) => {
 
   return (
     <>
-      <div
-        className="flex flex-col w-full h-full"
-        style={{ width: "280px", height: "450px" }}
-      >
+      <div style={{ maxWidth: "280px" }} className="flex flex-col w-full h-full">
         {" "}
         {/* 높이를 조정했습니다. */}
         {/* 이미지를 띄워지는 배경 */}
@@ -129,7 +126,6 @@ const VoteCardItem = (props) => {
             src={item.voteItemImgUrl}
           />
         </Container>
-        </div>
         
         {/* 버튼을 누르면 생기는 상세페이지 */}
         <div className="h-1/3 w-full flex flex-col justify-center items-center">
@@ -138,6 +134,7 @@ const VoteCardItem = (props) => {
           </h2>
           <p>{item.voteItemDesc}</p>
         </div>
+      </div>
     </>
   );
 }

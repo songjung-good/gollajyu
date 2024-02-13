@@ -72,14 +72,22 @@ const VoteCard = (props) => {
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
-  const contentContainerStyle = {
+  const contentContainerStyle = {   
     // 디자인
     padding:
       isXLarge ? "20px 30px" :
       isLarge ? "16px 24px" :
       isMedium ? "12px 18px" : "8px 12px",
-    borderRadius: "10px",
+    maxWidth: "1160px",
+    minWidth: "240px",
+    height: "484px",
+    borderRadius: "30px",
     background: "#FFFFFF",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
   }
 
   // ----------- 카테고리 이름 스타일 -----------
@@ -92,6 +100,12 @@ const VoteCard = (props) => {
 
     // 글자
     color: "#4A4A4A"
+  }
+
+  // ----------- 카드 컨테이너 스타일 -----------
+  const cardContainerStyle = {
+    // 디자인
+    height: "346px",
   }
 
   // ----------- 버튼 컨테이너 스타일 -----------
@@ -140,7 +154,7 @@ const VoteCard = (props) => {
         </div>
 
         {/* ------------------ 투표 카드 아이템 ------------------ */}
-        <div className="p-2 flex justify-around items-center h-full">
+        <div style={cardContainerStyle} className="p-2 flex justify-around items-center">
           {vote.voteItemList.map((item, itemIndex) => (
             <VoteCardItem 
               key={item.voteItemId}
