@@ -2,17 +2,17 @@
 import React from 'react';
 
 const ChatList = ({ list, choiced, onLike }) => {
-  const colorMap = {
-    '001': 'bg-yellow-300',
-    '002': 'bg-green-300',
-    '003': 'bg-blue-300',
-    '004': 'bg-orange-300'
-  };
-
+  const colorMap = [
+    'bg-yellow-300',
+    'bg-green-300',
+    'bg-blue-300',
+    'bg-orange-300'
+  ];
+  
   const items = () => list.map((v, k) => (
     <div key={k} className={`flex ${v.choiced === choiced ? 'justify-end' : ''}`}>
-      <div className={`${colorMap[v.choiced]} text-black p-2 rounded-lg max-w-xs`}>
-        <small>{v.userid} (선택지: {v.choiced})</small>
+      <div className={`${colorMap[choiced%4]} text-black p-2 rounded-lg max-w-xs`}>
+        <small>{v.userid} (선택지: {choiced%4})</small>
         <p className='chat-content'>{v.content}</p>
         <button className='fontsize-xs' onClick={() => onLike(k)}>좋아요: {v.liked} 👍</button>
       </div>
