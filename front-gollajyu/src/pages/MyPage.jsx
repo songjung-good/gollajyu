@@ -119,7 +119,15 @@ const MyPage = () => {
                 key={index}
                 to={item.to}
                 end
-                style={({ isActive }) => (isActive ? activeheaderLinkStyle : headerLinkStyle)}
+                style={
+                  ({ isActive }) => (
+                    isActive || (index == 1 && (
+                      window.location.pathname.startsWith('/Mypage/MyActivities/0') ||
+                      window.location.pathname.startsWith('/Mypage/MyActivities/1') ||
+                      window.location.pathname.startsWith('/Mypage/MyActivities/2')
+                    ))
+                  ) ? activeheaderLinkStyle : headerLinkStyle
+                }
               >
                 {item.text}
               </NavLink>
