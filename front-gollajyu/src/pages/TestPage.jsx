@@ -6,9 +6,9 @@ import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
-import API_URL from "../stores/apiURL";
-import useModalStore from "../stores/modalState";
-import useAuthStore from "../stores/userState";
+import API_URL from "/src/stores/apiURL";
+import useModalStore from "/src/stores/modalState";
+import useAuthStore from "/src/stores/userState";
 import axios from "axios";
 
 const TestPage = () => {

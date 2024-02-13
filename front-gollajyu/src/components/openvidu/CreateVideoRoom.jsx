@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 // import tmpProfileImg from "/assets/images/tmp_profile.png";
 import AddVoteItemModal from "./AddVoteItemModal";
-import useAuthStore from "../../stores/userState";
+import useAuthStore from "/src/stores/userState";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
-import API_URL from "../../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 
 /*
 <uuid란?>

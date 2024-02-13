@@ -5,10 +5,10 @@ import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
-import useModalStore from "../stores/modalState";
-import API_URL from "../stores/apiURL";
+import useModalStore from "/src/stores/modalState";
+import API_URL from "/src/stores/apiURL";
 import axios from "axios";
-import useAuthStore from "../stores/userState";
+import useAuthStore from "/src/stores/userState";
 
 const VotePage = () => {
   const user = useAuthStore((state) => state.user);

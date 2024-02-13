@@ -44,7 +44,7 @@ const useAuthStore = create(
 
 export default useAuthStore;
 
-// import useAuthStore from "../stores/userState";
+// import useAuthStore from "/src/stores/userState";
 
 // const user = useAuthStore((state) => state.user);
 

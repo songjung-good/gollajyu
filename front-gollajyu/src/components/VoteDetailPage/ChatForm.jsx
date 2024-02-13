@@ -1,7 +1,7 @@
 // ChatForm.jsx
 import React, { useState } from 'react';
 import axios from "axios";
-import API_URL from "../../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 
 const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
   const [value, setValue] = useState('');

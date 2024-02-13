@@ -17,7 +17,7 @@ import { Container } from '@mui/system';
 import useAuthStore from "/src/stores/userState";
 
 // 카테고리 데이터 불러오기
-import categoryData from '/src/stores/categoryData';
+import categoryData from "/src/stores/categoryData";
 
 
 // 각 투표에 관한 정보를 받아서 출력하는 곳

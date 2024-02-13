@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import categoryData from '../../stores/categoryData';
+import categoryData from "/src/stores/categoryData";
 
 const VotePageHeader = ({ onSort, onSearch, onSearchTerm, onSearchCategory }) => {
   const [selectedCategory, setSelectedCategory] = useState(""); // 상태 초기화
