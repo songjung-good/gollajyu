@@ -25,7 +25,8 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 import TmpModal from "../components/TmpModal"; // 임시 모달
-
+import LoginModal from "../components/LoginForm";
+import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
 
