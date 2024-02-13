@@ -8,6 +8,7 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 import useModalStore from "../stores/modalState";
+import { Helmet } from "react-helmet-async";
 
 const StatisticPage = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -312,6 +313,9 @@ const StatisticPage = () => {
   return (
     <>
       <VoteButton />
+      <Helmet>
+        <title>통계보여쥬</title>
+      </Helmet>
       <div style={bodyStyle}>
         {/* ------------- 사용자별 선호 태그 통계 ------------- */}
         <div style={containerStyle}>

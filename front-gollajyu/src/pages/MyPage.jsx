@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import MyProfile from "../components/MyPage/MyProfile";
 import MyActivities from "../components/MyPage/MyActivities";
 import MyStatistics from "../components/MyPage/MyStatistics";
+import { Helmet } from "react-helmet-async";
 
 const MyPage = () => {
   // ----------- 반응형 웹페이지 구현 -----------
@@ -45,6 +46,9 @@ const MyPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>마이페이지</title>
+      </Helmet>
       <div style={bodyStyle}>
         <Routes>
           <Route path="/" element={<MyProfile />} />

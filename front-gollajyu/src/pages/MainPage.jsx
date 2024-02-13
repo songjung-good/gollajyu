@@ -1,5 +1,6 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -50,12 +51,20 @@ const MainPage = () => {
   );
 
   // 투표 모달 창 상태
-  const isVoteDetailModalOpened = useModalStore((state) => state.isVoteDetailModalOpened);
-  const isVoteSimpleCreateModalOpened = useModalStore((state) => state.isVoteSimpleCreateModalOpened);
-  const isVoteProductCreateModalOpened = useModalStore((state) => state.isVoteProductCreateModalOpened);
-  
+  const isVoteDetailModalOpened = useModalStore(
+    (state) => state.isVoteDetailModalOpened
+  );
+  const isVoteSimpleCreateModalOpened = useModalStore(
+    (state) => state.isVoteSimpleCreateModalOpened
+  );
+  const isVoteProductCreateModalOpened = useModalStore(
+    (state) => state.isVoteProductCreateModalOpened
+  );
+
   // 상세페이지
-  const setVoteDetailModalOpen  = useModalStore((state) => state.setVoteDetailModalOpen)
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
   const transferVoteId = (voteId) => {
     // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
     setVoteDetailModalOpen(voteId);
@@ -148,7 +157,7 @@ const MainPage = () => {
     flexDirection: "column",
     justifyContent: "center",
   };
-  
+
   // ----------- 로딩중 스타일 -----------
   const loadingStyle = {
     // 디자인
@@ -167,19 +176,23 @@ const MainPage = () => {
     padding: "100px 0",
     width: "100%",
     background: "#FFFFFF",
-  }
-  
+  };
+
   // ----------- 투표 리스트 컨테이너 스타일 -----------
   const mainVoteListContainerStyle = {
     // 디자인
     padding: "100px 0",
     width: "100%",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
 
   return (
     <>
+      <Helmet>
+        <title>골라쥬</title>
+      </Helmet>
+
       {/* ----------- 투표 버튼 컴포넌트 ----------- */}
       <VoteButton />
 
@@ -207,7 +220,7 @@ const MainPage = () => {
             <div style={mainWordContainerStyle}>
               <MainWord />
             </div>
-            
+
             {/* 메인 투표 리스트 컴포넌트 */}
             <div style={mainVoteListContainerStyle}>
               <MainVoteList />
