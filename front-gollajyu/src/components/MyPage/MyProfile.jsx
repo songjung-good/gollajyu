@@ -34,6 +34,7 @@ const MyProfile = () => {
   // ----------- result가 변경될 때마다 실행되는 함수 -----------
   const user = useAuthStore((state) => state.user);
   useEffect(() => {
+    window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     setResult(user.typeId);
     setMatchingData(sobiTIData.find((data) => data.id === user.typeId));
   }, []);

@@ -54,14 +54,14 @@ const StatisticPage = () => {
     if (!isInitialMount.current && isAddButtonClicked.current) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     } else {
+      window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
       // 초기 마운트 이후 isInitialMount를 false로 설정
       isInitialMount.current = false;
     }
   }, [itemCount]);
-
 
   // ----------- 라디오 및 드롭다운 값이 변경될 때 해당 값을 객체 안에 추가 -----------
   const [selectedRadioValues, setSelectedRadioValues] = useState({});
@@ -84,14 +84,14 @@ const StatisticPage = () => {
   // ----------- 버튼 클릭 시 사용자 유형 추가 및 제거하는 함수 -----------
   const handleAddButtonClick = () => {
     if (itemCount < 4) {
-      setItemCount(prevCount => prevCount + 1);
+      setItemCount((prevCount) => prevCount + 1);
       isAddButtonClicked.current = true; // 버튼 클릭 시 화면이 내려갈 수 있게 함
     }
   };
 
   const handleRemoveButtonClick = () => {
     if (itemCount > 1) {
-      setItemCount(prevCount => prevCount - 1);
+      setItemCount((prevCount) => prevCount - 1);
 
       // ----------- 사용자 유형 제거 시 객채에서 정보 제거 -----------
       delete selectedRadioValues[`나이-${itemCount}`];
@@ -99,7 +99,6 @@ const StatisticPage = () => {
       delete selectedDropdownValues[`소비성향-${itemCount}`];
     }
   };
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -187,11 +186,14 @@ const StatisticPage = () => {
     position: "relative",
 
     // 디자인
-    margin:
-      isXLarge ? "0 10px" :
-      isLarge ? "0 8px" :
-      isMedium ? "0 6px" : "0 4px",
-  }
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
+  };
 
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
@@ -242,8 +244,8 @@ const StatisticPage = () => {
   // ----------- 쉼표 스타일 -----------
   const restStyle = {
     // 디자인
-    marginRight: isXLarge ? "10px" : "0", 
-  }
+    marginRight: isXLarge ? "10px" : "0",
+  };
 
   // ----------- 구분선 스타일 -----------
   const barStyle = {
@@ -270,7 +272,7 @@ const StatisticPage = () => {
 
     // 컨텐츠 정렬
     justifyContent: "center",
-  }
+  };
 
   // ----------- 그룹 컨테이너 스타일 -----------
   const groupContainerStyle = {
@@ -279,7 +281,7 @@ const StatisticPage = () => {
 
     // 디자인
     marginBottom: "20px",
-  }
+  };
 
   // ----------- 추가 버튼 컨테이너 스타일 -----------
   const addButtonContainerStyle = {
@@ -288,23 +290,14 @@ const StatisticPage = () => {
 
     // 컨텐츠 정렬
     justifyContent: "center",
-  }
+  };
 
   // ----------- 추가 버튼 스타일 -----------
   const addButtonStyle = {
-    width:
-      isXLarge ? "70px" :
-      isLarge ? "60px" :
-      isMedium ? "50px" : "40px",
-    height:
-      isXLarge ? "70px" :
-      isLarge ? "60px" :
-      isMedium ? "50px" : "40px",
-    fontSize:
-      isXLarge ? "44px" :
-      isLarge ? "38px" :
-      isMedium ? "32px" : "26px",
-  }
+    width: isXLarge ? "70px" : isLarge ? "60px" : isMedium ? "50px" : "40px",
+    height: isXLarge ? "70px" : isLarge ? "60px" : isMedium ? "50px" : "40px",
+    fontSize: isXLarge ? "44px" : isLarge ? "38px" : isMedium ? "32px" : "26px",
+  };
 
   // --------------------------------- css 끝 ---------------------------------
 
@@ -328,11 +321,12 @@ const StatisticPage = () => {
             </span>
           </div>
           <div style={contentsContainerStyle}>
-
             {/* ------------- 드롭다운 버튼 ------------- */}
             <div style={dropdownContainerStyle}>
               <div style={flexContainerStyle}>
-                <div style={subTitleStyle} className="fontsize-md">다른 사람들은</div>
+                <div style={subTitleStyle} className="fontsize-md">
+                  다른 사람들은
+                </div>
                 <div style={relativeContainerStyle}>
                   <div
                     onClick={toggleDropdown}
@@ -340,32 +334,50 @@ const StatisticPage = () => {
                     className="fontsize-sm"
                   >
                     {selectedCategoryId !== null
-                      ? categoryData.find((c) => c.id === parseInt(selectedCategoryId))?.name
+                      ? categoryData.find(
+                          (c) => c.id === parseInt(selectedCategoryId)
+                        )?.name
                       : categoryData[1].name}
                   </div>
                   {isOpen && (
                     <div style={dropdownMenuStyle}>
-                      {categoryData.map((category) => (
-                        // 첫 번째(전체), 마지막(간단) 투표 항목은 포함하지 않음
-                        (category.id !== 0 && category.id !== 5) && (
-                          <div
-                            key={category.id}
-                            onClick={() => handleCategoryChange({ target: { value: category.id } })}
-                            onMouseEnter={(e) => e.target.style.backgroundColor = "#FFE69C"}
-                            onMouseLeave={(e) => e.target.style.backgroundColor = "#FFFFFF"}
-                            style={dropdownItemStyle}
-                          >
-                            {category.name}
-                          </div>
-                        )
-                      ))}
+                      {categoryData.map(
+                        (category) =>
+                          // 첫 번째(전체), 마지막(간단) 투표 항목은 포함하지 않음
+                          category.id !== 0 &&
+                          category.id !== 5 && (
+                            <div
+                              key={category.id}
+                              onClick={() =>
+                                handleCategoryChange({
+                                  target: { value: category.id },
+                                })
+                              }
+                              onMouseEnter={(e) =>
+                                (e.target.style.backgroundColor = "#FFE69C")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.target.style.backgroundColor = "#FFFFFF")
+                              }
+                              style={dropdownItemStyle}
+                            >
+                              {category.name}
+                            </div>
+                          )
+                      )}
                     </div>
                   )}
                 </div>
-                <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
-                <div style={restStyle} className="fontsize-md">,</div>
+                <div style={subTitleStyle} className="fontsize-md">
+                  을(를) 구매 할 때
+                </div>
+                <div style={restStyle} className="fontsize-md">
+                  ,
+                </div>
               </div>
-              <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
+              <div style={subTitleStyle} className="fontsize-md">
+                어떤 요소를 중요하게 생각할까?
+              </div>
             </div>
             {/* --------------------------------------- */}
 
@@ -395,26 +407,31 @@ const StatisticPage = () => {
                   onDropdownChange={handleDropdownChange}
                 />
               ))}
-                <div style={addButtonContainerStyle}>
+              <div style={addButtonContainerStyle}>
+                <button
+                  style={{
+                    ...addButtonStyle,
+                    opacity: isAddButtonActive ? 1 : 0.5,
+                  }}
+                  onClick={handleAddButtonClick}
+                  disabled={!isAddButtonActive} // 4개 이상일 시 버튼 비활성화
+                >
+                  +
+                </button>
+                {itemCount > 1 && (
                   <button
-                    style={{ ...addButtonStyle, opacity: isAddButtonActive ? 1 : 0.5 }}
-                    onClick={handleAddButtonClick}
-                    disabled={!isAddButtonActive} // 4개 이상일 시 버튼 비활성화
+                    style={{
+                      ...addButtonStyle,
+                      opacity: isRemoveButtonActive ? 1 : 0.5,
+                    }}
+                    onClick={handleRemoveButtonClick}
                   >
-                    +
+                    -
                   </button>
-                  {itemCount > 1 && (
-                    <button
-                      style={{ ...addButtonStyle, opacity: isRemoveButtonActive ? 1 : 0.5 }}
-                      onClick={handleRemoveButtonClick}
-                    >
-                      -
-                    </button>
-                  )}
-                </div>
+                )}
+              </div>
             </div>
             {/* --------------------------------------- */}
-
           </div>
         </div>
       </div>

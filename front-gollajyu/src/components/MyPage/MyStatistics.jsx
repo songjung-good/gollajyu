@@ -206,6 +206,7 @@ const MyStatistics = () => {
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     axios
       .get(API_URL + `/members/${user.memberId}/votes/statistics`)
       .then((res) => {

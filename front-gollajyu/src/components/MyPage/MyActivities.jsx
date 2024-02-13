@@ -77,6 +77,7 @@ const MyActivities = () => {
   const [infoItems, setInfoItems] = useState([]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     // 작성한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes")

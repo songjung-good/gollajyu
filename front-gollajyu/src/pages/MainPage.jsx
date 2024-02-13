@@ -26,9 +26,7 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 
-
 const MainPage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -43,13 +41,21 @@ const MainPage = () => {
 
   // 로그인 및 회원가입 모달 창 상태
   const isLoginModalOpened = useModalStore((state) => state.isLoginModalOpened);
-  const isSignupModalOpened = useModalStore((state) => state.isSignupModalOpened);
+  const isSignupModalOpened = useModalStore(
+    (state) => state.isSignupModalOpened
+  );
 
   // 투표 모달 창 상태
-  const isVoteDetailModalOpened = useModalStore((state) => state.isVoteDetailModalOpened);
-  const isVoteSimpleCreateModalOpened = useModalStore((state) => state.isVoteSimpleCreateModalOpened);
-  const isVoteProductCreateModalOpened = useModalStore((state) => state.isVoteProductCreateModalOpened);
-  
+  const isVoteDetailModalOpened = useModalStore(
+    (state) => state.isVoteDetailModalOpened
+  );
+  const isVoteSimpleCreateModalOpened = useModalStore(
+    (state) => state.isVoteSimpleCreateModalOpened
+  );
+  const isVoteProductCreateModalOpened = useModalStore(
+    (state) => state.isVoteProductCreateModalOpened
+  );
+
   // 모달 창 열기 함수
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -126,9 +132,9 @@ const MainPage = () => {
 
   // 페이지 로드 시(컴포넌트가 처음 마운트 될 떄만) 데이터 가져오기
   useEffect(() => {
+    window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     fetchData();
   }, []);
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -136,14 +142,16 @@ const MainPage = () => {
   const loadingStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    height:
-      isXLarge ? "1000px" :
-      isLarge ? "900px" :
-      isMedium ? "800px" : "700px",
+    height: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "900px"
+      : isMedium
+      ? "800px"
+      : "700px",
   };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
@@ -155,7 +163,10 @@ const MainPage = () => {
         {isLoading ? (
           <>
             {/* 로딩 중일 떄 */}
-            <div style={loadingStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
+            <div
+              style={loadingStyle}
+              className="bg-gradient-to-tl from-blue-400 to-red-400"
+            >
               <p>Loading...</p>
             </div>
           </>
@@ -163,7 +174,6 @@ const MainPage = () => {
           <>
             {/* 로딩 완료 시 */}
             <div className="bg-gradient-to-tl from-blue-400 to-red-400">
-
               {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
               <MainWord />
 
