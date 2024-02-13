@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -15,6 +15,7 @@ import useAuthStore from '/src/stores/userState';
 
 // 투표 카드 컴포넌트
 import VoteCardItem from './VoteCardItem';
+import { selectClasses } from '@mui/base';
 
 
 const VoteCard = (props) => {
@@ -26,19 +27,26 @@ const VoteCard = (props) => {
   const { vote } = props;
 
   // 선택 상태 변수 선언
-  const [isSelect, setIsSelect] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const [countList, setCountList] = useState([]);
 
   // 좋아요 상태 변수
   const [isVoteLike, setIsVoteLike] = useState(vote.liked);
   const [voteLikesCount, setVoteLikesCount] = useState(vote.likesCnt);
-
+  const [selectedVoteItem, setSelectedVoteItem] = useState();
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
   
   // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
-  const handleClick = (index, selection) => {
-    setIsSelect(false)
-    // console.log(`선택지 ${index + 1}: ${selection}`);
+  const handleClick = (itemId, selection) => {
+    console.log(itemId)
+    // console.log(`선택지 ${itemId + 1}: ${selection}`);
+    setCountList(prevCountList => 
+      prevCountList.map((count, i) => vote.voteItemList[i].voteItemId === itemId ? count + 1 : count));
+
+    let plusCount = totalCount + 1
+    setTotalCount(plusCount);
+    setSelectedVoteItem(itemId);
   };
 
   // 좋아요 관리 함수
@@ -60,7 +68,19 @@ const VoteCard = (props) => {
       console.error('Error sending POST request:', error);
     }
   }
+  useEffect(() => {
+    let newTotalCount = 0;
+    vote.voteItemList.forEach((item) => {
+      newTotalCount += item.count;
+    });
+    setTotalCount(newTotalCount);
+    setCountList(prevCountList => vote.voteItemList.map(item => item.count));
+  }, [vote.voteItemList]);
 
+  useEffect(() => {
+    console.log(countList);
+    setSelectedVoteItem(vote.chosenItemId)
+  }, [countList]);
   
   // --------------------------------- css 시작 ---------------------------------
 
@@ -161,9 +181,11 @@ const VoteCard = (props) => {
               item={item}
               categoryId={vote.categoryId}
               voteId={vote.voteId}
+              totalCount={totalCount}
+              count={item.count}
+              selectedVoteItem={selectedVoteItem}
               path="/VotePage"
               onClick={() => handleClick(itemIndex)}
-              isSelect={isSelect}
             />
           ))}
         </div>

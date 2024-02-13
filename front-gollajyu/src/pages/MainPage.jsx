@@ -30,6 +30,8 @@ import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
 import TmpModal from "../components/TmpModal"; // 임시 모달
+import LoginModal from "../components/LoginForm";
+import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
