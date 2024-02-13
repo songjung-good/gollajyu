@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import NavigationBar from "./components/NavigationBar";
+import Footer from "./components/Footer";
 // import VoteButton from "./components/VoteButton";
 import MainPage from "./pages/MainPage";
 import VotePage from "./pages/VotePage";
@@ -65,6 +66,7 @@ const App = () => {
           <Route path="/VoteProduct" element={<VoteProduct />} />
         </Route>
       </Routes>
+      <Footer />
     </Router>
   );
 };
