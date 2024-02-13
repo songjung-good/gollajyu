@@ -119,6 +119,7 @@ if (age < 20) {
                 chosenItem={voteDetail.chosenItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                 userId={user.memberId}
                 commentLikes={voteDetail.commentLikes}
+                voteId={detailVoteId}
               />
             </>
           )}

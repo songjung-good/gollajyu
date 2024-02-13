@@ -1,17 +1,32 @@
 // ChatForm.jsx
 import React, { useState } from 'react';
+import axios from "axios";
+import API_URL from "../../stores/apiURL";
 
-const ChatForm = ({ onSubmit, userid, choiced }) => {
+const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
   const [value, setValue] = useState('');
 
   const handleChange = e => {
     setValue(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(value, userid, choiced);
-    setValue('');
+    const body = {
+      voteId: voteId,
+      memberId: userid,
+      voteItemId: choiced,
+      commentDesc: value,
+      commentMentionId: 0,
+    };
+    console.log(body);
+    try {
+      await axios.post(`${API_URL}/votes/details/comments`, body);
+      onSubmit(value, userid, choiced);
+      setValue('');
+    } catch (error) {
+      console.error(error);
+    }
   };
   // enter키로도 입력 가능
   const handleKeyPress = (e) => {
