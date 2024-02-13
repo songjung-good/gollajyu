@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // HTTP 요청을 위한 Axios 라이브러리
@@ -145,6 +145,26 @@ const NavigationBar = () => {
         console.log(err);
       });
   };
+
+  // ----------- 사이드 메뉴 밖 클릭 시 메뉴 닫음 -----------
+  const menuRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // 클릭이 메뉴 외부에 있으면 메뉴를 닫습니다.
+        setIsSideMenuOpend(false);
+      }
+    };
+
+    // 페이지에 클릭 이벤트를 추가합니다.
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsSideMenuOpend]);
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -614,8 +634,8 @@ const NavigationBar = () => {
             {(isMedium || isSmall) && renderButton()}
             {isSideMenuOpend ? (
               <button
-              style={hamburgerStyle}
-              onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+                style={hamburgerStyle}
+                onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
               >
                 &#10006;
               </button>
@@ -628,7 +648,7 @@ const NavigationBar = () => {
               </button>
             )}
             
-            <div style={sideMenuStyle}>
+            <div style={sideMenuStyle} ref={menuRef}>
               <div style={profileContainerStyle}>
                 <div style={menuSubTitleStyle}>메인 메뉴</div>
                 {linkItems.map((item, index) => (

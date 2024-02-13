@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // 반응형 웹 디자인을 위한 유틸리티 함수
@@ -64,6 +64,26 @@ const VoteButton = () => {
   const purchaseGollajyLeave = () => {
     setPurchaseGollajyuHovered(false);
   };
+
+  // ----------- vote 버튼 밖 클릭 시 메뉴 닫음 -----------
+  const buttonRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // 클릭된 요소가 버튼 영역 안에 있는지 확인
+      if (buttonRef.current && !buttonRef.current.contains(event.target)) {
+        // 버튼 외부를 클릭한 경우 세부 버튼을 닫음
+        setButtonHovered(false);
+      }
+    };
+
+    // 페이지에 클릭 이벤트 리스너 추가
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
 
   // --------------------------------- css 시작 ---------------------------------
@@ -290,6 +310,7 @@ const VoteButton = () => {
           style={voteButtonContainerStyle}
           onMouseEnter={buttonHover}
           onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
+          ref={buttonRef}
         >
           {/* ------------- 투표 버튼 ------------- */}
           <button style={voteButtonStyle}>
