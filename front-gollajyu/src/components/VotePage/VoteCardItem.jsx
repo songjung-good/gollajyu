@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -11,21 +11,19 @@ import API_URL from "/src/stores/apiURL";
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 // Material-UI의 Container 컴포넌트
-import { Container } from '@mui/system';
+import { Container } from "@mui/system";
 
 // 커스텀 스토어를 이용한 상태 관리
 import useAuthStore from "/src/stores/userState";
 
 // 카테고리 데이터 불러오기
-import categoryData from '/src/stores/categoryData';
-
+import categoryData from "/src/stores/categoryData";
 
 // 각 투표에 관한 정보를 받아서 출력하는 곳
 const VoteCardItem = (props) => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
-  
+
   // Props에서 필요한 값 추출
   const { item, categoryId, voteId, onClick, isSelect } = props;
 
@@ -34,7 +32,7 @@ const VoteCardItem = (props) => {
 
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
   // console.log(isSelect, clicked, "cliked")
-  
+
   // 선택된 카테고리의 태그 가져오기
   const selection = categoryData[categoryId].tags;
 
@@ -43,7 +41,7 @@ const VoteCardItem = (props) => {
   const [clicked, setClicked] = useState(0);
   const [memberId, setMemberId] = useState(0);
   const voteItemId = item.voteItemId;
-  
+
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
   // console.log(isSelect, clicked, "cliked")
 
@@ -74,10 +72,12 @@ const VoteCardItem = (props) => {
 
   // TODO: 비로그인 상태에서 로그인 창 띄우기
 
-
   return (
     <>
-      <div style={{ maxWidth: "280px" }} className="flex flex-col w-full h-full">
+      <div
+        style={{ maxWidth: "280px" }}
+        className="flex flex-col w-full h-full"
+      >
         {" "}
         {/* 높이를 조정했습니다. */}
         {/* 이미지를 띄워지는 배경 */}
@@ -126,7 +126,6 @@ const VoteCardItem = (props) => {
             src={item.voteItemImgUrl}
           />
         </Container>
-        
         {/* 버튼을 누르면 생기는 상세페이지 */}
         <div className="h-1/3 w-full flex flex-col justify-center items-center">
           <h2 className="text-lg font-bold mb-2">
@@ -137,6 +136,6 @@ const VoteCardItem = (props) => {
       </div>
     </>
   );
-}
+};
 
 export default VoteCardItem;
