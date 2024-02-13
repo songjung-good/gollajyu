@@ -33,13 +33,13 @@ const VoteCard = (props) => {
   // 좋아요 상태 변수
   const [isVoteLike, setIsVoteLike] = useState(vote.liked);
   const [voteLikesCount, setVoteLikesCount] = useState(vote.likesCnt);
-  const [selectedVoteItem, setSelectedVoteItem] = useState();
+  const [selectedVoteItem, setSelectedVoteItem] = useState(vote.chosenItemId);
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
   
   // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
   const handleClick = (itemId, selection) => {
-    console.log(itemId)
+    console.log(itemId,selection, "이거")
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
     setCountList(prevCountList => 
       prevCountList.map((count, i) => vote.voteItemList[i].voteItemId === itemId ? count + 1 : count));
@@ -47,6 +47,7 @@ const VoteCard = (props) => {
     let plusCount = totalCount + 1
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
+    console.log(selectedVoteItem);
   };
 
   // 좋아요 관리 함수
@@ -76,11 +77,6 @@ const VoteCard = (props) => {
     setTotalCount(newTotalCount);
     setCountList(prevCountList => vote.voteItemList.map(item => item.count));
   }, [vote.voteItemList]);
-
-  useEffect(() => {
-    console.log(countList);
-    setSelectedVoteItem(vote.chosenItemId)
-  }, [countList]);
   
   // --------------------------------- css 시작 ---------------------------------
 
@@ -185,7 +181,7 @@ const VoteCard = (props) => {
               count={item.count}
               selectedVoteItem={selectedVoteItem}
               path="/VotePage"
-              onClick={() => handleClick(itemIndex)}
+              onClicked={(voteItemId) => handleClick(voteItemId)}
             />
           ))}
         </div>
