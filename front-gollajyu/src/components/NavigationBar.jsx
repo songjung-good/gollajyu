@@ -72,11 +72,13 @@ const NavigationBar = () => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 메인 메뉴 hover -----------
-  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
-    useHoverState();
-
   const [
-    broadcastPageHovered,
+    votePageHovered,
+    votePageMouseEnter,
+    votePageMouseLeave
+  ] = useHoverState();
+
+  const [broadcastPageHovered,
     broadcastPageMouseEnter,
     broadcastPageMouseLeave,
   ] = useHoverState();
@@ -113,13 +115,8 @@ const NavigationBar = () => {
   const [signupButtonHovered, signupButtonMouseEnter, signupButtonMouseLeave] =
     useHoverState();
 
-  // ----------- 사이드 메뉴 버튼 hover -----------
-  const [
-    sideMenuHovered,
-    sideMenuMouseEnter,
-    sideMenuMouseLeave,
-    sideMenuClick,
-  ] = useHoverState();
+  // ----------- 사이드 메뉴 버튼 open 여부 -----------
+  const [isSideMenuOpend, setIsSideMenuOpend] = useState(false);
 
   // ----------- 로그인, 로그아웃, 회원가입 버튼 클릭 시의 동작에 관한 함수 -----------
   const setLogout = useAuthStore((state) => state.setLogout);
@@ -177,13 +174,6 @@ const NavigationBar = () => {
     background: "#FFFFFF",
   };
 
-  // ----------- flex 컨테이너 스타일 -----------
-  const flexContainerStyle = {
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
-  };
-
   // ----------- 내비게이션 바 스타일 -----------
   const navigationBarStyle = {
     // 상속
@@ -198,6 +188,103 @@ const NavigationBar = () => {
     maxWidth: "1200px",
     minWidth: "240px",
     width: "100%",
+  };
+
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
+  // ----------- 버튼 컨테이너 스타일 -----------
+  const buttonContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    height: "40px",
+
+    // 컨텐츠 정렬
+    justifyContent: "flex-end",
+  };
+
+  // ----------- 프로필 버튼 스타일 -----------
+  const myPageStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    marginRight: "10px",
+    height: "40px",
+  };
+
+  // ----------- 프로필 이미지 스타일 -----------
+  const profileImageStyle = {
+    // 디자인
+    width: "35px", // 이미지 가로 길이
+    height: "35px", // 이미지 세로 길이
+    borderRadius: "50%", // 둥근 테두리: 50% (원)
+  };
+
+  // ----------- 프로필 닉네임 스타일 -----------
+  const nickNameStyle = {
+    // 디자인
+    marginTop: "5px",
+    width: "110px",
+
+    // 글자
+    fontSize: "14px",
+  };
+
+  // ----------- 포인트 스타일 -----------
+  const pointStyle = {
+    // 디자인
+    marginTop: "5px",
+
+    // 글자
+    fontSize: "14px",
+    color: "#FFA500", // 글자 색: 주황
+  };
+
+  // ----------- 버튼 공통 스타일 -----------
+  const buttonStyle = {
+    // 디자인
+    marginTop: "5px",
+    width: "70px", // 버튼 넓이
+    height: "35px", // 버튼 높이
+    transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
+
+    // 글자
+    fontSize: "14px", // 버튼 안 글자 크기 고정
+    color: "#4A4A4A", // 글자 색: 회색
+  };
+
+  // ----------- 로그아웃 버튼 스타일 -----------
+  const logoutButtonStyle = {
+    // 상속
+    ...buttonStyle, // 버튼 공통 스타일 상속
+
+    // 글자
+    color: "#9C9C9C",
+  };
+
+  // ----------- 로그아웃 버튼 hover 스타일 -----------
+  const logoutButtonHoverStyle = {
+    // 글자
+    color: "#4A4A4A",
+  };
+
+  // ----------- 로그인 버튼 hover 스타일 -----------
+  const loginButtonHoverStyle = {
+    // 글자
+    color: "#FF595E",
+  };
+
+  // ----------- 회원가입 버튼 hover 스타일 -----------
+  const signupButtonHoverStyle = {
+    // 글자
+    color: "#FFA500",
   };
 
   // ----------- 메인 링크 컨테이너 스타일 -----------
@@ -266,82 +353,66 @@ const NavigationBar = () => {
     background: "#FFD257",
   };
 
-
-
-
-  // ----------- 버튼 컨테이너 스타일 -----------
-  const buttonContainerStyle = {
+  // ----------- 사이드 메뉴 컨테이너 스타일 -----------
+  const sideMenuContainerStyle = {
     // 상속
     ...flexContainerStyle,
 
     // 디자인
-    height: "40px",
-
+    width: "100px",
+    
     // 컨텐츠 정렬
     justifyContent: "flex-end",
   };
 
-  // ----------- 프로필 컨테이너 스타일 -----------
-  const profileContainerStyle = {
+  // ----------- 햄버거 버튼 스타일 -----------
+  const hamburgerStyle = {
     // 디자인
-    padding: "20px",
-    // backgroundColor: "#FFA500",
-  };
-
-  // ----------- 프로필 버튼 스타일 -----------
-  const myPageStyle = {
-    // 상속
-    ...flexContainerStyle,
-
-    // 디자인
-    marginRight: "10px",
-    height: "40px",
-  };
-
-  // ----------- 프로필 이미지 스타일 -----------
-  const profileImageStyle = {
-    // 디자인
-    width: "35px", // 이미지 가로 길이
-    height: "35px", // 이미지 세로 길이
-    borderRadius: "50%", // 둥근 테두리: 50% (원)
-  };
-
-  // ----------- 프로필 닉네임 스타일 -----------
-  const nickNameStyle = {
-    // 디자인
-    marginTop: "5px",
-    width: "110px",
+    paddingTop: "5px",
+    width: "30px", // 버튼 가로 길이
+    height: "70px", // 버튼 세로 길이
 
     // 글자
-    fontSize: "14px",
+    fontSize: "28px", // 햄버거 버튼 사이즈
+    color: "#4A4A4A", // 햄버거 버튼 색
   };
 
-  // ----------- 포인트 스타일 -----------
-  const pointStyle = {
-    // 디자인
-    marginTop: "5px",
-
-    // 글자
-    fontSize: "14px",
-    color: "#FFA500", // 글자 색: 주황
-  };
-
-  // ----------- 공통 메뉴 스타일 -----------
-  const commonMenuStyle = {
+  // ----------- 사이드 메뉴 스타일 -----------
+  const sideMenuStyle = {
     // 위치
     position: "absolute", // 메뉴 위치 기준
     top: isXLarge || isLarge ? "110px" : "70px",
     right: "0px", // 오른쪽 여백
 
     // 디자인
-    width: isXLarge || isLarge ? "50%" : "100%",
-    height: "1000px",
+    width:
+      isXLarge ? "30%" :
+      isLarge ? "50%" : 
+      isMedium ? "70%" : "100%",
+    height: "600px",
     background: "#FFFFFF", // 메뉴 배경 색: 흰색
-    boxShadow: "0 80px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
+    boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
 
     // 컨텐츠 정렬
+    display: isSideMenuOpend ? "flex" : "none", // 메뉴 오픈 여부
     flexDirection: "column", // 아이템 세로 방향으로 배치
   };
+
+  // ----------- 프로필 컨테이너 스타일 -----------
+  const profileContainerStyle = {
+    // 디자인
+    padding: "20px",
+  };
+
+  // ----------- 메뉴 서브 컨테이너 스타일 -----------
+  const menuSubTitleStyle = {
+    // 디자인
+    height: "60px",
+    paddingLeft: "5px",
+
+    // 글자
+    fontSize: "22px",
+  }
 
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
@@ -368,81 +439,9 @@ const NavigationBar = () => {
     color: "#000000", // 글자 색: 검정
   };
 
-  // ----------- 버튼 공통 스타일 -----------
-  const buttonStyle = {
-    // 디자인
-    marginTop: "5px",
-    width: "70px", // 버튼 넓이
-    height: "35px", // 버튼 높이
-    transition: "background 0.5s ease", // 마우스 호버 시 색깔 천천히 변경
-
-    // 글자
-    fontSize: "14px", // 버튼 안 글자 크기 고정
-    color: "#4A4A4A", // 글자 색: 회색
-  };
-
-  // ----------- 로그아웃 버튼 스타일 -----------
-  const logoutButtonStyle = {
-    // 상속
-    ...buttonStyle, // 버튼 공통 스타일 상속
-
-    // 글자
-    color: "#9C9C9C",
-  };
-
-  // ----------- 로그아웃 버튼 hover 스타일 -----------
-  const logoutButtonHoverStyle = {
-    // 글자
-    color: "#4A4A4A",
-  };
-
-  // ----------- 로그인 버튼 hover 스타일 -----------
-  const loginButtonHoverStyle = {
-    // 글자
-    color: "#FF595E",
-  };
-
-  // ----------- 회원가입 버튼 hover 스타일 -----------
-  const signupButtonHoverStyle = {
-    // 글자
-    color: "#FFA500",
-  };
-
-  // ----------- 햄버거 컨테이너 스타일 -----------
-  const hamburgerContainerStyle = {
-    // 상속
-    ...flexContainerStyle,
-
-    // 디자인
-    width: "100px",
-    
-    // 컨텐츠 정렬
-    justifyContent: "flex-end",
-  };
-
-  // ----------- 햄버거 버튼 스타일 -----------
-  const hamburgerStyle = {
-    // 디자인
-    paddingTop: "5px",
-    width: "30px", // 버튼 가로 길이
-    height: "70px", // 버튼 세로 길이
-
-    // 글자
-    fontSize: "28px", // 햄버거 버튼 사이즈
-    color: "#4A4A4A", // 햄버거 버튼 색
-  };
-
-  // ----------- 햄버거 메뉴 스타일 -----------
-  const hamburgerMenuStyle = {
-    // 상속
-    ...commonMenuStyle, // 공통 메뉴 스타일 상속
-
-    // 컨텐츠 정렬
-    display: sideMenuHovered ? "flex" : "none", // 메뉴 오픈 여부
-  };
-
   // --------------------------------- css 끝 ---------------------------------
 
+  
   // ----------- 링크 아이템 목록 -----------
   const linkItems = [
     {
@@ -541,7 +540,7 @@ const NavigationBar = () => {
               <div>
                 <button
                   style={myPageStyle}
-                  onClick={sideMenuClick}
+                  onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
                 >
                   <img
                     src={
@@ -647,34 +646,34 @@ const NavigationBar = () => {
             </>
           )}
 
-          {/* ------------- 햄버거 메뉴 -------------  */}
-          <div style={hamburgerContainerStyle}>
-            {sideMenuHovered ? (
+          {/* ------------- 사이드 메뉴 -------------  */}
+          <div style={sideMenuContainerStyle}>
+            {isSideMenuOpend ? (
               <button
               style={hamburgerStyle}
-              onClick={sideMenuClick}
+              onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
               >
                 &#10006;
               </button>
             ) : (
               <button
                 style={hamburgerStyle}
-                onClick={sideMenuClick}
+                onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
               >
                 &#9776;
               </button>
             )}
             
-            <div style={hamburgerMenuStyle}>
+            <div style={sideMenuStyle}>
               <div style={profileContainerStyle}>
-                <div>마이 페이지</div>
+                <div style={menuSubTitleStyle}>마이 페이지</div>
                 {profileItems.map((item, index) => (
                   <MenuItem
                     key={index}
                     to={item.to}
                     style={menuItemStyle}
                     activeStyle={menuItemActiveStyle}
-                    onClick={sideMenuClick}
+                    onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
                     hoverState={{
                       hovered: item.hovered,
                       handleMouseEnter: item.mouseEnter,
@@ -695,14 +694,14 @@ const NavigationBar = () => {
               </div>
 
               <div style={profileContainerStyle}>
-                <div>메인 메뉴</div>
+                <div style={menuSubTitleStyle}>메인 메뉴</div>
                 {linkItems.map((item, index) => (
                   <MenuItem
                     key={index}
                     to={item.to}
                     style={menuItemStyle}
                     activeStyle={menuItemActiveStyle}
-                    onClick={sideMenuClick}
+                    onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
                     hoverState={{
                       hovered: item.hovered,
                       handleMouseEnter: item.mouseEnter,
