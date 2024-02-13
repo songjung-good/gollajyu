@@ -1,7 +1,5 @@
 package com.jaecheop.backgollajyu.vote.model;
 
-import com.jaecheop.backgollajyu.vote.entity.Category;
-import com.jaecheop.backgollajyu.vote.entity.Tag;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import com.jaecheop.backgollajyu.vote.entity.VoteResult;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
@@ -13,11 +11,9 @@ import java.util.Optional;
 @Builder
 @Getter
 @AllArgsConstructor
-@RequiredArgsConstructor
+@NoArgsConstructor
 @ToString
 public class ListVoteDto {
-
-    private static VoteResultRepository voteResultRepository;
 
     private Long voteId;
     private String voteTitle;
@@ -55,13 +51,8 @@ public class ListVoteDto {
         this.isLiked = true;
     }
 
-    public void updateChosenItem(Long voteId, Long memberId){
-        Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(memberId, voteId);
-        if(optionalVoteResult.isEmpty()){
-            this.chosenItemId = 0L;
-        } else{
-            this.chosenItemId = optionalVoteResult.get().getVoteItem().getId();
-        }
+    public void updateChosenItem(Long chosenItem){
+        this.chosenItemId = chosenItem;
     }
 
 

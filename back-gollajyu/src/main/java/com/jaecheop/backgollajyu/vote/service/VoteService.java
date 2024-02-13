@@ -992,8 +992,17 @@ public class VoteService {
                         .stream()
                         .map(v ->ListVoteDto.convertToDto(v))
                         .toList();
-                allVoteList.forEach(vd -> vd.updateChosenItem(vd.getVoteId(), memberInfo.getMemberId()));
-                System.out.println("allVoteList = " + allVoteList);
+
+                // 사용자가 고른 투표 아이템 저장
+                 allVoteList.forEach(vd -> {
+                     Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(memberInfo.getMemberId(), vd.getVoteId());
+                     if(optionalVoteResult.isEmpty()){
+                         vd.updateChosenItem(0L);
+                     } else{
+                         vd.updateChosenItem(optionalVoteResult.get().getVoteItem().getId());
+                     }
+                 });
+
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
                     Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(memberId, lvd.getVoteId());
@@ -1022,6 +1031,16 @@ public class VoteService {
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+
+                // 사용자가 고른 투표 아이템 저장
+                allVoteList.forEach(vd -> {
+                    Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(memberInfo.getMemberId(), vd.getVoteId());
+                    if(optionalVoteResult.isEmpty()){
+                        vd.updateChosenItem(0L);
+                    } else{
+                        vd.updateChosenItem(optionalVoteResult.get().getVoteItem().getId());
+                    }
+                });
 
                 System.out.println("allVoteList = " + allVoteList);
 

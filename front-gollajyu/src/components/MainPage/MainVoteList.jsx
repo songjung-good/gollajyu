@@ -1,5 +1,7 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
+
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -8,6 +10,21 @@ import axios from "axios";
 import API_URL from "/src/stores/apiURL";
 
 const MainVoteList = ({ transferVoteId }) => {
+
+  // ----------- 반응형 웹페이지 구현 -----------
+  const isXLarge = useMediaQuery({
+    query: "(min-width:1024px)",
+  });
+  const isLarge = useMediaQuery({
+    query: "(min-width:768px) and (max-width:1023.98px)",
+  });
+  const isMedium = useMediaQuery({
+    query: "(min-width:480px) and (max-width:767.98px)",
+  });
+  const isSmall = useMediaQuery({
+    query: "(max-width:479.98px)",
+  });
+  
   const [listsData, setListsData] = useState([]);
 
   // 메인페이지로 값 전송
