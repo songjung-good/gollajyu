@@ -431,7 +431,7 @@ const MyActivities = () => {
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">
-            활동정보
+            # 활동정보
           </span>
         </div>
         <div style={contentsContainerStyle}>
@@ -453,7 +453,7 @@ const MyActivities = () => {
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
           <span style={titleTextStyle} className="fontsize-xl">
-            활동기록
+            # 활동기록
           </span>
         </div>
         <div style={linkContainerStyle}>

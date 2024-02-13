@@ -324,7 +324,7 @@ const StatisticPage = () => {
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-xl">
-              사용자별 선호 태그 통계
+              # 사용자별 선호 태그 통계
             </span>
           </div>
           <div style={contentsContainerStyle}>
@@ -332,7 +332,7 @@ const StatisticPage = () => {
             {/* ------------- 드롭다운 버튼 ------------- */}
             <div style={dropdownContainerStyle}>
               <div style={flexContainerStyle}>
-                <div style={subTitleStyle} className="fontsize-lg">다른 사람들은</div>
+                <div style={subTitleStyle} className="fontsize-md">다른 사람들은</div>
                 <div style={relativeContainerStyle}>
                   <div
                     onClick={toggleDropdown}
@@ -362,10 +362,10 @@ const StatisticPage = () => {
                     </div>
                   )}
                 </div>
-                <div style={subTitleStyle} className="fontsize-lg">을(를) 구매 할 때</div>
-                <div style={restStyle} className="fontsize-lg">,</div>
+                <div style={subTitleStyle} className="fontsize-md">을(를) 구매 할 때</div>
+                <div style={restStyle} className="fontsize-md">,</div>
               </div>
-              <div style={subTitleStyle} className="fontsize-lg">어떤 요소를 중요하게 생각할까?</div>
+              <div style={subTitleStyle} className="fontsize-md">어떤 요소를 중요하게 생각할까?</div>
             </div>
             {/* --------------------------------------- */}
 
