@@ -55,11 +55,12 @@ const StatisticPageChart = ({
     const responseDataArray = [];
     // ----------- itemCount 수 만큼 반복 -----------
     for (let i = 1; i <= itemCount; i++) {
+      const genderId = selectedRadioValues[`성별-${i}`]
       const requestData = {
         memberId: 0,
         typeId: selectedDropdownValues[`소비성향-${i}`],
         age: selectedRadioValues[`나이-${i}`],
-        gender: selectedRadioValues[`성별-${i}`],
+        gender: genderId == 1 ? "MALE" : (genderId == 2 ? "FEMALE" : 0),
         categoryId: selectedCategoryId,
       };
 
@@ -72,8 +73,8 @@ const StatisticPageChart = ({
 
         // responseDataArray에 서버 응답 데이터 추가
         responseDataArray.push(responseData.data);
-        // console.log('요청', requestData);
-        // console.log('응답', responseData.data);
+        console.log('요청', requestData);
+        console.log('응답', responseData.data);
       } catch (error) {
         console.error("axios 에러", error);
       }
