@@ -73,8 +73,8 @@ const StatisticPageChart = ({
 
         // responseDataArray에 서버 응답 데이터 추가
         responseDataArray.push(responseData.data);
-        console.log('요청', requestData);
-        console.log('응답', responseData.data);
+        // console.log('요청', requestData);
+        // console.log('응답', responseData.data);
       } catch (error) {
         console.error("axios 에러", error);
       }
