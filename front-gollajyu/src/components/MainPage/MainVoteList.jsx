@@ -1,7 +1,5 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";

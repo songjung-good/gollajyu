@@ -529,7 +529,9 @@ public class VoteService {
         List<VoteResult> voteResultList = filteredVoteResultList(vote.getVoteResultList(), voteDetailReqDto.getFilter());
 
         VoteInfoDto voteInfoDto = VoteInfoDto.builder()
+                .voteId(vote.getId())
                 .memberId(vote.getMember().getId())
+                .memberNickname(vote.getMember().getNickname())
                 .title(vote.getTitle())
                 .description(vote.getDescription())
                 .createAt(vote.getCreateAt())
