@@ -1,10 +1,11 @@
 // ChatForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import API_URL from "/src/stores/apiURL";
 
 const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
   const [value, setValue] = useState('');
+  const [chatList, setChatList] = useState([]);
 
   const handleChange = e => {
     setValue(e.target.value);
@@ -19,7 +20,6 @@ const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
       commentDesc: value,
       commentMentionId: 0,
     };
-    // console.log(body);
     try {
       await axios.post(`${API_URL}/votes/details/comments`, body);
       onSubmit(value, userid, choiced);
@@ -28,6 +28,11 @@ const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    setChatList([...chatList, { content: value, userId: userid, voteItemId: choiced }]);
+  }, [value, userid, choiced]);
+
   // enter키로도 입력 가능
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
