@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -121,7 +121,7 @@ const VotePage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     width: "100%",
-    height: isXLarge || isLarge ? "260px" : "160px",
+    height: isXLarge || isLarge ? "200px" : "160px",
     whiteSpace: "nowrap", // 줄바꿈 방지
 
     // 컨텐츠 정렬
@@ -133,7 +133,7 @@ const VotePage = () => {
   const headerContainerStyle = {
     // 디자인
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
-    hegith: "260px",
+    hegith: "200px",
     
     // 컨텐츠 정렬
     display: "flex",
@@ -148,7 +148,6 @@ const VotePage = () => {
     marginBottom: "20px",
 
     // 글자
-    fontSize: isXLarge || isLarge ? "32px" : "24px",
     color: "#FFFFFF",
   }
 
@@ -161,7 +160,8 @@ const VotePage = () => {
   // ----------- 해더 링크 스타일 -----------
   const headerLinkStyle = {
     // 디자인
-    marginRight: isXLarge || isLarge ? "30px" : "15px",
+    marginRight: isXLarge || isLarge ? "30px" : "7.5px",
+    marginLeft: isXLarge || isLarge ? "0" : "7.5px",
 
     // 글자
     color: "#4A4A4A",
@@ -182,7 +182,7 @@ const VotePage = () => {
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    padding: "50px 0", // 상하단 여백: 50px
+    padding: "30px 0", // 상하단 여백: 50px
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
     // whiteSpace: "nowrap", // 줄바꿈 방지
   };
@@ -208,7 +208,7 @@ const VotePage = () => {
             onSearch={handleSearch}
           />
           <div>
-            <p style={headerTitleStyle}>투표모아쥬</p>
+            <p style={headerTitleStyle} className="fontsize-lg text-center">투표모아쥬</p>
             <div style={headerLinkContainerStyle}>
 
               {/* ------------- 최신순 인기순 버튼 ------------- */}

@@ -317,14 +317,14 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: "100px",
+    width: "120px",
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
-    fontSize: "36px",
+    fontSize: "46px",
     color: "#FFD257", // 로고 글자 색: 노란색
     whiteSpace: "nowrap",
   };
@@ -335,7 +335,7 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    width: "50%",
+    width: "60%",
 
     // 컨텐츠 정렬
     justifyContent: "space-between",
@@ -378,9 +378,7 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    width:
-      isXLarge || isLarge ?  "100px" :
-      isMedium ? "330px" : "210px",
+    width: isXLarge || isLarge ?  "120px" : isMedium ? "330px" : "210px",
     
     // 컨텐츠 정렬
     justifyContent: "flex-end",
@@ -393,6 +391,7 @@ const NavigationBar = () => {
     paddingTop: "5px",
     width: "30px", // 버튼 가로 길이
     height: "70px", // 버튼 세로 길이
+    visibility: isXLarge ? "hidden" : "visible",
 
     // 글자
     fontSize: "28px", // 햄버거 버튼 사이즈
@@ -621,11 +620,11 @@ const NavigationBar = () => {
                     }}
                   >
                     <div>
-                      <div style={{fontSize: "16px"}}>{item.label}</div>
+                      <div style={{fontSize: "20px"}}>{item.label}</div>
                       <div
                         style={{
                           ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
+                          visibility: item.hovered || window.location.pathname.startsWith(item.to) ? "visible" : "hidden",
                         }}
                       ></div>
                     </div>
@@ -677,7 +676,7 @@ const NavigationBar = () => {
                       <div
                         style={{
                           ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
+                          visibility: item.hovered || window.location.pathname.startsWith(item.to) ? "visible" : "hidden",
                         }}
                       ></div>
                     </div>

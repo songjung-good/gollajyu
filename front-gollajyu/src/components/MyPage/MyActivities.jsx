@@ -196,7 +196,7 @@ const MyActivities = ({ transferVoteId }) => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
@@ -399,7 +399,7 @@ const MyActivities = ({ transferVoteId }) => {
       {/* ------------- 활동정보 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">
+          <span style={titleTextStyle} className="fontsize-lg">
             # 활동정보
           </span>
         </div>
@@ -421,7 +421,7 @@ const MyActivities = ({ transferVoteId }) => {
       {/* ------------- 활동기록 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">
+          <span style={titleTextStyle} className="fontsize-lg">
             # 활동기록
           </span>
         </div>

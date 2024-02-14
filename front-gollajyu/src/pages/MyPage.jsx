@@ -48,7 +48,7 @@ const MyPage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     width: "100%",
-    height: isXLarge || isLarge ? "260px" : "160px",
+    height: isXLarge || isLarge ? "200px" : "160px",
     whiteSpace: "nowrap", // 줄바꿈 방지
     
     // 컨텐츠 정렬
@@ -61,7 +61,7 @@ const MyPage = () => {
   const headerContainerStyle = {
     // 디자인
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
-    hegith: "260px",
+    hegith: "200px",
     
     // 컨텐츠 정렬
     display: "flex",
@@ -76,7 +76,6 @@ const MyPage = () => {
     marginBottom: "20px",
 
     // 글자
-    fontSize: isXLarge || isLarge ? "32px" : "24px",
     color: "#FFFFFF",
   }
 
@@ -89,7 +88,8 @@ const MyPage = () => {
   // ----------- 해더 링크 스타일 -----------
   const headerLinkStyle = {
     // 디자인
-    marginRight: isXLarge || isLarge ? "30px" : "15px",
+    marginRight: isXLarge || isLarge ? "30px" : "7.5px",
+    marginLeft: isXLarge || isLarge ? "0" : "7.5px",
 
     // 글자
     color: "#4A4A4A",
@@ -110,7 +110,7 @@ const MyPage = () => {
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    padding: "50px 0", // 상하단 여백: 50px
+    padding: "30px 0", // 상하단 여백: 50px
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
     whiteSpace: "nowrap", // 줄바꿈 방지
   };
@@ -131,7 +131,7 @@ const MyPage = () => {
       {/* ------------- Header ------------- */}
       <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
         <div style={headerContainerStyle}>
-          <p style={headerTitleStyle}>마이 페이지</p>
+          <p style={headerTitleStyle} className="fontsize-lg text-center">마이 페이지</p>
           <div style={headerLinkContainerStyle}>
             {mypageLinkItems.map((item, index) => (
               <NavLink

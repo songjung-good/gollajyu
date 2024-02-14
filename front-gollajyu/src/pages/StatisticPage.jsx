@@ -132,54 +132,11 @@ const StatisticPage = () => {
 
   // --------------------------------- css 시작 ---------------------------------
 
-  // ----------- 해더 스타일 -----------
-  const headerStyle = {
-    // 디자인
-    margin: "0 auto", // 가로 중앙 정렬
-    width: "100%",
-    height: isXLarge || isLarge ? "260px" : "160px",
-    whiteSpace: "nowrap", // 줄바꿈 방지
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "center",
-  }
-
-  // ----------- 해더 컨테이너 스타일 -----------
-  const headerContainerStyle = {
-    // 디자인
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
-    hegith: "260px",
-    
-    // 컨텐츠 정렬
-    display: "flex",
-    flexDirection: "column",
-    alignItems: isXLarge || isLarge ? "flex-start" : "center",
-    justifyContent: "center",
-  }
-
-  // ----------- 해더 제목 스타일 -----------
-  const headerTitleStyle = {
-    // 디자인
-    marginBottom: "20px",
-
-    // 글자
-    fontSize: isXLarge || isLarge ? "32px" : "24px",
-    color: "#FFFFFF",
-  }
-
-  // ----------- 해더 링크 컨테이너 스타일 -----------
-  const headerLinkContainerStyle = {
-    // 디자인
-    height: "28.5px",
-  }
-
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    padding: "50px 0", // 상하단 여백: 50px
+    padding: "30px 0", // 상하단 여백: 50px
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
     whiteSpace: "nowrap", // 줄바꿈 방지
   };
@@ -204,7 +161,7 @@ const StatisticPage = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
@@ -378,21 +335,12 @@ const StatisticPage = () => {
 
       {/* ------------- 투표 버튼 ------------- */}
       <VoteButton />
-      
-      {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
-        <div style={headerContainerStyle}>
-          <p style={headerTitleStyle}>통계보여쥬</p>
-          <div style={headerLinkContainerStyle}>
-          </div>
-        </div>
-      </div>
 
       {/* ------------- Body ------------- */}
       <div style={bodyStyle}>
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
-            <span style={titleTextStyle} className="fontsize-xl">
+            <span style={titleTextStyle} className="fontsize-lg">
               # 사용자별 선호 태그 통계
             </span>
           </div>

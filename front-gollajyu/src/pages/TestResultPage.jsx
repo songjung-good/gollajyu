@@ -1,15 +1,29 @@
+// 리액트 및 훅/라이브러리
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+import useModalStore from "/src/stores/modalState";
+
+// 투표 관련 컴포넌트
 import VoteButton from "../components/VoteButton";
 import TestResultHeader from "../components/TestResultHeader";
-import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
+
+// 소비성향 데이터 가져오기
 import sobiTIData from "/src/stores/testResultData.js";
-import useModalStore from "/src/stores/modalState";
-import useAuthStore from "/src/stores/userState";
-import { debounce } from "lodash";
+
+// react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
+
+import TmpModal from "../components/TmpModal"; // 임시 모달
+import { debounce } from "lodash";
+
 
 const items = [
   "프렌치 마카롱",
@@ -30,7 +44,12 @@ const items = [
   "초코잼",
 ];
 
+
 const TestResultPage = () => {
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
@@ -61,119 +80,233 @@ const TestResultPage = () => {
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, [result]);
 
+
+  // --------------------------------- css 시작 ---------------------------------
+
+  // ----------- body 스타일 -----------
+  const bodyStyle = {
+    // 디자인
+    margin: "0 auto", // 가로 중앙 정렬
+    padding: "30px 0", // 상하단 여백: 50px
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    // whiteSpace: "nowrap", // 줄바꿈 방지
+  };
+
+  // ----------- 컨텐츠 컨테이너 스타일 -----------
+  const containerStyle = {
+    // 디자인
+    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "375px",
+  };
+
+  // ----------- flex 컨테이너 스타일 -----------
+  const flexContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+  };
+
+  // ----------- 제목 컨테이너 스타일 -----------
+  const titleContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    marginBottom: isXLarge || isLarge ? "20px" : "15px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
+  };
+
+  // ----------- 제목 스타일 -----------
+  const titleTextStyle = {
+    // 디자인
+    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+  };
+
+  // ----------- 컨텐츠 컨테이너 스타일 -----------
+  const contentsContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
+    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    background: "#FFFFFF",
+
+    // 컨텐츠 정렬
+    flexDirection: "column",
+  };
+
+  // ----------- 조합 컨테이너 스타일 -----------
+  const combinationContainerStyle = {
+    // 상속
+    ...flexContainerStyle,
+
+    // 디자인
+    margin: "20px 0 40px 0",
+    width: "100%",
+
+    // 컨텐츠 정렬
+    flexDirection: isXLarge || isLarge ? "row" : "column",
+  }
+
+  // ----------- 조합 아이템 스타일 -----------
+  const combinationItemrStyle = {
+    // 디자인
+    width: isXLarge || isLarge ? "50%" : "100%",
+  }
+
+  // ----------- 왼쪽 아이템 스타일 -----------
+  const combinationLeftItemrStyle = {
+    // 상속
+    ...combinationItemrStyle,
+
+    // 디자인
+    marginRight: isXLarge || isLarge ? "10px" : "0px",
+    marginBottom: isXLarge || isLarge ? "0px" : "10px",
+  }
+
+  // ----------- 오른쪽 아이템 스타일 -----------
+  const combinationRightItemrStyle = {
+    // 상속
+    ...combinationItemrStyle,
+
+    // 디자인
+    marginLeft: isXLarge || isLarge ? "10px" : "0px",
+    marginTop: isXLarge || isLarge ? "0px" : "10px",
+  }
+
+
+  // --------------------------------- css 끝 ---------------------------------
+
+
   return (
     <>
-      <VoteButton />
       <Helmet>
         <title>소비성향알려쥬</title>
       </Helmet>
-      <div className="p-5">
-        <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] md:w-[330px] lg:w-[380px] xl:w-[550px] flex flex-col items-center relative">
-          {isMyResult ? (
-            <div className="font-bold w-full text-start absolute top-3 left-3">
-              나의 결과
-            </div>
-          ) : (
-            <div className="flex flex-wrap mb-5 justify-center">
-              {items.map((item, index) => {
-                return (
+      
+      {/* ------------- 투표 버튼 ------------- */}
+      <VoteButton />
+        
+      {/* ------------- Body ------------- */}
+      <div style={bodyStyle}>
+        <div style={containerStyle}>
+          <div style={titleContainerStyle}>
+            <span style={titleTextStyle} className="fontsize-lg">
+              {isMyResult ? "# 나의 결과" : "# 모든 결과 유형"}
+            </span>
+          </div>
+          <div style={contentsContainerStyle}>
+            {isMyResult ? (
+              <></>
+            ) : (
+              <div className="flex flex-wrap mb-5 w-4/5 justify-center">
+                {items.map((item, index) => {
+                  return (
+                    <button
+                      key={index}
+                      className={`m-1 px-3 py-2 border border-amber-200 rounded-lg ${
+                        result === index + 1 ? `bg-amber-300` : ""
+                      }`}
+                      onClick={() => {
+                        setResult(index + 1);
+                      }}
+                    >
+                      {item}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            {matchingData && (
+              <>
+                <TestResultHeader data={matchingData} result={result} />
+                <div
+                  id="description"
+                  className="bg-stone-100 p-10 rounded-lg break-keep"
+                >
+                  {matchingData.description?.map((item, index) => (
+                    <li className="p-2 fontsize-sm" key={index}>
+                      {item}
+                    </li>
+                  ))}
+                </div>
+
+                <div style={combinationContainerStyle}>
+                  <div
+                    id="good_chemi"
+                    style={combinationLeftItemrStyle}
+                    className="p-3 bg-stone-50 flex flex-col border rounded-lg"
+                  >
+                    <p className="fontsize-md my-4 px-2">
+                      <span className="fontsize-md text-red-400 font-bold">
+                        환상
+                      </span>
+                      의 조합
+                    </p>
+                    <div className="p-3">
+                      <p className="fontsize-sm">
+                        {sobiTIData.find(
+                          (data) => data.id === matchingData.good_chemi
+                        )?.subTitle || null}
+                      </p>
+                      <p className="fontsize-md font-bold">
+                        {sobiTIData.find(
+                          (data) => data.id === matchingData.good_chemi
+                        )?.title || null}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    id="bad_chemi"
+                    style={combinationRightItemrStyle}
+                    className="p-3 bg-stone-50 flex flex-col border rounded-lg"
+                  >
+                    <p className="fontsize-md my-4 px-2">
+                      <span className="fontsize-md text-blue-600 font-bold">
+                        환장
+                      </span>
+                      의 조합
+                    </p>
+                    <div className="p-3">
+                      <p className="fontsize-sm">
+                        {sobiTIData.find(
+                          (data) => data.id === matchingData.bad_chemi
+                        )?.subTitle || null}
+                      </p>
+                      <p className="fontsize-md font-bold">
+                        {sobiTIData.find(
+                          (data) => data.id === matchingData.bad_chemi
+                        )?.title || null}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {isMyResult ? (
                   <button
-                    key={index}
-                    className={`m-1 px-3 py-2 border border-amber-200 rounded-lg ${
-                      result === index + 1 ? `bg-amber-300` : ""
-                    }`}
+                    className="w-1/3 sm:w-2/5 md:w-2/5 p-5 rounded-full bg-amber-300 hover:bg-amber-400"
                     onClick={() => {
-                      setResult(index + 1);
+                      setIsMyResult(false);
+                      window.scrollTo({ top: 0 });
                     }}
                   >
-                    {item}
+                    모든 결과 보기
                   </button>
-                );
-              })}
-            </div>
-          )}
-          {matchingData && (
-            <>
-              <TestResultHeader data={matchingData} result={result} />
-              <div
-                id="description"
-                className="bg-stone-100 p-10 rounded-lg break-keep"
-              >
-                {matchingData.description?.map((item, index) => (
-                  <li className="p-2 fontsize-sm" key={index}>
-                    {item}
-                  </li>
-                ))}
-              </div>
-              <div
-                id="good_chemi"
-                className="my-5 p-3 bg-stone-50 w-full flex flex-col border rounded-lg"
-              >
-                <p className="fontsize-md my-4 px-2">
-                  <span className="fontsize-md text-red-400 font-bold">
-                    환상
-                  </span>
-                  의 조합
-                </p>
-                <div className="p-3">
-                  <p className="fontsize-sm">
-                    {sobiTIData.find(
-                      (data) => data.id === matchingData.good_chemi
-                    )?.subTitle || null}
-                  </p>
-                  <p className="fontsize-md font-bold">
-                    {sobiTIData.find(
-                      (data) => data.id === matchingData.good_chemi
-                    )?.title || null}
-                  </p>
-                </div>
-              </div>
-              <div
-                id="bad_chemi"
-                className="mb-5 p-3 bg-stone-50 w-full flex flex-col border rounded-lg"
-              >
-                <p className="fontsize-md my-4 px-2">
-                  <span className="fontsize-md text-blue-600 font-bold">
-                    환장
-                  </span>
-                  의 조합
-                </p>
-                <div className="p-3">
-                  <p className="fontsize-sm">
-                    {sobiTIData.find(
-                      (data) => data.id === matchingData.bad_chemi
-                    )?.subTitle || null}
-                  </p>
-                  <p className="fontsize-md font-bold">
-                    {sobiTIData.find(
-                      (data) => data.id === matchingData.bad_chemi
-                    )?.title || null}
-                  </p>
-                </div>
-              </div>
-              {isMyResult ? (
-                <button
-                  className="w-2/3 p-5 rounded-full bg-amber-300 hover:bg-amber-400"
-                  onClick={() => {
-                    setIsMyResult(false);
-                    window.scrollTo({ top: 0 });
-                  }}
-                >
-                  모든 결과 보기
-                </button>
-              ) : (
-                <button
-                  className="hover:font-bold"
-                  onClick={() => {
-                    window.scrollTo({ top: 0 });
-                  }}
-                >
-                  TOP
-                </button>
-              )}
-            </>
-          )}
+                ) : (
+                  <button
+                    className="hover:font-bold"
+                    onClick={() => {
+                      window.scrollTo({ top: 0 });
+                    }}
+                  >
+                    TOP
+                  </button>
+                )}
+              </>
+            )}
+          </div>
         </div>
+            
       </div>
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}

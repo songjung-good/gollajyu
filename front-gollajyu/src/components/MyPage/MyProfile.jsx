@@ -82,7 +82,7 @@ const MyProfile = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
@@ -210,7 +210,7 @@ const MyProfile = () => {
       {/* ------------- 기본정보 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleStyle} className="fontsize-xl">
+          <span style={titleStyle} className="fontsize-lg">
             # 기본정보
           </span>
         </div>
@@ -298,7 +298,7 @@ const MyProfile = () => {
       {/* ------------- 소비성향 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleStyle} className="fontsize-xl">
+          <span style={titleStyle} className="fontsize-lg">
             # 소비성향
           </span>
         </div>

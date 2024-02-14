@@ -71,7 +71,7 @@ const VotePageHeader = ({ onSearch, onSearchTerm, onSearchCategory }) => {
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    marginTop: isXLarge || isLarge ? "40px" : "15px",
+    marginTop: isXLarge || isLarge ? "30px" : "15px",
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
     whiteSpace: "nowrap", // 줄바꿈 방지
 
