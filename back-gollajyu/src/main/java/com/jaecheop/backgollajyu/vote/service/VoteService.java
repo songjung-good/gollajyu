@@ -569,7 +569,7 @@ public class VoteService {
                     .voteItemDesc(voteItem.getVoteItemDesc())
                     .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                     .price(voteItem.getPrice())
-                    .choiceCnt(choiceCnt) // 해당 아이템 선택 개수
+                    .count(choiceCnt) // 해당 아이템 선택 개수
                     .tagCountList(tagCountList) // 해당 아이템 내 각 태그 별 선택 개수
                     .build();
             voteItemInfoDtoList.add(voteItemInfoDto);
@@ -587,7 +587,7 @@ public class VoteService {
         VoteDetailResDto voteDetailResDto = VoteDetailResDto.builder()
                 .chosenItem(chosenItemId)
                 .voteInfo(voteInfoDto)
-                .voteItemListInfo(voteItemInfoDtoList)
+                .voteItemList(voteItemInfoDtoList)
                 .commentList(commentDtoList)
                 .build();
 

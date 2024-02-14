@@ -30,6 +30,7 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
+import TmpModal from "../components/TmpModal"; // 임시 모달
 import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 
