@@ -11,6 +11,8 @@ const VotePageList = ({ voteList }) => {
   return (
     <div>
       {votes.map((vote) => (
+        // (vote.chosenItemId === 0) ?
+        // (
         <VoteCard
         key={`${vote.voteId}-card`}
         vote={vote}
@@ -23,6 +25,7 @@ const VotePageList = ({ voteList }) => {
         categoryName={vote.categoryName}
         categoryId={vote.categoryId}
         />
+        //  ) : null
       ))}
     </div>
   );
