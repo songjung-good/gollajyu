@@ -33,7 +33,7 @@ const MyPage = () => {
     width: "100%",
     height: isXLarge || isLarge ? "260px" : "160px",
     whiteSpace: "nowrap", // 줄바꿈 방지
-
+    
     // 컨텐츠 정렬
     display: "flex",
     alignItems: "flex-end",
@@ -44,6 +44,7 @@ const MyPage = () => {
   const headerContainerStyle = {
     // 디자인
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    hegith: "260px",
     
     // 컨텐츠 정렬
     display: "flex",
@@ -64,6 +65,7 @@ const MyPage = () => {
 
   // ----------- 해더 링크 컨테이너 스타일 -----------
   const headerLinkContainerStyle = {
+    // 디자인
     height: "28.5px",
   }
 
@@ -71,7 +73,6 @@ const MyPage = () => {
   const headerLinkStyle = {
     // 디자인
     marginRight: isXLarge || isLarge ? "30px" : "15px",
-    borderBottom: "4px solid rgb(255, 255, 255, 0)",
 
     // 글자
     color: "#4A4A4A",
@@ -83,9 +84,6 @@ const MyPage = () => {
   const activeheaderLinkStyle = {
     // 상속
     ...headerLinkStyle,
-
-    // 디자인
-    borderBottom: "4px solid #FFFFFF",
 
     // 글자
     color: "#FFFFFF",
