@@ -11,7 +11,7 @@ import API_URL from "/src/stores/apiURL";
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 // 커스텀 스토어를 이용한 상태 관리
-import useAuthStore from '/src/stores/userState';
+import useAuthStore from "/src/stores/userState";
 
 // 투표 카드 컴포넌트
 import VoteCardItem from './VoteCardItem';
@@ -19,7 +19,6 @@ import { selectClasses } from '@mui/base';
 
 
 const VoteCard = (props) => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -36,7 +35,7 @@ const VoteCard = (props) => {
   const [selectedVoteItem, setSelectedVoteItem] = useState();
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
-  
+
   // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
   const handleClick = (itemId, selection) => {
     console.log(itemId)
@@ -52,20 +51,20 @@ const VoteCard = (props) => {
   // 좋아요 관리 함수
   const handleLike = async () => {
     try {
-      const response = await axios.post(API_URL+'/votes/likes', {
+      const response = await axios.post(API_URL + "/votes/likes", {
         memberId: user.memberId,
-        voteId: vote.voteId
+        voteId: vote.voteId,
       });
 
       // 현재 좋아요 상태를 업데이트
       // 만약 이미 좋아요를 눌렀었다면 좋아요 수를 1 감소시키고, 그렇지 않으면 1 증가시킴
-      setVoteLikesCount((isVoteLike) ? voteLikesCount-1 : voteLikesCount+1);
-      
+      setVoteLikesCount(isVoteLike ? voteLikesCount - 1 : voteLikesCount + 1);
+
       // 좋아요 상태를 반전시킴
-      setIsVoteLike(!isVoteLike)
+      setIsVoteLike(!isVoteLike);
       // console.log('POST request response:', response.data);
     } catch (error) {
-      console.error('Error sending POST request:', error);
+      console.error("Error sending POST request:", error);
     }
   }
   useEffect(() => {
@@ -92,12 +91,15 @@ const VoteCard = (props) => {
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
-  const contentContainerStyle = {   
+  const contentContainerStyle = {
     // 디자인
-    padding:
-      isXLarge ? "20px 30px" :
-      isLarge ? "16px 24px" :
-      isMedium ? "12px 18px" : "8px 12px",
+    padding: isXLarge
+      ? "20px 30px"
+      : isLarge
+      ? "16px 24px"
+      : isMedium
+      ? "12px 18px"
+      : "8px 12px",
     maxWidth: "1160px",
     minWidth: "240px",
     height: "484px",
@@ -108,25 +110,28 @@ const VoteCard = (props) => {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
-  }
+  };
 
   // ----------- 카테고리 이름 스타일 -----------
   const categoryNameStyle = {
     // 디자인
-    marginLeft:
-      isXLarge ? "20px" :
-      isLarge ? "15px" :
-      isMedium ? "10px" : "5px",
+    marginLeft: isXLarge
+      ? "20px"
+      : isLarge
+      ? "15px"
+      : isMedium
+      ? "10px"
+      : "5px",
 
     // 글자
-    color: "#4A4A4A"
-  }
+    color: "#4A4A4A",
+  };
 
   // ----------- 카드 컨테이너 스타일 -----------
   const cardContainerStyle = {
     // 디자인
     height: "346px",
-  }
+  };
 
   // ----------- 버튼 컨테이너 스타일 -----------
   const buttonContainerStyle = {
@@ -135,18 +140,21 @@ const VoteCard = (props) => {
 
     // 컨텐츠 정렬
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 버튼 공통 스타일 -----------
   const commonButtonStyle = {
     // 디자인
-    padding:
-      isXLarge ? "12px 20px 8px" :
-      isLarge ? "11px 18px 7px" :
-      isMedium ? "10px 16px 6px" : "9px 14px 5px",
+    padding: isXLarge
+      ? "12px 20px 8px"
+      : isLarge
+      ? "11px 18px 7px"
+      : isMedium
+      ? "10px 16px 6px"
+      : "9px 14px 5px",
     borderRadius: "8px",
     transition: "background 0.2s",
-  }
+  };
 
   // ----------- 좋아요 버튼 스타일 -----------
   const likeButtonStyle = {
@@ -157,26 +165,29 @@ const VoteCard = (props) => {
     border: "3px solid",
 
     // 글자
-    color: isVoteLike ? "#FF595E" : "#4A4A4A",  // 좋아요 상태에 따라 색상 변경
+    color: isVoteLike ? "#FF595E" : "#4A4A4A", // 좋아요 상태에 따라 색상 변경
   };
 
   // --------------------------------- css 끝 ---------------------------------
 
-
   return (
     <>
       <div style={contentContainerStyle}>
-
         {/* ------------------ 투표 제목 및 카테고리 ------------------ */}
         <div style={flexContainerStyle}>
           <div className="fontsize-lg">{vote.voteTitle}</div>
-          <p style={categoryNameStyle} className="fontsize-md">{vote.categoryName}</p>
+          <p style={categoryNameStyle} className="fontsize-md">
+            {vote.categoryName}
+          </p>
         </div>
 
         {/* ------------------ 투표 카드 아이템 ------------------ */}
-        <div style={cardContainerStyle} className="p-2 flex justify-around items-center">
+        <div
+          style={cardContainerStyle}
+          className="p-2 flex justify-around items-center"
+        >
           {vote.voteItemList.map((item, itemIndex) => (
-            <VoteCardItem 
+            <VoteCardItem
               key={item.voteItemId}
               item={item}
               categoryId={vote.categoryId}
@@ -194,12 +205,12 @@ const VoteCard = (props) => {
         <div style={buttonContainerStyle}>
           <button
             style={likeButtonStyle}
-            className={
-              `fontsize-sm ${isVoteLike ? 'hover:bg-pink-50' : 'hover:bg-gray-200'}`
-            }
+            className={`fontsize-sm ${
+              isVoteLike ? "hover:bg-pink-50" : "hover:bg-gray-200"
+            }`}
             onClick={handleLike}
           >
-            {(isVoteLike) ? "❤ 좋아요 취소" : "♡ 좋아요"} {voteLikesCount}
+            {isVoteLike ? "❤ 좋아요 취소" : "♡ 좋아요"} {voteLikesCount}
           </button>
           <button
             style={commonButtonStyle}
