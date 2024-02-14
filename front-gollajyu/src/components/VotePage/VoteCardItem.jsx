@@ -56,8 +56,6 @@ const VoteCardItem = (props) => {
       categoryId: categoryId,
       tagId: (categoryId - 1) * 5 + index + 1,
     };
-
-
     // Send axios request
     axios
       .post(API_URL + "/votes/choices", dto)
@@ -96,7 +94,7 @@ const VoteCardItem = (props) => {
           </div>):null}
 
           {/* 투표하는 기능 내부 */}
-          {((selectedItem !== voteItemId) && (selectedItem === 0) && hover) ? (
+          {((selectedItem === 0 || !selectedItem ) && hover) ? (
             <div
               className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
               onMouseLeave={() => {}}

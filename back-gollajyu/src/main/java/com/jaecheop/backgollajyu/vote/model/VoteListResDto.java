@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class VoteListResDto {
-    private int lastPageNo;
+    private long lastPageNo;
     private String categoryName;
     private List<TagDto> tagList;
     private List<ListVoteDto> voteInfoList;
@@ -18,7 +18,7 @@ public class VoteListResDto {
     public void updateVoteInfoList(List<ListVoteDto> voteInfoList) {
         this.voteInfoList = voteInfoList;
     }
-    public void updateLastPageNo(int lastPageNo) {
+    public void updateLastPageNo(long lastPageNo) {
         this.lastPageNo = lastPageNo;
     }
 

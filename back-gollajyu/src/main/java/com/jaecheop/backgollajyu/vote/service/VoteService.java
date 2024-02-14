@@ -532,6 +532,7 @@ public class VoteService {
                 .voteId(vote.getId())
                 .memberId(vote.getMember().getId())
                 .memberNickname(vote.getMember().getNickname())
+                .categoryId(vote.getCategory().getId())
                 .title(vote.getTitle())
                 .description(vote.getDescription())
                 .createAt(vote.getCreateAt())
@@ -658,8 +659,10 @@ public class VoteService {
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v)).toList();
 
+
+
                 // 마지막 페이지
-                int lastPageNo = allVoteList.size()/10;
+                long lastPageNo = voteRepository.count()/10;
                 voteListResDto.updateLastPageNo(lastPageNo);
 
                 makeVoteDetail(allVoteList);
@@ -696,7 +699,7 @@ public class VoteService {
                         .toList();
 
                 // 마지막 페이지
-                int lastPageNo = allVoteList.size()/10;
+                long lastPageNo = voteRepository.count()/10;
                 voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성
@@ -742,7 +745,7 @@ public class VoteService {
 
 
                 // 마지막 페이지
-                int lastPageNo = filteredVoteList.size()/10;
+                long lastPageNo = voteRepository.count()/10;
                 voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성
@@ -792,7 +795,7 @@ public class VoteService {
                 });
 
                 // 마지막 페이지
-                int lastPageNo = filteredVoteList.size()/10;
+                long lastPageNo = voteRepository.count()/10;
                 voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성

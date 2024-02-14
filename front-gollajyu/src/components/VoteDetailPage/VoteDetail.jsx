@@ -17,6 +17,10 @@ const VoteDetail = () => {
   // 유저의 이메일정보
   const user = useAuthStore((state) => state.user);
 
+  const [selectedVoteItem, setSelectedVoteItem] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [countList, setCountList] = useState([]);
+
   // 유저의 나이대
   const year = user.birthday.year;
   const month = user.birthday.month;
@@ -29,33 +33,33 @@ const VoteDetail = () => {
   
   let age = currentYear - year; // 만 나이 계산
 
-  // 생일이 아직 지나지 않았다면 만 나이에서 1을 빼야 합니다.
-if (currentMonth < month || (currentMonth === month && currentDay < day)) {
-  age--;
-}
+    // 생일이 아직 지나지 않았다면 만 나이에서 1을 빼야 합니다.
+  if (currentMonth < month || (currentMonth === month && currentDay < day)) {
+    age--;
+  }
 
-// 10대부터 50대까지 나이대 계산
-let ageGroup;
-if (age < 20) {
-  ageGroup = 1;
-} else if (age < 30) {
-  ageGroup = 2;
-} else if (age < 40) {
-  ageGroup = 3;
-} else if (age < 50) {
-  ageGroup = 4;
-} else {
-  ageGroup = 5;
-}
-
+  // 10대부터 50대까지 나이대 계산
+  let ageGroup;
+  if (age < 20) {
+    ageGroup = 1;
+  } else if (age < 30) {
+    ageGroup = 2;
+  } else if (age < 40) {
+    ageGroup = 3;
+  } else if (age < 50) {
+    ageGroup = 4;
+  } else {
+    ageGroup = 5;
+  }
+  
   useEffect(() => {
     const params = new URLSearchParams();
+
     params.append("memberId", user.memberId);
     params.append("voteId", detailVoteId);
     params.append("filter.age", -1);
     params.append("filter.gender", 'A');
     params.append("filter.typeId", -1);
-
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API_URL}/votes/detail`, {
@@ -71,6 +75,7 @@ if (age < 20) {
     fetchData();
   }, [detailVoteId]);
 
+
   // 모달창 닫는 로직
   const setVoteDetailModalClose = useModalStore(
     (state) => state.setVoteDetailModalClose
@@ -79,6 +84,42 @@ if (age < 20) {
     setVoteDetailModalClose();
   };
 
+  
+  ///////////// 상훈 추가 /////////////
+  ///////////////////////////////////
+  /////////////////////////////////////
+
+  // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
+  const handleClick = (itemId, selection) => {
+    // console.log(itemId)
+    // console.log(`선택지 ${itemId + 1}: ${selection}`);
+    setCountList(prevCountList => 
+      prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
+
+    let plusCount = totalCount + 1;
+    setTotalCount(plusCount);
+    setSelectedVoteItem(itemId);
+    console.log(selectedVoteItem);
+  };
+
+  // axios 요청 후 처리를 위한 로직
+  useEffect(() => {
+    let newTotalCount = 0;
+    if (voteDetail) {
+    voteDetail.voteItemList.forEach((item) => {
+      newTotalCount += item.count;
+    })
+    setTotalCount(newTotalCount);
+    setCountList(prevCountList => voteDetail.voteItemList.map(item => item.count))
+   }
+  }, [voteDetail]);
+  
+  useEffect(() => {
+    (voteDetail) ? setSelectedVoteItem(voteDetail.chosenItem)
+    : null;
+
+    }, [voteDetail])
+  
   return (
     <div
       id="outer-layer"
@@ -99,21 +140,22 @@ if (age < 20) {
           <div className="p-2 flex justify-around items-center h-full">
             {/* 투표한 안한 사람( voteDetail.chosenItem = null )은 투표가 가능하게  */}
             {voteDetail.voteItemList.map((item, itemIndex) => (
-              <VoteCardItem
-                key={item.voteItemId}
-                item={item} // 전체 item 객체 전달
-                categoryId={1} // categoryData 객체 전달
-                voteId={voteDetail.voteInfo.voteId}
-
-                onClick={() => setClicked(itemIndex)} // onClick 함수를 전달
-                isSelect={clicked} // 선택된 항목 ID 정보 전달
-              />
+            <VoteCardItem 
+            key={item.voteItemId}
+            item={item}
+            categoryId={voteDetail.voteInfo.categoryId}
+            voteId={voteDetail.voteInfo.voteId}
+            totalCount={totalCount}
+            count={item.count}
+            selectedVoteItem={selectedVoteItem}
+            path="/VotePage"
+            onClicked={(voteItemId) => handleClick(voteItemId)}
+          />
             ))}
           </div>
           {voteDetail.chosenItem && (
             <>
               <VoteDetailReselt
-                totalChoiceCnt={voteDetail.voteInfo.totalChoiceCnt}
                 voteResults={voteDetail.voteItemList}
               />
               <VoteDetailChat

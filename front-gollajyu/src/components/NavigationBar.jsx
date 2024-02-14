@@ -146,11 +146,17 @@ const NavigationBar = () => {
       });
   };
 
+  // ----------- 사이드 메뉴 버튼 ref -----------
+  const sideButtonRef = useRef();
+  const sideMenuRef = useRef();
+  
   // ----------- 사이드 메뉴 밖 클릭 시 메뉴 닫음 -----------
-  const menuRef = useRef();
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      if (
+        (sideButtonRef.current && !sideButtonRef.current.contains(event.target)) &&
+        (sideMenuRef.current && !sideMenuRef.current.contains(event.target))
+      ) {
         // 클릭이 메뉴 외부에 있으면 메뉴를 닫습니다.
         setIsSideMenuOpend(false);
       }
@@ -636,6 +642,7 @@ const NavigationBar = () => {
               <button
                 style={hamburgerStyle}
                 onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+                ref={sideButtonRef}
               >
                 &#10006;
               </button>
@@ -643,12 +650,13 @@ const NavigationBar = () => {
               <button
                 style={hamburgerStyle}
                 onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+                ref={sideButtonRef}
               >
                 &#9776;
               </button>
             )}
             
-            <div style={sideMenuStyle} ref={menuRef}>
+            <div style={sideMenuStyle} ref={sideMenuRef}>
               <div style={profileContainerStyle}>
                 <div style={menuSubTitleStyle}>메인 메뉴</div>
                 {linkItems.map((item, index) => (
