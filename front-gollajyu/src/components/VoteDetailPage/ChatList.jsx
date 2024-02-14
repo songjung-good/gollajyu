@@ -14,7 +14,7 @@ const ChatList = ({ list, choiced2, onLike }) => {
       <div className={`${colorMap[v.voteItemId%4]} text-black p-2 rounded-lg max-w-xs`}>
         <small>{v.userid} (선택지: {v.voteItemId%4})</small>
         <p className='chat-content'>{v.commentDesc}</p>
-        <button className='fontsize-xs' disabled={v.liked ? true : false} onClick={() => onLike(k)}>좋아요: {v.commentLikesCnt}👍</button>
+        {/* <button className='fontsize-xs' disabled={v.liked ? true : false} onClick={() => onLike(k)}>좋아요: {v.commentLikesCnt}👍</button> */}
       </div>
     </div>
   ));
