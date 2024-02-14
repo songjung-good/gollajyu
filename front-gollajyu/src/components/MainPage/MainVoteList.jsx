@@ -16,6 +16,7 @@ const MainVoteList = ({ transferVoteId }) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   
   const [listsData, setListsData] = useState([]);
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 메인페이지로 값 전송
   const openVoteDetailModal = (voteId) => {
