@@ -129,7 +129,7 @@ const MyPage = () => {
       </Helmet>
 
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
+      <div style={headerStyle} className="bg-gradient-to-tl from-stone-200 to-gray-400">
         <div style={headerContainerStyle}>
           <p style={headerTitleStyle} className="fontsize-lg text-center">마이 페이지</p>
           <div style={headerLinkContainerStyle}>

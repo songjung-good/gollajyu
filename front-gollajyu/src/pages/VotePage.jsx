@@ -149,6 +149,11 @@ const VotePage = () => {
 
     // 글자
     color: "#FFFFFF",
+
+    // 컨텐츠 정렬
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "space-between",
   }
 
   // ----------- 해더 링크 컨테이너 스타일 -----------
@@ -200,7 +205,7 @@ const VotePage = () => {
       <VoteButton />
         
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
+      <div style={headerStyle} className="bg-gradient-to-tl from-stone-200 to-gray-400">
         <div style={headerContainerStyle}>
           <VotePageHeader
             onSearchTerm={setSearchTerm}
@@ -208,7 +213,7 @@ const VotePage = () => {
             onSearch={handleSearch}
           />
           <div>
-            <p style={headerTitleStyle} className="fontsize-lg text-center">투표모아쥬</p>
+            <p style={headerTitleStyle} className="fontsize-lg sm:text-center md:text-center">투표모아쥬</p>
             <div style={headerLinkContainerStyle}>
 
               {/* ------------- 최신순 인기순 버튼 ------------- */}
