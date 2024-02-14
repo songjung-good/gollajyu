@@ -18,7 +18,7 @@ public class VoteItemInfoDto {
 
     private Long price;
 
-    private Long choiceCnt; // 아이템 선택 개수
+    private Long count; // 아이템 선택 개수
 
     List<TagCount> tagCountList; // 각 태그별 선택 개수
 }
