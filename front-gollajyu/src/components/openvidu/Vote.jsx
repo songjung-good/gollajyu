@@ -1,6 +1,6 @@
 import axios from "axios";
-import API_URL from "../../stores/apiURL";
-import useAuthStore from "../../stores/userState";
+import API_URL from "/src/stores/apiURL";
+import useAuthStore from "/src/stores/userState";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const Vote = ({ liveId }) => {

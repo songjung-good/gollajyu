@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import API_URL from "../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 import BroadcastItem from "../components/BroadcastItem";
 import VoteButton from "../components/VoteButton";
 import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
 import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
-import useModalStore from "../stores/modalState";
+import useModalStore from "/src/stores/modalState";
 import { Helmet } from "react-helmet-async";
 
 const BroadcastPage = () => {

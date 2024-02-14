@@ -5,6 +5,9 @@ import { Helmet } from "react-helmet-async";
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
 
+// 일정시간 내 함수가 1번만 동작하도록 방어하는 함수
+import { debounce } from "lodash";
+
 // API URL 설정
 import API_URL from "/src/stores/apiURL";
 
@@ -20,8 +23,6 @@ import MainVoteList from "../components/MainPage/MainVoteList";
 import MainWord from "../components/MainPage/MainWord";
 import SwipeVote from "../components/MainPage/SwipeVote";
 import VoteButton from "../components/VoteButton";
-import LoginModal from "../components/LoginForm";
-import SignupModal from "../components/SignupForm";
 
 // 투표 관련 컴포넌트
 import VoteSimple from "../components/VotePage/VoteSimple";
@@ -30,9 +31,11 @@ import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
 import TmpModal from "../components/TmpModal"; // 임시 모달
-
+import LoginModal from "../components/LoginForm";
+import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
+
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -123,30 +126,44 @@ const MainPage = () => {
   const categoryId = 0;
 
   // 투표 목록 데이터 및 로딩 상태 관련 상태 설정
-  const [voteListData, setVoteListData] = useState(null);
+  const [voteListData, setVoteListData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageNo, setPageNo] = useState(0);
+
+  // pageNo 올리는 함수
+  const increasePageNo = () => {
+    setPageNo((prev) => prev + 1);
+  };
 
   // 데이터 가져오기 함수
-  const fetchData = async () => {
+  const fetchData = debounce(async () => {
     try {
       const response = await axios.get(`${API_URL}/votes`, {
         params: {
           categoryId: categoryId,
           memberId: user ? user.memberId : null,
+          pageNo: pageNo,
         },
       });
-      setVoteListData(response.data);
+
+      const data = response.data.body.voteInfoList;
+      console.log("pageNo:", pageNo);
+      console.log(response.data);
+      setVoteListData((prevData) => {
+        return [...prevData, ...data];
+      });
       setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
     } catch (error) {
       setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
     }
-  };
+  }, 300);
 
   // 페이지 로드 시(컴포넌트가 처음 마운트 될 떄만) 데이터 가져오기
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
+    // console.log("pageNo 증가", pageNo);
     fetchData();
-  }, []);
+  }, [pageNo]);
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -214,7 +231,10 @@ const MainPage = () => {
             {/* 로딩 완료 시 */}
             <div className="bg-gradient-to-tl from-blue-400 to-red-400">
               {/* 스와이프 투표 컴포넌트 */}
-              <SwipeVote voteList={voteListData} />
+              <SwipeVote
+                voteList={voteListData}
+                increasePageNo={increasePageNo}
+              />
             </div>
 
             {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}

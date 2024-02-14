@@ -1,5 +1,16 @@
+// 리액트 및 훅/라이브러리
 import React, { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// HTTP 요청을 위한 Axios 라이브러리
+import axios from "axios";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// Recharts 라이브러리
 import {
   Radar,
   RadarChart,
@@ -9,10 +20,11 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
 } from "recharts";
+
+// 카테고리 및 소비성향 데이터 불러오기
 import categoryData from "/src/stores/categoryData";
 import sobiTIData from "/src/stores/testResultData";
-import API_URL from "/src/stores/apiURL";
-import axios from "axios";
+
 
 const StatisticPageChart = ({
   selectedCategoryId,
@@ -21,19 +33,8 @@ const StatisticPageChart = ({
   selectedDropdownValues,
 }) => {
 
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 사용자 유형 색 리스트 -----------
   const colorList = ["#2CB16A", "#FC9D2B", "#00A1FF", "#FF665A"];
@@ -113,13 +114,7 @@ const StatisticPageChart = ({
   const containerStyle = {
     // 디자인
     width: "100%",
-    height: isXLarge
-      ? "800px"
-      : isLarge
-      ? "700px"
-      : isMedium
-      ? "600px"
-      : "500px",
+    height: isXLarge ? "800px" : isLarge ? "700px" : isMedium ? "600px" : "500px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------

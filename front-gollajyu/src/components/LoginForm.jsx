@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import useAuthStore from "/src/stores/userState";
 import useModalStore from "/src/stores/modalState";
-import API_URL from "../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 import axios from "axios";
 
 const LoginModal = () => {

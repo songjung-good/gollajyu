@@ -1,6 +1,6 @@
 // 리액트 및 훅/라이브러리
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -14,9 +14,6 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 // 커스텀 스토어를 이용한 상태 관리
 import useModalStore from "/src/stores/modalState";
 import useAuthStore from "/src/stores/userState";
-
-// 기본 프로필 이미지 불러오기
-import DefaultProfileImage from "/assets/images/default_profile_img.png";
 
 
 // ----------- 커스텀 훅 -----------
@@ -95,16 +92,6 @@ const NavigationBar = () => {
     testResultPageMouseLeave,
   ] = useHoverState();
 
-  // ----------- 프로필 아이템 hover -----------
-  const [myProfileHovered, myProfileMouseEnter, myProfileMouseLeave] =
-    useHoverState();
-
-  const [myActivitiesHovered, myActivitiesMouseEnter, myActivitiesMouseLeave] =
-    useHoverState();
-
-  const [myStatisticsHovered, myStatisticsMouseEnter, myStatisticsMouseLeave] =
-    useHoverState();
-
   // ----------- 로그아웃, 로그인, 회원가입 버튼 hover -----------
   const [logoutButtonHovered, logoutButtonMouseEnter, logoutButtonMouseLeave] =
     useHoverState();
@@ -158,6 +145,26 @@ const NavigationBar = () => {
         console.log(err);
       });
   };
+
+  // ----------- 사이드 메뉴 밖 클릭 시 메뉴 닫음 -----------
+  const menuRef = useRef();
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        // 클릭이 메뉴 외부에 있으면 메뉴를 닫습니다.
+        setIsSideMenuOpend(false);
+      }
+    };
+
+    // 페이지에 클릭 이벤트를 추가합니다.
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsSideMenuOpend]);
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -235,6 +242,9 @@ const NavigationBar = () => {
 
     // 글자
     fontSize: "14px",
+    display: !isSmall? "flex" : "none", 
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   // ----------- 포인트 스타일 -----------
@@ -245,6 +255,7 @@ const NavigationBar = () => {
     // 글자
     fontSize: "14px",
     color: "#FFA500", // 글자 색: 주황
+    whiteSpace: "nowrap",
   };
 
   // ----------- 버튼 공통 스타일 -----------
@@ -258,6 +269,7 @@ const NavigationBar = () => {
     // 글자
     fontSize: "14px", // 버튼 안 글자 크기 고정
     color: "#4A4A4A", // 글자 색: 회색
+    whiteSpace: "nowrap",
   };
 
   // ----------- 로그아웃 버튼 스타일 -----------
@@ -308,6 +320,7 @@ const NavigationBar = () => {
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
     fontSize: "36px",
     color: "#FFD257", // 로고 글자 색: 노란색
+    whiteSpace: "nowrap",
   };
 
   // ----------- 링크 컨테이너 스타일 -----------
@@ -359,7 +372,9 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    width: "100px",
+    width:
+      isXLarge || isLarge ?  "100px" :
+      isMedium ? "330px" : "210px",
     
     // 컨텐츠 정렬
     justifyContent: "flex-end",
@@ -368,6 +383,7 @@ const NavigationBar = () => {
   // ----------- 햄버거 버튼 스타일 -----------
   const hamburgerStyle = {
     // 디자인
+    marginLeft: "15px",
     paddingTop: "5px",
     width: "30px", // 버튼 가로 길이
     height: "70px", // 버튼 세로 길이
@@ -385,11 +401,8 @@ const NavigationBar = () => {
     right: "0px", // 오른쪽 여백
 
     // 디자인
-    width:
-      isXLarge ? "30%" :
-      isLarge ? "50%" : 
-      isMedium ? "70%" : "100%",
-    height: "600px",
+    width: "240px",
+    height: "340px",
     background: "#FFFFFF", // 메뉴 배경 색: 흰색
     boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)", // 메뉴 그림자
 
@@ -422,10 +435,9 @@ const NavigationBar = () => {
     // 디자인
     paddingLeft: "30px",
     width: "100%",
-    height: isXLarge || isLarge ? "60px" : "40px",
+    height: "60px",
 
     // 글자
-    fontSize: "16px",
     color: "#4A4A4A", // 글자 색: 회색
   };
 
@@ -505,30 +517,6 @@ const NavigationBar = () => {
     },
   ];
 
-  // ----------- 프로필 아이템 목록 -----------
-  const profileItems = [
-    {
-      to: "/Mypage",
-      label: "내 프로필 요약",
-      hovered: myProfileHovered,
-      mouseEnter: myProfileMouseEnter,
-      mouseLeave: myProfileMouseLeave,
-    },
-    {
-      to: "/Mypage/MyActivities",
-      label: "내 활동 요약",
-      hovered: myActivitiesHovered,
-      mouseEnter: myActivitiesMouseEnter,
-      mouseLeave: myActivitiesMouseLeave,
-    },
-    {
-      to: "/Mypage/MyStatistics",
-      label: "내 통계 요약",
-      hovered: myStatisticsHovered,
-      mouseEnter: myStatisticsMouseEnter,
-      mouseLeave: myStatisticsMouseLeave,
-    },
-  ];
 
   // --------------------------------- 프로필, 버튼 렌더링 함수 ---------------------------------
   const renderButton = () => {
@@ -537,32 +525,27 @@ const NavigationBar = () => {
         <div style={buttonContainerStyle}>
           {isLoggedIn ? ( // ------------- 로그인 시 -------------
             <>
-              <div>
-                <button
-                  style={myPageStyle}
-                  onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
-                >
-                  <img
-                    src={
-                      // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
-                      !isNaN(user.profileImgUrl)
-                        ? `/assets/images/sobiTest/${user.profileImgUrl}.png`
-                        : user.profileImgUrl
-                    }
-                    alt="사진"
-                    style={profileImageStyle}
-                  />
-                    <p style={nickNameStyle}>
-                      {user.nickname.length <= 6
-                        ? user.nickname
-                        : user.nickname.slice(0, 6) + "..."}
-                      님
-                    </p>
-                    <p style={pointStyle}>
-                      {user.point} P
-                    </p>
-                </button>
-              </div>
+              <Link to="/Mypage" style={myPageStyle}>
+                <img
+                  src={
+                    // user.profileImgUrl이 숫자면 -> 소비성향테스트 결과 번호 -> 해당 번호의 png 파일을 src로 지정
+                    !isNaN(user.profileImgUrl)
+                      ? `/assets/images/sobiTest/${user.profileImgUrl}.png`
+                      : user.profileImgUrl
+                  }
+                  alt="사진"
+                  style={profileImageStyle}
+                />
+                <p style={nickNameStyle}>
+                  {user.nickname.length <= 6
+                    ? user.nickname
+                    : user.nickname.slice(0, 6) + "..."}
+                  님
+                </p>
+                <p style={pointStyle}>
+                  {user.point} P
+                </p>
+              </Link>
               <ButtonItem
                 style={buttonItems[0].style}
                 label={buttonItems[0].label}
@@ -648,10 +631,11 @@ const NavigationBar = () => {
 
           {/* ------------- 사이드 메뉴 -------------  */}
           <div style={sideMenuContainerStyle}>
+            {(isMedium || isSmall) && renderButton()}
             {isSideMenuOpend ? (
               <button
-              style={hamburgerStyle}
-              onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
+                style={hamburgerStyle}
+                onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
               >
                 &#10006;
               </button>
@@ -664,35 +648,7 @@ const NavigationBar = () => {
               </button>
             )}
             
-            <div style={sideMenuStyle}>
-              <div style={profileContainerStyle}>
-                <div style={menuSubTitleStyle}>마이 페이지</div>
-                {profileItems.map((item, index) => (
-                  <MenuItem
-                    key={index}
-                    to={item.to}
-                    style={menuItemStyle}
-                    activeStyle={menuItemActiveStyle}
-                    onClick={() => setIsSideMenuOpend(!isSideMenuOpend)}
-                    hoverState={{
-                      hovered: item.hovered,
-                      handleMouseEnter: item.mouseEnter,
-                      handleMouseLeave: item.mouseLeave,
-                    }}
-                  >
-                    <div>
-                      <div>{item.label}</div>
-                      <div
-                        style={{
-                          ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
-                        }}
-                      ></div>
-                    </div>
-                  </MenuItem>
-                ))}
-              </div>
-
+            <div style={sideMenuStyle} ref={menuRef}>
               <div style={profileContainerStyle}>
                 <div style={menuSubTitleStyle}>메인 메뉴</div>
                 {linkItems.map((item, index) => (
@@ -709,7 +665,7 @@ const NavigationBar = () => {
                     }}
                   >
                     <div>
-                      <div>{item.label}</div>
+                      <div style={{ fontSize: "16px" }}>{item.label}</div>
                       <div
                         style={{
                           ...itemHoverStyle,

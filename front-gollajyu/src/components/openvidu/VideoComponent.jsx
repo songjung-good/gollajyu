@@ -1,13 +1,13 @@
 import { OpenVidu } from "openvidu-browser";
 
 import axios from "axios";
-import API_URL from "../../stores/apiURL";
+import API_URL from "/src/stores/apiURL";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChattingForm from "./Chat/ChattingForm.jsx";
 import ChattingList from "./Chat/ChattingList.jsx";
-import useAuthStore from "../../stores/userState";
+import useAuthStore from "/src/stores/userState";
 import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 import tmpProfileImg from "/assets/images/tmp_profile.png";

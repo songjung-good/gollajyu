@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import useAuthStore from "../stores/userState";
-import useModalStore from "../stores/modalState";
+import useAuthStore from "/src/stores/userState";
+import useModalStore from "/src/stores/modalState";
 import axios from "axios";
 
 const TmpModal = () => {

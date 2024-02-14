@@ -1,7 +1,5 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
-
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -18,6 +16,7 @@ const MainVoteList = ({ transferVoteId }) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   
   const [listsData, setListsData] = useState([]);
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 메인페이지로 값 전송
   const openVoteDetailModal = (voteId) => {
@@ -122,19 +121,13 @@ const MainVoteList = ({ transferVoteId }) => {
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    width:
-      isXLarge ? "1000px" :
-      isLarge ? "740px" :
-      isMedium ? "470px" : "375px",
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
   };
 
   // ----------- 투표 리스트 컨테이너 스타일 -----------
   const voteListContainerStyle = {
     // 디자인
-    marginTop:
-      isXLarge ? "50px" :
-      isLarge ? "40px" :
-      isMedium ? "30px" : "20px",
+    marginTop: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
     padding: "10px",
     width: isXLarge || isLarge ? "45%" : "90%",
 
@@ -154,10 +147,7 @@ const MainVoteList = ({ transferVoteId }) => {
   // ----------- 좋아요 스타일 -----------
   const likeStyle = {
     // 디자인
-    marginRight:
-      isXLarge ? "10px" :
-      isLarge ? "8px" :
-      isMedium ? "6px" : "4px",
+    marginRight: isXLarge ? "10px" : isLarge ? "8px" : isMedium ? "6px" : "4px",
 
     // 글자
     color: "#FF595E",
