@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -15,9 +15,8 @@ import useAuthStore from "/src/stores/userState";
 import useModalStore from '/src/stores/modalState';
 
 // 투표 카드 컴포넌트
-import VoteCardItem from './VoteCardItem';
-import { selectClasses } from '@mui/base';
-
+import VoteCardItem from "./VoteCardItem";
+import { selectClasses } from "@mui/base";
 
 
 
@@ -26,16 +25,16 @@ const VoteCard = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 부모 컴포넌트로부터 투표 정보 전달 받음
-  const { vote } = props;
+  const { vote, liked, likesCnt, chosenItemId, voteItemList, voteId, voteTitle, categoryName, categoryId } = props;
 
   // 선택 상태 변수 선언
   const [totalCount, setTotalCount] = useState(0);
   const [countList, setCountList] = useState([]);
 
   // 좋아요 상태 변수
-  const [isVoteLike, setIsVoteLike] = useState(vote.liked);
-  const [voteLikesCount, setVoteLikesCount] = useState(vote.likesCnt);
-  const [selectedVoteItem, setSelectedVoteItem] = useState();
+  const [isVoteLike, setIsVoteLike] = useState(liked);
+  const [voteLikesCount, setVoteLikesCount] = useState(likesCnt);
+  const [selectedVoteItem, setSelectedVoteItem] = useState(chosenItemId);
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
   // 모달창
@@ -47,11 +46,12 @@ const VoteCard = (props) => {
     // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
     setCountList(prevCountList => 
-      prevCountList.map((count, i) => vote.voteItemList[i].voteItemId === itemId ? count + 1 : count));
+      prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
 
-    let plusCount = totalCount + 1
+    let plusCount = totalCount + 1;
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
+    console.log(selectedVoteItem);
   };
 
   // 모달창 여는 함수
@@ -65,7 +65,7 @@ const VoteCard = (props) => {
     try {
       const response = await axios.post(API_URL + "/votes/likes", {
         memberId: user.memberId,
-        voteId: vote.voteId,
+        voteId: voteId
       });
 
       // 현재 좋아요 상태를 업데이트
@@ -78,19 +78,19 @@ const VoteCard = (props) => {
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
-  }
+  };
   useEffect(() => {
     let newTotalCount = 0;
-    vote.voteItemList.forEach((item) => {
+    voteItemList.forEach((item) => {
       newTotalCount += item.count;
     });
     setTotalCount(newTotalCount);
-    setCountList(prevCountList => vote.voteItemList.map(item => item.count));
-  }, [vote.voteItemList]);
+    setCountList(prevCountList => voteItemList.map(item => item.count));
+  }, [voteItemList]);
 
   useEffect(() => {
-    // console.log(countList);
-    setSelectedVoteItem(vote.chosenItemId)
+    console.log(countList);
+    setSelectedVoteItem(chosenItemId)
   }, [countList]);
   
   // --------------------------------- css 시작 ---------------------------------
@@ -187,28 +187,23 @@ const VoteCard = (props) => {
       <div style={contentContainerStyle}>
         {/* ------------------ 투표 제목 및 카테고리 ------------------ */}
         <div style={flexContainerStyle}>
-          <div className="fontsize-lg">{vote.voteTitle}</div>
-          <p style={categoryNameStyle} className="fontsize-md">
-            {vote.categoryName}
-          </p>
+          <div className="fontsize-lg">{voteTitle}</div>
+          <p style={categoryNameStyle} className="fontsize-md">{categoryName}</p>
         </div>
 
         {/* ------------------ 투표 카드 아이템 ------------------ */}
-        <div
-          style={cardContainerStyle}
-          className="p-2 flex justify-around items-center"
-        >
-          {vote.voteItemList.map((item, itemIndex) => (
-            <VoteCardItem
+        <div style={cardContainerStyle} className="p-2 flex justify-around items-center">
+          {voteItemList.map((item, itemIndex) => (
+            <VoteCardItem 
               key={item.voteItemId}
               item={item}
-              categoryId={vote.categoryId}
-              voteId={vote.voteId}
+              categoryId={categoryId}
+              voteId={voteId}
               totalCount={totalCount}
               count={item.count}
               selectedVoteItem={selectedVoteItem}
               path="/VotePage"
-              onClick={() => handleClick(itemIndex)}
+              onClicked={(voteItemId) => handleClick(voteItemId)}
             />
           ))}
         </div>

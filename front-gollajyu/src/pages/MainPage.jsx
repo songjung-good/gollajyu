@@ -30,11 +30,11 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
+import TmpModal from "../components/TmpModal"; // 임시 모달
 import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -164,6 +164,12 @@ const MainPage = () => {
     fetchData();
   }, [pageNo]);
 
+  useEffect(() => {
+    // voteListData 길이가 일정 수준보다 작으면 increasePageNo 함수를 실행하고 fetchData 요청을 다시 보낸다.
+    // 단 lastPageNo와 현재 pageNo가 같으면 alert를 띄우고 요청을 더 이상 보내지 않는다.
+    // if (voteListData)
+  }, [voteListData]);
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- body 스타일 -----------
@@ -243,7 +249,7 @@ const MainPage = () => {
 
             {/* 메인 투표 리스트 컴포넌트 */}
             <div style={mainVoteListContainerStyle}>
-              <MainVoteList transferVoteId={transferVoteId}/>
+              <MainVoteList transferVoteId={transferVoteId} />
             </div>
           </>
         )}
