@@ -89,10 +89,6 @@ const MyActivities = () => {
   const setVoteDetailModalOpen = useModalStore(
     (state) => state.setVoteDetailModalOpen
   );
-  // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
-  const transferVoteId = (voteId) => {
-    setVoteDetailModalOpen(voteId);
-  };
 
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
@@ -101,40 +97,40 @@ const MyActivities = () => {
       .get(API_URL + "/members/" + user.memberId + "/votes")
       .then((res) => {
         setCreatedVote(res.data);
-        console.log("작성한 투표:", res.data);
+        // console.log("작성한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 좋아요한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes/likes")
       .then((res) => {
         setLikedVote(res.data);
-        console.log("좋아요한 투표:", res.data);
+        // console.log("좋아요한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 참여한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes/participation")
       .then((res) => {
         setParticipatedVote(res.data);
-        console.log("참여한 투표:", res.data);
+        // console.log("참여한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 작성한 댓글
     axios
       .get(API_URL + "/members/" + user.memberId + "/comments")
       .then((res) => {
         setCreatedComment(res.data);
-        console.log("작성한 댓글:", res.data);
+        // console.log("작성한 댓글:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }, []);
 
@@ -514,12 +510,7 @@ const MyActivities = () => {
           <Routes>
             <Route
               path="/"
-              element={
-                <MyActivitiesCreated
-                  props={createdVote}
-                  // transferVoteId={transferVoteId}
-                />
-              }
+              element={<MyActivitiesCreated props={createdVote} />}
             />
             <Route
               path="/0"

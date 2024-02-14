@@ -233,7 +233,7 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
     (state) => state.setVoteDetailModalOpen
   );
 
-  const openDetailModal = (voteId) => {
+  const openVoteDetailModal = (voteId) => {
     setVoteDetailModalOpen(voteId);
   };
 
@@ -243,7 +243,7 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
         <div
           style={containerStyle}
           onClick={() => {
-            openDetailModal(voteItem.voteId);
+            openVoteDetailModal(voteItem.voteId);
           }}
         >
           <div style={flexContainerStyle}>

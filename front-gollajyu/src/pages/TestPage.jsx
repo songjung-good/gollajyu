@@ -120,13 +120,13 @@ const TestPage = () => {
         gender: memberInfo.gender == "F" ? "FEMALE" : "MALE",
         typeId: memberInfo.typeId,
       };
-      console.log(socialMemberInfo);
+      // console.log(socialMemberInfo);
       axios
         .put(API_URL + "/members", socialMemberInfo)
         .then((response) => {
-          console.log("소셜로그인 회원가입:", response);
+          // console.log("소셜로그인 회원가입:", response);
           if (!response.data.header.result) {
-            console.log(response.data.header.message);
+            // console.log(response.data.header.message);
             navigate("/");
             window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
           } else {
@@ -142,17 +142,17 @@ const TestPage = () => {
             "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         })
         .catch((err) => {
-          console.log("회원가입 에러");
-          console.log(err);
+          // console.log("회원가입 에러");
+          // console.log(err);
         });
     } else {
       // 일반 신규 가입자인 경우
       axios
         .post(API_URL + "/members", memberInfo)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           if (!response.data.header.result) {
-            console.log(response.data.header.message);
+            // console.log(response.data.header.message);
             navigate("/");
             window.alert("회원가입되지 않았음, 콘솔창 확인 바람");
           } else {
@@ -165,8 +165,8 @@ const TestPage = () => {
           }
         })
         .catch((err) => {
-          console.log("회원가입 에러");
-          console.log(err);
+          // console.log("회원가입 에러");
+          // console.log(err);
         });
     }
   };
@@ -177,14 +177,14 @@ const TestPage = () => {
         withCredentials: true,
       })
       .then((response) => {
-        console.log("로그인 완료");
+        // console.log("로그인 완료");
         setLoggedIn(response.data.body);
         // 로그인 후, 테스트 결과 페이지로 이동
         navigate("/TestResultPage");
       })
       .catch((err) => {
-        console.log("로그인 과정에서 에러남");
-        console.log(err);
+        // console.log("로그인 과정에서 에러남");
+        // console.log(err);
       });
   };
 

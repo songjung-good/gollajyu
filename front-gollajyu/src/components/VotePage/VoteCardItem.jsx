@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -25,13 +25,21 @@ const VoteCardItem = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // Props에서 필요한 값 추출
-  const { item, categoryId, voteId, onClicked, totalCount, count, selectedVoteItem } = props;
+  const {
+    item,
+    categoryId,
+    voteId,
+    onClicked,
+    totalCount,
+    count,
+    selectedVoteItem,
+  } = props;
 
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
   const [selectedItem, setselectedItem] = useState(selectedVoteItem);
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
-  
+
   // 선택된 카테고리의 태그 가져오기
   const selection = categoryData[categoryId].tags;
 
@@ -43,7 +51,7 @@ const VoteCardItem = (props) => {
   const doVote = useAuthStore((state) => state.doVote);
   useEffect(() => {
     setselectedItem(selectedVoteItem);
-  }, [selectedVoteItem])
+  }, [selectedVoteItem]);
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
 
   // 투표하기 기능
@@ -61,7 +69,7 @@ const VoteCardItem = (props) => {
       .post(API_URL + "/votes/choices", dto)
       .then((response) => {
         // Handle success
-        console.log("Axios request successful:", response.data);
+        // console.log("Axios request successful:", response.data);
         doVote(); // 투표하면 2포인트 증가
       })
       .catch((error) => {
@@ -69,8 +77,6 @@ const VoteCardItem = (props) => {
         console.error("Axios request failed:", error);
       });
   };
-
-  // TODO: 비로그인 상태에서 로그인 창 띄우기
 
   return (
     <>
@@ -88,13 +94,10 @@ const VoteCardItem = (props) => {
           style={{ maxWidth: "100%" }}
         >
           {/* TODO 선택된 아이템이 있다면 로직 여기임 호철아 여기임 */}
-          {(selectedItem === voteItemId) ?
-          (<div>
-            당신이 선택한 아이템
-          </div>):null}
+          {selectedItem === voteItemId ? <div>당신이 선택한 아이템</div> : null}
 
           {/* 투표하는 기능 내부 */}
-          {((selectedItem === 0 || !selectedItem ) && hover) ? (
+          {(selectedItem === 0 || !selectedItem) && hover ? (
             <div
               className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
               onMouseLeave={() => {}}
@@ -118,8 +121,7 @@ const VoteCardItem = (props) => {
                 </button>
               ))}
             </div>
-          ) : null
-          }
+          ) : null}
 
           {/* 투표 이미지 */}
           <img
@@ -131,7 +133,9 @@ const VoteCardItem = (props) => {
         {/* 버튼을 누르면 생기는 상세페이지 */}
         <div className="h-1/3 w-full flex flex-col justify-center items-center">
           <p>
-          {selectedItem !== 0 ? `${(count / totalCount * 100).toFixed(2)}%` : '%'}
+            {selectedItem !== 0
+              ? `${((count / totalCount) * 100).toFixed(2)}%`
+              : "%"}
           </p>
           <h2 className="text-lg font-bold mb-2">
             {item.price ? `${item.price.toLocaleString()}원` : ""}

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import VoteButton from "../components/VoteButton";
 import TestResultHeader from "../components/TestResultHeader";
-import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import sobiTIData from "/src/stores/testResultData.js";

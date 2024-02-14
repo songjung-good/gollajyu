@@ -61,7 +61,6 @@ const VoteSimple = () => {
     setPreviewImages(updatedPreviewImages);
   };
 
-
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -93,7 +92,7 @@ const VoteSimple = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       createVote(); // 투표 만들면 10포인트 차감
       setVoteSimpleModalClose();
     } catch (error) {
@@ -182,18 +181,22 @@ const VoteSimple = () => {
             ))}
           </div>
           <div className="mb-5">
-          <button type="button" onClick={addVoteItem}
-            className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-            투표 항목 추가하기
-          </button>
+            <button
+              type="button"
+              onClick={addVoteItem}
+              className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+            >
+              투표 항목 추가하기
+            </button>
           </div>
           <div className="mb-5">
-          <button
-                type="button"
-                onClick={removeVoteItem}
-                className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                투표 항목 삭제하기
-          </button>
+            <button
+              type="button"
+              onClick={removeVoteItem}
+              className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none"
+            >
+              투표 항목 삭제하기
+            </button>
           </div>
           {/* 투표 올리기, 취소하기 버튼 */}
           <div className="flex justify-between">

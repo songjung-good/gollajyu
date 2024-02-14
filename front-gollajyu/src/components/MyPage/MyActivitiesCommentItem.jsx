@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom";
 // 반응형 웹 디자인을 위한 유틸리티 함수
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
+// 모달창 상태
+import useModalStore from "/src/stores/modalState";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -16,9 +18,7 @@ const useHoverState = () => {
   return [hovered, handleMouseEnter, handleMouseLeave];
 };
 
-
 const MyActivitiesCommentItem = ({ commentItem }) => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -42,14 +42,19 @@ const MyActivitiesCommentItem = ({ commentItem }) => {
     });
   });
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
     marginBottom: "30px",
-    padding: isXLarge ? "20px 30px" : isLarge ? "17px 26px" : isMedium ? "14px 22px" : "11px 18px",
+    padding: isXLarge
+      ? "20px 30px"
+      : isLarge
+      ? "17px 26px"
+      : isMedium
+      ? "14px 22px"
+      : "11px 18px",
     width: "100%",
     border: ItemHovered ? "3px solid #D0D0D0" : "3px solid #FFFFFF",
     borderRadius: "10px", // 둥근 테두리
@@ -126,7 +131,6 @@ const MyActivitiesCommentItem = ({ commentItem }) => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-  
   // ----------- VoteItem 컴포넌트 정의 -----------
   const VoteItem = ({ label, ratio, isMyChoice }) => {
     // 가장 높은 비율의 선택지 찾기
@@ -186,7 +190,7 @@ const MyActivitiesCommentItem = ({ commentItem }) => {
 
   // ----------- comment가 일정 길이 이상이면 ...으로 대체하는 함수 -----------
   const truncateComment = (comment) => {
-    const maxLabelLength = 20;  // 최대 길이
+    const maxLabelLength = 20; // 최대 길이
     return comment.length > maxLabelLength
       ? `${comment.substring(0, maxLabelLength)}...`
       : comment;
@@ -194,7 +198,7 @@ const MyActivitiesCommentItem = ({ commentItem }) => {
 
   // ----------- label이 일정 길이 이상이면 ...으로 대체하는 함수 -----------
   const truncateLabel = (label) => {
-    const maxLabelLength = 6;  // 최대 길이
+    const maxLabelLength = 6; // 최대 길이
     return label.length > maxLabelLength
       ? `${label.substring(0, maxLabelLength)}...`
       : label;
@@ -218,10 +222,24 @@ const MyActivitiesCommentItem = ({ commentItem }) => {
     );
   };
 
+  // 상세페이지
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+
+  const openVoteDetailModal = (voteId) => {
+    setVoteDetailModalOpen(voteId);
+  };
+
   return (
     <>
       <NavLink onMouseOver={ItemMouseEnter} onMouseOut={ItemMouseLeave}>
-        <div style={containerStyle}>
+        <div
+          style={containerStyle}
+          onClick={() => {
+            openVoteDetailModal(voteItem.voteId);
+          }}
+        >
           <div style={flexContainerStyle}>
             <div style={titleStyle} className="fontsize-lg">
               {truncateComment(commentItem.commentDescription)}
