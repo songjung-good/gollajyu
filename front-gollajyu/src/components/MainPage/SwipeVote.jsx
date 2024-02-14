@@ -19,7 +19,8 @@ const SwipeVote = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 부모 컴포넌트로부터 투표 목록 전달 받음
-  const { voteList, increasePageNo } = props;
+  const { voteList, isLastPage, increasePageNo } = props;
+  console.log("마지막 페이지니?", isLastPage);
 
   // 슬라이드 관련 상태 -> 안씀
   const [activeSlide, setActiveSlide] = useState(0);
@@ -28,9 +29,15 @@ const SwipeVote = (props) => {
   useEffect(() => {
     const swiperInstance = document.querySelector(".mySwiper").swiper;
     swiperInstance.on("slideChange", () => {
-      if (swiperInstance.activeIndex === voteList.length - 5) {
-        // console.log("절반 넘었음");
+      console.log("지금:", swiperInstance.activeIndex, "/", voteList.length);
+      if (swiperInstance.activeIndex > voteList.length - 3 && !isLastPage) {
+        console.log("얼마 안남음");
         increasePageNo();
+      } else if (
+        isLastPage &&
+        swiperInstance.activeIndex === voteList.length - 1
+      ) {
+        window.alert("더 이상 불러올 투표가 없어요");
       }
     });
     return () => {

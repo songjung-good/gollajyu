@@ -129,13 +129,14 @@ const MainPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [pageNo, setPageNo] = useState(0);
   const [lastPageNo, setLastPageNo] = useState(Infinity);
+  const [isLastPage, setIsLastPage] = useState(false);
   const [initialRender, setInitialRender] = useState(true);
 
   // pageNo 올리는 함수
   const increasePageNo = () => {
     setPageNo((prev) => {
+      console.log("lastPageNo:", lastPageNo);
       if (prev === lastPageNo) {
-        window.alert("더 이상 불러올 투표가 없어요");
         return prev;
       } else {
         return prev + 1;
@@ -157,7 +158,7 @@ const MainPage = () => {
       const data = response.data.body.voteInfoList;
       console.log("pageNo:", pageNo);
       console.log(response.data);
-      setLastPageNo(response.data.lastPageNo);
+      setLastPageNo(response.data.body.lastPageNo);
       setVoteListData((prevData) => {
         return [...prevData, ...data];
       });
@@ -173,6 +174,9 @@ const MainPage = () => {
     // console.log("pageNo 증가", pageNo);
     fetchData();
     setInitialRender(false);
+    if (pageNo === lastPageNo) {
+      setIsLastPage(true);
+    }
   }, [pageNo]);
 
   useEffect(() => {
@@ -251,6 +255,7 @@ const MainPage = () => {
               {/* 스와이프 투표 컴포넌트 */}
               <SwipeVote
                 voteList={voteListData}
+                isLastPage={isLastPage}
                 increasePageNo={increasePageNo}
               />
             </div>
