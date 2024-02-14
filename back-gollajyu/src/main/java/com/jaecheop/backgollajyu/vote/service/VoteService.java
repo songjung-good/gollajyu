@@ -532,6 +532,7 @@ public class VoteService {
                 .voteId(vote.getId())
                 .memberId(vote.getMember().getId())
                 .memberNickname(vote.getMember().getNickname())
+                .categoryId(vote.getCategory().getId())
                 .title(vote.getTitle())
                 .description(vote.getDescription())
                 .createAt(vote.getCreateAt())

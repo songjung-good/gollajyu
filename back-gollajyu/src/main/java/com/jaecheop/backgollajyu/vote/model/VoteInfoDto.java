@@ -15,6 +15,7 @@ public class VoteInfoDto {
     private String memberNickname;
     private String title;
     private String description;
+    private Integer categoryId;
 
     private LocalDateTime createAt;
 
