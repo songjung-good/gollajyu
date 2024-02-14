@@ -11,12 +11,11 @@ import API_URL from "/src/stores/apiURL";
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 const MainVoteList = ({ transferVoteId }) => {
-
+ 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   
   const [listsData, setListsData] = useState([]);
-  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 메인페이지로 값 전송
   const openVoteDetailModal = (voteId) => {

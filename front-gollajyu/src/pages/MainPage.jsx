@@ -243,7 +243,7 @@ const MainPage = () => {
 
             {/* 메인 투표 리스트 컴포넌트 */}
             <div style={mainVoteListContainerStyle}>
-              <MainVoteList />
+              <MainVoteList transferVoteId={transferVoteId}/>
             </div>
           </>
         )}

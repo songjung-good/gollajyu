@@ -1,7 +1,6 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -49,7 +48,7 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
 );
 
 
-const MyActivities = () => {
+const MyActivities = ({ transferVoteId }) => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -83,6 +82,7 @@ const MyActivities = () => {
   const [likedVote, setLikedVote] = useState([]);
   const [createdComment, setCreatedComment] = useState([]);
   const [infoItems, setInfoItems] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
