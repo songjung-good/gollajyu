@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -119,6 +119,31 @@ const MyStatistics = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  // ----------- 드롭다운 버튼 ref -----------
+  const dropdownButtonRef = useRef();
+  const dropdownMenuRef = useRef();
+
+  // ----------- 드롭다운 밖 클릭 시 메뉴 닫음 -----------
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        (dropdownButtonRef.current && !dropdownButtonRef.current.contains(event.target)) &&
+        (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target))
+      ) {
+        // 클릭이 메뉴 버튼 및 메뉴 외부에 있으면 메뉴를 닫습니다.
+        setIsOpen(false);
+      }
+    };
+  
+    // 페이지에 클릭 이벤트를 추가합니다.
+    document.addEventListener('mousedown', handleClickOutside);
+  
+    // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsOpen]);
 
   // ----------- 서버에서 내가 참여한 투표를 받아오고 객체로 정리하는 작업 ------
   const user = useAuthStore((state) => state.user);
@@ -439,12 +464,38 @@ const MyStatistics = () => {
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
     // 디자인
-    width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
-    padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
+    padding: isXLarge || isLarge ? "0px 10px 0px 14px" : isMedium ? "0px 10px 0px 12px" : "0 10px",
     border: "1px solid #ccc",
     borderRadius: "4px",
+    width: isXLarge || isLarge ? "110px" : isMedium ? "105px" : "100px",
+    height: isXLarge || isLarge ? "50px" : isMedium ? "40px" : "35px",
     cursor: "pointer",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
   };
+
+  // ----------- 드롭다운 스타일 -----------
+  const dropdownStyle = {
+    // 디자인
+    width: "100%",
+
+    // 글자
+    fontSize: isXLarge || isLarge ? "16px" : isMedium ? "15px" : "14px",
+
+    // 컨텐츠 정렬
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  }
+
+  // ----------- 화살표 스타일 -----------
+  const arrowStyle = {
+    // 글자
+    fontFamily: "GmarketSansBold",
+    fontWeight: "bold",
+  }
 
   // ----------- 드롭다운 메뉴 스타일 -----------
   const dropdownMenuStyle = {
@@ -455,8 +506,8 @@ const MyStatistics = () => {
 
     // 디자인
     marginTop: "4px",
-    padding: isXLarge ? "0 8px" : isLarge ? "0 7px" : isMedium ? "0 6px" : "0 5px",
-    width: isXLarge ? "120px" : isLarge ? "110px" : isMedium ? "100px" : "90px",
+    padding: isXLarge || isLarge ? "0 7px" : isMedium ? "0 6px" : "0 5px",
+    width: isXLarge || isLarge ? "110px" : isMedium ? "105px" : "100px",
     border: "1px solid #ccc",
     borderRadius: "4px",
     backgroundColor: "#FFFFFF",
@@ -468,6 +519,9 @@ const MyStatistics = () => {
     margin: isXLarge ? "8px 0" : isLarge ? "7px 0" : isMedium ? "6px 0" : "5px 0",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     cursor: "pointer",
+
+    // 글자
+    fontSize: isXLarge || isLarge ? "16px" : isMedium ? "14px" : "12px",
   };
 
   // ----------- 차트 컨테이너 스타일 -----------
@@ -733,16 +787,24 @@ const MyStatistics = () => {
                 <div
                   onClick={toggleDropdown}
                   style={dropdownButtonStyle}
-                  className="fontsize-sm"
+                  ref={dropdownButtonRef}
                 >
-                  {selectedCategory !== null
-                    ? filteredCategoryData.find(
-                        (c) => c.id === parseInt(selectedCategory)
-                      )?.name
-                    : "카테고리 선택"}
+                  <div style={dropdownStyle}>
+                    {selectedCategory !== null
+                      ? filteredCategoryData.find(
+                          (c) => c.id === parseInt(selectedCategory)
+                        )?.name
+                      : "카테고리 선택"
+                    }
+                    {isOpen ? (
+                      <span style={arrowStyle}>∧</span>
+                    ) : (
+                      <span style={arrowStyle}>∨</span>
+                    )}
+                  </div>
                 </div>
                 {isOpen && (
-                  <div style={dropdownMenuStyle}>
+                  <div style={dropdownMenuStyle} ref={dropdownMenuRef}>
                     {filteredCategoryData.map((category) => (
                       <div
                         key={category.id}
