@@ -19,6 +19,9 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
@@ -27,6 +30,14 @@ const StatisticPage = () => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showDescription, setShowDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleDescription = () => {
+    setShowDescription(!showDescription);
+  };
 
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
@@ -167,8 +178,29 @@ const StatisticPage = () => {
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -341,8 +373,23 @@ const StatisticPage = () => {
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-lg">
-              # 사용자별 선호 태그 통계
+              # 선호 태그 통계
             </span>
+            <img
+              src={questionMarkImg}
+              style={questionMarkStyle}
+              alt="물음표"
+              className="cursor-pointer rounded-full"
+              onClick={toggleDescription}
+              onMouseOver={() => setShowDescription(true)}
+              onMouseOut={() => setShowDescription(false)}
+            />
+            <p style={{
+              ...descriptionStyle,
+              visibility: showDescription ? "visible" : "hidden"
+            }}>
+              사용자 유형별 태그 선호도 비교
+            </p>
           </div>
           <div style={contentsContainerStyle}>
 

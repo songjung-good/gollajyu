@@ -18,6 +18,9 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 // 소비성향 데이터 가져오기
 import sobiTIData from "/src/stores/testResultData.js";
 
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
@@ -49,6 +52,14 @@ const TestResultPage = () => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showDescription, setShowDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleDescription = () => {
+    setShowDescription(!showDescription);
+  };
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -118,8 +129,29 @@ const TestResultPage = () => {
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -194,6 +226,21 @@ const TestResultPage = () => {
             <span style={titleTextStyle} className="fontsize-lg">
               {isMyResult ? "# 나의 결과" : "# 모든 결과 유형"}
             </span>
+            <img
+              src={questionMarkImg}
+              style={questionMarkStyle}
+              alt="물음표"
+              className="cursor-pointer rounded-full"
+              onClick={toggleDescription}
+              onMouseOver={() => setShowDescription(true)}
+              onMouseOut={() => setShowDescription(false)}
+            />
+            <p style={{
+              ...descriptionStyle,
+              visibility: showDescription ? "visible" : "hidden"
+            }}>
+              {isMyResult ? "소비성향 테스트 결과" : "다른 소비성향 목록"}
+            </p>
           </div>
           <div style={contentsContainerStyle}>
             {isMyResult ? (
@@ -284,7 +331,7 @@ const TestResultPage = () => {
 
                 {isMyResult ? (
                   <button
-                    className="w-1/3 sm:w-2/5 md:w-2/5 p-5 rounded-full bg-amber-300 hover:bg-amber-400"
+                    className="w-1/3 sm:w-2/5 md:w-2/5 p-5 rounded-full bg-amber-300 hover:bg-amber-400 fontsize-sm"
                     onClick={() => {
                       setIsMyResult(false);
                       window.scrollTo({ top: 0 });

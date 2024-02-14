@@ -20,7 +20,8 @@ import MyActivitiesParticipated from "./MyActivitiesParticipated";
 import MyActivitiesLiked from "./MyActivitiesLiked";
 import MyActivitiesCommented from "./MyActivitiesCommented";
 
-// 포인트 이미지 가져오기
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
 import PointImage from "/assets/images/point_img.png";
 
 
@@ -52,6 +53,18 @@ const MyActivities = ({ transferVoteId }) => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showInfoDescription, setShowInfoDescription] = useState(false);
+  const [showRecordDescription, setShowRecordDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleInfoDescription = () => {
+    setShowInfoDescription(!showInfoDescription);
+  };
+  const toggleRecordDescription = () => {
+    setShowRecordDescription(!showRecordDescription);
+  };
 
   // ----------- 링크 메뉴 hover -----------
   const [CreatedHovered, CreatedMouseEnter, CreatedMouseLeave] =
@@ -202,8 +215,29 @@ const MyActivities = ({ transferVoteId }) => {
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -402,6 +436,21 @@ const MyActivities = ({ transferVoteId }) => {
           <span style={titleTextStyle} className="fontsize-lg">
             # 활동정보
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleInfoDescription}
+            onMouseOver={() => setShowInfoDescription(true)}
+            onMouseOut={() => setShowInfoDescription(false)}
+          />
+          <p style={{
+            ...descriptionStyle,
+            visibility: showInfoDescription ? "visible" : "hidden"
+          }}>
+            내 포인트 및 누적 활동정보
+          </p>
         </div>
         <div style={contentsContainerStyle}>
           <div style={flexContainerStyle}>
@@ -424,6 +473,21 @@ const MyActivities = ({ transferVoteId }) => {
           <span style={titleTextStyle} className="fontsize-lg">
             # 활동기록
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleRecordDescription}
+            onMouseOver={() => setShowRecordDescription(true)}
+            onMouseOut={() => setShowRecordDescription(false)}
+          />
+          <p style={{
+            ...descriptionStyle,
+            visibility: showRecordDescription ? "visible" : "hidden"
+          }}>
+            참여 투표 목록 및 바로가기
+          </p>
         </div>
         <div style={linkContainerStyle}>
           {linkItems.map((item, index) => (

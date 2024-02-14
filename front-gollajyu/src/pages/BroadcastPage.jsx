@@ -23,8 +23,13 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
+// 모달 컴포넌트
 import TmpModal from "../components/TmpModal"; // 임시 모달
+
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
+
 
 
 const BroadcastPage = () => {
@@ -32,11 +37,11 @@ const BroadcastPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
-  // 상세 설명 토글하기 위한 상태
+  // ----------- 상세 설명 토글하기 위한 상태 -----------
   const [showHotDescription, setShowHotDescription] = useState(false);
   const [showDescription, setShowDescription] = useState(false);
 
-  // 상태 토글 함수
+  // ----------- 상태 토글 함수 -----------
   const toggleHotDescription = () => {
     setShowHotDescription(!showHotDescription);
   };
@@ -208,9 +213,29 @@ const BroadcastPage = () => {
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
-    marginRight: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -256,15 +281,6 @@ const BroadcastPage = () => {
       
       {/* ------------- Body ------------- */}
       <div style={bodyStyle}>
-
-        <div id="page-info">
-          <p className="text-black-70 fontsize-sm mb-4">
-            <span className="font-bold fontsize-sm">라이브 방송</span>을 시청하며
-            <span className="font-bold fontsize-sm"> 실시간 투표</span>를 하고
-            <span className="font-bold fontsize-sm"> 의견을 공유</span>할 수 있어요
-          </p>
-        </div>
-
         <div
           id="hot-broadcast"
           style={containerStyle}
@@ -273,13 +289,21 @@ const BroadcastPage = () => {
             <span style={titleTextStyle} className="fontsize-lg"># 지금</span>
             <span style={titleTextStyle} className="text-red-300 font-bold fontsize-lg">당장</span>
             <span style={titleTextStyle} className="fontsize-lg">골라쥬</span>
-            <span
-              className="cursor-pointer fontsize-sm"
+            <img
+              src={questionMarkImg}
+              style={questionMarkStyle}
+              alt="물음표"
+              className="cursor-pointer rounded-full"
               onClick={toggleHotDescription}
               onMouseOver={() => setShowHotDescription(true)}
               onMouseOut={() => setShowHotDescription(false)}
-            >?</span>
-            <p className="fontsize-sm">{showHotDescription && "현재 시청자 TOP3"}</p>
+            />
+            <p style={{
+              ...descriptionStyle,
+              visibility: showHotDescription ? "visible" : "hidden"
+            }}>
+              현재 시청자 높은 방송 TOP 3
+            </p>
           </div>
           <div
            style={contentsContainerStyle}
@@ -290,7 +314,7 @@ const BroadcastPage = () => {
                 return <BroadcastItem key={index} index={index} item={item} />;
               })
             ) : (
-              <p className="fontsize-sm">현재 방송 중인 지금 골라쥬가 없습니다</p>
+              <p className="fontsize-sm">현재 방송 중인 지금 골라쥬가 없습니다.</p>
             )}
             {/* {dummyData
               .sort((a, b) => b.viewerCnt - a.viewerCnt)
@@ -307,13 +331,21 @@ const BroadcastPage = () => {
         >
           <div style={titleContainerStyle}>
             <span style={titleTextStyle} className="fontsize-lg"># 지금 골라쥬</span>
-            <span
-              className="cursor-pointer fontsize-sm"
+            <img
+              src={questionMarkImg}
+              style={questionMarkStyle}
+              alt="물음표"
+              className="cursor-pointer rounded-full"
               onClick={toggleDescription}
               onMouseOver={() => setShowDescription(true)}
               onMouseOut={() => setShowDescription(false)}
-            >?</span>
-            <p className="fontsize-sm">{showDescription && "최신순"}</p>
+            />
+            <p style={{
+              ...descriptionStyle,
+              visibility: showDescription ? "visible" : "hidden"
+            }}>
+              최신순 방송 목록
+            </p>
           </div>
           <div
            style={contentsContainerStyle}
@@ -326,7 +358,7 @@ const BroadcastPage = () => {
             ) : (
               <div className="absolute left-20 top-10">
                 <p className="fontsize-sm">
-                  현재 방송 중인 지금 골라쥬가 충분하지 않습니다
+                  현재 방송 중인 지금 골라쥬가 충분하지 않습니다.
                 </p>
               </div>
             )}
