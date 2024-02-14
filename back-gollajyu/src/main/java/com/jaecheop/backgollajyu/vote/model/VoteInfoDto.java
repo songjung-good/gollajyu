@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 public class VoteInfoDto {
     private Long voteId;
     private Long memberId;
+    private String memberNickname;
     private String title;
     private String description;
+    private Integer categoryId;
 
     private LocalDateTime createAt;
 

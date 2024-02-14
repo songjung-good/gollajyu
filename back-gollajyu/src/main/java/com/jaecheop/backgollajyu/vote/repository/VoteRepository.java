@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -39,6 +38,7 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
     List<Vote> findVoteLikesByMemberId(@Param("memberId") Long memberId);
 
     List<Vote> findAllByOrderByCreateAtDesc(Pageable pageable);
+
 
     List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId, Pageable pageable);
 

@@ -1,8 +1,12 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
+
+// 일정시간 내 함수가 1번만 동작하도록 방어하는 함수
+import { debounce } from "lodash";
 
 // API URL 설정
 import API_URL from "/src/stores/apiURL";
@@ -26,11 +30,11 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
+import TmpModal from "../components/TmpModal"; // 임시 모달
 import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 
 const MainPage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -50,12 +54,20 @@ const MainPage = () => {
   );
 
   // 투표 모달 창 상태
-  const isVoteDetailModalOpened = useModalStore((state) => state.isVoteDetailModalOpened);
-  const isVoteSimpleCreateModalOpened = useModalStore((state) => state.isVoteSimpleCreateModalOpened);
-  const isVoteProductCreateModalOpened = useModalStore((state) => state.isVoteProductCreateModalOpened);
-  
+  const isVoteDetailModalOpened = useModalStore(
+    (state) => state.isVoteDetailModalOpened
+  );
+  const isVoteSimpleCreateModalOpened = useModalStore(
+    (state) => state.isVoteSimpleCreateModalOpened
+  );
+  const isVoteProductCreateModalOpened = useModalStore(
+    (state) => state.isVoteProductCreateModalOpened
+  );
+
   // 상세페이지
-  const setVoteDetailModalOpen  = useModalStore((state) => state.setVoteDetailModalOpen)
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
   const transferVoteId = (voteId) => {
     // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
     setVoteDetailModalOpen(voteId);
@@ -113,30 +125,67 @@ const MainPage = () => {
   const categoryId = 0;
 
   // 투표 목록 데이터 및 로딩 상태 관련 상태 설정
-  const [voteListData, setVoteListData] = useState(null);
+  const [voteListData, setVoteListData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageNo, setPageNo] = useState(0);
+  const [lastPageNo, setLastPageNo] = useState(Infinity);
+  const [isLastPage, setIsLastPage] = useState(false);
+  const [initialRender, setInitialRender] = useState(true);
+
+  // pageNo 올리는 함수
+  const increasePageNo = () => {
+    setPageNo((prev) => {
+      console.log("lastPageNo:", lastPageNo);
+      if (prev === lastPageNo) {
+        return prev;
+      } else {
+        return prev + 1;
+      }
+    });
+  };
 
   // 데이터 가져오기 함수
-  const fetchData = async () => {
+  const fetchData = debounce(async () => {
     try {
       const response = await axios.get(`${API_URL}/votes`, {
         params: {
           categoryId: categoryId,
           memberId: user ? user.memberId : null,
+          pageNo: pageNo,
         },
       });
-      setVoteListData(response.data);
+
+      const data = response.data.body.voteInfoList;
+      console.log("pageNo:", pageNo);
+      console.log(response.data);
+      setLastPageNo(response.data.body.lastPageNo);
+      setVoteListData((prevData) => {
+        return [...prevData, ...data];
+      });
       setIsLoading(false); // 데이터를 가져온 후 로딩 상태를 false로 설정
     } catch (error) {
       setIsLoading(false); // 에러 발생 시 로딩 상태를 false로 설정
     }
-  };
+  }, 300);
 
-  // 페이지 로드 시(컴포넌트가 처음 마운트 될 떄만) 데이터 가져오기
+  // 페이지 로드 시(컴포넌트가 처음 마운트 될 때만) 데이터 가져오기
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
+    // console.log("pageNo 증가", pageNo);
     fetchData();
-  }, []);
+    setInitialRender(false);
+    if (pageNo === lastPageNo) {
+      setIsLastPage(true);
+    }
+  }, [pageNo]);
+
+  useEffect(() => {
+    // voteListData 길이가 일정 수준보다 작으면 increasePageNo 함수를 실행하고 fetchData 요청을 다시 보낸다.
+    // 단, lastPageNo와 현재 pageNo가 같으면 alert를 띄우고 요청을 더 이상 보내지 않는다.
+    if (!initialRender && voteListData.length <= 3) {
+      increasePageNo(); // fetchData()는 위의 useEffect에 의해서 처리됨
+    }
+  }, [voteListData]);
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -148,7 +197,7 @@ const MainPage = () => {
     flexDirection: "column",
     justifyContent: "center",
   };
-  
+
   // ----------- 로딩중 스타일 -----------
   const loadingStyle = {
     // 디자인
@@ -167,19 +216,23 @@ const MainPage = () => {
     padding: "100px 0",
     width: "100%",
     background: "#FFFFFF",
-  }
-  
+  };
+
   // ----------- 투표 리스트 컨테이너 스타일 -----------
   const mainVoteListContainerStyle = {
     // 디자인
     padding: "100px 0",
     width: "100%",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
 
   return (
     <>
+      <Helmet>
+        <title>골라쥬</title>
+      </Helmet>
+
       {/* ----------- 투표 버튼 컴포넌트 ----------- */}
       <VoteButton />
 
@@ -200,17 +253,21 @@ const MainPage = () => {
             {/* 로딩 완료 시 */}
             <div className="bg-gradient-to-tl from-blue-400 to-red-400">
               {/* 스와이프 투표 컴포넌트 */}
-              <SwipeVote voteList={voteListData} />
+              <SwipeVote
+                voteList={voteListData}
+                isLastPage={isLastPage}
+                increasePageNo={increasePageNo}
+              />
             </div>
 
             {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
             <div style={mainWordContainerStyle}>
               <MainWord />
             </div>
-            
+
             {/* 메인 투표 리스트 컴포넌트 */}
             <div style={mainVoteListContainerStyle}>
-              <MainVoteList />
+              <MainVoteList transferVoteId={transferVoteId} />
             </div>
           </>
         )}

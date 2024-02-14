@@ -1,6 +1,5 @@
 package com.jaecheop.backgollajyu.vote.model;
 
-import com.jaecheop.backgollajyu.vote.entity.Tag;
 import lombok.*;
 
 import java.util.List;
@@ -11,12 +10,16 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class VoteListResDto {
+    private long lastPageNo;
     private String categoryName;
     private List<TagDto> tagList;
     private List<ListVoteDto> voteInfoList;
 
     public void updateVoteInfoList(List<ListVoteDto> voteInfoList) {
         this.voteInfoList = voteInfoList;
+    }
+    public void updateLastPageNo(long lastPageNo) {
+        this.lastPageNo = lastPageNo;
     }
 
 

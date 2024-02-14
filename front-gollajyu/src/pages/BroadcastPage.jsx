@@ -9,6 +9,7 @@ import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import useModalStore from "/src/stores/modalState";
+import { Helmet } from "react-helmet-async";
 
 const BroadcastPage = () => {
   const navigate = useNavigate();
@@ -169,6 +170,9 @@ const BroadcastPage = () => {
           시청자로 진입(Guest)
         </button>
       </div> */}
+      <Helmet>
+        <title>지금골라쥬</title>
+      </Helmet>
       <div className="container mx-auto my-5 flex flex-col items-center space-y-10 xl:w-[1000px] lg:w-[740px] md:w-[560px] sm:w-[375px]">
         <div id="page-info">
           <p className="text-black-70 fontsize-sm mx-4 mt-16">

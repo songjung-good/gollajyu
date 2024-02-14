@@ -19,6 +19,9 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 
+// react-helmet-async 라이브러리에서 Helmet을 import
+import { Helmet } from "react-helmet-async";
+
 
 const StatisticPage = () => {
 
@@ -369,9 +372,13 @@ const StatisticPage = () => {
 
   return (
     <>
+      <Helmet>
+        <title>통계보여쥬</title>
+      </Helmet>
+
       {/* ------------- 투표 버튼 ------------- */}
       <VoteButton />
-
+      
       {/* ------------- Header ------------- */}
       <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
         <div style={headerContainerStyle}>

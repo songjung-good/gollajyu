@@ -7,12 +7,11 @@ const VoteDetailHeader = (props) => {
         <div className="flex items-center">
         <div className="w-auto h-auto rounded-full border border-black mr-4 flex items-center justify-center">
           <span className="mx-2 text-base font-normal">
-            {/* {props.category} */}
-            {1}
+            {props.category}
           </span>
         </div>
           <div className="p-4">
-            <span className="text-xl font-normal">{props.memberId} | {props.createdAt}</span>
+            <span className="text-xl font-normal">{props.voteNickname} | {props.title}</span>
           </div>
         </div>
         <div className="flex items-center justify-end">

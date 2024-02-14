@@ -19,7 +19,7 @@ public class VoteDetailResDto {
     private VoteInfoDto voteInfo;
 
     // 투표 아이템 리스트 정보
-    private List<VoteItemInfoDto> voteItemListInfo;
+    private List<VoteItemInfoDto> voteItemList;
 
     // 댓글
     private List<CommentDto> commentList;
