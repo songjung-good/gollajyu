@@ -22,6 +22,7 @@ import MyStatisticsChart from "./MyStatisticsChart";
 
 // 이미지 가져오기
 import questionMarkImg from "/assets/images/question_mark_img.png";
+import Favicon from "/assets/images/favicon.png";
 
 // Material-UI의 CircularProgress 컴포넌트
 import { CircularProgress } from "@mui/material";
@@ -47,24 +48,44 @@ const RecommendModal = ({ topCategory, closeModal }) => {
   const handleClick = (linkUrl) => {
     window.open(linkUrl);
   };
+
+  // ----------- text가 일정 길이 이상이면 ...으로 대체하는 함수 -----------
+  const truncateText = (text) => {
+    const maxLabelLength = 8;  // 최대 길이
+    return text.length > maxLabelLength
+      ? `${text.substring(0, maxLabelLength)}...`
+      : text;
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center text-center"
       onClick={() => closeModal()}
     >
-      <div className="bg-white p-6 rounded-3xl xl:w-[700px] xl:h-[620px] lg:w-[600px] lg:h-[550px] md:w-[460px] md:h-[460px] sm:w-[255px] sm:h-[530px] relative">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          // 스크롤바
+          overflowY: "auto", // 세로 스크롤을 가능하게 하기 위해 추가
+          scrollbarWidth: "thin", // 스크롤바를 얇게 만듦
+          scrollbarColor: "#FFD257 transparent", // 스크롤바 색상 (track, thumb 순서)
+        }}
+        className="bg-white rounded-[10px]
+          xl:p-[40px] lg:p-[35px] md:p-[30px] sm:p-[25px]
+          max-h-[800px] xl:w-[800px] xl:h-[620px] lg:w-[640px] lg:h-[550px] md:w-[450px] md:h-[460px] sm:w-[360px] sm:h-[530px] relative"
+      >
         <div>
           <h1 className="fontsize-lg">{topCategory.key} 추천 쇼핑몰</h1>
           <p className="fontsize-xs mb-5">
             이미지 클릭 시, 쇼핑몰로 이동합니다
           </p>
         </div>
-        <button
-          className="absolute right-2 top-2 bg-red-400 rounded-full w-[3.5rem] h-[2.2rem] px-auto py-auto"
+        {/* <button
+          className="absolute right-4 top-4 bg-red-400 rounded-full w-[3.5rem] h-[2.2rem] px-auto py-auto"
           onClick={() => closeModal()}
         >
           닫기
-        </button>
+        </button> */}
         {data.length == 0 && (
           <div className="flex flex-col h-1/2 items-center justify-center">
             <CircularProgress size={100} sx={{ color: "#FFD257" }} />
@@ -78,14 +99,17 @@ const RecommendModal = ({ topCategory, closeModal }) => {
               <div
                 key={index}
                 onClick={() => handleClick(item.linkUrl)}
-                className="rounded-3xl w-[12rem] h-[15rem] mx-auto px-3 pt-3 pb-10 cursor-pointer hover:bg-amber-100"
+                className="rounded-3xl w-[12rem] h-[15rem] mx-auto px-3 pt-3 pb-10 cursor-pointer border-2 border-white hover:border-amber-300"
               >
                 <img
                   src={item.imageUrl}
                   alt="사이트 이미지"
-                  className="rounded-3xl w-full"
+                  className="rounded-3xl w-full mb-2 min-h-[105px]"
+                  onError={(e) => {
+                    e.target.src= Favicon; // 대체 이미지 URL로 변경
+                  }}
                 />
-                <p className="fontsize-sm break-keep">{item.text}</p>
+                <p className="fontsize-sm break-keep">{truncateText(item.text)}</p>
               </div>
             ))}
           </div>
