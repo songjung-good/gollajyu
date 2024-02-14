@@ -351,7 +351,7 @@ const NavigationBar = () => {
     height: "70px",
 
     // 글자
-    color: "#4A4A4A",
+    color: "#222222",
   };
 
   // ----------- 링크 아이템 active 스타일 -----------
@@ -464,6 +464,7 @@ const NavigationBar = () => {
     {
       to: "/VotePage",
       label: "투표모아쥬",
+      description: "투표를 최신순이나 인기순으로 정렬하거나, 원하는 투표를 검색할 수 있어요!",
       hovered: votePageHovered,
       mouseEnter: votePageMouseEnter,
       mouseLeave: votePageMouseLeave,
@@ -471,6 +472,7 @@ const NavigationBar = () => {
     {
       to: "/BroadcastPage",
       label: "지금골라쥬",
+      description: "라이브 방송을 시청하며 실시간 투표를 하고 의견을 공유할 수 있어요!",
       hovered: broadcastPageHovered,
       mouseEnter: broadcastPageMouseEnter,
       mouseLeave: broadcastPageMouseLeave,
@@ -478,6 +480,7 @@ const NavigationBar = () => {
     {
       to: "/StatisticPage",
       label: "통계보여쥬",
+      description: "다른 사람들이 물건을 구매 할 때 고려하는 요소들을 비교할 수 있어요!",
       hovered: statisticPageHovered,
       mouseEnter: statisticPageMouseEnter,
       mouseLeave: statisticPageMouseLeave,
@@ -485,6 +488,7 @@ const NavigationBar = () => {
     {
       to: "/TestResultPage",
       label: "소비성향알려쥬",
+      description: "나의 소비성향 및 다른 소비성향들에 대해 알아볼 수 있어요!",
       hovered: testResultPageHovered,
       mouseEnter: testResultPageMouseEnter,
       mouseLeave: testResultPageMouseLeave,
@@ -606,7 +610,7 @@ const NavigationBar = () => {
           {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
           {isXLarge && ( // (반응형) isXLarge 크기 이상일 경우
             <>
-              <div style={linkContainerStyle}>
+              <div style={linkContainerStyle} className="relative">
                 {linkItems.map((item, index) => (
                   <MenuItem
                     key={index}
@@ -620,6 +624,12 @@ const NavigationBar = () => {
                     }}
                   >
                     <div>
+                      <p
+                        style={{ visibility: item.hovered  ? "visible" : "hidden" }}
+                        className="absolute bottom-16 left-1/2 -translate-x-1/2 py-1 px-3 border-2 border-amber-300 rounded-full bg-white font-normal text-black shadow-lg whitespace-nowrap"
+                      >
+                        {item.description}
+                      </p>
                       <div style={{fontSize: "20px"}}>{item.label}</div>
                       <div
                         style={{
