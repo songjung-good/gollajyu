@@ -196,7 +196,7 @@ const BroadcastPage = () => {
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "375px",
+    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
   };
 
   // ----------- 제목 컨테이너 스타일 -----------
