@@ -11,16 +11,13 @@ import API_URL from "/src/stores/apiURL";
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 const MainVoteList = ({ transferVoteId }) => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
-  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
-  
   const [listsData, setListsData] = useState([]);
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 메인페이지로 값 전송
   const openVoteDetailModal = (voteId) => {
-    transferVoteId(voteId)
+    transferVoteId(voteId);
   };
 
   useEffect(() => {
@@ -81,7 +78,6 @@ const MainVoteList = ({ transferVoteId }) => {
     });
   }, []);
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 문구 컨테이너 스타일 -----------
@@ -95,7 +91,7 @@ const MainVoteList = ({ transferVoteId }) => {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  }
+  };
 
   // ----------- 보조 제목 스타일 -----------
   const subTitleStyle = {
@@ -108,30 +104,41 @@ const MainVoteList = ({ transferVoteId }) => {
     // 글자
     fontSize: isXLarge || isLarge ? "32px" : "24px",
     fontWeight: "bold",
-  }
+  };
 
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 글자
     fontSize: isXLarge || isLarge ? "22px" : "14px",
     color: "#4A4A4A",
-  }
-  
+  };
+
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
   };
 
   // ----------- 투표 리스트 컨테이너 스타일 -----------
   const voteListContainerStyle = {
     // 디자인
-    marginTop: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    marginTop: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     padding: "10px",
     width: isXLarge || isLarge ? "45%" : "90%",
-
-  }
+  };
 
   // ----------- 버튼 스타일 -----------
   const buttonStyle = {
@@ -142,7 +149,7 @@ const MainVoteList = ({ transferVoteId }) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 좋아요 스타일 -----------
   const likeStyle = {
@@ -151,10 +158,9 @@ const MainVoteList = ({ transferVoteId }) => {
 
     // 글자
     color: "#FF595E",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
@@ -184,11 +190,15 @@ const MainVoteList = ({ transferVoteId }) => {
                     className="hover:bg-gray-200 py-2"
                   >
                     <div className="flex items-center">
-                      <p style={likeStyle} className="fontsize-xs">❤ {item.likesCnt}</p>
+                      <p style={likeStyle} className="fontsize-xs">
+                        ❤ {item.likesCnt}
+                      </p>
                       <p className="fontsize-sm">{item.title}</p>
                     </div>
                     <div className="flex items-center justify-center w-10">
-                      <p className="fontsize-xs text-gray-500">{item.totalChoiceCnt}</p>
+                      <p className="fontsize-xs text-gray-500">
+                        {item.totalChoiceCnt}
+                      </p>
                     </div>
                   </button>
                 </li>

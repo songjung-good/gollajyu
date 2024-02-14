@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -14,9 +14,8 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 import useAuthStore from "/src/stores/userState";
 
 // 투표 카드 컴포넌트
-import VoteCardItem from './VoteCardItem';
-import { selectClasses } from '@mui/base';
-
+import VoteCardItem from "./VoteCardItem";
+import { selectClasses } from "@mui/base";
 
 const VoteCard = (props) => {
   // ------------------ 반응형 웹페이지 구현 ------------------
@@ -38,12 +37,15 @@ const VoteCard = (props) => {
 
   // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
   const handleClick = (itemId, selection) => {
-    console.log(itemId)
+    console.log(itemId);
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
-    setCountList(prevCountList => 
-      prevCountList.map((count, i) => vote.voteItemList[i].voteItemId === itemId ? count + 1 : count));
+    setCountList((prevCountList) =>
+      prevCountList.map((count, i) =>
+        vote.voteItemList[i].voteItemId === itemId ? count + 1 : count
+      )
+    );
 
-    let plusCount = totalCount + 1
+    let plusCount = totalCount + 1;
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
   };
@@ -66,21 +68,23 @@ const VoteCard = (props) => {
     } catch (error) {
       console.error("Error sending POST request:", error);
     }
-  }
+  };
   useEffect(() => {
     let newTotalCount = 0;
     vote.voteItemList.forEach((item) => {
       newTotalCount += item.count;
     });
     setTotalCount(newTotalCount);
-    setCountList(prevCountList => vote.voteItemList.map(item => item.count));
+    setCountList((prevCountList) =>
+      vote.voteItemList.map((item) => item.count)
+    );
   }, [vote.voteItemList]);
 
   useEffect(() => {
-    console.log(countList);
-    setSelectedVoteItem(vote.chosenItemId)
+    // console.log(countList);
+    setSelectedVoteItem(vote.chosenItemId);
   }, [countList]);
-  
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- flex 컨테이너 스타일 -----------
