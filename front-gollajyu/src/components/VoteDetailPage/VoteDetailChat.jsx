@@ -4,6 +4,7 @@ import ChatForm from "./ChatForm";
 import ChatList from "./ChatList";
 import axios from "axios";
 import API_URL from "../../stores/apiURL";
+import useAuthStore from "/src/stores/userState";
 
 const VoteDetailChat = ({ commentList, chosenItem, userId, voteId }) => {
   // state 설정
@@ -14,6 +15,8 @@ const VoteDetailChat = ({ commentList, chosenItem, userId, voteId }) => {
 
   // const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
   // const [totalPage, setTotalPage] = useState(1); // 총 페이지 수
+
+  const user = useAuthStore((state) => state.user);
 
   // 기존의 댓글 데이터
   // userid:아이디, content:대화 내용, date: 작성일자, liked: 좋아요 수, choiced: 선택지
@@ -35,7 +38,20 @@ const VoteDetailChat = ({ commentList, chosenItem, userId, voteId }) => {
 
   // 새로운 댓글 추가
   const addList = (content) => {
-    setList([...list, { userid, content, date: "", liked: "0", choiced }]);
+    const now = new Date();
+    const createAt = now.toISOString();
+    setList([
+      ...list,
+      {
+        memberId: userid,
+        memberNickname: user.nickname,
+        commentDesc: content,
+        createAt: createAt,
+        liked: false,
+        commentLikesCnt: 0,
+        voteItemId: choiced,
+      },
+    ]);
   };
   // 좋아요 기능
   const handleLike = (index) => {
