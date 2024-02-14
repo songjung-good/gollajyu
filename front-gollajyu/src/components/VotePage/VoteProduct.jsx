@@ -1,10 +1,25 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import API_URL from "/src/stores/apiURL";
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
 import useAuthStore from "/src/stores/userState";
 import useModalStore from "/src/stores/modalState";
 
+
 const VoteProduct = () => {
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
   // 설명 state 추가
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -70,8 +85,6 @@ const VoteProduct = () => {
     setPreviewImages(updatedPreviewImages);
   };
 
-
-
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -120,165 +133,240 @@ const VoteProduct = () => {
     }
   };
 
+
+  // --------------------------------- css 시작 ---------------------------------
+
+  // ----------- body 스타일 -----------
+  const bodyStyle = {
+    // 디자인
+    margin: "0 auto", // 가로 중앙 정렬
+    padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
+    width: isXLarge ? "800px" : isLarge ? "640px" : isMedium ? "450px" : "360px",
+    maxHeight: "800px",
+    borderRadius: "10px",
+    background: "#FFFFFF",
+    whiteSpace: "nowrap", // 줄바꿈 방지
+
+    // 스크롤바
+    overflowY: "auto", // 세로 스크롤을 가능하게 하기 위해 추가
+    scrollbarWidth: "thin", // 스크롤바를 얇게 만듦
+    scrollbarColor: "#FFD257 transparent", // 스크롤바 색상 (track, thumb 순서)
+  };
+
+  // ----------- 이미지 아이템 스타일 -----------
+  const imgItemStyle = {
+    // 디자인
+    width: isXLarge ? "200px" : isLarge ? "160px" : isMedium ? "100px" : "90px",
+    height: isXLarge ? "260px" : isLarge ? "208px" : isMedium ? "140px" : "130px",
+    marginRight: isXLarge ? "20px" : isLarge ? "15px" : "10px",
+    borderRadius: "5px",
+    
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+  }
+
+  // --------------------------------- css 끝 ---------------------------------
+
+
   return (
-    <div
-      id="outer-layer"
-      className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
-      onClick={(e) => {
-        if (e.target.id == "outer-layer") {
-          setVoteProductCreateModalClose();
-        }
-      }}
-    >
-      <div className="mx-auto max-h-[700px] w-full max-w-[550px] bg-white overflow-y-auto">
-        <form className="py-4 px-9" onSubmit={handleSubmit}>
-          <div className="mb-5">
-            <label
-              htmlFor="title"
-              className="mb-3 block text-base font-medium text-[#FF7F50]"
-            >
-              제목:
-            </label>
-            <input
-              type="text"
-              name="title"
-              id="title"
-              placeholder="제목을 입력하세요"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
-            />
-          </div>
-          <div className="mb-5">
-            <label
-              htmlFor="category"
-              className="mb-3 block text-base font-medium text-[#FF7F50]"
-            >
-              카테고리:
-            </label>
-            <select
-              name="category"
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
-            >
-              <option value="">카테고리를 선택하세요</option>
-              <option value="1">의류</option>
-              <option value="2">가구</option>
-              <option value="3">신발</option>
-              <option value="4">전자제품</option>
-            </select>
-          </div>
-          <div className="mb-5">
-            <label
-              htmlFor="description"
-              className="mb-3 block text-base font-medium text-[#FF7F50]"
-            >
-              투표 내용:
-            </label>
-            <textarea
-              name="description"
-              id="description"
-              placeholder="투표 내용을 입력하세요"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
-            />
-          </div>
+    <>
+      <div
+        id="outer-layer"
+        className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center"
+        onClick={(e) => {
+          if (e.target.id == "outer-layer") {
+            setVoteProductCreateModalClose();
+          }
+        }}
+      >
+        <div style={bodyStyle}>
+          <form onSubmit={handleSubmit}>
 
-          {/* 투표 항목 추가 부분 */}
-          {voteItems.map((voteItem, index) => (
-            <div key={index} className="mb-6 pt-4 border-t-2 border-blue-400">              <div className="flex rounded-lg h-full bg-[#8DB600] p-8 flex-col">
-            <div className="mb-8">
-              <label htmlFor={`voteItem${index + 1}`} className="relative">
-              <input
-                type="file"
-                name={`voteItemImgs`}
-                id={`voteItem${index + 1}`}
-                onChange={(e) => handleVoteItemImageChange(index, e)} multiple />
-              {previewImages[index] && (
-                  <img src={previewImages[index]} 
-                    alt="" 
-                    className="object-cover h-full w-full rounded-lg"
-                  />
-              )}
-              </label>
-
-              {!previewImages[index] && (
-              <label htmlFor={`voteItem${index + 1}`}
-                className="relative flex items-center justify-center 
-                rounded-md border border-dashed border-[#e0e0e0] p-6 text-center">
-                <div className="max-w-[200px] h-[200px]">
-                  <span className="mb-2 block text-xl font-semibold text-white">
-                    사진을 첨부해주세요
-                  </span>
-                </div>
-              </label>
-              )}
-            </div>
-          
-          </div>
+            {/* ------------- 제목 입력 ------------- */}
             <div className="mb-5">
-              <label htmlFor={`price-${index}`} className="mb-3 block text-base font-medium text-[#FF7F50]">
-                가격:
+              <label
+                htmlFor="title"
+                className="my-10 block text-center fontsize-xl"
+              >
+                <span style={{ color: "#1982C4" }} className="fontsize-xl">구매 </span>골라쥬
               </label>
               <input
-                name={`price-${index}`}
-                id={`price-${index}`}
-                placeholder="가격을 입력하세요"
-                value={voteItem.price || ''}
-                onChange={(e) => handleInputChange(e, index, 'price')}
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
+                type="text"
+                name="title"
+                id="title"
+                placeholder="제목을 입력하세요"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full rounded-xl border-0 focus:shadow-md
+                bg-gray-100 py-4 px-6 text-base text-[#6B7280]"
               />
             </div>
+
+            {/* ------------- 카테고리 선택 ------------- */}
             <div className="mb-5">
-              <label htmlFor={`content-${index}`} className="mb-3 block text-base font-medium text-[#FF7F50]">
-                내용 설명:
-              </label>
+              {/* <label
+                htmlFor="category"
+                className="mb-3 block text-base font-medium text-[#FF7F50]"
+              >
+                카테고리:
+              </label> */}
+              <select
+                name="category"
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full rounded-xl border-0 focus:shadow-md
+                bg-gray-100 py-4 px-6 text-base text-[#6B7280]"
+              >
+                <option value="">카테고리를 선택하세요</option>
+                <option value="1">의류</option>
+                <option value="2">가구</option>
+                <option value="3">신발</option>
+                <option value="4">전자제품</option>
+              </select>
+            </div>
+            <div className="mb-5">
+              {/* <label
+                htmlFor="description"
+                className="mb-3 block text-base font-medium text-[#FF7F50]"
+              >
+                투표 내용:
+              </label> */}
               <textarea
-                name={`content-${index}`}
-                id={`content-${index}`}
-                placeholder="내용을 입력하세요"
-                value={voteItem.voteItemDesc || ''}
-                onChange={(e) => handleInputChange(e, index, 'voteItemDesc')}
-                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#FF7F50] focus:shadow-md"
+                name="description"
+                id="description"
+                placeholder="투표 내용을 입력하세요"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                style={{ height: isXLarge ? "189px" : isLarge ? "145.5px" : "86px", }}
+                className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] focus:shadow-md"
               />
             </div>
-          </div>
-        ))}
 
-          {/* 투표 항목 추가 버튼 */}
-          <div className="mb-5">
-          <button type="button" onClick={addVoteItem}
-            className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-            투표 항목 추가하기
-          </button>
-          </div>
-          <div className="mb-5">
-          <button
+            {/* ------------- 투표 항목 추가 부분 ------------- */}
+            {voteItems.map((voteItem, index) => (
+              <div key={index} className="flex items-center mb-6 pt-4 border-t-2 border-gray-200">
+                <div
+                  style={{
+                    ...imgItemStyle,
+                    overflow: 'hidden',
+                  }}
+                  className="p-2 bg-gray-100 hover:bg-gray-200"
+                  key={index}
+                >
+                  <label
+                    htmlFor={`voteItem${index + 1}`}
+                    className="relative"
+                  >
+                    <input
+                      type="file"
+                      name={`voteItemImgs`}
+                      id={`voteItem${index + 1}`}
+                      onChange={(e) => handleVoteItemImageChange(index, e)}
+                      multiple
+                    />
+                    {previewImages[index] && (
+                      <img
+                        src={previewImages[index]}
+                        alt=""
+                        className="mt-3 rounded-lg"
+                      />
+                    )}
+                  </label>
+
+                  {!previewImages[index] && (
+                    <label
+                      htmlFor={`voteItem${index + 1}`}
+                      style={{ fontSize: "20px", paddingBottom: "20px" }}
+                      className="relative flex items-center h-full justify-center text-center cursor-pointer"
+                    >
+                      사진 {index+1}
+                    </label>
+                  )}
+                </div>
+
+                {/* ------------- 가격, 내용 설명 입력 ------------- */}
+                <div style={{ height: isXLarge ? "260px" : isLarge ? "208px" : isMedium ? "140px" : "130px" }}>
+                  <input
+                    name={`price-${index}`}
+                    id={`price-${index}`}
+                    placeholder="가격을 입력하세요"
+                    value={voteItem.price || ''}
+                    onChange={(e) => handleInputChange(e, index, 'price')}
+                    style={{ width: isXLarge ? "483.5px" : isLarge ? "378.5px" : isMedium ? "263.5px" : "210px" }}
+                    className="mb-5 rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] focus:shadow-md"
+                  />
+                  <div>
+                    <textarea
+                      name={`content-${index}`}
+                      id={`content-${index}`}
+                      placeholder="내용을 입력하세요"
+                      value={voteItem.voteItemDesc || ''}
+                      onChange={(e) => handleInputChange(e, index, 'voteItemDesc')}
+                      style={{
+                        width: isXLarge ? "483.5px" : isLarge ? "378.5px" : isMedium ? "263.5px" : "210px",
+                        height: isXLarge ? "189px" : isLarge ? "145.5px" : isMedium ? "86px" : "85.5px",
+                      }}
+                      className="rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] focus:shadow-md"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* ------------- 항목 추가, 제거 버튼 ------------- */}
+            <div style={{ gap: isXLarge ? "16px" : isLarge ? "14px" : isMedium ? "12px" : "10px" }} className="flex mb-5">
+              <button
+                style={{
+                  fontSize: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+                  fontFamily: "GmarketSansLight",
+                  cursor: voteItems.length > 3 ? "not-allowed" : "pointer",
+                  borderRadius: "5px",
+                }}
+                className="w-1/2 mx-2 flex items-center pt-3 h-14 justify-center bg-gray-100 hover:bg-gray-200"
+                type="button"
+                onClick={addVoteItem}
+                disabled={voteItems.length > 3}
+              >
+                +
+              </button>
+              <button
+                style={{
+                  fontSize: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+                  fontFamily: "GmarketSansLight",
+                  cursor: voteItems.length < 3 ? "not-allowed" : "pointer",
+                  borderRadius: "5px",
+                }}
+                className="w-1/2 mx-2 flex items-center pt-3 h-14 justify-center cursor-pointer bg-gray-100 hover:bg-gray-200"
                 type="button"
                 onClick={removeVoteItem}
-                className="w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none">
-                투표 항목 삭제하기
-          </button>
-          </div>
-          
-          <div className="flex justify-between">
-            <button
-              type="submit"
-              className="hover:shadow-form w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none mb-3 mr-2">
-              투표 올리기
-            </button>
-            <button
-              onClick={setVoteProductModalClose}
-              className="hover:shadow-form w-full rounded-md bg-[#FF7F50] py-3 px-8 text-center text-base font-semibold text-white outline-none mb-3 mr-2">
-              취소하기
-            </button>
-          </div>
-        </form>
+                disabled={voteItems.length < 3}
+              >
+                -
+              </button>
+            </div>
+
+            {/* ------------- 취소하기, 투표 올리기 버튼 ------------- */}
+            <div style={{ marginBottom: "40px" }} className="flex justify-between">
+              <button
+                onClick={setVoteProductModalClose}
+                className="w-1/2 mx-2 p-3 rounded-full bg-white hover:bg-gray-200 text-center fontsize-sm border-4 border-gray-300"
+              >
+                취소하기
+              </button>
+              <button
+                type="submit"
+                className="w-1/2 mx-2 p-3 rounded-full bg-amber-300 hover:bg-amber-400 text-center fontsize-sm"
+              >
+                투표 올리기
+              </button>
+
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

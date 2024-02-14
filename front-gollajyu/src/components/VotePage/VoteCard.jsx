@@ -19,7 +19,6 @@ import VoteCardItem from "./VoteCardItem";
 import { selectClasses } from "@mui/base";
 
 
-
 const VoteCard = (props) => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -105,6 +104,7 @@ const VoteCard = (props) => {
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentContainerStyle = {
     // 디자인
+    marginBottom: "20px",
     padding: isXLarge
       ? "20px 30px"
       : isLarge

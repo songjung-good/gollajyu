@@ -20,11 +20,26 @@ import sobiTIData from "/src/stores/testResultData.js";
 // 소비성향 조사 결과 컴포넌트
 import TestResultHeader from "../TestResultHeader";
 
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+
 
 const MyProfile = () => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showInfoDescription, setShowInfoDescription] = useState(false);
+  const [showTestDescription, setTestShowDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleInfoDescription = () => {
+    setShowInfoDescription(!showInfoDescription);
+  };
+  const toggleTestDescription = () => {
+    setTestShowDescription(!showTestDescription);
+  };
 
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
@@ -82,14 +97,35 @@ const MyProfile = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
   const titleStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentContainerStyle = {
@@ -185,23 +221,6 @@ const MyProfile = () => {
     flexDirection: "column",
   };
 
-  // ----------- 소비성향 자세히 알아보기 버튼 스타일 -----------
-  const testButtonStyle = {
-    // 상속
-    ...flexContainerStyle,
-
-    // 디자인
-    marginTop: "10px",
-    width: isXLarge ? "300px" : isLarge ? "270px" : isMedium ? "240px" : "210px",
-    height: isXLarge ? "70px" : isLarge ? "60px" : isMedium ? "50px" : "40px",
-    borderRadius: "50px",
-    background: testButtonHovered ? "#E6BE3D" : "#FFD257", // 마우스 호버 시 배경 색상 변경
-    transition: "background 0.5s ease",
-
-    // 컨텐츠 정렬
-    justifyContent: "center",
-  };
-
   // --------------------------------- css 끝 ---------------------------------
 
   
@@ -210,9 +229,24 @@ const MyProfile = () => {
       {/* ------------- 기본정보 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleStyle} className="fontsize-xl">
+          <span style={titleStyle} className="fontsize-lg">
             # 기본정보
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleInfoDescription}
+            onMouseOver={() => setShowInfoDescription(true)}
+            onMouseOut={() => setShowInfoDescription(false)}
+          />
+          <p style={{
+            ...descriptionStyle,
+            visibility: showInfoDescription ? "visible" : "hidden"
+          }}>
+            회원가입 시 입력한 정보
+          </p>
         </div>
         <div style={contentContainerStyle}>
           <div style={flexContainerStyle}>
@@ -242,7 +276,7 @@ const MyProfile = () => {
                     }}
                   />
                   <button
-                    className="mx-4 px-3 py-1 border-2 border-zinc-400 rounded-md fontsize-sm text-zinc-500 bg-zinc-200 hover:bg-white"
+                    className="mx-4 px-3 py-1 border-4 border-zinc-300 rounded-md fontsize-sm text-zinc-500 bg-white hover:bg-zinc-200"
                     onClick={handleEditToggle}
                   >
                     수정완료
@@ -254,7 +288,7 @@ const MyProfile = () => {
                     {user.nickname}
                   </div>
                   <button
-                    className="relative mx-4 mt-3 px-3 py-1 h-10 border-2 border-zinc-400 rounded-md fontsize-sm text-zinc-500 bg-white hover:bg-zinc-200"
+                    className="relative mx-4 mt-2 px-3 py-1 h-10 border-4 border-zinc-300 rounded-md fontsize-sm text-zinc-500 bg-white hover:bg-zinc-200"
                     onMouseOver={() => setButtonHovered(true)}
                     onMouseOut={() => setButtonHovered(false)}
                     onClick={handleEditToggle}
@@ -298,17 +332,31 @@ const MyProfile = () => {
       {/* ------------- 소비성향 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleStyle} className="fontsize-xl">
+          <span style={titleStyle} className="fontsize-lg">
             # 소비성향
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleTestDescription}
+            onMouseOver={() => setTestShowDescription(true)}
+            onMouseOut={() => setTestShowDescription(false)}
+          />
+          <p style={{
+            ...descriptionStyle,
+            visibility: showTestDescription ? "visible" : "hidden"
+          }}>
+            소비성향 테스트 결과
+          </p>
         </div>
         <div style={testContainerStyle}>
           <TestResultHeader data={matchingData} result={result} />
           <NavLink
             to="/TestResultPage"
             end
-            style={testButtonStyle}
-            className="fontsize-md"
+            className="w-1/3 sm:w-2/5 md:w-2/5 p-5 rounded-full bg-amber-300 hover:bg-amber-400 text-center fontsize-sm"
             onMouseOver={() => setTestButtonHovered(true)}
             onMouseOut={() => setTestButtonHovered(false)}
           >

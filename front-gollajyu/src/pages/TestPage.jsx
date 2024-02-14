@@ -1,17 +1,39 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+// HTTP 요청을 위한 Axios 라이브러리
+import axios from "axios";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+import useModalStore from "/src/stores/modalState";
+
+// 소비성향 결과 컴포넌트
 import TestItem from "../components/TestItem";
+
+// 이미지 가져오기
 import mainImg from "/assets/images/sobiTest/tmp_mainImg.png";
+
+// Material-UI에서 제공하는 LinearProgress 및 스타일링 관련 컴포넌트
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
-import API_URL from "/src/stores/apiURL";
-import useModalStore from "/src/stores/modalState";
-import useAuthStore from "/src/stores/userState";
-import axios from "axios";
+
+
 
 const TestPage = () => {
+
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+  
   const navigate = useNavigate();
   const location = useLocation();
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
@@ -239,77 +261,127 @@ const TestPage = () => {
     },
   }));
 
+
+  // --------------------------------- css 시작 ---------------------------------
+
+  // ----------- body 스타일 -----------
+  const bodyStyle = {
+    // 디자인
+    margin: "0 auto", // 가로 중앙 정렬
+    padding: "30px 0", // 상하단 여백: 50px
+    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    // whiteSpace: "nowrap", // 줄바꿈 방지
+
+    // 컨텐츠 정렬
+    display: "flex",
+    justifyContent: "center",
+  };
+
+  // ----------- 컨텐츠 컨테이너 스타일 -----------
+  const contentContainerStyle = {
+    // 디자인
+    padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
+    width: isXLarge ? "50%" : isLarge ? "60%" : "80%",
+    height: isXLarge ? "750px" : isLarge ? "675px" : isMedium ? "600px" : "525px",
+    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    background: "#FFFFFF",
+  };
+
+  // ----------- 컨테이너 스타일 -----------
+  const containerStyle = {
+    // 디자인
+    height: isXLarge ? "670px" : isLarge ? "605px" : isMedium ? "540px" : "475px",
+    
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+  }
+
+  // ----------- 컨텐츠 컨테이너 스타일 -----------
+  const imgStyle = {
+    padding: "0 40px",
+  }
+
+  // --------------------------------- css 끝 ---------------------------------
+
+  
   return (
-    <div className="p-5 h-screen">
-      <div className="container mx-auto my-5 p-10 bg-white rounded-2xl sm:w-[220px] sm:h-[330px] md:w-[330px] md:h-[390px] lg:w-[380px] lg:h-[450px] xl:w-[450px] xl:h-[530px]">
-        <div>
-          {questionNumber === -1 ? (
-            <div className="flex flex-col items-center space-y-10 sm:space-y-16">
-              <h1 className="text-center fontsize-lg">
-                <span className="text-sky-600 fontsize-lg">선택</span>
-                으로 알아보는
-                <br />
-                <span className="text-lime-500 fontsize-lg">소비성향</span>{" "}
-                테스트
-              </h1>
-              <img className="w-2/3 h-2/3" src={mainImg} alt="" />
-              <button
-                className="border rounded-full p-4 w-2/3 bg-amber-300 hover:bg-amber-400"
-                onClick={() => {
-                  setQuestionNumber(questionNumber + 1);
-                }}
-              >
-                테스트 시작하기
-              </button>
-            </div>
-          ) : null}
-          {questionNumber >= 0 && questionNumber <= 11 ? (
-            <>
-              <div className="mx-auto mb-5 max-w-lg transition ease-in duration-300">
-                <div className="flex justify-between">
-                  <p className="fontsize-xs">
-                    {cheeringPhrase[Math.floor(questionNumber / 3)]}
-                  </p>
-                  <p className="fontsize-xs">{questionNumber + 1} /12</p>
-                </div>
-                <BorderLinearProgress
-                  className=""
-                  variant="determinate"
-                  value={((questionNumber + 1) / 12) * 100}
-                  // 애니메이션 적용 (후순위) -> 쉽지 않음
-                />
+    <>
+      <div style={bodyStyle} className="h-screen">
+        <div style={contentContainerStyle}>
+          <div>
+            {questionNumber === -1 ? (
+              <div style={containerStyle}>
+                <h1 className="text-center fontsize-lg">
+                  <span className="text-sky-600 fontsize-lg">선택</span>
+                  으로 알아보는
+                  <br />
+                  <span className="text-lime-500 fontsize-lg">소비성향</span>{" "}
+                  테스트
+                </h1>
+                <img style={imgStyle} src={mainImg} alt="" />
+                <button
+                  className="border rounded-full p-4 w-2/3 bg-amber-300 hover:bg-amber-400"
+                  onClick={() => {
+                    setQuestionNumber(questionNumber + 1);
+                  }}
+                >
+                  테스트 시작하기
+                </button>
               </div>
-              <TestItem
-                data={{
-                  answer: answers[questionNumber],
-                  question: questions[questionNumber],
-                }}
-                handleResponse={handleResponse}
-              />
-            </>
-          ) : null}
-          {questionNumber === 12 ? (
-            <div className="flex flex-col items-center space-y-10 sm:space-y-16">
-              <p className="text-center fontsize-lg">
-                <span className="text-rose-500 fontsize-lg">두근두근</span>
-                <br />
-                당신의{" "}
-                <span className="text-lime-500 fontsize-lg">소비성향</span>은?
-              </p>
-              <img className="w-2/3 h-2/3" src={mainImg} alt="" />
-              <button
-                className="border rounded-full p-4 w-2/3 bg-amber-300 hover:bg-amber-400"
-                onClick={() => {
-                  goResultPage();
-                }}
-              >
-                결과 보러가기
-              </button>
-            </div>
-          ) : null}
+            ) : null}
+            {questionNumber >= 0 && questionNumber <= 11 ? (
+              <>
+                <div>
+                  <div className="mx-auto mb-5 max-w-lg transition ease-in duration-300">
+                    <div className="flex justify-between">
+                      <p className="fontsize-xs">
+                        {cheeringPhrase[Math.floor(questionNumber / 3)]}
+                      </p>
+                      <p className="fontsize-xs">{questionNumber + 1} /12</p>
+                    </div>
+                    <BorderLinearProgress
+                      className=""
+                      variant="determinate"
+                      value={((questionNumber + 1) / 12) * 100}
+                      // 애니메이션 적용 (후순위) -> 쉽지 않음
+                    />
+                  </div>
+                  <TestItem
+                    data={{
+                      answer: answers[questionNumber],
+                      question: questions[questionNumber],
+                    }}
+                    handleResponse={handleResponse}
+                  />
+                </div>
+              </>
+            ) : null}
+            {questionNumber === 12 ? (
+              <div style={containerStyle} className="flex flex-col items-center space-y-10 sm:space-y-16">
+                <p className="text-center fontsize-lg">
+                  <span className="text-rose-500 fontsize-lg">두근두근</span>
+                  <br />
+                  당신의{" "}
+                  <span className="text-lime-500 fontsize-lg">소비성향</span>은?
+                </p>
+                <img style={imgStyle} src={mainImg} alt="" />
+                <button
+                  className="border rounded-full p-4 w-2/3 bg-amber-300 hover:bg-amber-400"
+                  onClick={() => {
+                    goResultPage();
+                  }}
+                >
+                  결과 보러가기
+                </button>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

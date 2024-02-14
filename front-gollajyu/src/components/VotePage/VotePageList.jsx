@@ -18,16 +18,16 @@ const VotePageList = ({ voteList }) => {
         // (vote.chosenItemId === 0) ?
         // (
         <VoteCard
-        key={`${vote.voteId}-card`}
-        vote={vote}
-        liked={vote.liked}
-        likesCnt={vote.likesCnt}
-        chosenItemId={vote.chosenItemId}
-        voteItemList={vote.voteItemList}
-        voteId={vote.voteId}
-        voteTitle={vote.voteTitle}
-        categoryName={vote.categoryName}
-        categoryId={vote.categoryId}
+          key={`${vote.voteId}-card`}
+          vote={vote}
+          liked={vote.liked}
+          likesCnt={vote.likesCnt}
+          chosenItemId={vote.chosenItemId}
+          voteItemList={vote.voteItemList}
+          voteId={vote.voteId}
+          voteTitle={vote.voteTitle}
+          categoryName={vote.categoryName}
+          categoryId={vote.categoryId}
         />
         //  ) : null
       ))}

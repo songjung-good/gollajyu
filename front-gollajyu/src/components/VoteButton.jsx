@@ -211,7 +211,8 @@ const VoteButton = () => {
   // ----------- 버튼 아이템 목록 -----------
   const buttonItems = [
     {
-      label: "지금골라쥬!",
+      label: "지금",
+      color: "#FF595E",
       image: NowGollajyuImage,
       boxBottom: isXLarge ? 85 : isLarge ? 76 : isMedium ? 67 : 58,
       circleBottom: buttonHovered ? ( isXLarge ? 85 : isLarge ? 76 : isMedium ? 67 : 58 ) : -200,
@@ -230,7 +231,8 @@ const VoteButton = () => {
       },
     },
     {
-      label: "간단골라쥬!",
+      label: "간단",
+      color: "#8AC926",
       image: SimpleGollajyuImage,
       boxBottom: isXLarge ? 155 : isLarge ? 138 : isMedium ? 121 : 104,
       circleBottom: buttonHovered ? ( isXLarge ? 155 : isLarge ? 138 : isMedium ? 121 : 104 ) : -200,
@@ -250,7 +252,8 @@ const VoteButton = () => {
       },
     },
     {
-      label: "구매골라쥬!",
+      label: "구매",
+      color: "#1982C4",
       image: PurchaseGollajyuImage,
       boxBottom: isXLarge ? 225 : isLarge ? 200 : isMedium ? 175 : 150,
       circleBottom: buttonHovered ? ( isXLarge ? 225 : isLarge ? 200 : isMedium ? 175 : 150 ) : -200,
@@ -284,7 +287,8 @@ const VoteButton = () => {
             bottom: `${button.boxBottom}px`,
           }}>
             <div style={textContainerStyle}>
-              <div style={textStyle} className="fontsize-sm">{button.label}</div>
+              <div style={{ ...textStyle, color: button.color }} className="fontsize-sm">{button.label}</div>
+              <div className="fontsize-sm text-black">골라쥬!</div>
               <div style={textPointStyle} className="fontsize-xs">(10P 차감됩니다)</div>
             </div>
             <div style={textContainerStyle}>
