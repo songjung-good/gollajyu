@@ -19,7 +19,7 @@ const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
       commentDesc: value,
       commentMentionId: 0,
     };
-    console.log(body);
+    // console.log(body);
     try {
       await axios.post(`${API_URL}/votes/details/comments`, body);
       onSubmit(value, userid, choiced);

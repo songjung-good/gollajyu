@@ -46,7 +46,7 @@ const VoteDetailChat = ({commentList, chosenItem, userId, voteId}) => {
     // 좋아요 기능
     const handleLike = (index) => {
       const newList = [...list];
-      console.log(list);
+      // console.log(list);
 
       // 이미 좋아요를 눌렀다면 return
       if (newList.liked === true) {
@@ -59,7 +59,7 @@ const VoteDetailChat = ({commentList, chosenItem, userId, voteId}) => {
 
       // 좋아요를 누른 계정 기록
       setLikes({ ...likes, [newList[index].userid]: true });
-    console.log(newList)
+    // console.log(newList)
     // 서버에 좋아요 증가 정보 POST 요청s
     const fetchData = async () => {
       try {

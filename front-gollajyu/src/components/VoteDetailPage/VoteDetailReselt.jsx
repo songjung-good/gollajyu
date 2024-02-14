@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// 태그 색상 데이터 불러오기
+import tagColorData from '/src/stores/tagColorData';
 
 // 임시 데이터를 상위 컴포넌트로부터 받아오는 props로 변경
 const VoteDetailResult = ({voteResults}) => {
@@ -19,13 +21,14 @@ const VoteDetailResult = ({voteResults}) => {
           {selectedOptions[index] && (
             <div>
               {result.tagCountList.map((tag) => (
+                
                 <p key={tag.tagName}>{tag.tagName}: {tag.count}%</p>
               ))}
             </div>
           )}
         </div>
       ))}
-      {/* 사용자 유형 필터링 핑료 */}
+      {/* 사용자 유형 필터링 필요 */}
     </div>
   );
 };
