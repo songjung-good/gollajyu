@@ -52,9 +52,9 @@ if (age < 20) {
     const params = new URLSearchParams();
     params.append("memberId", user.memberId);
     params.append("voteId", detailVoteId);
-    params.append("filter.age", ageGroup);
-    params.append("filter.gender", user.gender);
-    params.append("filter.typeId", user.typeId);
+    params.append("filter.age", -1);
+    params.append("filter.gender", 'A');
+    params.append("filter.typeId", -1);
 
     const fetchData = async () => {
       try {
@@ -118,7 +118,6 @@ if (age < 20) {
                 commentList={voteDetail.commentList}
                 chosenItem={voteDetail.chosenItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                 userId={user.memberId}
-                commentLikes={voteDetail.commentLikes}
                 voteId={detailVoteId}
               />
             </>
