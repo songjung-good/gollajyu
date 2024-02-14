@@ -40,7 +40,7 @@ const VoteCard = (props) => {
     console.log(itemId,selection, "이거")
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
     setCountList(prevCountList => 
-      prevCountList.map((count, i) => vote.voteItemList[i].voteItemId === itemId ? count + 1 : count));
+      prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
 
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
@@ -73,12 +73,12 @@ const VoteCard = (props) => {
       newTotalCount += item.count;
     });
     setTotalCount(newTotalCount);
-    setCountList(prevCountList => vote.voteItemList.map(item => item.count));
-  }, [vote.voteItemList]);
+    setCountList(prevCountList => voteItemList.map(item => item.count));
+  }, [voteItemList]);
 
   useEffect(() => {
     console.log(countList);
-    setSelectedVoteItem(vote.chosenItemId)
+    setSelectedVoteItem(chosenItemId)
   }, [countList]);
   
   // --------------------------------- css 시작 ---------------------------------
