@@ -657,8 +657,15 @@ public class VoteService {
                         .findAllByOrderByCreateAtDesc(pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v)).toList();
+
+                // 마지막 페이지
+                int lastPageNo = allVoteList.size()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
+
                 makeVoteDetail(allVoteList);
+
                 voteListResDto.updateVoteInfoList(allVoteList);
+
             }
 
             // 카테고리가 전체가 아닐 때
@@ -687,6 +694,10 @@ public class VoteService {
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+
+                // 마지막 페이지
+                int lastPageNo = allVoteList.size()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(allVoteList);
@@ -729,6 +740,10 @@ public class VoteService {
                         .tagList(null) // 전체에서는 tagList를 특정할 수 없으므로 null로 주고, 각 투표마다 태그 리스트를 따로 저장해준다.
                         .build();
 
+
+                // 마지막 페이지
+                int lastPageNo = filteredVoteList.size()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(filteredVoteList);
@@ -776,12 +791,15 @@ public class VoteService {
                     }
                 });
 
+                // 마지막 페이지
+                int lastPageNo = filteredVoteList.size()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
+
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(filteredVoteList);
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-//        System.out.println("voteListResDto = " + voteListResDto);
         return new ServiceResult<VoteListResDto>().success(voteListResDto);
 
     }
