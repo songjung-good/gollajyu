@@ -123,7 +123,7 @@ const VoteDetail = () => {
   return (
     <div
       id="outer-layer"
-      className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50"
+      className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 py-10 flex justify-center items-center"
       onClick={(e) => {
         if (e.target.id == "outer-layer") {
           setVoteDetailModalClose();
@@ -131,8 +131,9 @@ const VoteDetail = () => {
       }}
     >
       {voteDetail && (
-        <div className="mx-auto max-h-[800px] w-full max-w-[1000px] bg-white overflow-y-10">
+        <div className="mx-auto max-h-[1000px] w-full max-w-[1000px] overflow-auto rounded-xl bg-white">
           <VoteDetailHeader
+            className=""
             {...voteDetail.voteInfo}
             onClose={handleClose}
           />
@@ -157,7 +158,7 @@ const VoteDetail = () => {
               <VoteDetailReselt
                 voteResults={voteDetail.voteItemList}
               />
-              <VoteDetailChat 
+              <VoteDetailChat
                 commentList={voteDetail.commentList}
                 chosenItem={voteDetail.chosenItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                 userId={user.memberId}

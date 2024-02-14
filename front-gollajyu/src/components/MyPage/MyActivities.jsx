@@ -23,6 +23,9 @@ import MyActivitiesCommented from "./MyActivitiesCommented";
 // 포인트 이미지 가져오기
 import PointImage from "/assets/images/point_img.png";
 
+// 모달창
+import VoteDetail from "../../components/VoteDetailPage/VoteDetail";
+import useModalStore from "/src/stores/modalState";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -48,7 +51,7 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
 );
 
 
-const MyActivities = ({ transferVoteId }) => {
+const MyActivities = () => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -82,7 +85,19 @@ const MyActivities = ({ transferVoteId }) => {
   const [likedVote, setLikedVote] = useState([]);
   const [createdComment, setCreatedComment] = useState([]);
   const [infoItems, setInfoItems] = useState([]);
-  const navigate = useNavigate();
+
+  // 투표 모달 창 상태
+  const isVoteDetailModalOpened = useModalStore(
+    (state) => state.isVoteDetailModalOpened
+  );
+  // 상세페이지
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+  // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
+  const transferVoteId = (voteId) => {
+    setVoteDetailModalOpen(voteId);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
@@ -456,7 +471,11 @@ const MyActivities = ({ transferVoteId }) => {
           <Routes>
             <Route
               path="/"
-              element={<MyActivitiesCreated props={createdVote} />}
+              element={
+              <MyActivitiesCreated 
+                props={createdVote} 
+                transferVoteId={transferVoteId} 
+              />}
             />
             <Route
               path="/0"
@@ -473,6 +492,7 @@ const MyActivities = ({ transferVoteId }) => {
           </Routes>
         </div>
       </div>
+      {isVoteDetailModalOpened && <VoteDetail />}
     </>
   );
 };
