@@ -128,11 +128,19 @@ const MainPage = () => {
   const [voteListData, setVoteListData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pageNo, setPageNo] = useState(0);
+  const [lastPageNo, setLastPageNo] = useState(Infinity)
+  const [initialRender, setInitialRender] = useState(true);
 
   // pageNo 올리는 함수
   const increasePageNo = () => {
-    setPageNo((prev) => prev + 1);
-  };
+    setPageNo((prev) => {
+      if (prev === lastPageNo) {
+        window.alert("더 이상 불러올 투표가 없어요")
+        return prev
+      } else {
+        return (prev + 1)
+      }
+  });
 
   // 데이터 가져오기 함수
   const fetchData = debounce(async () => {
@@ -148,6 +156,7 @@ const MainPage = () => {
       const data = response.data.body.voteInfoList;
       console.log("pageNo:", pageNo);
       console.log(response.data);
+      setLastPageNo(response.data.lastPageNo)
       setVoteListData((prevData) => {
         return [...prevData, ...data];
       });
@@ -157,17 +166,20 @@ const MainPage = () => {
     }
   }, 300);
 
-  // 페이지 로드 시(컴포넌트가 처음 마운트 될 떄만) 데이터 가져오기
+  // 페이지 로드 시(컴포넌트가 처음 마운트 될 때만) 데이터 가져오기
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     // console.log("pageNo 증가", pageNo);
     fetchData();
+    setInitialRender(false);
   }, [pageNo]);
 
   useEffect(() => {
     // voteListData 길이가 일정 수준보다 작으면 increasePageNo 함수를 실행하고 fetchData 요청을 다시 보낸다.
-    // 단 lastPageNo와 현재 pageNo가 같으면 alert를 띄우고 요청을 더 이상 보내지 않는다.
-    // if (voteListData)
+    // 단, lastPageNo와 현재 pageNo가 같으면 alert를 띄우고 요청을 더 이상 보내지 않는다.
+    if (!initialRender && voteListData.length <= 3) {
+      increasePageNo(); // fetchData()는 위의 useEffect에 의해서 처리됨
+    }
   }, [voteListData]);
 
   // --------------------------------- css 시작 ---------------------------------

@@ -12,6 +12,7 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 const MainVoteList = ({ transferVoteId }) => {
   // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   const [listsData, setListsData] = useState([]);
 
   // 메인페이지로 값 전송
