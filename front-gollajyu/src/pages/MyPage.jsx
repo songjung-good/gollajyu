@@ -13,6 +13,9 @@ import MyStatistics from "../components/MyPage/MyStatistics";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
+// 상세 페이지 컴포넌트
+import useModalStore from "/src/stores/modalState";
+import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 const MyPage = () => {
 
@@ -26,6 +29,17 @@ const MyPage = () => {
     { to: "/Mypage/MyStatistics", text: "내 통계 요약" },
   ];
 
+  // 투표 모달 창 상태
+  const isVoteDetailModalOpened = useModalStore(
+    (state) => state.isVoteDetailModalOpened
+  );
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+  const transferVoteId = (voteId) => {
+    // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
+    setVoteDetailModalOpen(voteId);
+  };
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -147,10 +161,11 @@ const MyPage = () => {
       <div style={bodyStyle}>
         <Routes>
           <Route path="/" element={<MyProfile />} />
-          <Route path="/MyActivities/*" element={<MyActivities />} />
+          <Route path="/MyActivities/*" element={<MyActivities transferVoteId={transferVoteId}/>} />
           <Route path="/MyStatistics" element={<MyStatistics />} />
         </Routes>
       </div>
+      {isVoteDetailModalOpened && <VoteDetail />}
     </>
   );
 };

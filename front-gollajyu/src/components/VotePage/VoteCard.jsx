@@ -12,10 +12,13 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 // 커스텀 스토어를 이용한 상태 관리
 import useAuthStore from "/src/stores/userState";
+import useModalStore from '/src/stores/modalState';
 
 // 투표 카드 컴포넌트
 import VoteCardItem from "./VoteCardItem";
 import { selectClasses } from "@mui/base";
+
+
 
 const VoteCard = (props) => {
   // ------------------ 반응형 웹페이지 구현 ------------------
@@ -34,10 +37,13 @@ const VoteCard = (props) => {
   const [selectedVoteItem, setSelectedVoteItem] = useState(chosenItemId);
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
+  // 모달창
+  const setVoteDetailModalOpen = useModalStore((state) => state.setVoteDetailModalOpen);
+
 
   // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
   const handleClick = (itemId, selection) => {
-    console.log(itemId,selection, "이거")
+    // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
     setCountList(prevCountList => 
       prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
@@ -46,6 +52,12 @@ const VoteCard = (props) => {
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
     console.log(selectedVoteItem);
+  };
+
+  // 모달창 여는 함수
+  const openModal = () => {
+    // Call the function to open the modal window
+    setVoteDetailModalOpen(vote.voteId);
   };
 
   // 좋아요 관리 함수
@@ -208,6 +220,7 @@ const VoteCard = (props) => {
             {isVoteLike ? "❤ 좋아요 취소" : "♡ 좋아요"} {voteLikesCount}
           </button>
           <button
+            onClick={openModal}
             style={commonButtonStyle}
             className="fontsize-sm bg-amber-300 hover:bg-amber-400"
           >

@@ -11,6 +11,7 @@ import API_URL from "/src/stores/apiURL";
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 const MainVoteList = ({ transferVoteId }) => {
+ 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const [listsData, setListsData] = useState([]);
 
