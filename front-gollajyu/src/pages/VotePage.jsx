@@ -93,7 +93,7 @@ const VotePage = () => {
         },
       });
       // 성공적으로 받은 데이터 처리
-      // console.log("데이터 가져오기 성공:", response.data);
+      console.log("데이터 가져오기 성공:", response.data);
       return response.data; // 요청한 데이터 반환
     } catch (error) {
       // 오류 처리
