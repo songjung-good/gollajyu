@@ -4,9 +4,9 @@ import React from "react";
 // 내 투표 컴포넌트
 import MyActivitiesVoteItem from "./MyActivitiesVoteItem";
 
-
 const MyActivitiesCreated = ({ props }) => {
   // console.log("작성한 투표:", props);
+
   return (
     <>
       {props.length >= 1 ? (
