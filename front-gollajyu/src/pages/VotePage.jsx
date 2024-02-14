@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import VotePageList from "../components/VotePage/VotePageList";
 import VotePageHeader from "../components/VotePage/VotePageHeader";
-import TmpModal from "../components/TmpModal"; // 임시 모달
 import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
@@ -10,6 +9,7 @@ import API_URL from "/src/stores/apiURL";
 import axios from "axios";
 import useAuthStore from "/src/stores/userState";
 import { Helmet } from "react-helmet-async";
+import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 const VotePage = () => {
   const user = useAuthStore((state) => state.user);
@@ -113,7 +113,7 @@ const VotePage = () => {
         )}
       </div>
       {/* 정렬 상태를 props로 전달 */}
-      {isVoteDetailModalOpened && <TmpModal />}
+      {isVoteDetailModalOpened && <VoteDetail />}
       {isVoteSimpleCreateModalOpened && <VoteSimple />}
       {isVoteProductCreateModalOpened && <VoteProduct />}
     </div>
