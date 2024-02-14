@@ -128,19 +128,20 @@ const MainPage = () => {
   const [voteListData, setVoteListData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [pageNo, setPageNo] = useState(0);
-  const [lastPageNo, setLastPageNo] = useState(Infinity)
+  const [lastPageNo, setLastPageNo] = useState(Infinity);
   const [initialRender, setInitialRender] = useState(true);
 
   // pageNo 올리는 함수
   const increasePageNo = () => {
     setPageNo((prev) => {
       if (prev === lastPageNo) {
-        window.alert("더 이상 불러올 투표가 없어요")
-        return prev
+        window.alert("더 이상 불러올 투표가 없어요");
+        return prev;
       } else {
-        return (prev + 1)
+        return prev + 1;
       }
-  });
+    });
+  };
 
   // 데이터 가져오기 함수
   const fetchData = debounce(async () => {
@@ -156,7 +157,7 @@ const MainPage = () => {
       const data = response.data.body.voteInfoList;
       console.log("pageNo:", pageNo);
       console.log(response.data);
-      setLastPageNo(response.data.lastPageNo)
+      setLastPageNo(response.data.lastPageNo);
       setVoteListData((prevData) => {
         return [...prevData, ...data];
       });
