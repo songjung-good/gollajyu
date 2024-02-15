@@ -15,12 +15,14 @@ import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class LiveService {
+
+    @Value("${img.url}")
+    private String imgUrl;
 
     private final MemberRepository memberRepository;
     private final LiveRepository liveRepository;
@@ -93,6 +98,7 @@ public class LiveService {
 
                 // description 설정
                 liveVoteItem.setDescription(itemDto.getDescription());
+                liveVoteItem.setCount(0L);
 
                 // DB에 저장
                 liveVoteItemRepository.save(liveVoteItem);
@@ -151,8 +157,9 @@ public class LiveService {
         return LiveListDto.builder()
                 .id(live.getId())
                 .title(live.getTitle())
+                .nickName(live.getMember().getNickname())
                 .count(live.getCount()) // 시청자 수
-                .imgUrl(live.getImgUrl()) // 라이브 방송 이미지 URL
+                .imgUrl(convertFilePathToUrl(live.getImgUrl())) // 라이브 방송 이미지 URL
                 .sessionId(live.getSessionId())
                 .build();
     }
@@ -164,8 +171,14 @@ public class LiveService {
             return new ServiceResult<Void>().fail("Live방이 존재하지 않습니다.");
         }
 
-        // 라이브 방과 관련된 아이템들 삭제
+        // 라이브 방의 투표 참가자들 삭제 (LiveVoteParticipant)
+        liveVoteParticipantRepository.deleteByLiveVoteItemLiveId(liveId);
+
+        // 라이브 방과 관련된 아이템들 삭제 (LiveVoteItem)
         liveVoteItemRepository.deleteByLiveId(liveId);
+
+        // 라이브 방에 참여중인 참가자들 삭제 (LiveParticipant)
+        liveParticipantRepository.deleteByLiveId(liveId);
 
         // 라이브 방 삭제
         liveRepository.deleteById(liveId);
@@ -179,7 +192,8 @@ public class LiveService {
                     List<LiveVoteItemResDto> voteItems = liveVoteItemRepository.findByLiveId(liveId)
                             .stream()
                             .map(item -> LiveVoteItemResDto.builder()
-                                    .imgUrl(item.getImgUrl())
+                                    .id(item.getId())
+                                    .imgUrl(convertFilePathToUrl(item.getImgUrl()))
                                     .description(item.getDescription())
                                     .count(item.getCount())
                                     .build())
@@ -194,6 +208,17 @@ public class LiveService {
                                     .build());
                 })
                 .orElseGet(() -> new ServiceResult<LiveDetailResDto>().fail("해당 라이브 방송을 찾을 수 없습니다."));
+    }
+
+    // 파일 경로를 웹 URL로 변환
+    private String convertFilePathToUrl(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return null; // 또는 기본 이미지 URL
+        }
+        // 이미지 파일명만 추출합니다.
+        String fileName = Paths.get(filePath).getFileName().toString();
+        // 웹 접근 가능한 URL로 변환합니다.
+        return String.format("%s/resources/%s", imgUrl, fileName);
     }
 
     @Transactional

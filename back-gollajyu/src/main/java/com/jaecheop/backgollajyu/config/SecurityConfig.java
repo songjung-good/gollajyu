@@ -88,11 +88,9 @@ public class SecurityConfig {
                                 .addLogoutHandler((request, response, authentication) -> {
                                     // 사실 굳이 내가 세션 무효화하지 않아도 됨.
                                     // LogoutFilter가 내부적으로 해줌.
-                                    System.out.println("logout filter!!!!!!!!");
                                     HttpSession session = request.getSession();
                                     if (session != null) {
                                         session.invalidate();
-                                        System.out.println("session invalidated!!!!!!!!");
                                     }
                                 })  // 로그아웃 핸들러 추가
 //                        .logoutSuccessHandler((request, response, authentication) -> {

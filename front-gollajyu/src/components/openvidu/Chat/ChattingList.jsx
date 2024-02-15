@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import _ from "lodash";
-import tmp_profile from "/assets/images/tmp_profile.png";
 
 const StyledChattingList = styled.div`
   height: 87%;
@@ -84,9 +83,6 @@ const ChattingList = (props) => {
         {props.messageList.map((msg, i) => (
           <div key={i}>
             <ChatDiv>
-              <ProfileDiv>
-                <ProfileImg src={tmp_profile}></ProfileImg>
-              </ProfileDiv>
               <div>
                 <MessageSenderDiv>{msg.split(":")[0]}</MessageSenderDiv>
                 <MessageContentDiv>{msg.split(":")[1]}</MessageContentDiv>

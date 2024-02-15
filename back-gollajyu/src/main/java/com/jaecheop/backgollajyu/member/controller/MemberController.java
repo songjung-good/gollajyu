@@ -1,16 +1,12 @@
 package com.jaecheop.backgollajyu.member.controller;
 
-import com.jaecheop.backgollajyu.Info.model.CategoryInfoResDto;
-import com.jaecheop.backgollajyu.Info.model.StatisticsSearchReqDto;
 import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.entity.Type;
 import com.jaecheop.backgollajyu.member.model.*;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
 import com.jaecheop.backgollajyu.member.service.MemberService;
-import com.jaecheop.backgollajyu.socialLogin.PrincipalDetails;
 import com.jaecheop.backgollajyu.vote.entity.Category;
-import com.jaecheop.backgollajyu.vote.entity.VoteResult;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.CategoryRepository;
 import com.jaecheop.backgollajyu.vote.repository.VoteResultRepository;
@@ -20,6 +16,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,16 +24,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import com.jaecheop.backgollajyu.member.service.MemberService;
 import com.jaecheop.backgollajyu.vote.model.ResponseMessage;
 import com.jaecheop.backgollajyu.vote.model.ServiceResult;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.net.http.HttpResponse;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,16 +65,12 @@ public class MemberController {
     @Operation(summary = "Login method", description = "returns LoginResDto")
     public ResponseEntity<ResponseMessage<LoginResDto>> login(@RequestBody(required = false) LoginReqDto loginReqDto, HttpSession session,
                                                               @AuthenticationPrincipal Object info, HttpServletResponse response) {
-        System.out.println("###############################################");
-//        System.out.println("info = " + info);
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("email:::::::::::authentication.getPrincipal() = " + authentication.getPrincipal());
 
         ServiceResult<LoginResDto> result = memberService.login(loginReqDto, session);
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<LoginResDto>().fail(result.getMessage()));
         }
-        System.out.println("controller - session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
         Cookie cookie = new Cookie("login-cookie", loginReqDto.getEmail() );
         cookie.setMaxAge(3600); // 쿠키의 만료 시간 설정 (초 단위)
@@ -103,7 +91,6 @@ public class MemberController {
     @Operation(summary = " 추가정보 입력 폼", description = "returns AddInfoResDto : 소셜로그인으로 받아온 정보를 입력해서 넣어주고(AddInfoResDto) 추가 정보를 입력받는 폼을 반환합니다.")
     public ResponseEntity<ResponseMessage<AddInfoResDto>> addInfo(HttpServletRequest request, Authentication authentication) {
         // 쿠키에서 string을 쪼개서 providerId를 가져옴
-        System.out.println("4444444444444444444444444444444");
         Cookie[] cookieList = request.getCookies();
         String providerId = "";
         for (Cookie cookie : cookieList) {
@@ -145,7 +132,6 @@ public class MemberController {
     @Operation(summary = "logout", description = "로그아웃에 성공하면 로그아웃 성공이라는 문자열을 반환합니다")
     public ResponseEntity<ResponseMessage<String>> logout(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("authentication = " + authentication);
         return ResponseEntity.ok().body(new ResponseMessage<String>().success("로그아웃 성공"));
     }
 
@@ -229,15 +215,20 @@ public class MemberController {
     // 카테고리별 통계?
     @GetMapping("/{memberId}/votes/statistics")
     @Operation(summary = "카테고리별 통계", description = "returns CategoryInfoMap")
-    public ResponseEntity<Map<String, List<List<CategoryTagDto>>>> statisticMemberResult(
+    public ResponseEntity<Map<String, List<CategoryTagDto>>> statisticMemberResult(
             @PathVariable Long memberId) {
-        Map<String, List<List<CategoryTagDto>>> categoryInfoMap = new HashMap<>();
+        Map<String, List<CategoryTagDto>> categoryInfoMap = new HashMap<>();
         List<Category> categories = categoryRepository.findAll();
+        int i = 0;
         for (Category category : categories) {
-            List<List<CategoryTagDto>> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
+            if (i > 3) {
+                break;
+            }
+            List<CategoryTagDto> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
 
             // <category.getName(), categoryInfoResDtoList>
             categoryInfoMap.put(category.getCategoryName(), categoryInfoList);
+            i++;
         }
         if (categoryInfoMap.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -245,6 +236,7 @@ public class MemberController {
             return new ResponseEntity<>(categoryInfoMap, HttpStatus.OK);
         }
     }
+
 
     @GetMapping("/{memberId}/recommends")
     @Operation(summary = "크롤링", description = "returns crawlingResult : 멤버 아이디 기반 추천 사이트 크롤링")
@@ -255,7 +247,7 @@ public class MemberController {
         // Ensure there are at least two elements in the list
         CategoryTagDto secondLargestDto = new CategoryTagDto();
         if (categoryTagDtoList.size() >= 2) {
-            // Sort the list in descending order based on the count
+            // Sort the list in descending order based on (the count
             List<CategoryTagDto> sortedList = categoryTagDtoList.stream()
                     .sorted(Comparator.comparing(CategoryTagDto::getCount).reversed())
                     .toList();
@@ -264,12 +256,11 @@ public class MemberController {
             secondLargestDto = sortedList.get(1);
 
         } else {
-            // Handle the case where there are fewer than two elements in the list
-            // You might want to throw an exception or handle it according to your requirements
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        String categoryNameAndTag = secondLargestDto.getCategory() + " " + secondLargestDto.getTag();
+        String categoryNameAndTag = ((!Objects.equals(secondLargestDto.getCategory(), "전자제품")) ?
+                (secondLargestDto.getTag() + " " +secondLargestDto.getCategory()) : "삼성 가전");
 
-        System.out.println(categoryNameAndTag);
         List<Map<String, String>> crawlingResult = memberService.crawlNaverSearchResults(categoryNameAndTag);
 
 

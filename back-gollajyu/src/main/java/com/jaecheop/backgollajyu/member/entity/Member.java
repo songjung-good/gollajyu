@@ -72,5 +72,6 @@ public class Member implements Serializable {
         this.gender = Gender.valueOf(addInfoReqDto.getGender());
         this.type = type;
         this.nickname = addInfoReqDto.getNickname();
+        this.profileImgUrl = String.valueOf(type.getId());
     }
 }

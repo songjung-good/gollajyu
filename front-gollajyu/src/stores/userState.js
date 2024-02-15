@@ -4,8 +4,34 @@ import { devtools, persist } from "zustand/middleware";
 const store = persist(
   (set) => ({
     isLoggedIn: false,
+    user: {},
     setLoggedIn: (data) => set(() => ({ isLoggedIn: true, user: data })),
     setLogout: () => set(() => ({ isLoggedIn: false, user: {} })),
+    // 닉네임 변경 시, 포인트 차감 100
+    updateNickname: (nickname) =>
+      set((state) => ({
+        user: {
+          ...state.user,
+          nickname: nickname,
+          point: state.user.point - 100,
+        },
+      })),
+    // 구매 골라쥬, 간단 골라쥬, 지금 골라쥬 생성 시 포인트 차감 10
+    createVote: () =>
+      set((state) => ({
+        user: {
+          ...state.user,
+          point: state.user.point - 10,
+        },
+      })),
+    // 투표 참여 시, 포인트 획득 2
+    doVote: () =>
+      set((state) => ({
+        user: {
+          ...state.user,
+          point: state.user.point + 2,
+        },
+      })),
   }),
   {
     name: "userStorage",
@@ -18,8 +44,7 @@ const useAuthStore = create(
 
 export default useAuthStore;
 
-
-// import useAuthStore from "../stores/userState";
+// import useAuthStore from "/src/stores/userState";
 
 // const user = useAuthStore((state) => state.user);
 

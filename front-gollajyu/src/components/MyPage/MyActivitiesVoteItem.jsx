@@ -1,6 +1,12 @@
+// 리액트 및 훅/라이브러리
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 모달창 상태
+import useModalStore from "/src/stores/modalState";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -13,19 +19,8 @@ const useHoverState = () => {
 };
 
 const MyActivitiesVoteItem = ({ voteItem }) => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 내 활동 아이템 hover -----------
   const [ItemHovered, ItemMouseEnter, ItemMouseLeave] = useHoverState();
@@ -96,8 +91,6 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
   const titleStyle = {
     // 디자인
     marginRight: "10px",
-
-    // 길이가 일정 이상일 경우 ... 되는 기능 필요
   };
 
   // ----------- 댓글 수 스타일 -----------
@@ -201,6 +194,22 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
     );
   };
 
+  // ----------- title이 일정 길이 이상이면 ...으로 대체하는 함수 -----------
+  const truncateTitle = (title) => {
+    const maxLabelLength = 20; // 최대 길이
+    return title.length > maxLabelLength
+      ? `${title.substring(0, maxLabelLength)}...`
+      : title;
+  };
+
+  // ----------- label이 일정 길이 이상이면 ...으로 대체하는 함수 -----------
+  const truncateLabel = (label) => {
+    const maxLabelLength = 6; // 최대 길이
+    return label.length > maxLabelLength
+      ? `${label.substring(0, maxLabelLength)}...`
+      : label;
+  };
+
   // ----------- Vote 컴포넌트 사용 함수 -----------
   const Vote = ({ voteOptions }) => {
     return (
@@ -209,7 +218,7 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
           {voteOptions.map((option, index) => (
             <VoteItem
               key={index}
-              label={option.label}
+              label={truncateLabel(option.label)}
               ratio={option.ratio}
               isMyChoice={option.isMyChoice}
             />
@@ -219,17 +228,29 @@ const MyActivitiesVoteItem = ({ voteItem }) => {
     );
   };
 
+  // 상세페이지
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+
+  const openVoteDetailModal = (voteId) => {
+    setVoteDetailModalOpen(voteId);
+  };
+
   return (
     <>
       <NavLink onMouseOver={ItemMouseEnter} onMouseOut={ItemMouseLeave}>
-        <div style={containerStyle}>
+        <div
+          style={containerStyle}
+          onClick={() => {
+            openVoteDetailModal(voteItem.voteId);
+          }}
+        >
           <div style={flexContainerStyle}>
             <div style={titleStyle} className="fontsize-lg">
-              {voteItem.title}
+              {truncateTitle(voteItem.title)}
             </div>
-            <div style={commentNumberStyle} className="fontsize-md">
-              [[댓글]]
-            </div>
+            <div style={commentNumberStyle} className="fontsize-md"></div>
           </div>
           <div style={infoContainerStyle}>
             <div style={infoSubContainerStyle}>

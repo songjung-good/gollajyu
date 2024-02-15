@@ -10,11 +10,19 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -80,7 +88,6 @@ public class VoteController {
     @GetMapping("/detail")
     @Operation(summary = "투표 상세", description = "returns VoteDetailResDto")
     public ResponseEntity<ResponseMessage<VoteDetailResDto>> voteDetail(@ModelAttribute VoteDetailReqDto voteDetailReqDto) {
-        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         ServiceResult result = voteService.voteDetail(voteDetailReqDto);
 
         if (!result.isResult()) {
@@ -121,24 +128,20 @@ public class VoteController {
     public ResponseEntity<ResponseMessage<VoteListResDto>> voteListByCategory(
             @RequestParam(value = "categoryId") int categoryId,
             HttpSession session,
-            @RequestParam(value = "memberId", required = false) Long memberId
+            @RequestParam(value = "memberId", required = false) Long memberId,
+            @RequestParam(value  = "pageNo", defaultValue = "0") int pageNo
     ) {
 
-        System.out.println("categoryId = " + categoryId);
-        System.out.println("memberId = " + memberId);
 
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
-        System.out.println("session 잘 되어 있나요---(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
 
-        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId);
-//        System.out.println("result = " + result);
+        ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId, pageNo);
 
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().fail(result.getMessage()));
         }
 
-        System.out.println("result.getData() = " + result.getData());
         return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().success(result.getData()));
     }
 
@@ -161,7 +164,6 @@ public class VoteController {
             , @RequestParam(name = "keyword", defaultValue = "") String keyword
             , HttpSession session) {
 
-        System.out.println(categoryId +"aaaaaaaaaaaaaaaaaa" + keyword);
         SearchReqDto searchReqDto = SearchReqDto.builder()
                 .categoryId(Integer.parseInt(categoryId))
                 .keyword(keyword)
@@ -216,6 +218,21 @@ public class VoteController {
 
 
         return new ResponseEntity<>(gollaItem, HttpStatus.OK);
+    }
+
+    @GetMapping("/resources/{filename:.+}")
+    public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
+        Path file = Paths.get(fileDir).resolve(filename);
+        try {
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok().body(resource);
+            } else {
+                throw new RuntimeException("Could not read file: " + filename);
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
     }
 
 }

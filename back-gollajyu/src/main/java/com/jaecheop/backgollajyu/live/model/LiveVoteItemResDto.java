@@ -1,7 +1,6 @@
 package com.jaecheop.backgollajyu.live.model;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -9,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LiveVoteItemResDto {
+    private Long id;
     private String imgUrl;
     private String description;
     private Long count;

@@ -1,5 +1,9 @@
+// 리액트
 import React from "react";
+
+// 내 댓글 컴포넌트
 import MyActivitiesCommentItem from "./MyActivitiesCommentItem";
+
 
 const MyActivitiesCommented = ({ props }) => {
   // console.log("작성한 댓글:", props);

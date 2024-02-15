@@ -1,15 +1,32 @@
+// 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import { NavLink } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
+import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
+
+// HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
-import useAuthStore from "../../stores/userState";
-import API_URL from "../../stores/apiURL";
+
+// API URL 설정
+import API_URL from "/src/stores/apiURL";
+
+// 반응형 웹 디자인을 위한 유틸리티 함수
+import { useResponsiveQueries } from "/src/stores/responsiveUtils";
+
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+
+// 내 활동 컴포넌트
 import MyActivitiesCreated from "./MyActivitiesCreated";
 import MyActivitiesParticipated from "./MyActivitiesParticipated";
 import MyActivitiesLiked from "./MyActivitiesLiked";
 import MyActivitiesCommented from "./MyActivitiesCommented";
+
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
 import PointImage from "/assets/images/point_img.png";
+
+// 모달창
+import VoteDetail from "../../components/VoteDetailPage/VoteDetail";
+import useModalStore from "/src/stores/modalState";
 
 // ----------- Hover 커스텀 훅 -----------
 const useHoverState = () => {
@@ -35,19 +52,24 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
 );
 
 const MyActivities = () => {
-  // ----------- 반응형 웹페이지 구현 -----------
-  const isXLarge = useMediaQuery({
-    query: "(min-width:1024px)",
-  });
-  const isLarge = useMediaQuery({
-    query: "(min-width:768px) and (max-width:1023.98px)",
-  });
-  const isMedium = useMediaQuery({
-    query: "(min-width:480px) and (max-width:767.98px)",
-  });
-  const isSmall = useMediaQuery({
-    query: "(max-width:479.98px)",
-  });
+  // ------------------ 반응형 웹페이지 구현 ------------------
+  const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showInfoDescription, setShowInfoDescription] = useState(false);
+  const [showRecordDescription, setShowRecordDescription] = useState(false);
+  const [showPointDescription, setShowPointDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleInfoDescription = () => {
+    setShowInfoDescription(!showInfoDescription);
+  };
+  const toggleRecordDescription = () => {
+    setShowRecordDescription(!showRecordDescription);
+  };
+  const togglePointDescription = () => {
+    setShowPointDescription(!showPointDescription);
+  };
 
   // ----------- 링크 메뉴 hover -----------
   const [CreatedHovered, CreatedMouseEnter, CreatedMouseLeave] =
@@ -76,46 +98,56 @@ const MyActivities = () => {
   const [createdComment, setCreatedComment] = useState([]);
   const [infoItems, setInfoItems] = useState([]);
 
+  // 투표 모달 창 상태
+  const isVoteDetailModalOpened = useModalStore(
+    (state) => state.isVoteDetailModalOpened
+  );
+  // 상세페이지
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+
   useEffect(() => {
+    window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     // 작성한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes")
       .then((res) => {
         setCreatedVote(res.data);
-        console.log("작성한 투표:", res.data);
+        // console.log("작성한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 좋아요한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes/likes")
       .then((res) => {
         setLikedVote(res.data);
-        console.log("좋아요한 투표:", res.data);
+        // console.log("좋아요한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 참여한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes/participation")
       .then((res) => {
         setParticipatedVote(res.data);
-        console.log("참여한 투표:", res.data);
+        // console.log("참여한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 작성한 댓글
     axios
       .get(API_URL + "/members/" + user.memberId + "/comments")
       .then((res) => {
         setCreatedComment(res.data);
-        console.log("작성한 댓글:", res.data);
+        // console.log("작성한 댓글:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }, []);
 
@@ -192,13 +224,34 @@ const MyActivities = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
+  };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  };
+
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
@@ -337,10 +390,12 @@ const MyActivities = () => {
     // 디자인
     marginRight: isXLarge ? "10px" : isLarge ? "8px" : isMedium ? "6px" : "4px",
     paddingTop: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
-    width: !isSmall ? "20%" : "25%",
+    width: isXLarge || isLarge ? "20%" : isMedium ? "22%" : "25%",
     height: isXLarge ? "60px" : isLarge ? "50px" : "40px",
-    borderTopLeftRadius: !isSmall ? "20px" : "10px",
-    borderTopRightRadius: !isSmall ? "20px" : "10px",
+    borderTopLeftRadius:
+      isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
+    borderTopRightRadius:
+      isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
     background: "#D9D9D9",
 
     // 글자
@@ -376,15 +431,21 @@ const MyActivities = () => {
   const historyContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    // 최소 높이
     minHeight: isXLarge
       ? "1000px"
       : isLarge
       ? "740px"
       : isMedium
-      ? "560px"
+      ? "460px"
       : "375px",
-    borderBottomRadius: isXLarge
+    borderBottomLeftRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
+    borderBottomRightRadius: isXLarge
       ? "50px"
       : isLarge
       ? "40px"
@@ -430,9 +491,26 @@ const MyActivities = () => {
       {/* ------------- 활동정보 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">
-            활동정보
+          <span style={titleTextStyle} className="fontsize-lg">
+            # 활동정보
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleInfoDescription}
+            onMouseOver={() => setShowInfoDescription(true)}
+            onMouseOut={() => setShowInfoDescription(false)}
+          />
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showInfoDescription ? "visible" : "hidden",
+            }}
+          >
+            내 포인트 및 누적 활동정보
+          </p>
         </div>
         <div style={contentsContainerStyle}>
           <div style={flexContainerStyle}>
@@ -440,8 +518,34 @@ const MyActivities = () => {
             <div style={pointTextStyle} className="fontsize-lg">
               내 포인트
             </div>
-            <div style={pointNumberStyle} className="fontsize-xl">
+            <div style={pointNumberStyle} className="fontsize-xl mx-2">
               {user.point}
+            </div>
+            <div className="relative">
+              <img
+                src={questionMarkImg}
+                style={questionMarkStyle}
+                alt="물음표"
+                className="cursor-pointer rounded-full"
+                onClick={togglePointDescription}
+                onMouseOver={() => setShowPointDescription(true)}
+                onMouseOut={() => setShowPointDescription(false)}
+              />
+              <p
+                style={{
+                  ...descriptionStyle,
+                  visibility: showPointDescription ? "visible" : "hidden",
+                  position: "absolute",
+                  top: -2,
+                  left: 30,
+                }}
+              >
+                투표하기 (-2)
+                <br />
+                골라쥬 생성 (+10)
+                <br />
+                닉네임 수정 (+100)
+              </p>
             </div>
           </div>
           <div style={barStyle}></div>
@@ -452,9 +556,26 @@ const MyActivities = () => {
       {/* ------------- 활동기록 ------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">
-            활동기록
+          <span style={titleTextStyle} className="fontsize-lg">
+            # 활동기록
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleRecordDescription}
+            onMouseOver={() => setShowRecordDescription(true)}
+            onMouseOut={() => setShowRecordDescription(false)}
+          />
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showRecordDescription ? "visible" : "hidden",
+            }}
+          >
+            참여 투표 목록 및 바로가기
+          </p>
         </div>
         <div style={linkContainerStyle}>
           {linkItems.map((item, index) => (
@@ -504,6 +625,7 @@ const MyActivities = () => {
           </Routes>
         </div>
       </div>
+      {isVoteDetailModalOpened && <VoteDetail />}
     </>
   );
 };

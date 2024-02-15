@@ -24,12 +24,11 @@ public class Oauth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
         // Custom logic after successful OAuth2 login
-//        System.out.println("my succcesss handelr!!!!!!!!!!!!!");
 
 
         // Custom logic after successful OAuth2 login
         PrincipalDetails principal = (PrincipalDetails)authentication.getPrincipal();
-        Object oauthemail = principal.getAttributes().get("email");
+//        Object oauthemail = principal.getAttributes().get("email");
         // Perform actions based on authorities or any other custom logic
         // 추가 정보 받기!!!!
         // 리다이렉트밖에 클라이언트 쪽으로 정보를 보내는 방법이 없음 -> 쿠키에 담아주기

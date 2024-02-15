@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.vote.model;
 
 import com.jaecheop.backgollajyu.comment.entity.Comment;
+import com.jaecheop.backgollajyu.comment.model.CommentResDto;
 import com.jaecheop.backgollajyu.vote.entity.Vote;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,10 @@ public class VoteDetailResDto {
     private VoteInfoDto voteInfo;
 
     // 투표 아이템 리스트 정보
-    private List<VoteItemInfoDto> voteItemListInfo;
+    private List<VoteItemInfoDto> voteItemList;
 
     // 댓글
-    private List<Comment> commentList;
+    private List<CommentDto> commentList;
 
 
 }

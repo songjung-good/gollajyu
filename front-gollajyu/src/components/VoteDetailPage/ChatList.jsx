@@ -1,31 +1,62 @@
 // ChatList.jsx
-import React from 'react';
+import React from "react";
 
-const ChatList = ({ list, choiced, onLike }) => {
-  const colorMap = {
-    '001': 'bg-yellow-300',
-    '002': 'bg-green-300',
-    '003': 'bg-blue-300',
-    '004': 'bg-orange-300'
+const ChatList = ({ list, choiced2, onLike }) => {
+  // console.log(list);
+  const colorMap = [
+    "text-[#FF595E]",
+    "text-[#FFCA3A]",
+    "text-[#8AC926]",
+    "text-[#1982C4]",
+  ];
+
+  const formatCreatedAt = (createdAt) => {
+    const date = new Date(createdAt);
+    const formattedDate = date.toLocaleDateString(); // Get date in format MM/DD/YYYY
+    const formattedTime = date.toLocaleTimeString(); // Get time in format HH:MM:SS
+    return `${formattedDate} ${formattedTime.slice(0, -3)}`; // 형식: YYYY.MM.DD 오전/오후 HH:mm
   };
 
-  const items = () => list.map((v, k) => (
-    <div key={k} className={`flex ${v.choiced === choiced ? 'justify-end' : ''}`}>
-      <div className={`${colorMap[v.choiced]} text-black p-2 rounded-lg max-w-xs`}>
-        <small>{v.userid} (선택지: {v.choiced})</small>
-        <p className='chat-content'>{v.content}</p>
-        <button className='fontsize-xs' onClick={() => onLike(k)}>좋아요: {v.liked} 👍</button>
+  const items = () =>
+    list.map((v, k) => (
+      <div
+        key={k}
+        className={`px-3 flex ${
+          v.voteItemId === choiced2 ? "justify-end" : ""
+        }`}
+      >
+        <div className={`bg-white text-black p-2 rounded-lg max-w-xs`}>
+          <small
+            style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
+            className={`fontsize-xs ${colorMap[v.voteItemId % 4]}`}
+          >
+            {v.memberNickname} ({formatCreatedAt(v.createAt)})
+          </small>
+          <p
+            style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
+            className="chat-content fontsize-sm"
+          >
+            {v.commentDesc}
+          </p>
+          {/* <button className='fontsize-xs' disabled={v.liked ? true : false} onClick={() => onLike(k)}>좋아요: {v.commentLikesCnt}👍</button> */}
+        </div>
       </div>
-    </div>
-  ));
+    ));
 
   return (
-    <div className="flex-1 overflow-y-auto p-4">
-      <div className="flex flex-col space-y-2">
-        {items()}
+    <>
+      <div
+        style={{
+          overflowY: "auto", // 세로 스크롤을 가능하게 하기 위해 추가
+          scrollbarWidth: "thin", // 스크롤바를 얇게 만듦
+          scrollbarColor: "#BEBEBE transparent", // 스크롤바 색상 (track, thumb 순서)
+        }}
+        className="flex-1 overflow-y-auto py-4 bg-gray-100 h-[500px]"
+      >
+        <div className="flex flex-col space-y-2">{items()}</div>
       </div>
-    </div>
+    </>
   );
-}
+};
 
 export default ChatList;

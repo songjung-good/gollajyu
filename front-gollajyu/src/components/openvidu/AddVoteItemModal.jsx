@@ -4,16 +4,19 @@ const settingButton = "text-white font-bold py-2 px-4 rounded";
 
 const AddVoteItemModal = ({ isOpen, onClose }) => {
   const [imgFile, setImgFile] = useState("");
+  const [previewImgFile, setPreviewImgFile] = useState("");
   const [text, setText] = useState("");
   const imgRef = useRef();
 
   // 이미지 업로드 input의 onChange
   const saveImgFile = () => {
     const file = imgRef.current.files[0];
+    // console.log(file);
+    setImgFile(file);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setImgFile(reader.result);
+      setPreviewImgFile(reader.result);
     };
   };
 
@@ -27,9 +30,9 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = () => {
     if (imgFile) {
-      onClose(imgFile);
+      onClose("img", [imgFile, previewImgFile]);
     } else if (text) {
-      onClose(text);
+      onClose("text", [text]);
     }
     setImgFile("");
     setText("");
@@ -38,17 +41,11 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center text-center">
       <div className="bg-neutral-300 p-6 rounded-md w-[450px] h-[350px] relative">
-        {/* <span
-          className="absolute top-2 right-2 text-2xl cursor-pointer"
-          onClick={onClose}
-        >
-          &times;
-        </span> */}
         <h2 className="text-2xl mb-4">투표 선택지 추가하기</h2>
         <div className="flex flex-col items-center space-y-3">
           {imgFile && (
             <img
-              src={imgFile}
+              src={previewImgFile}
               className="w-48 h-40 mx-auto"
               alt="이미지 미리보기"
             />
@@ -68,9 +65,15 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 className="w-3/5"
-                placeholder="텍스트를 추가해주세요"
+                placeholder="텍스트 추가해쥬(15자 이내)"
+                value={text}
                 onChange={(e) => {
-                  setText(e.target.value);
+                  if (e.target.value.length > 15) {
+                    window.alert("글자수가 15자를 넘었습니다");
+                    setText(e.target.value.slice(0, 15));
+                  } else {
+                    setText(e.target.value);
+                  }
                 }}
               />
             </>

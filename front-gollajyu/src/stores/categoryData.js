@@ -24,6 +24,12 @@ const categoryData = [
     name: "전자제품",
     tags: ["가성비", "브랜드", "디자인", "기능성", "내구성"],
   },
+  {
+    id: 5,
+    name: "간단",
+    tags: ["선택"],
+  },
+
 ];
 
 export default categoryData;

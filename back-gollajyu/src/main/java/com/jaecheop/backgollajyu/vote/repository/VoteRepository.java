@@ -1,6 +1,7 @@
 package com.jaecheop.backgollajyu.vote.repository;
 
 import com.jaecheop.backgollajyu.vote.entity.Vote;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -37,9 +37,10 @@ public interface VoteRepository extends JpaRepository<Vote, Long> {
             "ORDER BY li.createAt DESC")
     List<Vote> findVoteLikesByMemberId(@Param("memberId") Long memberId);
 
-    List<Vote> findAllByOrderByCreateAtDesc();
+    List<Vote> findAllByOrderByCreateAtDesc(Pageable pageable);
 
-    List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId);
+
+    List<Vote> findAllByCategoryIdOrderByCreateAtDesc(int categoryId, Pageable pageable);
 
     List<Vote> findAllByCreateAtBetweenOrderByCreateAtDesc(LocalDateTime startDate, LocalDateTime endDate);
 

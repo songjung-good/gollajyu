@@ -13,13 +13,17 @@ import com.jaecheop.backgollajyu.vote.entity.*;
 import com.jaecheop.backgollajyu.vote.model.*;
 import com.jaecheop.backgollajyu.vote.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.*;
@@ -29,6 +33,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class VoteService {
+
+    @Value("${img.url}")
+    private String imgUrl;
+
     private final VoteResultRepository voteResultRepository;
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
@@ -54,7 +62,6 @@ public class VoteService {
 
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
-        System.out.println(optionalMember+"/sdfsdfasdfasdfasdfasdfasdf/"+voteReqDto.toString());
 
         if (optionalMember.isEmpty()) {
             return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
@@ -197,7 +204,7 @@ public class VoteService {
     public VoteItemResDto mapVoteItemToDto(VoteItem voteItem) {
         return VoteItemResDto.builder()
                 .voteItemId(voteItem.getId())
-                .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                 .voteItemDesc(voteItem.getVoteItemDesc())
                 .price(voteItem.getPrice())
                 .resultSize((long) voteResultRepository.findByVoteItem(voteItem).size()) //
@@ -245,14 +252,15 @@ public class VoteService {
     // 태그별 투표수 첨부 해주기 For ItemResDto 결과랑 sSReq(null true)
     public List<CategoryTagDto> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<CategoryTagDto> statisticsList = new ArrayList<>();
-//        System.out.println(voteResults+"@@@@@@@@@@@@@@@@");
         // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
         List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
                 : voteResults;
 
-        assert statisticsSearchReqDto != null;
-        List<Tag> allTags = tagRepository.findAllByCategoryId(statisticsSearchReqDto.getCategoryId());
+        List<Tag> allTags = new ArrayList<>();
+        if (statisticsSearchReqDto != null) {
+            allTags = tagRepository.findAllByCategoryId(statisticsSearchReqDto.getCategoryId());
+        }
         CategoryTagDto allTagDto = new CategoryTagDto(0, "all", "all", 0L);
         statisticsList.add(allTagDto);
 
@@ -317,7 +325,6 @@ public class VoteService {
     // StatisticsSearchReqDto 에 따른 필터링 작업 ,,,voteResultList(byVoteItem or byMemberId or byAll)
     public List<VoteResult> perfectResultsMethod(List<VoteResult> voteResultList, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<VoteResult> resultList = voteResultList;
-//        System.out.println(statisticsSearchReqDto+"ssssssssssssssssssssssssssss");
 
         // 소비성향이 있다면
         if ((statisticsSearchReqDto.getTypeId() != null) && (statisticsSearchReqDto.getTypeId() != 0)) {
@@ -517,11 +524,12 @@ public class VoteService {
         Vote vote = optionalVote.get();
 
         // 이 사용자의 투표 참여 여부
+        Long chosenItemId = null; // 사용자가 선택한 투표 아이템 ID를 저장할 변수, 참여하지 않았다면 null 상태 유지
         Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(member.getId(), vote.getId());
-        if (optionalVoteResult.isEmpty()) {
-            return  new ServiceResult<>().fail("투표하지 않은 사용자입니다.");
+        if (optionalVoteResult.isPresent()) {
+            // 투표에 참여한 경우, 선택한 투표 아이템의 ID 할당
+            chosenItemId = optionalVoteResult.get().getVoteItem().getId();
         }
-        VoteResult voteResult = optionalVoteResult.get();
 
         // 상세정보 - 나이, 성별, 성향 별
         // 1. 투표 관련 정보 + 총 투표 수 + 좋아요
@@ -529,7 +537,10 @@ public class VoteService {
         List<VoteResult> voteResultList = filteredVoteResultList(vote.getVoteResultList(), voteDetailReqDto.getFilter());
 
         VoteInfoDto voteInfoDto = VoteInfoDto.builder()
+                .voteId(vote.getId())
                 .memberId(vote.getMember().getId())
+                .memberNickname(vote.getMember().getNickname())
+                .categoryId(vote.getCategory().getId())
                 .title(vote.getTitle())
                 .description(vote.getDescription())
                 .createAt(vote.getCreateAt())
@@ -565,21 +576,28 @@ public class VoteService {
             VoteItemInfoDto voteItemInfoDto = VoteItemInfoDto.builder()
                     .voteItemId(voteItem.getId())
                     .voteItemDesc(voteItem.getVoteItemDesc())
-                    .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                    .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                     .price(voteItem.getPrice())
-                    .choiceCnt(choiceCnt) // 해당 아이템 선택 개수
+                    .count(choiceCnt) // 해당 아이템 선택 개수
                     .tagCountList(tagCountList) // 해당 아이템 내 각 태그 별 선택 개수
                     .build();
             voteItemInfoDtoList.add(voteItemInfoDto);
         }
         // 3. 댓글
         List<Comment> commentList = commentRepository.findByVoteId(vote.getId());
+        List<CommentDto> commentDtoList = new ArrayList<>();
 
+        // 각 댓글을 DTO로 변환
+        for(Comment comment : commentList){
+            commentDtoList.add(CommentDto.convertToDto(comment, voteDetailReqDto.getMemberId()));
+        }
+
+        // req로 받은 사용자의 좋아요 여부 추가
         VoteDetailResDto voteDetailResDto = VoteDetailResDto.builder()
-                .chosenItem(voteResult.getId())
+                .chosenItem(chosenItemId)
                 .voteInfo(voteInfoDto)
-                .voteItemListInfo(voteItemInfoDtoList)
-                .commentList(commentList)
+                .voteItemList(voteItemInfoDtoList)
+                .commentList(commentDtoList)
                 .build();
 
         return  new ServiceResult<VoteDetailResDto>().success(voteDetailResDto);
@@ -627,7 +645,10 @@ public class VoteService {
 
     }
 
-    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession, Long memberId) {
+    public ServiceResult<VoteListResDto> getVoteListByCategory(int categoryId, LoginResDto memberSession, Long memberId, int pageNo) {
+        // pageable
+        Pageable pageable = PageRequest.of(pageNo, 10);
+
         // 반환 할 결과
         VoteListResDto voteListResDto = null;
         // 로그인 하지 않은 사용자
@@ -642,16 +663,24 @@ public class VoteService {
                         .build();
                 // 단일 투표의 상세 리스트
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByOrderByCreateAtDesc()
+                        .findAllByOrderByCreateAtDesc(pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v)).toList();
+
+
+
+                // 마지막 페이지
+                long lastPageNo = voteRepository.count()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
+
                 makeVoteDetail(allVoteList);
+
                 voteListResDto.updateVoteInfoList(allVoteList);
+
             }
 
             // 카테고리가 전체가 아닐 때
             else {
-                System.out.println("33333333333");
                 // 카테고리 유무 확인
                 Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
                 if (optionalCategory.isEmpty()) {
@@ -671,10 +700,14 @@ public class VoteService {
 
                 // 해당 카테고리 투표 리스트 최신순으로 담기
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId)
+                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId, pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
+
+                // 마지막 페이지
+                long lastPageNo = voteRepository.count()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(allVoteList);
@@ -691,7 +724,7 @@ public class VoteService {
             if (categoryId == 0) {
                 // 전체 투표에서 투표 한 투표 거르기
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByOrderByCreateAtDesc()
+                        .findAllByOrderByCreateAtDesc(pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
@@ -717,6 +750,10 @@ public class VoteService {
                         .tagList(null) // 전체에서는 tagList를 특정할 수 없으므로 null로 주고, 각 투표마다 태그 리스트를 따로 저장해준다.
                         .build();
 
+
+                // 마지막 페이지
+                long lastPageNo = voteRepository.count()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
 
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(filteredVoteList);
@@ -745,7 +782,7 @@ public class VoteService {
                 // 해당 카테고리 투표 리스트 최신순으로 담기
                 // 참여한 투표 거르기
                 List<ListVoteDto> allVoteList = voteRepository
-                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId)
+                        .findAllByCategoryIdOrderByCreateAtDesc(categoryId, pageable)
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
@@ -764,12 +801,15 @@ public class VoteService {
                     }
                 });
 
+                // 마지막 페이지
+                long lastPageNo = voteRepository.count()/10;
+                voteListResDto.updateLastPageNo(lastPageNo);
+
                 //  단일 투표들의 상세 정보 리스트 생성
                 makeVoteDetail(filteredVoteList);
                 voteListResDto.updateVoteInfoList(filteredVoteList);
             }
         }
-//        System.out.println("voteListResDto = " + voteListResDto);
         return new ServiceResult<VoteListResDto>().success(voteListResDto);
 
     }
@@ -796,7 +836,7 @@ public class VoteService {
             listVoteItemDtoList.add(
                     ListVoteItemDto.builder()
                             .voteItemId(voteItem.getId())
-                            .voteItemImgUrl(voteItem.getVoteItemImgUrl())
+                            .voteItemImgUrl(convertFilePathToUrl(voteItem.getVoteItemImgUrl()))
                             .voteItemDesc(voteItem.getVoteItemDesc())
                             .price(voteItem.getPrice())
                             .count((long)voteItem.getVoteResultList().size())
@@ -970,7 +1010,6 @@ public class VoteService {
 
         // 로그인 했을 때,
         if (memberInfo != null) {
-            System.out.println("memberInfo!!!!!!!! = " + memberInfo);
             Long memberId = memberInfo.getMemberId();
 
             //  카테고리가 전체일 때, 카테고리가 전체가 아닐 때 키워드로 거르기
@@ -980,8 +1019,18 @@ public class VoteService {
                         .build();
                 allVoteList = voteRepository.findAllByTitleContainingOrDescriptionContainingOrderByCreateAtDesc(keyword, keyword)
                         .stream()
-                        .map(v -> ListVoteDto.convertToDto(v))
+                        .map(v ->ListVoteDto.convertToDto(v))
                         .toList();
+
+                // 사용자가 고른 투표 아이템 저장
+                 allVoteList.forEach(vd -> {
+                     Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(memberInfo.getMemberId(), vd.getVoteId());
+                     if(optionalVoteResult.isEmpty()){
+                         vd.updateChosenItem(0L);
+                     } else{
+                         vd.updateChosenItem(optionalVoteResult.get().getVoteItem().getId());
+                     }
+                 });
 
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
@@ -1012,7 +1061,16 @@ public class VoteService {
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
 
-                System.out.println("allVoteList = " + allVoteList);
+                // 사용자가 고른 투표 아이템 저장
+                allVoteList.forEach(vd -> {
+                    Optional<VoteResult> optionalVoteResult = voteResultRepository.findByMemberIdAndVoteId(memberInfo.getMemberId(), vd.getVoteId());
+                    if(optionalVoteResult.isEmpty()){
+                        vd.updateChosenItem(0L);
+                    } else{
+                        vd.updateChosenItem(optionalVoteResult.get().getVoteItem().getId());
+                    }
+                });
+
 
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
@@ -1061,7 +1119,6 @@ public class VoteService {
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
-                System.out.println("!!!!!!!!!!!!!allVoteList = " + allVoteList);
 
                 makeVoteDetail(allVoteList);
 
@@ -1071,5 +1128,16 @@ public class VoteService {
         }
 
         return new ServiceResult<SearchResDto>().success(searchResDto);
+    }
+
+    // 파일 경로를 웹 URL로 변환
+    private String convertFilePathToUrl(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return null; // 또는 기본 이미지 URL
+        }
+        // 이미지 파일명만 추출합니다.
+        String fileName = Paths.get(filePath).getFileName().toString();
+        // 웹 접근 가능한 URL로 변환합니다.
+        return String.format("%s/resources/%s", imgUrl, fileName);
     }
 }

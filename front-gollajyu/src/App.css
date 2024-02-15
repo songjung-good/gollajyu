@@ -6,7 +6,6 @@
 }
 
 .body {
-  margin-top: 100px; /* 네비게이션 바 높이만큼 높이 설정 */
   background-color: #f7f6f3;
 }
 
@@ -39,6 +38,7 @@
 }
 
 /* -------------------- 화면크기별 기본 폰트 사이즈 설정 ---------------------- */
+
 /* 가장 작은 화면 : 480px보다 작은 화면*/
 @media (max-width: 479.98px) {
   * {
@@ -64,6 +64,20 @@
 @media (min-width: 1024px) {
   * {
     font-size: 16px;
+  }
+}
+
+/* -------------------- 화면크기별 높이 설정 ---------------------- */
+
+@media (max-width: 767.98px) {
+  .body {
+    margin-top: 70px;
+  }
+}
+
+@media (min-width: 768px) {
+  .body {
+    margin-top: 110px;
   }
 }
 
