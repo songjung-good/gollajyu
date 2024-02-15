@@ -317,14 +317,14 @@ const NavigationBar = () => {
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
     // 디자인
-    width: "100px",
+    width: "120px",
   };
 
   // ----------- 로고 스타일 -----------
   const logoStyle = {
     // 글자
     fontFamily: "HSSantokkiRegular", // 로고 폰트로 변경
-    fontSize: "36px",
+    fontSize: "46px",
     color: "#FFD257", // 로고 글자 색: 노란색
     whiteSpace: "nowrap",
   };
@@ -335,7 +335,7 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    width: "50%",
+    width: "60%",
 
     // 컨텐츠 정렬
     justifyContent: "space-between",
@@ -351,7 +351,7 @@ const NavigationBar = () => {
     height: "70px",
 
     // 글자
-    color: "#4A4A4A",
+    color: "#222222",
   };
 
   // ----------- 링크 아이템 active 스타일 -----------
@@ -378,9 +378,7 @@ const NavigationBar = () => {
     ...flexContainerStyle,
 
     // 디자인
-    width:
-      isXLarge || isLarge ?  "100px" :
-      isMedium ? "330px" : "210px",
+    width: isXLarge || isLarge ?  "120px" : isMedium ? "330px" : "210px",
     
     // 컨텐츠 정렬
     justifyContent: "flex-end",
@@ -393,6 +391,7 @@ const NavigationBar = () => {
     paddingTop: "5px",
     width: "30px", // 버튼 가로 길이
     height: "70px", // 버튼 세로 길이
+    visibility: isXLarge ? "hidden" : "visible",
 
     // 글자
     fontSize: "28px", // 햄버거 버튼 사이즈
@@ -465,6 +464,7 @@ const NavigationBar = () => {
     {
       to: "/VotePage",
       label: "투표모아쥬",
+      description: "투표를 최신순이나 인기순으로 정렬하거나, 원하는 투표를 검색할 수 있어요!",
       hovered: votePageHovered,
       mouseEnter: votePageMouseEnter,
       mouseLeave: votePageMouseLeave,
@@ -472,6 +472,7 @@ const NavigationBar = () => {
     {
       to: "/BroadcastPage",
       label: "지금골라쥬",
+      description: "라이브 방송을 시청하며 실시간 투표를 하고 의견을 공유할 수 있어요!",
       hovered: broadcastPageHovered,
       mouseEnter: broadcastPageMouseEnter,
       mouseLeave: broadcastPageMouseLeave,
@@ -479,6 +480,7 @@ const NavigationBar = () => {
     {
       to: "/StatisticPage",
       label: "통계보여쥬",
+      description: "다른 사람들이 물건을 구매 할 때 고려하는 요소들을 비교할 수 있어요!",
       hovered: statisticPageHovered,
       mouseEnter: statisticPageMouseEnter,
       mouseLeave: statisticPageMouseLeave,
@@ -486,6 +488,7 @@ const NavigationBar = () => {
     {
       to: "/TestResultPage",
       label: "소비성향알려쥬",
+      description: "나의 소비성향 및 다른 소비성향들에 대해 알아볼 수 있어요!",
       hovered: testResultPageHovered,
       mouseEnter: testResultPageMouseEnter,
       mouseLeave: testResultPageMouseLeave,
@@ -607,7 +610,7 @@ const NavigationBar = () => {
           {/* --------------------------------- 내비게이션 메뉴 --------------------------------- */}
           {isXLarge && ( // (반응형) isXLarge 크기 이상일 경우
             <>
-              <div style={linkContainerStyle}>
+              <div style={linkContainerStyle} className="relative">
                 {linkItems.map((item, index) => (
                   <MenuItem
                     key={index}
@@ -621,11 +624,17 @@ const NavigationBar = () => {
                     }}
                   >
                     <div>
-                      <div style={{fontSize: "16px"}}>{item.label}</div>
+                      <p
+                        style={{ visibility: item.hovered  ? "visible" : "hidden" }}
+                        className="absolute bottom-16 left-1/2 -translate-x-1/2 py-1 px-3 border-2 border-amber-300 rounded-full bg-white font-normal text-black shadow-lg whitespace-nowrap"
+                      >
+                        {item.description}
+                      </p>
+                      <div style={{fontSize: "20px"}}>{item.label}</div>
                       <div
                         style={{
                           ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
+                          visibility: item.hovered || window.location.pathname.startsWith(item.to) ? "visible" : "hidden",
                         }}
                       ></div>
                     </div>
@@ -677,7 +686,7 @@ const NavigationBar = () => {
                       <div
                         style={{
                           ...itemHoverStyle,
-                          visibility: item.hovered ? "visible" : "hidden",
+                          visibility: item.hovered || window.location.pathname.startsWith(item.to) ? "visible" : "hidden",
                         }}
                       ></div>
                     </div>
