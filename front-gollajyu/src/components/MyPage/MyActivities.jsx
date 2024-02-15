@@ -1,7 +1,6 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
 import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
-import { Tooltip } from "@mui/material";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -59,6 +58,7 @@ const MyActivities = () => {
   //  ----------- 상세 설명 토글하기 위한 상태 -----------
   const [showInfoDescription, setShowInfoDescription] = useState(false);
   const [showRecordDescription, setShowRecordDescription] = useState(false);
+  const [showPointDescription, setShowPointDescription] = useState(false);
 
   // ----------- 상태 토글 함수 -----------
   const toggleInfoDescription = () => {
@@ -66,6 +66,9 @@ const MyActivities = () => {
   };
   const toggleRecordDescription = () => {
     setShowRecordDescription(!showRecordDescription);
+  };
+  const togglePointDescription = () => {
+    setShowPointDescription(!showPointDescription);
   };
 
   // ----------- 링크 메뉴 hover -----------
@@ -518,25 +521,32 @@ const MyActivities = () => {
             <div style={pointNumberStyle} className="fontsize-xl mx-2">
               {user.point}
             </div>
-            <Tooltip
-              title={
-                <div className="fontsize-xs">
-                  포인트 획득 - 출석, 투표하기
-                  <br />
-                  포인트 차감 - 골라쥬 생성, 닉네임 수정
-                </div>
-              }
-              placement="right-start"
-              size="md"
-              variant="outlined"
-            >
+            <div className="relative">
               <img
                 src={questionMarkImg}
                 style={questionMarkStyle}
                 alt="물음표"
                 className="cursor-pointer rounded-full"
+                onClick={togglePointDescription}
+                onMouseOver={() => setShowPointDescription(true)}
+                onMouseOut={() => setShowPointDescription(false)}
               />
-            </Tooltip>
+              <p
+                style={{
+                  ...descriptionStyle,
+                  visibility: showPointDescription ? "visible" : "hidden",
+                  position: "absolute",
+                  top: -2,
+                  left: 30,
+                }}
+              >
+                투표하기 (-2)
+                <br />
+                골라쥬 생성 (+10)
+                <br />
+                닉네임 수정 (+100)
+              </p>
+            </div>
           </div>
           <div style={barStyle}></div>
           {renderInfoItems}

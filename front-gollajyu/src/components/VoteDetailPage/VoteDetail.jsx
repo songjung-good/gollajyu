@@ -10,18 +10,16 @@ import API_URL from "/src/stores/apiURL";
 // 반응형 웹 디자인을 위한 유틸리티 함수
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
-import VoteCardItem from '../VotePage/VoteCardItem';
-import VoteDetailHeader from './VoteDetailHeader';
-import VoteDetailReselt from './VoteDetailReselt';
-import VoteDetailChat from './VoteDetailChat';
+import VoteCardItem from "../VotePage/VoteCardItem";
+import VoteDetailHeader from "./VoteDetailHeader";
+import VoteDetailResult from "./VoteDetailResult";
+import VoteDetailChat from "./VoteDetailChat";
 import useAuthStore from "/src/stores/userState";
 import useModalStore from "/src/stores/modalState";
 import { useParams } from "react-router-dom";
 
-
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
 const VoteDetail = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -106,8 +104,11 @@ const VoteDetail = () => {
   const handleClick = (itemId, selection) => {
     // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
-    setCountList(prevCountList => 
-      prevCountList.map((count, i) => voteDetail.voteItemList[i].voteItemId === itemId ? count + 1 : count));
+    setCountList((prevCountList) =>
+      prevCountList.map((count, i) =>
+        voteDetail.voteItemList[i].voteItemId === itemId ? count + 1 : count
+      )
+    );
 
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
@@ -140,7 +141,13 @@ const VoteDetail = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    width: isXLarge ? "800px" : isLarge ? "640px" : isMedium ? "450px" : "360px",
+    width: isXLarge
+      ? "800px"
+      : isLarge
+      ? "640px"
+      : isMedium
+      ? "450px"
+      : "360px",
     maxHeight: "800px",
     borderRadius: "10px",
     background: "#FFFFFF",
@@ -156,17 +163,22 @@ const VoteDetail = () => {
   const imgItemStyle = {
     // 디자인
     width: isXLarge ? "200px" : isLarge ? "160px" : isMedium ? "100px" : "90px",
-    height: isXLarge ? "260px" : isLarge ? "208px" : isMedium ? "140px" : "130px",
+    height: isXLarge
+      ? "260px"
+      : isLarge
+      ? "208px"
+      : isMedium
+      ? "140px"
+      : "130px",
     marginRight: isXLarge ? "20px" : isLarge ? "15px" : "10px",
     borderRadius: "5px",
-    
+
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
@@ -189,36 +201,34 @@ const VoteDetail = () => {
             <div className="py-4 flex justify-around items-center h-full gap-2">
               {/* 투표한 안한 사람( voteDetail.chosenItem = null )은 투표가 가능하게  */}
               {voteDetail.voteItemList.map((item, itemIndex) => (
-              <VoteCardItem 
-              key={item.voteItemId}
-              item={item}
-              categoryId={voteDetail.voteInfo.categoryId}
-              voteId={voteDetail.voteInfo.voteId}
-              totalCount={totalCount}
-              count={countList[itemIndex]}
-              selectedVoteItem={selectedVoteItem}
-              path="/VotePage"
-              onClicked={(voteItemId) => handleClick(voteItemId)}
-            />
+                <VoteCardItem
+                  key={item.voteItemId}
+                  item={item}
+                  categoryId={voteDetail.voteInfo.categoryId}
+                  voteId={voteDetail.voteInfo.voteId}
+                  totalCount={totalCount}
+                  count={countList[itemIndex]}
+                  selectedVoteItem={selectedVoteItem}
+                  path="/VotePage"
+                  onClicked={(voteItemId) => handleClick(voteItemId)}
+                />
               ))}
             </div>
             {selectedVoteItem && (
               <>
-                <VoteDetailReselt
-                  voteResults={voteDetail.voteItemList}
-                />
+                <VoteDetailResult voteResults={voteDetail.voteItemList} />
 
                 <p className="pt-12 pb-4 fontsize-sm">💬 댓글</p>
                 <VoteDetailChat
                   commentList={voteDetail.commentList}
-                  chosenItem={selectedVoteItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
+                  chosenItem={selectedVoteItem} //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                   userId={user.memberId}
                   voteId={detailVoteId}
                 />
               </>
             )}
           </div>
-        )}      
+        )}
       </div>
     </>
   );
