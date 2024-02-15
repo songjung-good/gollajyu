@@ -730,7 +730,10 @@ const MyStatistics = () => {
             <div style={infoContainerStyle} key={index}>
               <div style={itemLeftStyle}>
                 <div className="fontsize-md">{item.category}</div>
-                <div style={flexContainerStyle}>
+                <div style={{
+                  ...flexContainerStyle,
+                  width: isXLarge || isMedium ? "300px" : "195px",
+                }}>
                   {top3Left.map((tag, index) => (
                     <div
                       style={{
@@ -753,7 +756,10 @@ const MyStatistics = () => {
                   <div className="fontsize-md">
                     {tagRatio[index + 1].category}
                   </div>
-                  <div style={flexContainerStyle}>
+                  <div style={{
+                    ...flexContainerStyle,
+                    width: isXLarge || isMedium ? "300px" : "195px",
+                  }}>
                     {top3Right.map((tag, i) => (
                       <div
                         style={{
