@@ -24,6 +24,7 @@ const VoteDetail = () => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   const detailVoteId = useModalStore((state) => state.detailVoteId);
+  const detailVoteHandle = useModalStore((state) => state.detailVoteHandle);
   const [clicked, setClicked] = useState([false, false, false, false]);
   const [voteDetail, setVoteDetail] = useState();
   // 유저의 이메일정보
@@ -113,6 +114,7 @@ const VoteDetail = () => {
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
+    detailVoteHandle(itemId);
     // console.log(selectedVoteItem);
   };
 
