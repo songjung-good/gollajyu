@@ -79,6 +79,17 @@ const VoteCardItem = (props) => {
       });
   };
 
+  const getDynamicHeight = () => {
+    if (isXLarge) {
+      return "289px";
+    } else if (isLarge) {
+      return "220px";
+    } else if (isMedium) {
+      return "140px";
+    } else {
+      return "130px";
+    }
+  };
   return (
     <>
       <div className="flex flex-col">
@@ -119,7 +130,8 @@ const VoteCardItem = (props) => {
                 : isMedium
                 ? "90px"
                 : "70px",
-            height: "289px",
+            // height: "289px",
+            height: getDynamicHeight(),
             border: "5px solid",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
           }}
@@ -129,7 +141,7 @@ const VoteCardItem = (props) => {
           {/* 높이를 조정했습니다. */}
           {/* 이미지를 띄워지는 배경 */}
           <Container
-            className="w-full p-2 relative rounded-xl"
+            className="w-full p-0 relative rounded-xl"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             style={{ maxWidth: "100%" }}
@@ -169,9 +181,11 @@ const VoteCardItem = (props) => {
 
             {/* 투표 이미지 */}
             <img
-              className="mx-auto w-2/3 object-cover"
+              className="mx-auto w-2/3 h-full object-cover"
               alt="Vote Image"
               src={item.voteItemImgUrl}
+              // 로컬에서 임시로 이미지를 확인하기 위한 부분
+              // src="/assets/images/tmp_profile.png"
             />
           </Container>
           {/* 버튼을 누르면 생기는 상세페이지 */}
@@ -183,7 +197,7 @@ const VoteCardItem = (props) => {
               ).toFixed(2)}%`}</p>
             ) : (
               <p className="pb-2 fontsize-sm text-center invisible">
-                투표 참여 시, 선택 비율이 공개됩니다.
+                투표 비율
               </p>
             )}
             <h2 className="fontsize-sm font-bold">

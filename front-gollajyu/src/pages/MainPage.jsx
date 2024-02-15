@@ -96,7 +96,7 @@ const MainPage = () => {
         }
       });
     }
-  });
+  }, []);
 
   // 로그인 함수
   const logIn = (data) => {

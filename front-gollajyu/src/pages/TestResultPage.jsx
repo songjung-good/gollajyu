@@ -359,7 +359,7 @@ const TestResultPage = () => {
                         navigate("/");
                       }}
                     >
-                      메인으로 가기
+                      메인페이지로 가기
                     </button>
                   </>
                 ) : (
