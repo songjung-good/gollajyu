@@ -29,6 +29,7 @@ const SwipeVote = (props) => {
   useEffect(() => {
     const swiperInstance = document.querySelector(".mySwiper").swiper;
     swiperInstance.on("slideChange", () => {
+      setActiveSlide(swiperInstance.activeIndex);
       // console.log("지금:", swiperInstance.activeIndex, "/", voteList.length);
       if (swiperInstance.activeIndex > voteList.length - 3 && !isLastPage) {
         // console.log("얼마 안남음");
@@ -98,13 +99,22 @@ const SwipeVote = (props) => {
         className="mySwiper"
         style={swiperStyle}
       >
-        {voteList.map((vote) => (
+        {voteList.map((vote, index) => (
           <SwiperSlide
             key={vote.voteId}
             data-hash={vote.voteId}
             style={swiperSlideStyle}
           >
             <div style={voteCardStyle}>
+              {activeSlide !== index ? (
+                <div
+                  id="block"
+                  className="absolute z-10 w-5/6 rounded-3xl"
+                  style={swiperSlideStyle}
+                >
+                  {" "}
+                </div>
+              ) : null}
               <VoteCard
                 key={`${vote.voteId}-card`}
                 liked={vote.liked}

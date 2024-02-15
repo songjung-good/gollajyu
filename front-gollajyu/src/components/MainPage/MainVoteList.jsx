@@ -31,6 +31,7 @@ const MainVoteList = () => {
     // API를 통해 투표 정보를 가져옵니다.
     axios.get(`${API_URL}/votes/ranks`).then((response) => {
       const sortedVotes = response.data.body;
+      console.log(sortedVotes);
       const lists = [
         {
           key: 0,
@@ -200,7 +201,11 @@ const MainVoteList = () => {
                       <p style={likeStyle} className="fontsize-xs">
                         ❤ {item.likesCnt}
                       </p>
-                      <p className="fontsize-sm">{item.title}</p>
+                      <p className="fontsize-sm">
+                        {item.title.length > 20
+                          ? item.title.slice(0, 20) + "..."
+                          : item.title}
+                      </p>
                     </div>
                     <div className="flex items-center justify-center w-10">
                       <p className="fontsize-xs text-gray-500">

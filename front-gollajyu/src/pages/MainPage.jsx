@@ -252,7 +252,7 @@ const MainPage = () => {
                 voteList={voteListData}
                 isLastPage={isLastPage}
                 increasePageNo={increasePageNo}
-              />
+              /> 
             </div>
 
             {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
