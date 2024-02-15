@@ -113,15 +113,15 @@ const VoteCard = (props) => {
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
 
-  const getDynamicHeight = () => {
+  const getDynamicContainerHeight = () => {
     if (isXLarge) {
       return "500px";
     } else if (isLarge) {
-      return "35rem";
+      return "400px";
     } else if (isMedium) {
-      return "41rem";
+      return "290px";
     } else {
-      return "48rem";
+      return "290px";
     }
   };
 
@@ -138,7 +138,7 @@ const VoteCard = (props) => {
     maxWidth: "1160px",
     minWidth: "240px",
     // height: "484px",
-    height: getDynamicHeight(),
+    height: getDynamicContainerHeight(),
     borderRadius: "30px",
     background: "#FFFFFF",
 
@@ -164,9 +164,22 @@ const VoteCard = (props) => {
   };
 
   // ----------- 카드 컨테이너 스타일 -----------
+  const getDynamicCardHeight = () => {
+    if (isXLarge) {
+      return "400px";
+    } else if (isLarge) {
+      return "270px";
+    } else if (isMedium) {
+      return "200px";
+    } else {
+      return "200px";
+    }
+  };
+
   const cardContainerStyle = {
     // 디자인
-    height: "319px",
+    // height: "319px",
+    height: getDynamicCardHeight(),
   };
 
   // ----------- 버튼 컨테이너 스타일 -----------

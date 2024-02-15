@@ -51,8 +51,8 @@ const SwipeVote = (props) => {
   // ----------- Swiper 스타일 -----------
   const swiperStyle = {
     // 디자인
-    paddingTop: "60px",
-    paddingBottom: "60px",
+    paddingTop: "4rem",
+    paddingBottom: "4rem",
   };
 
   // ----------- Swiper Slide 스타일 -----------
@@ -70,13 +70,13 @@ const SwipeVote = (props) => {
 
   const getDynamicHeight = () => {
     if (isXLarge) {
-      return "31rem";
+      return "500px";
     } else if (isLarge) {
-      return "35rem";
+      return "400px";
     } else if (isMedium) {
-      return "41rem";
+      return "290px";
     } else {
-      return "48rem";
+      return "290px";
     }
   };
 

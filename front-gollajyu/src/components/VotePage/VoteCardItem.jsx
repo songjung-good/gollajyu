@@ -79,6 +79,17 @@ const VoteCardItem = (props) => {
       });
   };
 
+  const getDynamicHeight = () => {
+    if (isXLarge) {
+      return "289px";
+    } else if (isLarge) {
+      return "220px";
+    } else if (isMedium) {
+      return "140px";
+    } else {
+      return "130px";
+    }
+  };
   return (
     <>
       <div className="flex flex-col">
@@ -119,7 +130,8 @@ const VoteCardItem = (props) => {
                 : isMedium
                 ? "90px"
                 : "70px",
-            height: "289px",
+            // height: "289px",
+            height: getDynamicHeight(),
             border: "5px solid",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
           }}
@@ -185,7 +197,7 @@ const VoteCardItem = (props) => {
               ).toFixed(2)}%`}</p>
             ) : (
               <p className="pb-2 fontsize-sm text-center invisible">
-                투표 참여 시, 선택 비율이 공개됩니다.
+                투표 비율
               </p>
             )}
             <h2 className="fontsize-sm font-bold">
