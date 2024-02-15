@@ -46,7 +46,7 @@ const VotePage = () => {
           .slice()
           .sort((a, b) => b.likesCnt - a.likesCnt);
       } else {
-        sortedData = prevVoteList;
+        sortedData = prevVoteList ? prevVoteList.slice() : [];
       }
       setVoteListData(sortedData);
       setSortType(type);
@@ -136,8 +136,7 @@ const VotePage = () => {
     
     // 컨텐츠 정렬
     display: "flex",
-    flexDirection: "column",
-    alignItems: isXLarge || isLarge ? "flex-start" : "center",
+    alignItems: "flex-end",
     justifyContent: "space-between",
   };
 
@@ -147,7 +146,7 @@ const VotePage = () => {
     marginBottom: "20px",
 
     // 글자
-    color: "#FFFFFF",
+    color: "#000000",
 
     // 컨텐츠 정렬
     // display: "flex",
@@ -164,11 +163,10 @@ const VotePage = () => {
   // ----------- 해더 링크 스타일 -----------
   const headerLinkStyle = {
     // 디자인
-    marginRight: isXLarge || isLarge ? "30px" : "7.5px",
-    marginLeft: isXLarge || isLarge ? "0" : "7.5px",
+    marginRight: isXLarge || isLarge ? "30px" : "15px",
 
     // 글자
-    color: "#4A4A4A",
+    color: "#000000",
     fontSize: isXLarge || isLarge ? "19px" : "16px",
     whiteSpace: "nowrap",
   };
@@ -179,7 +177,7 @@ const VotePage = () => {
     ...headerLinkStyle,
 
     // 글자
-    color: "#FFFFFF",
+    fontWeight: "bold",
   };
 
   // ----------- body 스타일 -----------
@@ -203,15 +201,11 @@ const VotePage = () => {
       <VoteButton />
 
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-stone-200 to-gray-400">
+      <div style={headerStyle} className="bg-gradient-to-tl from-gray-200 to-[#FF9999]">
         <div style={headerContainerStyle}>
-          <VotePageHeader
-            onSearchTerm={setSearchTerm}
-            onSearchCategory={setSearchCategory}
-            onSearch={handleSearch}
-          />
+
           <div>
-            <p style={headerTitleStyle} className="fontsize-lg sm:text-center md:text-center">투표모아쥬</p>
+            <p style={headerTitleStyle} className="fontsize-lg">투표모아쥬</p>
             <div style={headerLinkContainerStyle}>
               {/* ------------- 최신순 인기순 버튼 ------------- */}
               <button
@@ -222,7 +216,7 @@ const VotePage = () => {
                 } // 수정된 부분
                 onClick={() => handleSort("latest")}
               >
-                최신순
+                {sortType === "latest" ? "☑" : "☐" } 최신순 
               </button>
               <button
                 style={
@@ -232,10 +226,16 @@ const VotePage = () => {
                 } // 수정된 부분
                 onClick={() => handleSort("popular")}
               >
-                인기순
+                {sortType === "popular" ? "☑" : "☐" } 인기순
               </button>
             </div>
           </div>
+
+          <VotePageHeader
+            onSearchTerm={setSearchTerm}
+            onSearchCategory={setSearchCategory}
+            onSearch={handleSearch}
+          />
         </div>
       </div>
 

@@ -70,9 +70,8 @@ const VotePageHeader = ({ onSearch, onSearchTerm, onSearchCategory }) => {
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
-    margin: "0 auto", // 가로 중앙 정렬
-    marginTop: isXLarge || isLarge ? "30px" : "15px",
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    marginLeft: "auto",
+    marginBottom: isXLarge || isLarge ? "15px" : "5px",
     whiteSpace: "nowrap", // 줄바꿈 방지
 
     // 컨텐츠 정렬
@@ -84,7 +83,7 @@ const VotePageHeader = ({ onSearch, onSearchTerm, onSearchCategory }) => {
   const containerStyle = {
     // 디자인
     paddingRight: "20px",
-    width: isXLarge || isLarge ? "440px" : isMedium ? "420px" : "335px",
+    width: isXLarge || isLarge ? "440px" : isMedium ? "270px" : "216px",
     height: isXLarge || isLarge ? "50px" : isMedium ? "40px" : "35px",
     backgroundColor: "#FFFFFF",
     borderRadius: "10px",
@@ -116,7 +115,7 @@ const VotePageHeader = ({ onSearch, onSearchTerm, onSearchCategory }) => {
     marginRight: "5px",
     padding: isXLarge || isLarge ? "2px 10px 0px 14px" : isMedium ? "2px 10px 0px 12px" : "2px 10px 0px 10px",
     border: "none",
-    width: isXLarge || isLarge ? "110px" : isMedium ? "105px" : "100px",
+    width: isXLarge || isLarge ? "110px" : isMedium ? "105px" : "80px",
     height: isXLarge || isLarge ? "50px" : isMedium ? "40px" : "35px",
     cursor: "pointer",
 
@@ -178,7 +177,7 @@ const VotePageHeader = ({ onSearch, onSearchTerm, onSearchCategory }) => {
     // 디자인
     padding: "2px 10px 0px 10px",
     border: "none",
-    width: isXLarge || isLarge ? "210px" : isMedium ? "200px" : "160px",
+    width: isXLarge || isLarge ? "210px" : isMedium ? "115px" : "90px",
     height: isXLarge || isLarge ? "40px" : isMedium ? "30px" : "25px",
     
     // 글자
@@ -258,7 +257,7 @@ const VotePageHeader = ({ onSearch, onSearchTerm, onSearchCategory }) => {
             {/* ------------- 검색 창  ------------- */}
             <input
               type="text"
-              placeholder="검색어를 입력하세요"
+              placeholder={isXLarge || isLarge ? "검색어를 입력하세요" : "검색"}
               onChange={handleChange} // Wire up the handleChange event handler
               style={searchStyle}
             />

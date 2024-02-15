@@ -54,10 +54,10 @@ const generateSentence = () => {
   const userInfo = [ageTypes, genderTypes, testTypes].map(getRandomItem);
 
   // 문장 생성 및 반환
-  const words = `${categories[firstCategoryIndex]} 에서 ${firstTagTypes[firstTagIndex]} ${['가성비', '브랜드', '소재'].includes(firstTagTypes[firstTagIndex]) ? '를' : '을'} 선호하는
-    “ ${userInfo[0]} ${userInfo[1]} ${userInfo[2]} ” ${['프렌치 마카롱', '붕어빵', '슈크림', '식빵', '초코잼'].includes(userInfo[2]) ? '은' : '는'}
-    ${categories[secondCategoryIndex]} 에서 ${secondTagTypes[secondTagIndex]} ${['가성비', '브랜드', '소재'].includes(secondTagTypes[secondTagIndex]) ? '를' : '을'} 선호해요`;
-
+  const word1 = `[${categories[firstCategoryIndex]}] 에서 ${firstTagTypes[firstTagIndex]} ${['가성비', '브랜드', '소재'].includes(firstTagTypes[firstTagIndex]) ? '를' : '을'} 선호하는`
+  const word2 = `“ ${userInfo[0]} • ${userInfo[1]} • ${userInfo[2]} ” ${['프렌치 마카롱', '붕어빵', '슈크림', '식빵', '초코잼'].includes(userInfo[2]) ? '은' : '는'}`
+  const word3 = `[${categories[secondCategoryIndex]}] 에서 ${secondTagTypes[secondTagIndex]} ${['가성비', '브랜드', '소재'].includes(secondTagTypes[secondTagIndex]) ? '를' : '을'} 선호해요`;
+  const words = [word1, word2, word3]
   return words;
 };
 
@@ -68,7 +68,7 @@ const MainWord = () => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // phrase 상태 변수 선언 및 초기값 빈 문자열로 설정
-  const [phrase, setPhrase] = useState('');
+  const [phrase, setPhrase] = useState([]);
 
   // 컴포넌트가 마운트될 때마다 문구가 바뀌도록 설정
   useEffect(() => {
@@ -77,70 +77,41 @@ const MainWord = () => {
 
   // --------------------------------- css 시작 ---------------------------------
 
-  // ----------- flex 컨테이너 스타일 -----------
-  const flexContainerStyle = {
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "center",
-  };
-
   // ----------- body 스타일 -----------
   const bodyStyle = {
-    // 상속
-    ...flexContainerStyle,
-
     // 디자인
-    margin: "200px auto",
+    margin: "0 auto",
     padding: "0 20px",
     maxWidth: "1160px",
     minWidth: "240px",
     width: "100%",
 
     // 컨텐츠 정렬
+    display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
     alignItems: "center",
   };
 
-  // ----------- 보조 문구 스타일 -----------
-  const textStyle = {
+  // ----------- 보조 제목 스타일 -----------
+  const subTitleStyle = {
     // 디자인
-    marginBottom: "20px",
+    margin: "100px 0",
     padding: "8px 20px 4px",
     width: isXLarge || isLarge ? "500px" : "350px",
-    backgroundColor: "#FFE69C",
+    backgroundColor: "#CCCEFF",
 
     // 글자
     fontSize: isXLarge || isLarge ? "32px" : "24px",
     fontWeight: "bold",
-  }
-  
+  };
+
   // ----------- 문구 컨테이너 스타일 -----------
   const wordContainerStyle = {
-    // 상속
-    ...flexContainerStyle,
-
     // 디자인
     width: isXLarge ? "100%" : "90%",
 
     // 컨텐츠 정렬
     justifyContent: "center",
-  }
-
-  // ----------- 메인 문구 스타일 -----------
-  const mainWordStyle = {
-    // 글자
-    fontSize: isXLarge || isLarge ? "22px" : "14px",
-  }
-
-  // ----------- 버튼 스타일 -----------
-  const buttonStyle = {
-    // 디자인
-    marginTop: "60px",
-
-    // 글자
-    fontSize: "18px",
-    fontWeight: "bold",
   }
 
   // --------------------------------- css 끝 ---------------------------------
@@ -149,27 +120,41 @@ const MainWord = () => {
   return (
     <>
       <div style={bodyStyle}>
-        <p style={textStyle}># 다른 사람들의 구매 스타일</p>
+        <div style={subTitleStyle}>
+          # 다른 사람들의 구매 스타일
+        </div>
         <div style={wordContainerStyle}>
-          <div className="tracking-wider">
-            {phrase.split(' ').map((word, index) => {
-              const tagColor = tagColorData.find(tag => tag.name === word)?.color;
-              return (
-                <span key={index} style={{
-                  ...mainWordStyle,
-                  color: tagColor || "#4A4A4A",
-                }}
-                >
-                  {word + ' '}
-                </span>
-              );
-            })}
+          <div className="flex flex-col items-center tracking-wider">
+            {phrase.map((sentence, sentenceIndex) => (
+              <div key={sentenceIndex}>
+                {sentence.split(' ').map((word, index) => {
+                  const tagColor = tagColorData.find(tag => tag.name === word)?.color;
+                  return (
+                    <span
+                      key={index}
+                      style={{
+                        color: tagColor || "#000000",
+                        fontSize: isXLarge ? "30px" : isLarge ? "25px" : isMedium ? "20px" : "15px",
+                      }}
+                    >
+                      {word + ' '}
+                    </span>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         </div>
-        <Link to="/StatisticPage">
-          <button style={buttonStyle} className="text-amber-500 hover:text-amber-600">
-            더 자세히 알아보기 →
-          </button>
+        <Link
+          to="/StatisticPage"
+          style={{
+            margin: "100px 0 ",
+            width: isXLarge ? "400px" : isLarge ? "300px" : isMedium ? "200px" : "150px",
+            height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "40px" : "35px",
+          }}
+          className="p-4 rounded-full bg-amber-300 hover:bg-amber-400 text-center fontsize-sm"
+        >
+          더 자세히 알아보기 →
         </Link>
       </div>
     </>
