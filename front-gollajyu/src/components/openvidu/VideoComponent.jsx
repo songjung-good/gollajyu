@@ -11,9 +11,6 @@ import useAuthStore from "/src/stores/userState";
 import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 
-// Footer
-import Footer from "../../components/Footer";
-
 const OPENVIDU_SERVER_URL = import.meta.env.VITE_OPENVIDU_API_URL;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 

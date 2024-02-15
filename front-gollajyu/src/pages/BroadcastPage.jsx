@@ -23,9 +23,6 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-// Footer
-import Footer from "../components/Footer";
-
 // 이미지 가져오기
 import questionMarkImg from "/assets/images/question_mark_img.png";
 
@@ -253,7 +250,6 @@ const BroadcastPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>

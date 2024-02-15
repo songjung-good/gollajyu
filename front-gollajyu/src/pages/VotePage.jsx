@@ -27,9 +27,6 @@ import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-// Footer
-import Footer from "../components/Footer";
-
 const VotePage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -216,11 +213,15 @@ const VotePage = () => {
       <VoteButton />
 
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-gray-200 to-[#FF9999]">
+      <div
+        style={headerStyle}
+        className="bg-gradient-to-tl from-gray-200 to-[#FF9999]"
+      >
         <div style={headerContainerStyle}>
-
           <div>
-            <p style={headerTitleStyle} className="fontsize-lg">투표모아쥬</p>
+            <p style={headerTitleStyle} className="fontsize-lg">
+              투표모아쥬
+            </p>
             <div style={headerLinkContainerStyle}>
               {/* ------------- 최신순 인기순 버튼 ------------- */}
               <button
@@ -231,7 +232,7 @@ const VotePage = () => {
                 } // 수정된 부분
                 onClick={() => handleSort("latest")}
               >
-                {sortType === "latest" ? "☑" : "☐" } 최신순 
+                {sortType === "latest" ? "☑" : "☐"} 최신순
               </button>
               <button
                 style={
@@ -241,7 +242,7 @@ const VotePage = () => {
                 } // 수정된 부분
                 onClick={() => handleSort("popular")}
               >
-                {sortType === "popular" ? "☑" : "☐" } 인기순
+                {sortType === "popular" ? "☑" : "☐"} 인기순
               </button>
             </div>
           </div>
@@ -269,7 +270,7 @@ const VotePage = () => {
         </div>
         {/* 정렬 상태를 props로 전달 */}
       </div>
-      <Footer />
+
       {/* ------------- 투표 생성 모달 ------------- */}
       {isVoteDetailModalOpened && <VoteDetail />}
       {isVoteSimpleCreateModalOpened && <VoteSimple />}

@@ -79,7 +79,7 @@ const VoteDetail = () => {
           params,
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
-        console.log(data.body);
+        // console.log(data.body);
         setVoteDetail(data.body);
         setSelectedVoteItem(data.body.chosenItem);
       } catch (error) {

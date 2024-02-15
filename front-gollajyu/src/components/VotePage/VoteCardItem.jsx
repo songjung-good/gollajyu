@@ -135,7 +135,8 @@ const VoteCardItem = (props) => {
             style={{ maxWidth: "100%" }}
           >
             {/* 투표하는 기능 내부 */}
-            {((selectedItem === 0 || !selectedItem || clicked !== 0 ) && (hover || clicked !== 0)) ? (
+            {(selectedItem === 0 || !selectedItem || clicked !== 0) &&
+            (hover || clicked !== 0) ? (
               <div
                 className={`absolute inset-0 w-full bg-orange-200 opacity-50 flex flex-col justify-between`}
                 onMouseLeave={() => {}}
@@ -145,9 +146,11 @@ const VoteCardItem = (props) => {
                   <button
                     key={index}
                     className={`h-1/5 w-full flex items-center justify-center cursor-pointer "text-black"
-                    ${clicked - 1 === index
+                    ${
+                      clicked - 1 === index
                         ? "text-white bg-blue-500"
-                        : "text-black"}
+                        : "text-black"
+                    }
                         border-t-2 border-white text-max-xl`}
                     onClick={() => {
                       if (clicked === 0 && user.memberId != null) {
@@ -158,7 +161,7 @@ const VoteCardItem = (props) => {
                       }
                     }}
                   >
-                  {tag}
+                    {tag}
                   </button>
                 ))}
               </div>
@@ -166,7 +169,7 @@ const VoteCardItem = (props) => {
 
             {/* 투표 이미지 */}
             <img
-              className="h-full w-full object-cover"
+              className="w-2/3 object-cover"
               alt="Vote Image"
               src={item.voteItemImgUrl}
             />
