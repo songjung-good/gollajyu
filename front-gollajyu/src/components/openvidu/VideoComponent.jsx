@@ -11,6 +11,9 @@ import useAuthStore from "/src/stores/userState";
 import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
 
+// Footer
+import Footer from "../../components/Footer";
+
 const OPENVIDU_SERVER_URL = import.meta.env.VITE_OPENVIDU_API_URL;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
 
@@ -169,11 +172,8 @@ export default function VideoComponent() {
 
     // Host이면 지금골라쥬 방 삭제 요청
     if (isHost) {
-      axios
-        .delete(API_URL + `/lives/${liveId}`)
-        .then
-        // console.log("라이브 방송 삭제")
-        ();
+      axios.delete(API_URL + `/lives/${liveId}`).then;
+      //( console.log("라이브 방송 삭제"));
     } else {
       // Host가 아니면 퇴장 요청
       // api/lives/{liveId}/exit/{memberId} 에 POST 요청을 보내면서 방에서 퇴장
@@ -189,6 +189,7 @@ export default function VideoComponent() {
     }
 
     navigate("/BroadcastPage");
+    window.location.reload();
   }, [session]);
 
   // 메세지 보내기(Sender of the message (after 'session.connect'))
@@ -328,7 +329,7 @@ export default function VideoComponent() {
     <>
       {isEnoughSize ? (
         <>
-          <div id="logo" className="m-2 text-center">
+          <div id="logo" className="m-5 text-center">
             <p style={logoStyle}>골라쥬</p>
           </div>
           {/* 방송 화면으로 진입하기 전, 한번 막음 => joinSession이 동작하는 단계가 필요하기 때문*/}
@@ -427,7 +428,7 @@ export default function VideoComponent() {
                 )}
                 <div
                   id="sub-container"
-                  className="flex flex-row justify-between gap-7 h-[625px]"
+                  className="flex flex-row justify-between gap-7 h-[625px] my-16"
                 >
                   <div
                     id="video+detail"

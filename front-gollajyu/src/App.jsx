@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import NavigationBar from "./components/NavigationBar";
-import Footer from "./components/Footer";
+// import Footer from "./components/Footer";
 // import VoteButton from "./components/VoteButton";
 import MainPage from "./pages/MainPage";
 import VotePage from "./pages/VotePage";
@@ -57,7 +57,7 @@ const App = () => {
           <Route path="/TestPage" element={<TestPage />} />
         </Route>
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </Router>
   );
 };

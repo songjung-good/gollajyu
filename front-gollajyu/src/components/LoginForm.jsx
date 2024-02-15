@@ -45,12 +45,12 @@ const LoginModal = () => {
   };
 
   // 소셜로그인 핸들링 함수
-  const handleKakaoLogin = () => {
-    // console.log("카카오로그인 -> 사실 안됨");
-  };
-  const handleNaverLogin = () => {
-    // console.log("네이버로그인 시도 -> 사실 안됨");
-  };
+  // const handleKakaoLogin = () => {
+  //   // console.log("카카오로그인 -> 사실 안됨");
+  // };
+  // const handleNaverLogin = () => {
+  //   // console.log("네이버로그인 시도 -> 사실 안됨");
+  // };
 
   const handleGoogleLogin = () => {
     // console.log("구글로그인 시도");
@@ -156,7 +156,7 @@ const LoginModal = () => {
             id="social-icons"
             className="flex justify-around w-1/2 mx-auto my-3"
           >
-            <div id="kakao" onClick={handleKakaoLogin}>
+            {/* <div id="kakao" onClick={handleKakaoLogin}>
               <img
                 src="/assets/images/social-login/kakao.png"
                 alt=""
@@ -169,17 +169,22 @@ const LoginModal = () => {
                 alt=""
                 className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
               />
-            </div>
+            </div> */}
             <Link
               to={`${API_URL.slice(0, -3)}oauth2/authorization/google`}
               onClick={handleGoogleLogin}
             >
-              <div id="google" onClick={handleGoogleLogin}>
+              <div
+                id="google"
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-between rounded-full px-5 w-60 h-10 bg-white hover:bg-blue-300 shadow shadow-lg border"
+              >
                 <img
                   src="/assets/images/social-login/google.png"
                   alt=""
-                  className="w-10 h-10 rounded-full hover:outline hover:outline-2 outline-gray-300"
+                  className="w-6 h-6"
                 />
+                <p className="text-gray-600 mx-5">Google 로그인</p>
               </div>
             </Link>
           </div>

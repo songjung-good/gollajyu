@@ -1,5 +1,6 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -14,9 +15,7 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 import useAuthStore from "/src/stores/userState";
 import useModalStore from "/src/stores/modalState";
 
-
 const VoteProduct = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -42,6 +41,9 @@ const VoteProduct = () => {
   const setVoteProductModalClose = useModalStore(
     (state) => state.setVoteProductCreateModalClose
   );
+
+  const createVote = useAuthStore((state) => state.createVote);
+  const navigate = useNavigate();
 
   const handleInputChange = (e, index, field) => {
     const updatedItems = [...voteItems];
@@ -136,13 +138,14 @@ const VoteProduct = () => {
         },
       });
       // console.log(response.data);
+      createVote(); // 투표 만들면 10포인트 차감
+      navigate("/VotePage");
       setVoteProductModalClose();
     } catch (error) {
       console.error(error);
       alert("Failed to create poll.");
     }
   };
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -151,7 +154,13 @@ const VoteProduct = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    width: isXLarge ? "800px" : isLarge ? "640px" : isMedium ? "450px" : "360px",
+    width: isXLarge
+      ? "800px"
+      : isLarge
+      ? "640px"
+      : isMedium
+      ? "450px"
+      : "360px",
     maxHeight: "800px",
     borderRadius: "10px",
     background: "#FFFFFF",
@@ -167,17 +176,22 @@ const VoteProduct = () => {
   const imgItemStyle = {
     // 디자인
     width: isXLarge ? "200px" : isLarge ? "160px" : isMedium ? "100px" : "90px",
-    height: isXLarge ? "260px" : isLarge ? "208px" : isMedium ? "140px" : "130px",
+    height: isXLarge
+      ? "260px"
+      : isLarge
+      ? "208px"
+      : isMedium
+      ? "140px"
+      : "130px",
     marginRight: isXLarge ? "20px" : isLarge ? "15px" : "10px",
     borderRadius: "5px",
-    
+
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
@@ -192,14 +206,16 @@ const VoteProduct = () => {
       >
         <div style={bodyStyle}>
           <form onSubmit={handleSubmit}>
-
             {/* ------------- 제목 입력 ------------- */}
             <div className="mb-5">
               <label
                 htmlFor="title"
                 className="my-10 block text-center fontsize-xl"
               >
-                <span style={{ color: "#1982C4" }} className="fontsize-xl">구매 </span>골라쥬
+                <span style={{ color: "#1982C4" }} className="fontsize-xl">
+                  구매{" "}
+                </span>
+                골라쥬
               </label>
               <input
                 type="text"
@@ -249,26 +265,28 @@ const VoteProduct = () => {
                 placeholder="투표 내용을 입력하세요"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                style={{ height: isXLarge ? "189px" : isLarge ? "145.5px" : "86px", }}
+                style={{
+                  height: isXLarge ? "189px" : isLarge ? "145.5px" : "86px",
+                }}
                 className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] focus:shadow-md"
               />
             </div>
 
             {/* ------------- 투표 항목 추가 부분 ------------- */}
             {voteItems.map((voteItem, index) => (
-              <div key={index} className="flex items-center mb-6 pt-4 border-t-2 border-gray-200">
+              <div
+                key={index}
+                className="flex items-center mb-6 pt-4 border-t-2 border-gray-200"
+              >
                 <div
                   style={{
                     ...imgItemStyle,
-                    overflow: 'hidden',
+                    overflow: "hidden",
                   }}
                   className="p-2 bg-gray-100 hover:bg-gray-200"
                   key={index}
                 >
-                  <label
-                    htmlFor={`voteItem${index + 1}`}
-                    className="relative"
-                  >
+                  <label htmlFor={`voteItem${index + 1}`} className="relative">
                     <input
                       type="file"
                       name={`voteItemImgs`}
@@ -291,20 +309,38 @@ const VoteProduct = () => {
                       style={{ fontSize: "20px", paddingBottom: "20px" }}
                       className="relative flex items-center h-full justify-center text-center cursor-pointer"
                     >
-                      사진 {index+1}
+                      사진 {index + 1}
                     </label>
                   )}
                 </div>
 
                 {/* ------------- 가격, 내용 설명 입력 ------------- */}
-                <div style={{ height: isXLarge ? "260px" : isLarge ? "208px" : isMedium ? "140px" : "130px" }}>
+                <div
+                  style={{
+                    height: isXLarge
+                      ? "260px"
+                      : isLarge
+                      ? "208px"
+                      : isMedium
+                      ? "140px"
+                      : "130px",
+                  }}
+                >
                   <input
                     name={`price-${index}`}
                     id={`price-${index}`}
                     placeholder="가격을 입력하세요"
-                    value={voteItem.price || ''}
-                    onChange={(e) => handleInputChange(e, index, 'price')}
-                    style={{ width: isXLarge ? "483.5px" : isLarge ? "378.5px" : isMedium ? "263.5px" : "210px" }}
+                    value={voteItem.price || ""}
+                    onChange={(e) => handleInputChange(e, index, "price")}
+                    style={{
+                      width: isXLarge
+                        ? "483.5px"
+                        : isLarge
+                        ? "378.5px"
+                        : isMedium
+                        ? "263.5px"
+                        : "210px",
+                    }}
                     className="mb-5 rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] focus:shadow-md"
                   />
                   <div>
@@ -312,11 +348,25 @@ const VoteProduct = () => {
                       name={`content-${index}`}
                       id={`content-${index}`}
                       placeholder="내용을 입력하세요"
-                      value={voteItem.voteItemDesc || ''}
-                      onChange={(e) => handleInputChange(e, index, 'voteItemDesc')}
+                      value={voteItem.voteItemDesc || ""}
+                      onChange={(e) =>
+                        handleInputChange(e, index, "voteItemDesc")
+                      }
                       style={{
-                        width: isXLarge ? "483.5px" : isLarge ? "378.5px" : isMedium ? "263.5px" : "210px",
-                        height: isXLarge ? "189px" : isLarge ? "145.5px" : isMedium ? "86px" : "85.5px",
+                        width: isXLarge
+                          ? "483.5px"
+                          : isLarge
+                          ? "378.5px"
+                          : isMedium
+                          ? "263.5px"
+                          : "210px",
+                        height: isXLarge
+                          ? "189px"
+                          : isLarge
+                          ? "145.5px"
+                          : isMedium
+                          ? "86px"
+                          : "85.5px",
                       }}
                       className="rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] focus:shadow-md"
                     />
@@ -326,10 +376,27 @@ const VoteProduct = () => {
             ))}
 
             {/* ------------- 항목 추가, 제거 버튼 ------------- */}
-            <div style={{ gap: isXLarge ? "16px" : isLarge ? "14px" : isMedium ? "12px" : "10px" }} className="flex mb-5">
+            <div
+              style={{
+                gap: isXLarge
+                  ? "16px"
+                  : isLarge
+                  ? "14px"
+                  : isMedium
+                  ? "12px"
+                  : "10px",
+              }}
+              className="flex mb-5"
+            >
               <button
                 style={{
-                  fontSize: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+                  fontSize: isXLarge
+                    ? "50px"
+                    : isLarge
+                    ? "40px"
+                    : isMedium
+                    ? "30px"
+                    : "20px",
                   fontFamily: "GmarketSansLight",
                   cursor: voteItems.length > 3 ? "not-allowed" : "pointer",
                   borderRadius: "5px",
@@ -343,7 +410,13 @@ const VoteProduct = () => {
               </button>
               <button
                 style={{
-                  fontSize: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+                  fontSize: isXLarge
+                    ? "50px"
+                    : isLarge
+                    ? "40px"
+                    : isMedium
+                    ? "30px"
+                    : "20px",
                   fontFamily: "GmarketSansLight",
                   cursor: voteItems.length < 3 ? "not-allowed" : "pointer",
                   borderRadius: "5px",
@@ -358,7 +431,10 @@ const VoteProduct = () => {
             </div>
 
             {/* ------------- 취소하기, 투표 올리기 버튼 ------------- */}
-            <div style={{ marginBottom: "40px" }} className="flex justify-between">
+            <div
+              style={{ marginBottom: "40px" }}
+              className="flex justify-between"
+            >
               <button
                 onClick={setVoteProductModalClose}
                 className="w-1/2 mx-2 p-3 rounded-full bg-white hover:bg-gray-200 text-center fontsize-sm border-4 border-gray-300"
@@ -371,7 +447,6 @@ const VoteProduct = () => {
               >
                 투표 올리기
               </button>
-
             </div>
           </form>
         </div>

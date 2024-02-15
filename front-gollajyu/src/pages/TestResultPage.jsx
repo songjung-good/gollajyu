@@ -24,6 +24,9 @@ import questionMarkImg from "/assets/images/question_mark_img.png";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
+// Footer
+import Footer from "../components/Footer";
+
 import { debounce } from "lodash";
 
 const items = [
@@ -367,6 +370,7 @@ const TestResultPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
