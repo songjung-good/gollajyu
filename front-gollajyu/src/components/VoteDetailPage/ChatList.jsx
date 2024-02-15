@@ -2,7 +2,7 @@
 import React from "react";
 
 const ChatList = ({ list, choiced2, onLike }) => {
-  console.log(list);
+  // console.log(list);
   const colorMap = [
     "bg-green-300",
     "bg-yellow-300",

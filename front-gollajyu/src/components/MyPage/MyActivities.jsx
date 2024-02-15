@@ -515,7 +515,7 @@ const MyActivities = () => {
             <div style={pointTextStyle} className="fontsize-lg">
               내 포인트
             </div>
-            <div style={pointNumberStyle} className="fontsize-xl">
+            <div style={pointNumberStyle} className="fontsize-xl mx-2">
               {user.point}
             </div>
             <Tooltip
@@ -531,9 +531,10 @@ const MyActivities = () => {
               variant="outlined"
             >
               <img
-                src="/assets/images/question_mark_img.png"
-                className="my-auto mx-4 w-[1.4rem] h-[1.4rem] opacity-60"
-                alt=""
+                src={questionMarkImg}
+                style={questionMarkStyle}
+                alt="물음표"
+                className="cursor-pointer rounded-full"
               />
             </Tooltip>
           </div>
