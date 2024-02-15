@@ -1,6 +1,10 @@
 // ChatList.jsx
 import React from "react";
 
+// 커스텀 스토어를 이용한 상태 관리
+import useAuthStore from "/src/stores/userState";
+
+
 const ChatList = ({ list, choiced2, onLike }) => {
   // console.log(list);
   const colorMap = [
@@ -9,6 +13,8 @@ const ChatList = ({ list, choiced2, onLike }) => {
     "text-[#8AC926]",
     "text-[#1982C4]",
   ];
+
+  const user = useAuthStore((state) => state.user);
 
   const formatCreatedAt = (createdAt) => {
     const date = new Date(createdAt);
@@ -25,9 +31,11 @@ const ChatList = ({ list, choiced2, onLike }) => {
           v.voteItemId === choiced2 ? "justify-end" : ""
         }`}
       >
-        <div className={`bg-white text-black p-2 rounded-lg max-w-xs`}>
+        <div
+          style={{ background: (v.memberId === user.memberId) ? "#FFE69C" : "#FFFFFF" }}
+          className={"text-black p-2 rounded-lg max-w-xs"}
+        >
           <small
-            style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
             className={`fontsize-xs ${colorMap[v.voteItemId % 4]}`}
           >
             {v.memberNickname} ({formatCreatedAt(v.createAt)})

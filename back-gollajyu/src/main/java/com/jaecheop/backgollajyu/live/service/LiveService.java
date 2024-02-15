@@ -116,9 +116,9 @@ public class LiveService {
 
         if (!file.isEmpty()) {
             imgPath = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            file.transferTo(new File(fileDir + "\\" + imgPath));
+            file.transferTo(new File(fileDir + "/" + imgPath));
         }
-        return fileDir + "\\" + imgPath;
+        return fileDir + "/" + imgPath;
     }
 
 //    public ServiceResult<List<LiveListDto>> findAllLives() {

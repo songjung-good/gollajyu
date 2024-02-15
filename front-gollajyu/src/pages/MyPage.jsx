@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Routes, Route } from "react-router-dom";
 
 // 반응형 웹 디자인을 위한 유틸리티 함수
@@ -26,6 +26,7 @@ const MyPage = () => {
     { to: "/Mypage/MyActivities", text: "내 활동 요약" },
     { to: "/Mypage/MyStatistics", text: "내 통계 요약" },
   ];
+
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -68,8 +69,8 @@ const MyPage = () => {
     marginBottom: "20px",
 
     // 글자
-    color: "#FFFFFF",
-  };
+    color: "#000000",
+  }
 
   // ----------- 해더 링크 컨테이너 스타일 -----------
   const headerLinkContainerStyle = {
@@ -84,7 +85,7 @@ const MyPage = () => {
     marginLeft: isXLarge || isLarge ? "0" : "7.5px",
 
     // 글자
-    color: "#4A4A4A",
+    color: "#000000",
     fontSize: isXLarge || isLarge ? "19px" : "16px",
     whiteSpace: "nowrap",
   };
@@ -95,8 +96,8 @@ const MyPage = () => {
     ...headerLinkStyle,
 
     // 글자
-    color: "#FFFFFF",
-  };
+    fontWeight: "bold",
+  }
 
   // ----------- body 스타일 -----------
   const bodyStyle = {
@@ -115,6 +116,26 @@ const MyPage = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
+  const [isProfileActive, setIsProfileActive] = useState(true);
+  const [isActivitiesActive, setIsActivitiesActive] = useState(false);
+  const [isStatisticsActive, setIsStatisticsActive] = useState(false);
+
+  const setIsActives = [
+    setIsProfileActive,
+    setIsActivitiesActive,
+    setIsStatisticsActive
+  ]
+  const isActives = [
+    isProfileActive,
+    isActivitiesActive,
+    isStatisticsActive
+  ]
+  const changeActiveLink = (activeIndex) => {
+    setIsActives.forEach((item, index) => {
+      setIsActives[index](index === activeIndex);
+    });
+  };
+
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
   }, []);
@@ -126,10 +147,7 @@ const MyPage = () => {
       </Helmet>
 
       {/* ------------- Header ------------- */}
-      <div
-        style={headerStyle}
-        className="bg-gradient-to-tl from-stone-200 to-gray-400"
-      >
+      <div style={headerStyle} className="bg-gradient-to-tl from-gray-200 to-[#FF9999]">
         <div style={headerContainerStyle}>
           <p style={headerTitleStyle} className="fontsize-lg text-center">
             마이 페이지
@@ -155,8 +173,9 @@ const MyPage = () => {
                     ? activeheaderLinkStyle
                     : headerLinkStyle
                 }
+                onClick={() => changeActiveLink(index)}  // 함수를 래핑하여 전달
               >
-                {item.text}
+                <span key={index}>{isActives[index] ? "☑" : "☐"}</span> {item.text}
               </NavLink>
             ))}
           </div>
