@@ -10,7 +10,6 @@ import ChattingList from "./Chat/ChattingList.jsx";
 import useAuthStore from "/src/stores/userState";
 import Vote from "./Vote.jsx";
 import { Button, Input, CircularProgress } from "@mui/material";
-import tmpProfileImg from "/assets/images/tmp_profile.png";
 
 const OPENVIDU_SERVER_URL = import.meta.env.VITE_OPENVIDU_API_URL;
 const OPENVIDU_SERVER_SECRET = "MY_SECRET";
@@ -41,7 +40,7 @@ export default function VideoComponent() {
   const [messageList, setMessageList] = useState([]); // 메세지 정보를 담을 배열
   const [audioState, setAudioSate] = useState(true);
   const [totalUsers, setTotalUsers] = useState(0); // 총 유저수
-  console.log("isHost?:", isHost);
+  // console.log("isHost?:", isHost);
 
   useEffect(() => {
     // 컴포넌트가 마운트 될 때, liveId로 방송 정보 GET 요청을 보냄
@@ -50,10 +49,10 @@ export default function VideoComponent() {
       .then((res) => {
         setTitle(res.data.body.title);
         setHostNickName(res.data.body.nickName);
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }, []);
 
@@ -135,16 +134,16 @@ export default function VideoComponent() {
             //   (device) => device.deviceId === currentVideoDeviceId
             // );
 
-            console.log("publisher:", publisher);
+            // console.log("publisher:", publisher);
             setPublisher(publisher);
             // setCurrentVideoDevice(currentVideoDevice);
           }
         } catch (error) {
-          console.log(
-            "There was an error connecting to the session:",
-            error.code,
-            error.message
-          );
+          // console.log(
+          //   "There was an error connecting to the session:",
+          //   error.code,
+          //   error.message
+          // );
         }
       });
     }
@@ -152,7 +151,7 @@ export default function VideoComponent() {
 
   // subscribers 변경이 잘 되는지 확인하기 위한 코드 => 배포 시, 삭제
   useEffect(() => {
-    console.log("구독자 변경: ", subscribers);
+    // console.log("구독자 변경: ", subscribers);
   }, [subscribers]);
 
   const leaveSession = useCallback(() => {
@@ -172,18 +171,20 @@ export default function VideoComponent() {
     if (isHost) {
       axios
         .delete(API_URL + `/lives/${liveId}`)
-        .then(console.log("라이브 방송 삭제"));
+        .then
+        // console.log("라이브 방송 삭제")
+        ();
     } else {
       // Host가 아니면 퇴장 요청
       // api/lives/{liveId}/exit/{memberId} 에 POST 요청을 보내면서 방에서 퇴장
       axios
         .post(API_URL + `/lives/${liveId}/exit/${user.memberId}`)
         .then((res) => {
-          console.log("라이브 방송 퇴장 성공");
+          // console.log("라이브 방송 퇴장 성공");
         })
         .catch((err) => {
-          console.log(err);
-          console.log("라이브 방송 퇴장 실패");
+          // console.log(err);
+          // console.log("라이브 방송 퇴장 실패");
         });
     }
 
@@ -200,54 +201,11 @@ export default function VideoComponent() {
         type: "chat", // The type of message (optional)
       })
       .then(() => {
-        console.log("Message successfully sent");
+        // console.log("Message successfully sent");
       })
       .catch((error) => {
         console.error(error);
       });
-  };
-
-  const screenShare = useCallback(async () => {
-    // try {
-    //   const devices = await OV.current.getDevices();
-    //   const videoDevices = devices.filter(
-    //     (device) => device.kind === "videoinput"
-    //   );
-    //   if (videoDevices && videoDevices.length > 1) {
-    //     const newVideoDevice = videoDevices.filter(
-    //       (device) => device.deviceId !== currentVideoDevice.deviceId
-    //     );
-    //     if (newVideoDevice.length > 0) {
-    //       const newPublisher = OV.current.initPublisher(undefined, {
-    //         videoSource: newVideoDevice[0].deviceId,
-    //         publishAudio: true,
-    //         publishVideo: true,
-    //         mirror: true,
-    //       });
-    //       if (session) {
-    //         await session.unpublish(mainStreamManager);
-    //         await session.publish(newPublisher);
-    //         setCurrentVideoDevice(newVideoDevice[0]);
-    //         setMainStreamManager(newPublisher);
-    //         setPublisher(newPublisher);
-    //       }
-    //     }
-    //   }
-    // } catch (e) {
-    //   console.error(e);
-    // }
-  }, [session]);
-
-  // 사용 X
-  const mute = () => {
-    // publishAudio(true) 도 되고 publishVideo(false)도 되는데 publishAudio(false) 하면 openvidu-browser.js 에서 에러나고 멈춤
-    if (audioState) {
-      // publisher.publishAudio(false);
-      setAudioSate(false);
-    } else {
-      // publisher.publishAudio(true);
-      setAudioSate(true);
-    }
   };
 
   const deleteSubscriber = useCallback((streamManager) => {
@@ -342,11 +300,11 @@ export default function VideoComponent() {
     axios
       .post(API_URL + `/lives/${liveId}/enter/${user.memberId}`)
       .then((res) => {
-        console.log("라이브 방송 입장 성공");
+        // console.log("라이브 방송 입장 성공");
       })
       .catch((err) => {
-        console.log(err);
-        console.log("라이브 방송 입장 실패");
+        // console.log(err);
+        // console.log("라이브 방송 입장 실패");
       });
   };
 
@@ -441,20 +399,6 @@ export default function VideoComponent() {
                   >
                     <div className="space-x-2">
                       <p className="fontsize-md">지금골라쥬 방송중</p>
-                      {/* <button
-                        className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
-                        onClick={screenShare}
-                      >
-                        화면 공유
-                      </button> */}
-                      {/* <button
-                    className={`bg-sky-500 hover:bg-sky-700 ${settingButton}`}
-                    onClick={mute}
-                    >
-                    {audioState
-                      ? "마이크 음소거 (안됨)"
-                      : "마이크 음소거 해제 (안됨)"}
-                    </button> */}
                     </div>
                     <button
                       className={`bg-red-500 hover:bg-red-700 ${settingButton}`}

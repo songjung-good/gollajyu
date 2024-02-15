@@ -14,15 +14,13 @@ import NowGollajyuImage from "/assets/images/vote-button/now_gollajyu_img.png";
 import SimpleGollajyuImage from "/assets/images/vote-button/simple_gollajyu_img.png";
 import PurchaseGollajyuImage from "/assets/images/vote-button/purchase_gollajyu_img.png";
 
-
 const VoteButton = () => {
-  
   const navigate = useNavigate();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // 로그인 여부
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
-  
+
   // ----------- 버튼 hover -----------
   const [buttonHovered, setButtonHovered] = useState(false);
   const [nowGollajyuHovered, setNowGollajyuHovered] = useState(false);
@@ -35,7 +33,7 @@ const VoteButton = () => {
   };
 
   const buttonClick = () => {
-    setButtonHovered(!buttonHovered);  // 클릭 시 버튼 열고 닫음
+    setButtonHovered(!buttonHovered); // 클릭 시 버튼 열고 닫음
   };
 
   // ----------- '지금골라쥬!' 버튼 호버/떠남 상태 업데이트 함수 -----------
@@ -85,7 +83,6 @@ const VoteButton = () => {
     };
   }, []);
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 버튼 컨테이너 스타일 -----------
@@ -116,7 +113,7 @@ const VoteButton = () => {
   const xButtonStyle = {
     // 디자인
     paddingTop: "2px",
-  }
+  };
 
   // ----------- 투표 상세 설명 박스 스타일 -----------
   const boxStyle = {
@@ -125,7 +122,13 @@ const VoteButton = () => {
     right: isXLarge ? "15px" : isLarge ? "13px" : isMedium ? "11px" : "9px",
 
     // 디자인
-    width: isXLarge ? "300px" : isLarge ? "270px" : isMedium ? "240px" : "210px",
+    width: isXLarge
+      ? "300px"
+      : isLarge
+      ? "270px"
+      : isMedium
+      ? "240px"
+      : "210px",
     height: isXLarge ? "60px" : isLarge ? "54px" : isMedium ? "48px" : "42px",
     borderRadius: "50px",
     backgroundColor: "#F0F0F0",
@@ -147,7 +150,13 @@ const VoteButton = () => {
   // ----------- 텍스트 스타일 -----------
   const textStyle = {
     // 디자인
-    marginLeft: isXLarge ? "30px" : isLarge ? "27px" : isMedium ? "24px" : "21px",
+    marginLeft: isXLarge
+      ? "30px"
+      : isLarge
+      ? "27px"
+      : isMedium
+      ? "24px"
+      : "21px",
 
     // 글자
     color: "#000000", // 글자 색: 검정
@@ -198,7 +207,6 @@ const VoteButton = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-
   // 모달 상태 변경 함수
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setVoteSimpleCreateModalOpen = useModalStore(
@@ -215,7 +223,15 @@ const VoteButton = () => {
       color: "#FF595E",
       image: NowGollajyuImage,
       boxBottom: isXLarge ? 85 : isLarge ? 76 : isMedium ? 67 : 58,
-      circleBottom: buttonHovered ? ( isXLarge ? 85 : isLarge ? 76 : isMedium ? 67 : 58 ) : -200,
+      circleBottom: buttonHovered
+        ? isXLarge
+          ? 85
+          : isLarge
+          ? 76
+          : isMedium
+          ? 67
+          : 58
+        : -200,
       description: "라이브 방송으로 선택을 맡겨봐요",
       hovered: nowGollajyuHovered,
       mouseEnter: nowGollajyuHover,
@@ -235,13 +251,21 @@ const VoteButton = () => {
       color: "#8AC926",
       image: SimpleGollajyuImage,
       boxBottom: isXLarge ? 155 : isLarge ? 138 : isMedium ? 121 : 104,
-      circleBottom: buttonHovered ? ( isXLarge ? 155 : isLarge ? 138 : isMedium ? 121 : 104 ) : -200,
+      circleBottom: buttonHovered
+        ? isXLarge
+          ? 155
+          : isLarge
+          ? 138
+          : isMedium
+          ? 121
+          : 104
+        : -200,
       description: "간단한 질문으로 선택을 맡겨봐요",
       hovered: simpleGollajyuHovered,
       mouseEnter: simpleGollajyuHover,
       mouseLeave: simpleGollajyuLeave,
       handleClick: () => {
-        console.log("간단골라쥬 클릭");
+        // console.log("간단골라쥬 클릭");
         if (isLoggedIn) {
           // 로그인 사용자 -> 생성 모달 띄움
           setVoteSimpleCreateModalOpen();
@@ -256,13 +280,21 @@ const VoteButton = () => {
       color: "#1982C4",
       image: PurchaseGollajyuImage,
       boxBottom: isXLarge ? 225 : isLarge ? 200 : isMedium ? 175 : 150,
-      circleBottom: buttonHovered ? ( isXLarge ? 225 : isLarge ? 200 : isMedium ? 175 : 150 ) : -200,
+      circleBottom: buttonHovered
+        ? isXLarge
+          ? 225
+          : isLarge
+          ? 200
+          : isMedium
+          ? 175
+          : 150
+        : -200,
       description: "상세한 질문으로 선택을 맡겨봐요",
       hovered: purchaseGollajyuHovered,
       mouseEnter: purchaseGollajyHover,
       mouseLeave: purchaseGollajyLeave,
       handleClick: () => {
-        console.log("구매골라쥬 클릭");
+        // console.log("구매골라쥬 클릭");
         if (isLoggedIn) {
           // 로그인 사용자 -> 생성 모달 띄움
           setVoteProductCreateModalOpen();
@@ -282,17 +314,21 @@ const VoteButton = () => {
         onMouseLeave={() => button.mouseLeave()}
       >
         {button.hovered && buttonHovered && (
-          <div style={{
-            ...boxStyle,
-            bottom: `${button.boxBottom}px`,
-          }}>
+          <div
+            style={{
+              ...boxStyle,
+              bottom: `${button.boxBottom}px`,
+            }}
+          >
             <div style={textContainerStyle}>
               <div style={{ ...textStyle, color: button.color }} className="fontsize-sm">{button.label}</div>
               <div className="fontsize-sm text-black">골라쥬!</div>
               <div style={textPointStyle} className="fontsize-xs">(10P 차감됩니다)</div>
             </div>
             <div style={textContainerStyle}>
-              <div style={textDescriptionStyle} className="fontsize-xs">{button.description}</div>
+              <div style={textDescriptionStyle} className="fontsize-xs">
+                {button.description}
+              </div>
             </div>
           </div>
         )}
@@ -313,15 +349,16 @@ const VoteButton = () => {
         <div
           style={voteButtonContainerStyle}
           onMouseEnter={buttonHover}
-          onClick={buttonClick}  // 클릭 시 세부 버튼 닫기
+          onClick={buttonClick} // 클릭 시 세부 버튼 닫기
           ref={buttonRef}
         >
           {/* ------------- 투표 버튼 ------------- */}
           <button style={voteButtonStyle}>
-            {buttonHovered ? 
+            {buttonHovered ? (
               <p style={xButtonStyle} className="fontsize-md">
                 &#10006;
-              </p> : (
+              </p>
+            ) : (
               <p className="fontsize-sm">
                 투표
                 <br />

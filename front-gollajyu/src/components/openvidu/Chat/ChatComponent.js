@@ -35,7 +35,7 @@ export default class ChatComponent extends Component {
         });
 
         this.setState({ messageList: messageList });
-        console.log(messageList);
+        // console.log(messageList);
         this.scrollToBottom();
       });
   }
@@ -51,7 +51,7 @@ export default class ChatComponent extends Component {
   }
 
   sendMessage() {
-    console.log(this.state.message);
+    // console.log(this.state.message);
     if (this.props.user && this.state.message) {
       let message = this.state.message.replace(/ +(?= )/g, "");
       if (message !== "" && message !== " ") {

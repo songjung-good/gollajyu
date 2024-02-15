@@ -15,7 +15,6 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 import useModalStore from "/src/stores/modalState";
 import useAuthStore from "/src/stores/userState";
 
-
 // ----------- 커스텀 훅 -----------
 const useHoverState = () => {
   const [hovered, setHovered] = useState(false);
@@ -64,18 +63,15 @@ const ButtonItem = ({ label, style, hoverState, onClick }) => (
 );
 
 const NavigationBar = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // ----------- 메인 메뉴 hover -----------
-  const [
-    votePageHovered,
-    votePageMouseEnter,
-    votePageMouseLeave
-  ] = useHoverState();
+  const [votePageHovered, votePageMouseEnter, votePageMouseLeave] =
+    useHoverState();
 
-  const [broadcastPageHovered,
+  const [
+    broadcastPageHovered,
     broadcastPageMouseEnter,
     broadcastPageMouseLeave,
   ] = useHoverState();
@@ -123,39 +119,32 @@ const NavigationBar = () => {
     setSignupModalOpen();
   };
 
-  const checkLoggedIn = (event) => {
-    // TODO :: 비로그인 사용자의 네비게이션 바 이용 막아야함
-    if (!isLoggedIn) {
-      // console.log(event.target);
-      // console.log(isLoggedIn);
-      setLoginModalOpen();
-    }
-  };
-
   const navigate = useNavigate();
   const handleLogout = () => {
     axios
       .get(API_URL + "/members/logout")
       .then((res) => {
-        console.log(res.data.body); // 로그아웃 성공
+        // console.log(res.data.body); // 로그아웃 성공
         setLogout();
         navigate("/");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
   // ----------- 사이드 메뉴 버튼 ref -----------
   const sideButtonRef = useRef();
   const sideMenuRef = useRef();
-  
+
   // ----------- 사이드 메뉴 밖 클릭 시 메뉴 닫음 -----------
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        (sideButtonRef.current && !sideButtonRef.current.contains(event.target)) &&
-        (sideMenuRef.current && !sideMenuRef.current.contains(event.target))
+        sideButtonRef.current &&
+        !sideButtonRef.current.contains(event.target) &&
+        sideMenuRef.current &&
+        !sideMenuRef.current.contains(event.target)
       ) {
         // 클릭이 메뉴 외부에 있으면 메뉴를 닫습니다.
         setIsSideMenuOpend(false);
@@ -163,14 +152,13 @@ const NavigationBar = () => {
     };
 
     // 페이지에 클릭 이벤트를 추가합니다.
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setIsSideMenuOpend]);
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -248,7 +236,7 @@ const NavigationBar = () => {
 
     // 글자
     fontSize: "14px",
-    display: !isSmall? "flex" : "none", 
+    display: !isSmall ? "flex" : "none",
     alignItems: "center",
     justifyContent: "center",
   };
@@ -312,7 +300,7 @@ const NavigationBar = () => {
 
     // 컨텐츠 정렬
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 로고 컨테이너 스타일 -----------
   const logoContainerStyle = {
@@ -430,7 +418,7 @@ const NavigationBar = () => {
 
     // 글자
     fontSize: "22px",
-  }
+  };
 
   // ----------- 메뉴 아이템 스타일 -----------
   const menuItemStyle = {
@@ -458,7 +446,6 @@ const NavigationBar = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-  
   // ----------- 링크 아이템 목록 -----------
   const linkItems = [
     {
@@ -526,7 +513,6 @@ const NavigationBar = () => {
     },
   ];
 
-
   // --------------------------------- 프로필, 버튼 렌더링 함수 ---------------------------------
   const renderButton = () => {
     return (
@@ -551,9 +537,7 @@ const NavigationBar = () => {
                     : user.nickname.slice(0, 6) + "..."}
                   님
                 </p>
-                <p style={pointStyle}>
-                  {user.point} P
-                </p>
+                <p style={pointStyle}>{user.point} P</p>
               </Link>
               <ButtonItem
                 style={buttonItems[0].style}
@@ -599,7 +583,6 @@ const NavigationBar = () => {
         {(isXLarge || isLarge) && renderButton()}
 
         <div style={mainLinkContainerStyle}>
-
           {/* --------------------------------- 로고 --------------------------------- */}
           <div style={logoContainerStyle}>
             <NavLink to="/" style={logoStyle}>
@@ -664,7 +647,7 @@ const NavigationBar = () => {
                 &#9776;
               </button>
             )}
-            
+
             <div style={sideMenuStyle} ref={sideMenuRef}>
               <div style={profileContainerStyle}>
                 <div style={menuSubTitleStyle}>메인 메뉴</div>

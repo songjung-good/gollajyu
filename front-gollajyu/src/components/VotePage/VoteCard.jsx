@@ -67,7 +67,7 @@ const VoteCard = (props) => {
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
-    console.log(selectedVoteItem);
+    // console.log(selectedVoteItem);
   };
 
   // 모달창 여는 함수
@@ -105,7 +105,7 @@ const VoteCard = (props) => {
   }, [voteItemList]);
 
   useEffect(() => {
-    console.log(countList);
+    // console.log(countList);
     setSelectedVoteItem(chosenItemId);
   }, [countList]);
 

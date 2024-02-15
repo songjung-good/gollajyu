@@ -62,122 +62,16 @@ const BroadcastPage = () => {
     (state) => state.isVoteProductCreateModalOpened
   );
 
-  // const enterRoom = () => {
-  //   navigate("/EnterVideoRoom", {
-  //     state: {
-  //       isHost: false,
-  //       sessionId: "SessionABCDEFG",
-  //       userNickName: userNickName,
-  //     },
-  //   });
-  // };
-  // const createRoom = () => {
-  //   navigate("/EnterVideoRoom", {
-  //     state: {
-  //       isHost: true,
-  //       sessionId: "SessionABCDEFG",
-  //     },
-  //   });
-  // };
-  // const handleInput = (event) => {
-  //   setUserNickName(event.target.value);
-  //   console.log(userNickName);
-  // };
-
-  // const dummyData = [
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 1000,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 14:11"),
-  //     voteItem: ["고양이", "강아지", "햄스터", "도마뱀"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 2,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 15:11"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 123,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 16:11"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 78,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 14:10"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 44,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 14:04"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 678,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 10:11"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 707,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 12:11"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 500,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 14:30"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  //   {
-  //     thumbnail: tmpThumbnailImg,
-  //     title: "최고의 반려동물은? 고양이 vs 강아지",
-  //     viewerCnt: 10,
-  //     sessionId: "sessionABCD",
-  //     hostNickName: "고라파덕",
-  //     createdDate: new Date("2024-01-24 14:50"),
-  //     voteItem: ["고양이", "강아지"],
-  //   },
-  // ];
-
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     axios
       .get(API_URL + "/lives/listWithTop3")
       .then((res) => {
-        console.log(res.data.body);
+        // console.log(res.data.body);
         setLiveItem(res.data.body);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }, []);
 
@@ -248,30 +142,7 @@ const BroadcastPage = () => {
 
   return (
     <>
-      {/* <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        onClick={createRoom}
-      >
-        지금 골라쥬 생성(Host)
-      </button>
-      <br />
-      <div>
-        <label htmlFor="nickName">닉네임 : </label>
-        <input
-          type="text"
-          id="nickName"
-          name="nickName"
-          value={userNickName}
-          onChange={handleInput}
-        />
-        <button
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={enterRoom}
-        >
-          시청자로 진입(Guest)
-        </button>
-      </div> */}
-
+      <VoteButton />
       <Helmet>
         <title>지금골라쥬</title>
       </Helmet>
@@ -316,12 +187,6 @@ const BroadcastPage = () => {
             ) : (
               <p className="fontsize-sm">현재 방송 중인 지금 골라쥬가 없습니다.</p>
             )}
-            {/* {dummyData
-              .sort((a, b) => b.viewerCnt - a.viewerCnt)
-              .slice(0, 3)
-              .map((item, index) => {
-                return <BroadcastItem key={index} index={index} item={item} />;
-              })} */}
           </div>
         </div>
 
@@ -362,11 +227,6 @@ const BroadcastPage = () => {
                 </p>
               </div>
             )}
-            {/* {dummyData
-              .sort((a, b) => b.createdDate.getTime() - a.createdDate.getTime())
-              .map((item, index) => {
-                return <BroadcastItem key={index} item={item} />;
-              })} */}
           </div>
 
         </div>

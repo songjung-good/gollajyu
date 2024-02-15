@@ -21,25 +21,32 @@ const VoteProduct = () => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 설명 state 추가
-  const [description, setDescription] = useState('');
-  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState("");
+  const [title, setTitle] = useState("");
   // 카테고리 상태 변수 추가
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState("");
   // 모달창 닫기
-  const setVoteProductCreateModalClose = useModalStore((state) => state.setVoteProductCreateModalClose);
+  const setVoteProductCreateModalClose = useModalStore(
+    (state) => state.setVoteProductCreateModalClose
+  );
 
-  const [voteItems, setVoteItems] = useState([{ voteItemImg: null, voteItemDesc: '', price: '' }, { voteItemImg: null, voteItemDesc: '', price: '' }]);
+  const [voteItems, setVoteItems] = useState([
+    { voteItemImg: null, voteItemDesc: "", price: "" },
+    { voteItemImg: null, voteItemDesc: "", price: "" },
+  ]);
   const [previewImages, setPreviewImages] = useState([]);
 
   // 사용자 ID를 저장할 state 변수 추가
   const user = useAuthStore((state) => state.user);
   // 모달창 닫는 로직
-  const setVoteProductModalClose = useModalStore((state) => state.setVoteProductCreateModalClose);
+  const setVoteProductModalClose = useModalStore(
+    (state) => state.setVoteProductCreateModalClose
+  );
 
-  
   const handleInputChange = (e, index, field) => {
     const updatedItems = [...voteItems];
-    const value = field === 'price' ? parseFloat(e.target.value) || 0 : e.target.value;
+    const value =
+      field === "price" ? parseFloat(e.target.value) || 0 : e.target.value;
     if (updatedItems[index]) {
       updatedItems[index] = { ...updatedItems[index], [field]: value };
     } else {
@@ -50,24 +57,27 @@ const VoteProduct = () => {
 
   const addVoteItem = () => {
     if (voteItems.length > 3) {
-      alert('최대 개수를 초과하였습니다.');
-      return
+      alert("최대 개수를 초과하였습니다.");
+      return;
     }
-    setVoteItems(prevState => [...prevState, { voteItemImg: null, voteItemDesc: '', price: '' }]);
-    setPreviewImages(prevState => [...prevState, null]);
-
+    setVoteItems((prevState) => [
+      ...prevState,
+      { voteItemImg: null, voteItemDesc: "", price: "" },
+    ]);
+    setPreviewImages((prevState) => [...prevState, null]);
   };
   // Function to handle changing voting item image
   const handleVoteItemImageChange = (index, event) => {
     const newVoteItems = [...voteItems];
     // 여기서 취소를 눌러도 유지되게끔 바꿀 수도 있음.
     newVoteItems[index].voteItemImg = event.target.files[0];
-    setVoteItems(newVoteItems)
+    setVoteItems(newVoteItems);
 
     const newPreviewImages = [...previewImages];
     // 그림을 넣으려다 취소를 눌렀을 때 제거되기 때문에 보관하던 이미지도 제거했다.
-    (event.target.files[0]) ? newPreviewImages[index] = URL.createObjectURL(event.target.files[0])
-    : newPreviewImages[index] = null;
+    event.target.files[0]
+      ? (newPreviewImages[index] = URL.createObjectURL(event.target.files[0]))
+      : (newPreviewImages[index] = null);
     setPreviewImages(newPreviewImages);
   };
 
@@ -89,47 +99,47 @@ const VoteProduct = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (title === '') {
-      alert('제목을 입력해쥬!');
+    if (title === "") {
+      alert("제목을 입력해쥬!");
       return;
     }
 
-    if (voteItems && voteItems.length<2) {
-      alert('최소 2개 이상의 사진을 첨부해쥬!');
+    if (voteItems && voteItems.length < 2) {
+      alert("최소 2개 이상의 사진을 첨부해쥬!");
       return;
     }
 
-    if (event.target.category.value === '') {
-      alert('카테고리를 선택해쥬!')
+    if (event.target.category.value === "") {
+      alert("카테고리를 선택해쥬!");
       return;
     }
 
-    if (event.target.description.value === '') {
-      alert('내용을 입력해쥬!')
+    if (event.target.description.value === "") {
+      alert("내용을 입력해쥬!");
       return;
     }
     const formData = new FormData();
-    formData.append('memberEmail', user.email);
-    formData.append('title', event.target.title.value);
-    formData.append('description', event.target.description.value);
-    formData.append('categoryId', event.target.category.value);
+    formData.append("memberEmail", user.email);
+    formData.append("title", event.target.title.value);
+    formData.append("description", event.target.description.value);
+    formData.append("categoryId", event.target.category.value);
     voteItems.forEach((item, index) => {
       formData.append(`voteItemList[${index}].voteItemImg`, item.voteItemImg);
       formData.append(`voteItemList[${index}].voteItemDesc`, item.voteItemDesc);
       formData.append(`voteItemList[${index}].price`, item.price);
     });
-    
+
     try {
-      const response = await axios.post(API_URL+'/votes', formData, {
+      const response = await axios.post(API_URL + "/votes", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       setVoteProductModalClose();
     } catch (error) {
       console.error(error);
-      alert('Failed to create poll.');
+      alert("Failed to create poll.");
     }
   };
 
