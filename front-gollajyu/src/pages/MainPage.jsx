@@ -270,7 +270,7 @@ const MainPage = () => {
                 }
               }}
             >
-              <MainVoteList transferVoteId={transferVoteId} />
+              <MainVoteList />
             </div>
           </>
         )}

@@ -24,9 +24,7 @@ import questionMarkImg from "/assets/images/question_mark_img.png";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-import TmpModal from "../components/TmpModal"; // 임시 모달
 import { debounce } from "lodash";
-
 
 const items = [
   "프렌치 마카롱",
@@ -47,9 +45,7 @@ const items = [
   "초코잼",
 ];
 
-
 const TestResultPage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -91,7 +87,6 @@ const TestResultPage = () => {
     setMatchingData(sobiTIData.find((data) => data.id === result));
   }, [result]);
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- body 스타일 -----------
@@ -99,14 +94,26 @@ const TestResultPage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "30px 0", // 상하단 여백: 50px
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     // whiteSpace: "nowrap", // 줄바꿈 방지
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "375px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "375px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -139,8 +146,8 @@ const TestResultPage = () => {
     margin: "0 5px",
     width: "16px",
     height: "16px",
-  }
-  
+  };
+
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 디자인
@@ -151,7 +158,7 @@ const TestResultPage = () => {
     // 글자
     fontSize: "13px",
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -160,7 +167,13 @@ const TestResultPage = () => {
 
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
 
     // 컨텐츠 정렬
@@ -178,13 +191,13 @@ const TestResultPage = () => {
 
     // 컨텐츠 정렬
     flexDirection: isXLarge || isLarge ? "row" : "column",
-  }
+  };
 
   // ----------- 조합 아이템 스타일 -----------
   const combinationItemrStyle = {
     // 디자인
     width: isXLarge || isLarge ? "50%" : "100%",
-  }
+  };
 
   // ----------- 왼쪽 아이템 스타일 -----------
   const combinationLeftItemrStyle = {
@@ -194,7 +207,7 @@ const TestResultPage = () => {
     // 디자인
     marginRight: isXLarge || isLarge ? "10px" : "0px",
     marginBottom: isXLarge || isLarge ? "0px" : "10px",
-  }
+  };
 
   // ----------- 오른쪽 아이템 스타일 -----------
   const combinationRightItemrStyle = {
@@ -204,21 +217,19 @@ const TestResultPage = () => {
     // 디자인
     marginLeft: isXLarge || isLarge ? "10px" : "0px",
     marginTop: isXLarge || isLarge ? "0px" : "10px",
-  }
-
+  };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
       <Helmet>
         <title>소비성향알려쥬</title>
       </Helmet>
-      
+
       {/* ------------- 투표 버튼 ------------- */}
       <VoteButton />
-        
+
       {/* ------------- Body ------------- */}
       <div style={bodyStyle}>
         <div style={containerStyle}>
@@ -235,10 +246,12 @@ const TestResultPage = () => {
               onMouseOver={() => setShowDescription(true)}
               onMouseOut={() => setShowDescription(false)}
             />
-            <p style={{
-              ...descriptionStyle,
-              visibility: showDescription ? "visible" : "hidden"
-            }}>
+            <p
+              style={{
+                ...descriptionStyle,
+                visibility: showDescription ? "visible" : "hidden",
+              }}
+            >
               {isMyResult ? "소비성향 테스트 결과" : "다른 소비성향 목록"}
             </p>
           </div>
@@ -353,7 +366,6 @@ const TestResultPage = () => {
             )}
           </div>
         </div>
-            
       </div>
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}

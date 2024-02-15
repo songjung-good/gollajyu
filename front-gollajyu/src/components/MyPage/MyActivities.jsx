@@ -237,8 +237,8 @@ const MyActivities = () => {
     margin: "0 5px",
     width: "16px",
     height: "16px",
-  }
-  
+  };
+
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 디자인
@@ -249,7 +249,7 @@ const MyActivities = () => {
     // 글자
     fontSize: "13px",
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -500,10 +500,12 @@ const MyActivities = () => {
             onMouseOver={() => setShowInfoDescription(true)}
             onMouseOut={() => setShowInfoDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showInfoDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showInfoDescription ? "visible" : "hidden",
+            }}
+          >
             내 포인트 및 누적 활동정보
           </p>
         </div>
@@ -518,18 +520,18 @@ const MyActivities = () => {
             </div>
             <Tooltip
               title={
-                <div>
+                <div className="fontsize-xs">
                   포인트 획득 - 출석, 투표하기
                   <br />
                   포인트 차감 - 골라쥬 생성, 닉네임 수정
                 </div>
               }
               placement="right-start"
-              size="lg"
+              size="md"
               variant="outlined"
             >
               <img
-                src="/assets/images/question_mark.png"
+                src="/assets/images/question_mark_img.png"
                 className="my-auto mx-4 w-[1.4rem] h-[1.4rem] opacity-60"
                 alt=""
               />
@@ -555,10 +557,12 @@ const MyActivities = () => {
             onMouseOver={() => setShowRecordDescription(true)}
             onMouseOut={() => setShowRecordDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showRecordDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showRecordDescription ? "visible" : "hidden",
+            }}
+          >
             참여 투표 목록 및 바로가기
           </p>
         </div>
