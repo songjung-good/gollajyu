@@ -12,7 +12,7 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
 // 커스텀 스토어를 이용한 상태 관리
 import useAuthStore from "/src/stores/userState";
-import useModalStore from '/src/stores/modalState';
+import useModalStore from "/src/stores/modalState";
 
 // 투표 카드 컴포넌트
 import VoteCardItem from "./VoteCardItem";
@@ -24,7 +24,17 @@ const VoteCard = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 부모 컴포넌트로부터 투표 정보 전달 받음
-  const { vote, liked, likesCnt, chosenItemId, voteItemList, voteId, voteTitle, categoryName, categoryId } = props;
+  const {
+    vote,
+    liked,
+    likesCnt,
+    chosenItemId,
+    voteItemList,
+    voteId,
+    voteTitle,
+    categoryName,
+    categoryId,
+  } = props;
 
   // 선택 상태 변수 선언
   const [totalCount, setTotalCount] = useState(0);
@@ -36,16 +46,23 @@ const VoteCard = (props) => {
   const [selectedVoteItem, setSelectedVoteItem] = useState(chosenItemId);
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
-  // 모달창
-  const setVoteDetailModalOpen = useModalStore((state) => state.setVoteDetailModalOpen);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen); // 로그인 모달이 열립니다
 
+  // 모달창
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
 
   // 클릭 시 isSelect 상태 변수를 false로 업데이트 하는 함수
   const handleClick = (itemId, selection) => {
     // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
-    setCountList(prevCountList => 
-      prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
+    setCountList((prevCountList) =>
+      prevCountList.map((count, i) =>
+        voteItemList[i].voteItemId === itemId ? count + 1 : count
+      )
+    );
 
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
@@ -64,7 +81,7 @@ const VoteCard = (props) => {
     try {
       const response = await axios.post(API_URL + "/votes/likes", {
         memberId: user.memberId,
-        voteId: voteId
+        voteId: voteId,
       });
 
       // 현재 좋아요 상태를 업데이트
@@ -84,14 +101,14 @@ const VoteCard = (props) => {
       newTotalCount += item.count;
     });
     setTotalCount(newTotalCount);
-    setCountList(prevCountList => voteItemList.map(item => item.count));
+    setCountList((prevCountList) => voteItemList.map((item) => item.count));
   }, [voteItemList]);
 
   useEffect(() => {
     console.log(countList);
-    setSelectedVoteItem(chosenItemId)
+    setSelectedVoteItem(chosenItemId);
   }, [countList]);
-  
+
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -184,17 +201,30 @@ const VoteCard = (props) => {
 
   return (
     <>
-      <div style={contentContainerStyle}>
+      <div
+        style={contentContainerStyle}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (!isLoggedIn) {
+            setLoginModalOpen();
+          }
+        }}
+      >
         {/* ------------------ 투표 제목 및 카테고리 ------------------ */}
         <div style={flexContainerStyle}>
           <div className="fontsize-lg">{voteTitle}</div>
-          <p style={categoryNameStyle} className="fontsize-md">{categoryName}</p>
+          <p style={categoryNameStyle} className="fontsize-md">
+            {categoryName}
+          </p>
         </div>
 
         {/* ------------------ 투표 카드 아이템 ------------------ */}
-        <div style={cardContainerStyle} className="p-2 flex justify-around items-center">
+        <div
+          style={cardContainerStyle}
+          className="p-2 flex justify-around items-center"
+        >
           {voteItemList.map((item, itemIndex) => (
-            <VoteCardItem 
+            <VoteCardItem
               key={item.voteItemId}
               item={item}
               categoryId={categoryId}
