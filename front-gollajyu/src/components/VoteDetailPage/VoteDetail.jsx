@@ -78,6 +78,7 @@ const VoteDetail = () => {
           params,
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
+        console.log(data.body);
         setVoteDetail(data.body);
         setSelectedVoteItem(data.body.chosenItem);
       } catch (error) {
@@ -216,7 +217,9 @@ const VoteDetail = () => {
             </div>
             {selectedVoteItem && (
               <>
-                <VoteDetailResult voteResults={voteDetail.voteItemList} />
+                {voteDetail.voteInfo.categoryId !== 5 && (
+                  <VoteDetailResult voteResults={voteDetail.voteItemList} />
+                )}
 
                 <p className="pt-12 pb-4 fontsize-sm">💬 댓글</p>
                 <VoteDetailChat

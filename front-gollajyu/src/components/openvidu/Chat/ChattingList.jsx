@@ -63,7 +63,8 @@ const ChattingList = (props) => {
     );
   }, 100);
 
-  const scroll = useCallback(() => {
+  const scroll = useCallback((event) => {
+    event.stopPropagation();
     scrollEvent();
   }, []);
 

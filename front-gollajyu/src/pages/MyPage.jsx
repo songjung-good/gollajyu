@@ -13,8 +13,10 @@ import MyStatistics from "../components/MyPage/MyStatistics";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-const MyPage = () => {
+// Footer
+import Footer from "../components/Footer";
 
+const MyPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -34,25 +36,31 @@ const MyPage = () => {
     width: "100%",
     height: isXLarge || isLarge ? "200px" : "160px",
     whiteSpace: "nowrap", // 줄바꿈 방지
-    
+
     // 컨텐츠 정렬
     display: "flex",
     alignItems: "flex-end",
     justifyContent: "center",
-  }
+  };
 
   // ----------- 해더 컨테이너 스타일 -----------
   const headerContainerStyle = {
     // 디자인
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     hegith: "200px",
-    
+
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
     alignItems: isXLarge || isLarge ? "flex-start" : "center",
     justifyContent: "center",
-  }
+  };
 
   // ----------- 해더 제목 스타일 -----------
   const headerTitleStyle = {
@@ -61,13 +69,13 @@ const MyPage = () => {
 
     // 글자
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 해더 링크 컨테이너 스타일 -----------
   const headerLinkContainerStyle = {
     // 디자인
     height: "28.5px",
-  }
+  };
 
   // ----------- 해더 링크 스타일 -----------
   const headerLinkStyle = {
@@ -79,7 +87,7 @@ const MyPage = () => {
     color: "#4A4A4A",
     fontSize: isXLarge || isLarge ? "19px" : "16px",
     whiteSpace: "nowrap",
-  }
+  };
 
   // ----------- 활성화 된 해더 링크 스타일 -----------
   const activeheaderLinkStyle = {
@@ -88,19 +96,24 @@ const MyPage = () => {
 
     // 글자
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "30px 0", // 상하단 여백: 50px
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     whiteSpace: "nowrap", // 줄바꿈 방지
   };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
@@ -113,23 +126,34 @@ const MyPage = () => {
       </Helmet>
 
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-stone-200 to-gray-400">
+      <div
+        style={headerStyle}
+        className="bg-gradient-to-tl from-stone-200 to-gray-400"
+      >
         <div style={headerContainerStyle}>
-          <p style={headerTitleStyle} className="fontsize-lg text-center">마이 페이지</p>
+          <p style={headerTitleStyle} className="fontsize-lg text-center">
+            마이 페이지
+          </p>
           <div style={headerLinkContainerStyle}>
             {mypageLinkItems.map((item, index) => (
               <NavLink
                 key={index}
                 to={item.to}
                 end
-                style={
-                  ({ isActive }) => (
-                    isActive || (index == 1 && (
-                      window.location.pathname.startsWith('/Mypage/MyActivities/0') ||
-                      window.location.pathname.startsWith('/Mypage/MyActivities/1') ||
-                      window.location.pathname.startsWith('/Mypage/MyActivities/2')
-                    ))
-                  ) ? activeheaderLinkStyle : headerLinkStyle
+                style={({ isActive }) =>
+                  isActive ||
+                  (index == 1 &&
+                    (window.location.pathname.startsWith(
+                      "/Mypage/MyActivities/0"
+                    ) ||
+                      window.location.pathname.startsWith(
+                        "/Mypage/MyActivities/1"
+                      ) ||
+                      window.location.pathname.startsWith(
+                        "/Mypage/MyActivities/2"
+                      )))
+                    ? activeheaderLinkStyle
+                    : headerLinkStyle
                 }
               >
                 {item.text}
@@ -147,6 +171,8 @@ const MyPage = () => {
           <Route path="/MyStatistics" element={<MyStatistics />} />
         </Routes>
       </div>
+
+      <Footer />
     </>
   );
 };

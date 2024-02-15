@@ -31,7 +31,7 @@ const MainVoteList = () => {
     // API를 통해 투표 정보를 가져옵니다.
     axios.get(`${API_URL}/votes/ranks`).then((response) => {
       const sortedVotes = response.data.body;
-      console.log(sortedVotes);
+
       const lists = [
         {
           key: 0,

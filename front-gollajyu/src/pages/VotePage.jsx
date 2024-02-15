@@ -27,6 +27,9 @@ import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
+// Footer
+import Footer from "../components/Footer";
+
 const VotePage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -131,9 +134,15 @@ const VotePage = () => {
   // ----------- 해더 컨테이너 스타일 -----------
   const headerContainerStyle = {
     // 디자인
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     hegith: "200px",
-    
+
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
@@ -153,7 +162,7 @@ const VotePage = () => {
     // display: "flex",
     // alignItems: "center",
     // justifyContent: "space-between",
-  }
+  };
 
   // ----------- 해더 링크 컨테이너 스타일 -----------
   const headerLinkContainerStyle = {
@@ -187,7 +196,13 @@ const VotePage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "30px 0", // 상하단 여백: 50px
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     // whiteSpace: "nowrap", // 줄바꿈 방지
   };
 
@@ -203,7 +218,10 @@ const VotePage = () => {
       <VoteButton />
 
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-stone-200 to-gray-400">
+      <div
+        style={headerStyle}
+        className="bg-gradient-to-tl from-stone-200 to-gray-400"
+      >
         <div style={headerContainerStyle}>
           <VotePageHeader
             onSearchTerm={setSearchTerm}
@@ -211,7 +229,12 @@ const VotePage = () => {
             onSearch={handleSearch}
           />
           <div>
-            <p style={headerTitleStyle} className="fontsize-lg sm:text-center md:text-center">투표모아쥬</p>
+            <p
+              style={headerTitleStyle}
+              className="fontsize-lg sm:text-center md:text-center"
+            >
+              투표모아쥬
+            </p>
             <div style={headerLinkContainerStyle}>
               {/* ------------- 최신순 인기순 버튼 ------------- */}
               <button
@@ -240,7 +263,7 @@ const VotePage = () => {
       </div>
 
       {/* ------------- Body ------------- */}
-      <div style={bodyStyle}>
+      <div style={bodyStyle} className="min-h-screen">
         {" "}
         {/* 정렬 함수를 props로 전달 */}
         <div className="grid grid-cols-1">
@@ -254,7 +277,7 @@ const VotePage = () => {
         </div>
         {/* 정렬 상태를 props로 전달 */}
       </div>
-
+      <Footer />
       {/* ------------- 투표 생성 모달 ------------- */}
       {isVoteDetailModalOpened && <VoteDetail />}
       {isVoteSimpleCreateModalOpened && <VoteSimple />}

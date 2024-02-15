@@ -81,7 +81,7 @@ const VoteCardItem = (props) => {
 
   return (
     <>
-      <div className='flex flex-col h-[319px]'>
+      <div className="flex flex-col h-[319px]">
         <div
           style={{
             marginLeft: "15px",
@@ -96,9 +96,29 @@ const VoteCardItem = (props) => {
         <div
           style={{
             width:
-              voteItemLength === 2 ? (isXLarge ? "300px" : isLarge ? "220px" : isMedium ? "120px" : "110px") :
-              voteItemLength === 3 ? (isXLarge ? "270px" : isLarge ? "200px" : isMedium ? "113px" : "100px") :
-              (isXLarge ? "220px" : isLarge ? "165px" : isMedium ? "100px" : "80px"),
+              voteItemLength === 2
+                ? isXLarge
+                  ? "300px"
+                  : isLarge
+                  ? "220px"
+                  : isMedium
+                  ? "120px"
+                  : "110px"
+                : voteItemLength === 3
+                ? isXLarge
+                  ? "270px"
+                  : isLarge
+                  ? "200px"
+                  : isMedium
+                  ? "113px"
+                  : "100px"
+                : isXLarge
+                ? "220px"
+                : isLarge
+                ? "165px"
+                : isMedium
+                ? "100px"
+                : "80px",
             height: "289px",
             border: "5px solid",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
@@ -108,7 +128,6 @@ const VoteCardItem = (props) => {
           {" "}
           {/* 높이를 조정했습니다. */}
           {/* 이미지를 띄워지는 배경 */}
-
           <Container
             className="w-full p-2 relative rounded-xl"
             onMouseEnter={() => setHover(true)}
@@ -116,7 +135,7 @@ const VoteCardItem = (props) => {
             style={{ maxWidth: "100%" }}
           >
             {/* 투표하는 기능 내부 */}
-            {((selectedItem === 0 || !selectedItem ) && hover) ? (
+            {(selectedItem === 0 || !selectedItem) && hover ? (
               <div
                 className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
                 onMouseLeave={() => {}}
@@ -140,8 +159,7 @@ const VoteCardItem = (props) => {
                   </button>
                 ))}
               </div>
-            ) : null
-            }
+            ) : null}
 
             {/* 투표 이미지 */}
             <img
@@ -152,13 +170,25 @@ const VoteCardItem = (props) => {
           </Container>
           {/* 버튼을 누르면 생기는 상세페이지 */}
           <div className="w-full flex flex-col justify-center items-center">
-            {(selectedItem !== 0 && selectedItem ) ? (
-              <p className="fontsize-md pb-2">{`${(count / totalCount * 100).toFixed(2)}%`}</p>
-            ) : <p className="pb-2 fontsize-sm text-center">투표 참여 시 <br/> 선택 비율이 공개됩니다.</p>}
+            {selectedItem !== 0 && selectedItem ? (
+              <p className="fontsize-md pb-2">{`${(
+                (count / totalCount) *
+                100
+              ).toFixed(2)}%`}</p>
+            ) : (
+              <p className="pb-2 fontsize-sm text-center invisible">
+                투표 참여 시 <br /> 선택 비율이 공개됩니다.
+              </p>
+            )}
             <h2 className="fontsize-sm font-bold">
               {item.price ? `${item.price.toLocaleString()}원` : ""}
             </h2>
-            <p className="fontsize-xs pt-2" style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}>{item.voteItemDesc}</p>
+            <p
+              className="fontsize-xs pt-2"
+              style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
+            >
+              {item.voteItemDesc}
+            </p>
           </div>
         </div>
       </div>
