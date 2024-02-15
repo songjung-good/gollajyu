@@ -836,39 +836,40 @@ const MyStatistics = () => {
         </div>
         <div style={tagContentsContainerStyle}>
           {/* ------------- 관심있는 카테고리 ------------- */}
-          <div style={subTitleContainerStyle}>
-            {topCategory.key ? (
-              <>
+          {topCategory.key ? (
+            <>
+              <div style={subTitleContainerStyle}>
                 <div style={subTitleStyle} className="fontsize-lg">
                   가장 관심있는 카테고리 :
                 </div>
                 <div style={categoryTextStyle} className="fontsize-xl">
                   " {topCategory.key} "
                 </div>
-                <div style={descriptionContainerStyle}>
-                  <div style={responsiveDescriptionContainerStyle}>
-                    <div style={responsiveDescriptionSubContainerStyle}>
-                      <div className="fontsize-sm">참여한 투표의</div>
-                      <div style={descriptionDataStyle} className="fontsize-sm">
-                        {topCategory && topCategory.value.toFixed(0)}%
-                      </div>
-                      <div className="fontsize-sm">가</div>
-                    </div>
-                  </div>
+              </div>
+
+              <div style={descriptionContainerStyle}>
+                <div style={responsiveDescriptionContainerStyle}>
                   <div style={responsiveDescriptionSubContainerStyle}>
+                    <div className="fontsize-sm">참여한 투표의</div>
                     <div style={descriptionDataStyle} className="fontsize-sm">
-                      {topCategory.key}
+                      {topCategory && topCategory.value.toFixed(0)}%
                     </div>
-                    <div className="fontsize-sm">카테고리에 속해있어요!</div>
+                    <div className="fontsize-sm">가</div>
                   </div>
                 </div>
-              </>
-            ) : (
-              <p className="fontsize-md font-[#4A4A4A]">
-                투표 참여 기록이 없어요
-              </p>
-            )}
-          </div>
+                <div style={responsiveDescriptionSubContainerStyle}>
+                  <div style={descriptionDataStyle} className="fontsize-sm">
+                    {topCategory.key}
+                  </div>
+                  <div className="fontsize-sm">카테고리에 속해있어요!</div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="fontsize-md font-[#4A4A4A]">
+              투표 참여 기록이 없어요
+            </p>
+          )}
 
           {topCategory.key && <div style={barStyle}></div>}
 

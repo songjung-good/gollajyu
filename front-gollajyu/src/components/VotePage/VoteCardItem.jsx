@@ -193,9 +193,7 @@ const VoteCardItem = (props) => {
               className="fontsize-xs pt-2"
               style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
             >
-              {item.voteItemDesc.length > 20
-                ? item.voteItemDesc.slice(0, 20) + "..."
-                : item.voteItemDesc}
+              {item.voteItemDesc}
             </p>
           </div>
         </div>
