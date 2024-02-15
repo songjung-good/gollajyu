@@ -20,6 +20,10 @@ import tagColorData from "/src/stores/tagColorData";
 // 차트 컴포넌트
 import MyStatisticsChart from "./MyStatisticsChart";
 
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+import Favicon from "/assets/images/favicon.png";
+
 // Material-UI의 CircularProgress 컴포넌트
 import { CircularProgress } from "@mui/material";
 
@@ -43,24 +47,44 @@ const RecommendModal = ({ topCategory, closeModal }) => {
   const handleClick = (linkUrl) => {
     window.open(linkUrl);
   };
+
+  // ----------- text가 일정 길이 이상이면 ...으로 대체하는 함수 -----------
+  const truncateText = (text) => {
+    const maxLabelLength = 8;  // 최대 길이
+    return text.length > maxLabelLength
+      ? `${text.substring(0, maxLabelLength)}...`
+      : text;
+  };
+
   return (
     <div
       className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center text-center"
       onClick={() => closeModal()}
     >
-      <div className="bg-white p-6 rounded-3xl xl:w-[700px] xl:h-[620px] lg:w-[600px] lg:h-[550px] md:w-[460px] md:h-[460px] sm:w-[255px] sm:h-[530px] relative">
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          // 스크롤바
+          overflowY: "auto", // 세로 스크롤을 가능하게 하기 위해 추가
+          scrollbarWidth: "thin", // 스크롤바를 얇게 만듦
+          scrollbarColor: "#FFD257 transparent", // 스크롤바 색상 (track, thumb 순서)
+        }}
+        className="bg-white rounded-[10px]
+          xl:p-[40px] lg:p-[35px] md:p-[30px] sm:p-[25px]
+          max-h-[800px] xl:w-[800px] xl:h-[620px] lg:w-[640px] lg:h-[550px] md:w-[450px] md:h-[460px] sm:w-[360px] sm:h-[530px] relative"
+      >
         <div>
           <h1 className="fontsize-lg">{topCategory.key} 추천 쇼핑몰</h1>
           <p className="fontsize-xs mb-5">
             이미지 클릭 시, 쇼핑몰로 이동합니다
           </p>
         </div>
-        <button
-          className="absolute right-2 top-2 bg-red-400 rounded-full w-[3.5rem] h-[2.2rem] px-auto py-auto"
+        {/* <button
+          className="absolute right-4 top-4 bg-red-400 rounded-full w-[3.5rem] h-[2.2rem] px-auto py-auto"
           onClick={() => closeModal()}
         >
           닫기
-        </button>
+        </button> */}
         {data.length == 0 && (
           <div className="flex flex-col h-1/2 items-center justify-center">
             <CircularProgress size={100} sx={{ color: "#FFD257" }} />
@@ -74,14 +98,17 @@ const RecommendModal = ({ topCategory, closeModal }) => {
               <div
                 key={index}
                 onClick={() => handleClick(item.linkUrl)}
-                className="rounded-3xl w-[12rem] h-[15rem] mx-auto px-3 pt-3 pb-10 cursor-pointer hover:bg-amber-100"
+                className="rounded-3xl w-[12rem] h-[15rem] mx-auto px-3 pt-3 pb-10 cursor-pointer border-2 border-white hover:border-amber-300"
               >
                 <img
                   src={item.imageUrl}
                   alt="사이트 이미지"
-                  className="rounded-3xl w-full"
+                  className="rounded-3xl w-full mb-2 min-h-[105px]"
+                  onError={(e) => {
+                    e.target.src= Favicon; // 대체 이미지 URL로 변경
+                  }}
                 />
-                <p className="fontsize-sm break-keep">{item.text}</p>
+                <p className="fontsize-sm break-keep">{truncateText(item.text)}</p>
               </div>
             ))}
           </div>
@@ -101,6 +128,18 @@ const RecommendModal = ({ topCategory, closeModal }) => {
 const MyStatistics = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showCategoryDescription, setShowCategoryDescription] = useState(false);
+  const [showTagDescription, setShowTagDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleCategoryDescription = () => {
+    setShowCategoryDescription(!showCategoryDescription);
+  };
+  const toggleTagDescription = () => {
+    setShowTagDescription(!showTagDescription);
+  };
 
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
@@ -315,14 +354,35 @@ const MyStatistics = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -724,12 +784,31 @@ const MyStatistics = () => {
     <>
       {/* -------------------------- 카테고리 선호도 -------------------------- */}
       <div style={containerStyle}>
-        <div style={titleContainerStyle} className="flex justify-between">
-          <span style={titleTextStyle} className="fontsize-xl">
+        <div style={titleContainerStyle}>
+          <span style={titleTextStyle} className="fontsize-lg">
             # 카테고리 선호도
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleCategoryDescription}
+            onMouseOver={() => setShowCategoryDescription(true)}
+            onMouseOut={() => setShowCategoryDescription(false)}
+          />
+          <div className="relative h-full">
+            <p style={{
+              ...descriptionStyle,
+              visibility: showCategoryDescription ? "visible" : "hidden",
+              position: "absolute",
+              top: isXLarge ? "12px" : isLarge ? "8px" : isMedium ? "7px" : "6px",
+            }} >
+              투표에 많이 참여한 카테고리
+            </p>
+          </div>
           <button
-            className="bg-amber-300 rounded-full mx-5 px-5 py-3 fontsize-sm hover:bg-amber-400"
+            className="bg-amber-300 rounded-full ml-auto px-5 py-2 fontsize-sm hover:bg-amber-400"
             onClick={handleRecommend}
           >
             쇼핑몰 추천받기
@@ -827,9 +906,24 @@ const MyStatistics = () => {
       {/* -------------------------- 태그 선호도 -------------------------- */}
       <div style={containerStyle}>
         <div style={titleContainerStyle}>
-          <span style={titleTextStyle} className="fontsize-xl">
+          <span style={titleTextStyle} className="fontsize-lg">
             # 태그 선호도
           </span>
+          <img
+            src={questionMarkImg}
+            style={questionMarkStyle}
+            alt="물음표"
+            className="cursor-pointer rounded-full"
+            onClick={toggleTagDescription}
+            onMouseOver={() => setShowTagDescription(true)}
+            onMouseOut={() => setShowTagDescription(false)}
+          />
+          <p style={{
+            ...descriptionStyle,
+            visibility: showTagDescription ? "visible" : "hidden"
+          }}>
+            내가 선택한 태그 통계
+          </p>
         </div>
         <div style={tagContentsContainerStyle}>
           {/* ------------- 드롭다운 버튼 ------------- */}

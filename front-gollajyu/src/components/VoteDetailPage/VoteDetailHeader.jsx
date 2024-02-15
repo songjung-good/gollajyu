@@ -2,13 +2,13 @@ import React from 'react';
 
 const VoteDetailHeader = (props) => {
   return (
-    <div className="w-auto h-auto relative bg-white rounded-md overflow-hidden max-w-xxl mx-auto">
+    <div className="w-auto h-auto relative bg-white overflow-hidden max-w-xxl mx-auto">
       <div className="flex justify-between items-center p-4">
         <div className="flex items-center">
-          <div className="p-4">
+          <div className="p-auto">
             <span className="text-xl font-normal">({props.memberNickname})</span>
           </div>
-          <div className="p-4">
+          <div className="p-auto">
             <span className="text-xl font-normal">"{props.title}"</span>
           </div>
         </div>

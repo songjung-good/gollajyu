@@ -19,6 +19,9 @@ import VoteSimple from "../components/VotePage/VoteSimple";
 import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
@@ -27,6 +30,14 @@ const StatisticPage = () => {
 
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showDescription, setShowDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleDescription = () => {
+    setShowDescription(!showDescription);
+  };
 
   // ----------- 카테고리 드롭다운 state 관리 -----------
   const [isOpen, setIsOpen] = useState(false);
@@ -132,54 +143,11 @@ const StatisticPage = () => {
 
   // --------------------------------- css 시작 ---------------------------------
 
-  // ----------- 해더 스타일 -----------
-  const headerStyle = {
-    // 디자인
-    margin: "0 auto", // 가로 중앙 정렬
-    width: "100%",
-    height: isXLarge || isLarge ? "260px" : "160px",
-    whiteSpace: "nowrap", // 줄바꿈 방지
-
-    // 컨텐츠 정렬
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "center",
-  }
-
-  // ----------- 해더 컨테이너 스타일 -----------
-  const headerContainerStyle = {
-    // 디자인
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
-    hegith: "260px",
-    
-    // 컨텐츠 정렬
-    display: "flex",
-    flexDirection: "column",
-    alignItems: isXLarge || isLarge ? "flex-start" : "center",
-    justifyContent: "center",
-  }
-
-  // ----------- 해더 제목 스타일 -----------
-  const headerTitleStyle = {
-    // 디자인
-    marginBottom: "20px",
-
-    // 글자
-    fontSize: isXLarge || isLarge ? "32px" : "24px",
-    color: "#FFFFFF",
-  }
-
-  // ----------- 해더 링크 컨테이너 스타일 -----------
-  const headerLinkContainerStyle = {
-    // 디자인
-    height: "28.5px",
-  }
-
   // ----------- body 스타일 -----------
   const bodyStyle = {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
-    padding: "50px 0", // 상하단 여백: 50px
+    padding: "30px 0", // 상하단 여백: 50px
     width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
     whiteSpace: "nowrap", // 줄바꿈 방지
   };
@@ -204,14 +172,35 @@ const StatisticPage = () => {
 
     // 디자인
     marginBottom: isXLarge || isLarge ? "20px" : "15px",
-    height: isXLarge ? "60px" : isLarge ? "50px" : isMedium ? "45px" : "40px",
+    height: isXLarge ? "45px" : isLarge ? "40px" : isMedium ? "35px" : "30px",
   };
 
   // ----------- 제목 스타일 -----------
   const titleTextStyle = {
     // 디자인
-    marginTop: isXLarge ? "5px" : isLarge ? "3px" : isMedium ? "5px" : "4px",
+    marginTop: "5px",
+    marginRight: "5px",
   };
+
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px",
+    width: "16px",
+    height: "16px",
+  }
+  
+  // ----------- 설명 스타일 -----------
+  const descriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  }
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -378,23 +367,29 @@ const StatisticPage = () => {
 
       {/* ------------- 투표 버튼 ------------- */}
       <VoteButton />
-      
-      {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-blue-400 to-red-400">
-        <div style={headerContainerStyle}>
-          <p style={headerTitleStyle}>통계보여쥬</p>
-          <div style={headerLinkContainerStyle}>
-          </div>
-        </div>
-      </div>
 
       {/* ------------- Body ------------- */}
       <div style={bodyStyle}>
         <div style={containerStyle}>
           <div style={titleContainerStyle}>
-            <span style={titleTextStyle} className="fontsize-xl">
-              # 사용자별 선호 태그 통계
+            <span style={titleTextStyle} className="fontsize-lg">
+              # 선호 태그 통계
             </span>
+            <img
+              src={questionMarkImg}
+              style={questionMarkStyle}
+              alt="물음표"
+              className="cursor-pointer rounded-full"
+              onClick={toggleDescription}
+              onMouseOver={() => setShowDescription(true)}
+              onMouseOut={() => setShowDescription(false)}
+            />
+            <p style={{
+              ...descriptionStyle,
+              visibility: showDescription ? "visible" : "hidden"
+            }}>
+              사용자 유형별 태그 선호도 비교
+            </p>
           </div>
           <div style={contentsContainerStyle}>
 

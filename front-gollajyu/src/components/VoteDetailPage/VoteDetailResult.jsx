@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// 태그 색상 데이터 불러오기
-import tagColorData from '/src/stores/tagColorData';
 
 // 임시 데이터를 상위 컴포넌트로부터 받아오는 props로 변경
 const VoteDetailResult = ({voteResults, totalChoiceCnt}) => {
@@ -21,7 +19,7 @@ const VoteDetailResult = ({voteResults, totalChoiceCnt}) => {
     <div className='mx-auto p-2 flex justify-around items-center' style={{display: "flex"}}>
       {voteResults.map((result, index) => (
         <button onClick={() => handleClick(index)}>
-        <div className={`${colorMap[result.voteItemId%4]} rounded-lg`} key={index} style={{border: "1px solid black", width: "280px", margin: "10px", padding: "10px"}}>
+        <div className={`${colorMap[result.voteItemId%4]} rounded-lg w-auto m-auto p-2`} key={index} style={{border: "1px solid black"}}>
           {/* <h2>선택비율 : {Math.round((result.count / totalChoiceCnt) * 100)}%</h2> */}
           <h2>자세한 정보를 알고 싶다면...!</h2>
           {selectedOptions[index] && (
