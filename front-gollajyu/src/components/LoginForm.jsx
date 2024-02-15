@@ -177,7 +177,7 @@ const LoginModal = () => {
               <div
                 id="google"
                 onClick={handleGoogleLogin}
-                className="flex items-center justify-between rounded-full px-5 w-60 h-10 bg-white hover:bg-blue-300 shadow shadow-lg border"
+                className="flex items-center justify-between rounded-full px-5 w-60 h-10 bg-white hover:bg-blue-300 border border-2"
               >
                 <img
                   src="/assets/images/social-login/google.png"

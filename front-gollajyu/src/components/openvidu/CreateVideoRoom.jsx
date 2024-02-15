@@ -5,8 +5,6 @@ import useAuthStore from "/src/stores/userState";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import API_URL from "/src/stores/apiURL";
-// Footer
-import Footer from "../../components/Footer";
 
 /*
 <uuid란?>

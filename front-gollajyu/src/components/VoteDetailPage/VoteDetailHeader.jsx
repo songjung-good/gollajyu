@@ -16,7 +16,7 @@ const VoteDetailHeader = (props) => {
 
   const user = useAuthStore((state) => state.user);
 
-  console.log(props);
+  // console.log(props);
 
   // 좋아요 관리 함수
   const handleLike = async () => {

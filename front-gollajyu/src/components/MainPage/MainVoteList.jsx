@@ -31,7 +31,6 @@ const MainVoteList = () => {
     // API를 통해 투표 정보를 가져옵니다.
     axios.get(`${API_URL}/votes/ranks`).then((response) => {
       const sortedVotes = response.data.body;
-
       const lists = [
         {
           key: 0,
@@ -71,14 +70,17 @@ const MainVoteList = () => {
         },
         {
           key: 3,
-          subject: "박빙투표",
+          subject: "박빙 투표",
           items: sortedVotes.sortByClose.slice(0, 5).map((item) => ({
             ...item,
             title: item.title,
-            likesCnt: item.likesCnt,
             totalChoiceCnt: item.totalChoiceCnt,
             voteId: item.voteId,
             memberId: item.memberId,
+            percentage: [
+              item.voteItemList[0].percent,
+              item.voteItemList[1].percent,
+            ],
           })),
         },
       ];
@@ -186,36 +188,76 @@ const MainVoteList = () => {
             <div className="flex items-center justify-between border-b border-gray-300 pb-2">
               <p className="font-bold fontsize-md">{data.subject}</p>
               <div className="flex items-center justify-center w-10">
-                <p>📝</p>
+                {data.key !== 3 ? (
+                  <img
+                    src="/assets/images/person.png"
+                    alt="참여자 아이콘"
+                    className="w-5 h-5"
+                  />
+                ) : (
+                  <img
+                    src="/assets/images/boxing.png"
+                    alt="박빙 투표 아이콘"
+                    className="w-8 h-8"
+                  />
+                )}
               </div>
             </div>
-            <ul className="flex flex-col">
-              {data.items.map((item) => (
-                <li key={item.voteId} className="border-b border-gray-300">
-                  <button
-                    style={buttonStyle}
-                    onClick={() => openVoteDetailModal(item.voteId)}
-                    className="hover:bg-gray-200 py-2"
-                  >
-                    <div className="flex items-center">
-                      <p style={likeStyle} className="fontsize-xs">
-                        ❤ {item.likesCnt}
-                      </p>
-                      <p className="fontsize-sm">
-                        {item.title.length > 20
-                          ? item.title.slice(0, 20) + "..."
-                          : item.title}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-center w-10">
-                      <p className="fontsize-xs text-gray-500">
-                        {item.totalChoiceCnt}
-                      </p>
-                    </div>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {data.key !== 3 ? (
+              <ul className="flex flex-col">
+                {data.items.map((item) => (
+                  <li key={item.voteId} className="border-b border-gray-300">
+                    <button
+                      style={buttonStyle}
+                      onClick={() => openVoteDetailModal(item.voteId)}
+                      className="hover:bg-gray-200 py-2"
+                    >
+                      <div className="flex items-center">
+                        <p style={likeStyle} className="fontsize-xs">
+                          ❤ {item.likesCnt}
+                        </p>
+                        <p className="fontsize-sm">
+                          {item.title.length > 20
+                            ? item.title.slice(0, 20) + "..."
+                            : item.title}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center w-10">
+                        <p className="fontsize-xs text-gray-500">
+                          {item.totalChoiceCnt}
+                        </p>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="flex flex-col">
+                {data.items.map((item) => (
+                  <li key={item.voteId} className="border-b border-gray-300">
+                    <button
+                      style={buttonStyle}
+                      onClick={() => openVoteDetailModal(item.voteId)}
+                      className="hover:bg-gray-200 py-2"
+                    >
+                      <div className="flex items-center">
+                        <p className="fontsize-sm">
+                          {item.title.length > 20
+                            ? item.title.slice(0, 20) + "..."
+                            : item.title}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center w-30">
+                        <p className="fontsize-xs text-gray-500">
+                          {item.percentage[0].toFixed(0)}% |{" "}
+                          {item.percentage[1].toFixed(0)}%
+                        </p>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
