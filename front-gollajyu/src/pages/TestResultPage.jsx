@@ -343,9 +343,9 @@ const TestResultPage = () => {
                 </div>
 
                 {isMyResult ? (
-                  <div className="w-full grid grid-cols-2 place-items-center">
+                  <>
                     <button
-                      className="w-2/3 p-5 rounded-full bg-amber-300 hover:bg-amber-400 fontsize-sm"
+                      className="w-2/5 xs:w-1/2 p-5 rounded-full bg-amber-300 hover:bg-amber-400 fontsize-sm"
                       onClick={() => {
                         setIsMyResult(false);
                         window.scrollTo({ top: 0 });
@@ -354,14 +354,14 @@ const TestResultPage = () => {
                       모든 결과 보기
                     </button>
                     <button
-                      className="w-2/3 p-5 rounded-full bg-amber-300 hover:bg-amber-400 fontsize-sm"
+                      className="fontsize-sm hover:font-bold mt-10"
                       onClick={() => {
                         navigate("/");
                       }}
                     >
-                      메인페이지로 가기
+                      메인으로 가기
                     </button>
-                  </div>
+                  </>
                 ) : (
                   <button
                     className="hover:font-bold"
