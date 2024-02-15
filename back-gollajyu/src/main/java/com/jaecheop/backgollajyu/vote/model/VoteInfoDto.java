@@ -20,9 +20,17 @@ public class VoteInfoDto {
     private LocalDateTime createAt;
 
     private Long likesCnt;
+
+    // 멤버의 해당 투표 좋아요 여부
+    private boolean isLiked;
+
     private Long totalChoiceCnt;
 
     private int itemCnt;
+
+    public void updateIsLiked(){
+        this.isLiked = true;
+    }
 
     public static VoteCloseInfoDto convertToVoteCloseDto(VoteInfoDto voteInfo){
         return VoteCloseInfoDto.builder()
