@@ -1,6 +1,7 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
 import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
+import { Tooltip } from "@mui/material";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -515,6 +516,24 @@ const MyActivities = () => {
             <div style={pointNumberStyle} className="fontsize-xl">
               {user.point}
             </div>
+            <Tooltip
+              title={
+                <div>
+                  포인트 획득 - 출석, 투표하기
+                  <br />
+                  포인트 차감 - 골라쥬 생성, 닉네임 수정
+                </div>
+              }
+              placement="right-start"
+              size="lg"
+              variant="outlined"
+            >
+              <img
+                src="/assets/images/question_mark.png"
+                className="my-auto mx-4 w-[1.4rem] h-[1.4rem] opacity-60"
+                alt=""
+              />
+            </Tooltip>
           </div>
           <div style={barStyle}></div>
           {renderInfoItems}

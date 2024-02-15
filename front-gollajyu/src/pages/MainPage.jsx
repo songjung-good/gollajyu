@@ -261,8 +261,16 @@ const MainPage = () => {
             </div>
 
             {/* 메인 투표 리스트 컴포넌트 */}
-            <div style={mainVoteListContainerStyle}>
-              <MainVoteList />
+            <div
+              style={mainVoteListContainerStyle}
+              onClick={(event) => {
+                event.stopPropagation();
+                if (!isLoggedIn) {
+                  setLoginModalOpen();
+                }
+              }}
+            >
+              <MainVoteList transferVoteId={transferVoteId} />
             </div>
           </>
         )}

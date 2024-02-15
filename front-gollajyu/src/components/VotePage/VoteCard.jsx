@@ -46,6 +46,9 @@ const VoteCard = (props) => {
   const [selectedVoteItem, setSelectedVoteItem] = useState(chosenItemId);
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen); // 로그인 모달이 열립니다
+
   // 모달창
   const setVoteDetailModalOpen = useModalStore(
     (state) => state.setVoteDetailModalOpen
@@ -198,7 +201,15 @@ const VoteCard = (props) => {
 
   return (
     <>
-      <div style={contentContainerStyle}>
+      <div
+        style={contentContainerStyle}
+        onClick={(event) => {
+          event.stopPropagation();
+          if (!isLoggedIn) {
+            setLoginModalOpen();
+          }
+        }}
+      >
         {/* ------------------ 투표 제목 및 카테고리 ------------------ */}
         <div style={flexContainerStyle}>
           <div className="fontsize-lg">{voteTitle}</div>
