@@ -313,8 +313,8 @@ const MainVoteList = () => {
                     >
                       <div className="flex items-center">
                         <p className="fontsize-sm">
-                          {item.title.length > 20
-                            ? item.title.slice(0, 20) + "..."
+                          {item.title.length > 17
+                            ? item.title.slice(0, 17) + "..."
                             : item.title}
                         </p>
                       </div>
