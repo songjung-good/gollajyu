@@ -33,6 +33,7 @@ const VoteCardItem = (props) => {
     totalCount,
     count,
     selectedVoteItem,
+    voteItemLength,
   } = props;
 
   // 로그인한 사용자 정보 가져오기
@@ -80,10 +81,11 @@ const VoteCardItem = (props) => {
 
   return (
     <>
-      <div className='flex flex-col'>
+      <div className='flex flex-col h-[319px]'>
         <div
           style={{
             marginLeft: "15px",
+            height: "30px",
             color: "#FF6D6D",
             visibility: selectedItem === voteItemId ? "visible" : "hidden",
           }}
@@ -93,9 +95,12 @@ const VoteCardItem = (props) => {
         </div>
         <div
           style={{
-            maxWidth: "280px",
+            width:
+              voteItemLength === 2 ? (isXLarge ? "300px" : isLarge ? "220px" : isMedium ? "120px" : "110px") :
+              voteItemLength === 3 ? (isXLarge ? "270px" : isLarge ? "200px" : isMedium ? "113px" : "100px") :
+              (isXLarge ? "220px" : isLarge ? "165px" : isMedium ? "100px" : "80px"),
+            height: "289px",
             border: "5px solid",
-            padding: "4px",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
           }}
           className="flex flex-col w-full h-full"
@@ -105,18 +110,15 @@ const VoteCardItem = (props) => {
           {/* 이미지를 띄워지는 배경 */}
 
           <Container
-            className="h-4/5 w-full p-2 relative rounded-xl"
+            className="w-full p-2 relative rounded-xl"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             style={{ maxWidth: "100%" }}
           >
-            {/* TODO 선택된 아이템이 있다면 로직 여기임 호철아 여기임 */}
-
-
             {/* 투표하는 기능 내부 */}
             {((selectedItem === 0 || !selectedItem ) && hover) ? (
               <div
-                className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
+                className={`absolute inset-0 w-full bg-orange-200 opacity-50 flex flex-col justify-between`}
                 onMouseLeave={() => {}}
               >
                 {/* 선택지의 묶음 */}
@@ -149,14 +151,14 @@ const VoteCardItem = (props) => {
             />
           </Container>
           {/* 버튼을 누르면 생기는 상세페이지 */}
-          <div className="h-1/3 w-full flex flex-col justify-center items-center">
+          <div className="w-full flex flex-col justify-center items-center">
             {(selectedItem !== 0 && selectedItem ) ? (
-              <p>{`${(count / totalCount * 100).toFixed(2)}%`}</p>
-            ) : <p>투표를 하면 퍼센트가 나옴</p>}
-            <h2 className="fontsize-sm font-bold mb-2">
+              <p className="fontsize-md pb-2">{`${(count / totalCount * 100).toFixed(2)}%`}</p>
+            ) : <p className="pb-2 fontsize-sm text-center">투표 참여 시 <br/> 선택 비율이 공개됩니다.</p>}
+            <h2 className="fontsize-sm font-bold">
               {item.price ? `${item.price.toLocaleString()}원` : ""}
             </h2>
-            <p className="fontsize-xs" style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}>{item.voteItemDesc}</p>
+            <p className="fontsize-xs pt-2" style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}>{item.voteItemDesc}</p>
           </div>
         </div>
       </div>

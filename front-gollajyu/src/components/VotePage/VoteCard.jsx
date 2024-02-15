@@ -144,7 +144,7 @@ const VoteCard = (props) => {
   // ----------- 카드 컨테이너 스타일 -----------
   const cardContainerStyle = {
     // 디자인
-    height: "346px",
+    height: "319px",
   };
 
   // ----------- 버튼 컨테이너 스타일 -----------
@@ -196,7 +196,11 @@ const VoteCard = (props) => {
         }}
       >
         {/* ------------------ 투표 제목 및 카테고리 ------------------ */}
-        <div style={flexContainerStyle}>
+        <div style={{
+          ...flexContainerStyle,
+          height: "50px",
+          marginBottom: "10px",
+        }}>
           <div className="fontsize-lg">{voteTitle}</div>
           <p style={categoryNameStyle} className="fontsize-md">
             {categoryName}
@@ -206,7 +210,7 @@ const VoteCard = (props) => {
         {/* ------------------ 투표 카드 아이템 ------------------ */}
         <div
           style={cardContainerStyle}
-          className="p-2 flex justify-around items-center"
+          className="flex justify-around items-center"
         >
           {voteItemList.map((item, itemIndex) => (
             <VoteCardItem
@@ -217,6 +221,7 @@ const VoteCard = (props) => {
               totalCount={totalCount}
               count={countList[itemIndex]}
               selectedVoteItem={selectedVoteItem}
+              voteItemLength={voteItemList.length}
               path="/VotePage"
               onClicked={(voteItemId) => handleClick(voteItemId)}
             />
@@ -224,7 +229,11 @@ const VoteCard = (props) => {
         </div>
 
         {/* ------------------ 좋아요, 상세보기 버튼 ------------------ */}
-        <div style={buttonContainerStyle}>
+        <div style={{
+          ...buttonContainerStyle,
+          height: "55px",
+          marginTop: "10px",
+        }}>
           <button
             style={likeButtonStyle}
             className={`fontsize-sm ${

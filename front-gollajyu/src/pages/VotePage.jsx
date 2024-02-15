@@ -243,7 +243,7 @@ const VotePage = () => {
       <div style={bodyStyle}>
         {" "}
         {/* 정렬 함수를 props로 전달 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1">
           {isLoading ? (
             <p className="text-center">Loading...</p>
           ) : (
