@@ -81,7 +81,7 @@ const VoteCardItem = (props) => {
 
   return (
     <>
-      <div className="flex flex-col h-[319px]">
+      <div className="flex flex-col">
         <div
           style={{
             marginLeft: "15px",
@@ -106,19 +106,19 @@ const VoteCardItem = (props) => {
                   : "110px"
                 : voteItemLength === 3
                 ? isXLarge
-                  ? "270px"
+                  ? "220px"
                   : isLarge
-                  ? "200px"
+                  ? "160px"
                   : isMedium
-                  ? "113px"
-                  : "100px"
+                  ? "100px"
+                  : "90px"
                 : isXLarge
-                ? "220px"
+                ? "160px"
                 : isLarge
-                ? "165px"
+                ? "130px"
                 : isMedium
-                ? "100px"
-                : "80px",
+                ? "90px"
+                : "70px",
             height: "289px",
             border: "5px solid",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",

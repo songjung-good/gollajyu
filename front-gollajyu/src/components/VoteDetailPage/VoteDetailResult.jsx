@@ -22,9 +22,9 @@ const VoteDetailResult = ({ voteResults, totalChoiceCnt }) => {
     >
       {voteResults.map((result, index) => (
         <button onClick={() => handleClick(index)}>
-          <div className={`${colorMap[result.voteItemId%4]} rounded-lg w-auto m-auto p-1 min-w-[200px]`} key={index}>
+          <div className={`${colorMap[result.voteItemId%4]} rounded-lg w-auto m-auto p-1`} key={index}>
             {/* <h2>선택비율 : {Math.round((result.count / totalChoiceCnt) * 100)}%</h2> */}
-            <p className="fontsize-sm">태그 통계</p>
+            <p className="fontsize-sm mx-3">태그 통계</p>
             {selectedOptions[index] && (
               <div className="py-4 bg-white">
                 {result.tagCountList.map((tag) => (
