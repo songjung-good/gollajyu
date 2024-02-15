@@ -13,9 +13,6 @@ import MyStatistics from "../components/MyPage/MyStatistics";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-// Footer
-import Footer from "../components/Footer";
-
 const MyPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -26,7 +23,6 @@ const MyPage = () => {
     { to: "/Mypage/MyActivities", text: "내 활동 요약" },
     { to: "/Mypage/MyStatistics", text: "내 통계 요약" },
   ];
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -70,7 +66,7 @@ const MyPage = () => {
 
     // 글자
     color: "#000000",
-  }
+  };
 
   // ----------- 해더 링크 컨테이너 스타일 -----------
   const headerLinkContainerStyle = {
@@ -97,7 +93,7 @@ const MyPage = () => {
 
     // 글자
     fontWeight: "bold",
-  }
+  };
 
   // ----------- body 스타일 -----------
   const bodyStyle = {
@@ -123,13 +119,9 @@ const MyPage = () => {
   const setIsActives = [
     setIsProfileActive,
     setIsActivitiesActive,
-    setIsStatisticsActive
-  ]
-  const isActives = [
-    isProfileActive,
-    isActivitiesActive,
-    isStatisticsActive
-  ]
+    setIsStatisticsActive,
+  ];
+  const isActives = [isProfileActive, isActivitiesActive, isStatisticsActive];
   const changeActiveLink = (activeIndex) => {
     setIsActives.forEach((item, index) => {
       setIsActives[index](index === activeIndex);
@@ -147,7 +139,10 @@ const MyPage = () => {
       </Helmet>
 
       {/* ------------- Header ------------- */}
-      <div style={headerStyle} className="bg-gradient-to-tl from-gray-200 to-[#FF9999]">
+      <div
+        style={headerStyle}
+        className="bg-gradient-to-tl from-gray-200 to-[#FF9999]"
+      >
         <div style={headerContainerStyle}>
           <p style={headerTitleStyle} className="fontsize-lg text-center">
             마이 페이지
@@ -173,9 +168,10 @@ const MyPage = () => {
                     ? activeheaderLinkStyle
                     : headerLinkStyle
                 }
-                onClick={() => changeActiveLink(index)}  // 함수를 래핑하여 전달
+                onClick={() => changeActiveLink(index)} // 함수를 래핑하여 전달
               >
-                <span key={index}>{isActives[index] ? "☑" : "☐"}</span> {item.text}
+                <span key={index}>{isActives[index] ? "☑" : "☐"}</span>{" "}
+                {item.text}
               </NavLink>
             ))}
           </div>
@@ -190,8 +186,6 @@ const MyPage = () => {
           <Route path="/MyStatistics" element={<MyStatistics />} />
         </Routes>
       </div>
-
-      <Footer />
     </>
   );
 };

@@ -25,9 +25,6 @@ import questionMarkImg from "/assets/images/question_mark_img.png";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-// Footer
-import Footer from "../components/Footer";
-
 const StatisticPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
@@ -557,7 +554,7 @@ const StatisticPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>
