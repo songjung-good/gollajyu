@@ -130,9 +130,9 @@ const VoteCardItem = (props) => {
         </Container>
         {/* 버튼을 누르면 생기는 상세페이지 */}
         <div className="h-1/3 w-full flex flex-col justify-center items-center">
-          {selectedItem !== 0 && (
+          {(selectedItem !== 0 && selectedItem ) ? (
             <p>{`${(count / totalCount * 100).toFixed(2)}%`}</p>
-          )}
+          ) : <p>투표를 하면 퍼센트가 나옴</p>}
           <h2 className="text-lg font-bold mb-2">
             {item.price ? `${item.price.toLocaleString()}원` : ""}
           </h2>

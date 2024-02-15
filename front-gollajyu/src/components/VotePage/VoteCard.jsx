@@ -24,7 +24,7 @@ const VoteCard = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 부모 컴포넌트로부터 투표 정보 전달 받음
-  const { vote, liked, likesCnt, chosenItemId, voteItemList, voteId, voteTitle, categoryName, categoryId } = props;
+  const { liked, likesCnt, chosenItemId, voteItemList, voteId, voteTitle, categoryName, categoryId } = props;
 
   // 선택 상태 변수 선언
   const [totalCount, setTotalCount] = useState(0);
@@ -85,11 +85,10 @@ const VoteCard = (props) => {
     });
     setTotalCount(newTotalCount);
     setCountList(prevCountList => voteItemList.map(item => item.count));
-  }, [voteItemList]);
+  }, []);
 
   useEffect(() => {
     console.log(countList);
-    setSelectedVoteItem(chosenItemId)
   }, [countList]);
   
   // --------------------------------- css 시작 ---------------------------------
@@ -200,7 +199,7 @@ const VoteCard = (props) => {
               categoryId={categoryId}
               voteId={voteId}
               totalCount={totalCount}
-              count={item.count}
+              count={countList[itemIndex]}
               selectedVoteItem={selectedVoteItem}
               path="/VotePage"
               onClicked={(voteItemId) => handleClick(voteItemId)}

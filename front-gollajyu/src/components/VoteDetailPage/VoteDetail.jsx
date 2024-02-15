@@ -67,6 +67,7 @@ const VoteDetail = () => {
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
+        setSelectedVoteItem(data.body.chosenItem);
       } catch (error) {
         // 요청 실패 시 오류 처리를 수행합니다.
         console.error(error);
@@ -94,7 +95,7 @@ const VoteDetail = () => {
     // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
     setCountList(prevCountList => 
-      prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
+      prevCountList.map((count, i) => voteDetail.voteItemList[i].voteItemId === itemId ? count + 1 : count));
 
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
@@ -114,11 +115,6 @@ const VoteDetail = () => {
    }
   }, [voteDetail]);
   
-  useEffect(() => {
-    (voteDetail) ? setSelectedVoteItem(voteDetail.chosenItem)
-    : null;
-
-    }, [voteDetail])
   
   return (
     <div
@@ -146,7 +142,7 @@ const VoteDetail = () => {
             categoryId={voteDetail.voteInfo.categoryId}
             voteId={voteDetail.voteInfo.voteId}
             totalCount={totalCount}
-            count={item.count}
+            count={countList[itemIndex]}
             selectedVoteItem={selectedVoteItem}
             path="/VotePage"
             onClicked={(voteItemId) => handleClick(voteItemId)}

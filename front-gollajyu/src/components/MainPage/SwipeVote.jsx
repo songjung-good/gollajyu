@@ -107,7 +107,6 @@ const SwipeVote = (props) => {
             <div style={voteCardStyle}>
               <VoteCard
                 key={`${vote.voteId}-card`}
-                vote={vote}
                 liked={vote.liked}
                 likesCnt={vote.likesCnt}
                 chosenItemId={vote.chosenItemId}
