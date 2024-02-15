@@ -306,10 +306,10 @@ const VoteProduct = () => {
                   {!previewImages[index] && (
                     <label
                       htmlFor={`voteItem${index + 1}`}
-                      style={{ fontSize: "20px", paddingBottom: "20px" }}
-                      className="relative flex items-center h-full justify-center text-center cursor-pointer"
+                      style={{ paddingBottom: "20px" }}
+                      className="fontsize-xs relative flex items-center h-full justify-center text-center cursor-pointer"
                     >
-                      사진 {index + 1}
+                      아이템 {index + 1}
                     </label>
                   )}
                 </div>

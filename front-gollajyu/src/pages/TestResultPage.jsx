@@ -24,9 +24,6 @@ import questionMarkImg from "/assets/images/question_mark_img.png";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-// Footer
-import Footer from "../components/Footer";
-
 import { debounce } from "lodash";
 
 const items = [
@@ -346,15 +343,25 @@ const TestResultPage = () => {
                 </div>
 
                 {isMyResult ? (
-                  <button
-                    className="w-1/3 sm:w-2/5 md:w-2/5 p-5 rounded-full bg-amber-300 hover:bg-amber-400 fontsize-sm"
-                    onClick={() => {
-                      setIsMyResult(false);
-                      window.scrollTo({ top: 0 });
-                    }}
-                  >
-                    모든 결과 보기
-                  </button>
+                  <>
+                    <button
+                      className="w-2/5 xs:w-1/2 p-5 rounded-full bg-amber-300 hover:bg-amber-400 fontsize-sm"
+                      onClick={() => {
+                        setIsMyResult(false);
+                        window.scrollTo({ top: 0 });
+                      }}
+                    >
+                      모든 결과 보기
+                    </button>
+                    <button
+                      className="fontsize-sm hover:font-bold mt-10"
+                      onClick={() => {
+                        navigate("/");
+                      }}
+                    >
+                      메인으로 가기
+                    </button>
+                  </>
                 ) : (
                   <button
                     className="hover:font-bold"
@@ -370,7 +377,7 @@ const TestResultPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>

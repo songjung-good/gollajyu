@@ -79,7 +79,7 @@ const VoteDetail = () => {
           params,
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
-        console.log(data.body);
+        // console.log(data.body);
         setVoteDetail(data.body);
         setSelectedVoteItem(data.body.chosenItem);
       } catch (error) {
@@ -145,9 +145,9 @@ const VoteDetail = () => {
     margin: "0 auto", // 가로 중앙 정렬
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
     width: isXLarge
-      ? "800px"
+      ? "900px"
       : isLarge
-      ? "640px"
+      ? "690px"
       : isMedium
       ? "450px"
       : "360px",

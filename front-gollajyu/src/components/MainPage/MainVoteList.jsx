@@ -13,10 +13,40 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 // 모달창 상태
 import useModalStore from "/src/stores/modalState";
 
+// 이미지 가져오기
+import questionMarkImg from "/assets/images/question_mark_img.png";
+
 const MainVoteList = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   const [listsData, setListsData] = useState([]);
+
+  //  ----------- 상세 설명 토글하기 위한 상태 -----------
+  const [showLikeDescription, setShowLikeDescription] = useState(false);
+  const [showParticipateDescription, setParticipateShowDescription] = useState(false);
+  const [showRecentDescription, setRecentShowDescription] = useState(false);
+  const [showCompeteDescription, setCompeteShowDescription] = useState(false);
+
+  // ----------- 상태 토글 함수 -----------
+  const toggleLikeDescription = () => {
+    setShowLikeDescription(!showLikeDescription);
+  };
+  const toggleParticipateDescription = () => {
+    setParticipateShowDescription(!showParticipateDescription);
+  };
+  const toggleRecentDescription = () => {
+    setRecentShowDescription(!showRecentDescription);
+  };
+  const toggleCompeteDescription = () => {
+    setCompeteShowDescription(!showCompeteDescription);
+  };
+  
+  const voteList = [
+    [showLikeDescription, setShowLikeDescription, toggleLikeDescription, "좋아요 많은 투표"],
+    [showParticipateDescription, setParticipateShowDescription, toggleParticipateDescription, "참여자 많은 투표"],
+    [showRecentDescription, setRecentShowDescription, toggleRecentDescription, "최근 올라온 투표"],
+    [showCompeteDescription, setCompeteShowDescription, toggleCompeteDescription, "선택 비율이 비슷한 투표"],
+  ]
 
   // 상세페이지
   const setVoteDetailModalOpen = useModalStore(
@@ -31,11 +61,10 @@ const MainVoteList = () => {
     // API를 통해 투표 정보를 가져옵니다.
     axios.get(`${API_URL}/votes/ranks`).then((response) => {
       const sortedVotes = response.data.body;
-
       const lists = [
         {
           key: 0,
-          subject: "좋아요 순",
+          subject: "👍 좋아요순",
           items: sortedVotes.sortByLikes.slice(0, 5).map((item) => ({
             ...item,
             title: item.title,
@@ -47,7 +76,7 @@ const MainVoteList = () => {
         },
         {
           key: 1,
-          subject: "참여자 순",
+          subject: "📝 참여자순",
           items: sortedVotes.sortByVoter.slice(0, 5).map((item) => ({
             ...item,
             title: item.title,
@@ -59,7 +88,7 @@ const MainVoteList = () => {
         },
         {
           key: 2,
-          subject: "최신순",
+          subject: "✨ 최신순",
           items: sortedVotes.sortByNew.slice(0, 5).map((item) => ({
             ...item,
             title: item.title,
@@ -71,14 +100,17 @@ const MainVoteList = () => {
         },
         {
           key: 3,
-          subject: "박빙투표",
+          subject: "🔥 박빙 투표",
           items: sortedVotes.sortByClose.slice(0, 5).map((item) => ({
             ...item,
             title: item.title,
-            likesCnt: item.likesCnt,
             totalChoiceCnt: item.totalChoiceCnt,
             voteId: item.voteId,
             memberId: item.memberId,
+            percentage: [
+              item.voteItemList[0].percent,
+              item.voteItemList[1].percent,
+            ],
           })),
         },
       ];
@@ -145,7 +177,7 @@ const MainVoteList = () => {
       ? "30px"
       : "20px",
     padding: "10px",
-    width: isXLarge || isLarge ? "45%" : "90%",
+    width: isXLarge ? "45%" : isLarge ? "48%" : "90%",
   };
 
   // ----------- 버튼 스타일 -----------
@@ -168,7 +200,29 @@ const MainVoteList = () => {
     color: "#FF595E",
   };
 
+  // ----------- 물음표 스타일 -----------
+  const questionMarkStyle = {
+    // 디자인
+    margin: "0 5px 3px 5px",
+    width: "16px",
+    height: "16px",
+  };
+
+  // ----------- 물음표 설명 스타일 -----------
+  const questionDescriptionStyle = {
+    // 디자인
+    padding: "2px 5px 0",
+    marginBottom: "2px",
+    borderRadius: "3px",
+    backgroundColor: "#6B6B6B",
+
+    // 글자
+    fontSize: "13px",
+    color: "#FFFFFF",
+  };
+
   // --------------------------------- css 끝 ---------------------------------
+
 
   return (
     <>
@@ -176,7 +230,7 @@ const MainVoteList = () => {
         <p style={subTitleStyle}># 핫한 투표 리스트</p>
         <p style={descriptionStyle}>어떤 투표들이 인기있는지 확인해보아요</p>
       </div>
-      <div style={bodyStyle} className="flex flex-wrap justify-center gap-6">
+      <div style={bodyStyle} className="flex flex-wrap justify-center gap-4">
         {listsData.map((data, index) => (
           <div
             key={data.key}
@@ -184,38 +238,97 @@ const MainVoteList = () => {
             className="border-t-2 border-amber-400"
           >
             <div className="flex items-center justify-between border-b border-gray-300 pb-2">
-              <p className="font-bold fontsize-md">{data.subject}</p>
+              <div className="flex items-center">
+                <p className="font-bold fontsize-md">{data.subject}</p>
+                <img
+                  src={questionMarkImg}
+                  style={questionMarkStyle}
+                  alt="물음표"
+                  className="cursor-pointer rounded-full"
+                  onClick={voteList[index][2]}
+                  onMouseOver={() => voteList[index][1](true)}
+                  onMouseOut={() => voteList[index][1](false)}
+                />
+                <p
+                  style={{
+                    ...questionDescriptionStyle,
+                    visibility: voteList[index][0] ? "visible" : "hidden",
+                  }}
+                >
+                  {voteList[index][3]}
+                </p>
+              </div>
               <div className="flex items-center justify-center w-10">
-                <p>📝</p>
+                {data.key !== 3 ? (
+                  <img
+                    src="/assets/images/person.png"
+                    alt="참여자 아이콘"
+                    className="w-5 h-5"
+                  />
+                ) : (
+                  <img
+                    src="/assets/images/boxing.png"
+                    alt="박빙 투표 아이콘"
+                    className="w-8 h-8"
+                  />
+                )}
               </div>
             </div>
-            <ul className="flex flex-col">
-              {data.items.map((item) => (
-                <li key={item.voteId} className="border-b border-gray-300">
-                  <button
-                    style={buttonStyle}
-                    onClick={() => openVoteDetailModal(item.voteId)}
-                    className="hover:bg-gray-200 py-2"
-                  >
-                    <div className="flex items-center">
-                      <p style={likeStyle} className="fontsize-xs">
-                        ❤ {item.likesCnt}
-                      </p>
-                      <p className="fontsize-sm">
-                        {item.title.length > 20
-                          ? item.title.slice(0, 20) + "..."
-                          : item.title}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-center w-10">
-                      <p className="fontsize-xs text-gray-500">
-                        {item.totalChoiceCnt}
-                      </p>
-                    </div>
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {data.key !== 3 ? (
+              <ul className="flex flex-col">
+                {data.items.map((item) => (
+                  <li key={item.voteId} className="border-b border-gray-300">
+                    <button
+                      style={buttonStyle}
+                      onClick={() => openVoteDetailModal(item.voteId)}
+                      className="hover:bg-gray-200 py-2"
+                    >
+                      <div className="flex items-center">
+                        <p style={likeStyle} className="fontsize-xs">
+                          ❤ {item.likesCnt}
+                        </p>
+                        <p className="fontsize-sm">
+                          {item.title.length > 17
+                            ? item.title.slice(0, 17) + "..."
+                            : item.title}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center w-10">
+                        <p className="fontsize-xs text-gray-500">
+                          {item.totalChoiceCnt}
+                        </p>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <ul className="flex flex-col">
+                {data.items.map((item) => (
+                  <li key={item.voteId} className="border-b border-gray-300">
+                    <button
+                      style={buttonStyle}
+                      onClick={() => openVoteDetailModal(item.voteId)}
+                      className="hover:bg-gray-200 py-2"
+                    >
+                      <div className="flex items-center">
+                        <p className="fontsize-sm">
+                          {item.title.length > 17
+                            ? item.title.slice(0, 17) + "..."
+                            : item.title}
+                        </p>
+                      </div>
+                      <div className="flex items-center justify-center w-30">
+                        <p className="fontsize-xs text-gray-500">
+                          {item.percentage[0].toFixed(0)}% |{" "}
+                          {item.percentage[1].toFixed(0)}%
+                        </p>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         ))}
       </div>
