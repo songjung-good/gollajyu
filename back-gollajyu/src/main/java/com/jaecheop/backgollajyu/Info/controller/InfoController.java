@@ -31,26 +31,22 @@ public class InfoController {
     @PostMapping("")
     @Operation(summary = "통계결과", description = "returns CategoryTagDtoList")
     public ResponseEntity<List<CategoryTagDto>> resultStatistics(@RequestBody StatisticsSearchReqDto statisticsSearchReqDto) {
-        System.out.println("statisticsSearchReqDto = " + statisticsSearchReqDto);
         if (statisticsSearchReqDto == null || statisticsSearchReqDto.getCategoryId() == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             List<VoteResult> voteResults;
             if ((statisticsSearchReqDto.getMemberId() != null) && (statisticsSearchReqDto.getMemberId() != 0)) {
-                System.out.println("member");
                 // memberId is present, include it in the query
                 voteResults = voteResultRepository.findAllByCategoryIdAndMemberId(
                         statisticsSearchReqDto.getCategoryId(),
                         statisticsSearchReqDto.getMemberId()
                 );
             } else {
-//                System.out.println("nomember");
                 // memberId is not present, query without considering it
                 voteResults = voteResultRepository.findAllByCategoryId(
                         statisticsSearchReqDto.getCategoryId()
                 );
             }
-//            System.out.println(voteResults+"213124124124//"+statisticsSearchReqDto.getCategoryId());
             List<CategoryTagDto> statistics = voteService.generateStatistics(
                     voteResults,
                     statisticsSearchReqDto

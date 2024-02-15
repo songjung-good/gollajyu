@@ -88,7 +88,6 @@ public class VoteController {
     @GetMapping("/detail")
     @Operation(summary = "투표 상세", description = "returns VoteDetailResDto")
     public ResponseEntity<ResponseMessage<VoteDetailResDto>> voteDetail(@ModelAttribute VoteDetailReqDto voteDetailReqDto) {
-        System.out.println("voteDetailReqDto = " + voteDetailReqDto);
         ServiceResult result = voteService.voteDetail(voteDetailReqDto);
 
         if (!result.isResult()) {
@@ -133,21 +132,16 @@ public class VoteController {
             @RequestParam(value  = "pageNo", defaultValue = "0") int pageNo
     ) {
 
-        System.out.println("categoryId = " + categoryId);
-        System.out.println("memberId = " + memberId);
 
         LoginResDto sessionInfo = (LoginResDto) session.getAttribute("memberInfo");
-        System.out.println("session 잘 되어 있나요---(LoginResDto)session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
 
         ServiceResult<VoteListResDto> result = voteService.getVoteListByCategory(categoryId, sessionInfo, memberId, pageNo);
-//        System.out.println("result = " + result);
 
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().fail(result.getMessage()));
         }
 
-        System.out.println("result.getData() = " + result.getData());
         return ResponseEntity.ok().body(new ResponseMessage<VoteListResDto>().success(result.getData()));
     }
 
@@ -170,7 +164,6 @@ public class VoteController {
             , @RequestParam(name = "keyword", defaultValue = "") String keyword
             , HttpSession session) {
 
-        System.out.println(categoryId +"aaaaaaaaaaaaaaaaaa" + keyword);
         SearchReqDto searchReqDto = SearchReqDto.builder()
                 .categoryId(Integer.parseInt(categoryId))
                 .keyword(keyword)

@@ -62,8 +62,6 @@ public class VoteService {
 
         // 사용자 존재 유무 확인
         Optional<Member> optionalMember = memberRepository.findByEmail(voteReqDto.getMemberEmail());
-        System.out.println(optionalMember);
-        System.out.println("/sdfsdfasdfasdfasdfasdfasdf/"+voteReqDto.toString());
 
         if (optionalMember.isEmpty()) {
             return  new ServiceResult<>().fail("존재하지 않는 사용자입니다.");
@@ -242,7 +240,6 @@ public class VoteService {
     // 태그별 투표수 첨부 해주기 For ItemResDto 결과랑 sSReq(null true)
     public List<CategoryTagDto> generateStatistics(List<VoteResult> voteResults, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<CategoryTagDto> statisticsList = new ArrayList<>();
-//        System.out.println(voteResults+"@@@@@@@@@@@@@@@@");
         // Check if statisticsSearchReqDto is provided before calling perfectResultsMethod
         List<VoteResult> voteResultList = (statisticsSearchReqDto != null)
                 ? perfectResultsMethod(voteResults, statisticsSearchReqDto)
@@ -316,7 +313,6 @@ public class VoteService {
     // StatisticsSearchReqDto 에 따른 필터링 작업 ,,,voteResultList(byVoteItem or byMemberId or byAll)
     public List<VoteResult> perfectResultsMethod(List<VoteResult> voteResultList, StatisticsSearchReqDto statisticsSearchReqDto) {
         List<VoteResult> resultList = voteResultList;
-//        System.out.println(statisticsSearchReqDto+"ssssssssssssssssssssssssssss");
 
         // 소비성향이 있다면
         if ((statisticsSearchReqDto.getTypeId() != null) && (statisticsSearchReqDto.getTypeId() != 0)) {
@@ -673,7 +669,6 @@ public class VoteService {
 
             // 카테고리가 전체가 아닐 때
             else {
-                System.out.println("33333333333");
                 // 카테고리 유무 확인
                 Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
                 if (optionalCategory.isEmpty()) {
@@ -1003,7 +998,6 @@ public class VoteService {
 
         // 로그인 했을 때,
         if (memberInfo != null) {
-            System.out.println("memberInfo!!!!!!!! = " + memberInfo);
             Long memberId = memberInfo.getMemberId();
 
             //  카테고리가 전체일 때, 카테고리가 전체가 아닐 때 키워드로 거르기
@@ -1065,7 +1059,6 @@ public class VoteService {
                     }
                 });
 
-                System.out.println("allVoteList = " + allVoteList);
 
                 // 걸러진 투표 사용자의 좋아요 유무 체크
                 allVoteList.stream().forEach(lvd -> {
@@ -1114,7 +1107,6 @@ public class VoteService {
                         .stream()
                         .map(v -> ListVoteDto.convertToDto(v))
                         .toList();
-                System.out.println("!!!!!!!!!!!!!allVoteList = " + allVoteList);
 
                 makeVoteDetail(allVoteList);
 

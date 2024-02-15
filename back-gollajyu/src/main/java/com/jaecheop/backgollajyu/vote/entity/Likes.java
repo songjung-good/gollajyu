@@ -22,11 +22,11 @@ public class Likes {
     private Long id;
 
     @JoinColumn(name="member_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Member member;
 
     @JoinColumn(name="vote_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Vote vote;
 
     private LocalDateTime createAt;

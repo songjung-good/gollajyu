@@ -28,7 +28,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return new BCryptPasswordEncoder().encode(plainPassword);
     }
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-//        System.out.println("userRequest = " + userRequest);
         // 우리 서버의 기본 정보 - registrationId로 어떤 OAUTH로 로그인 했는지 확인 가능
 //        System.out.println("userRequest.getClientRegistration() = " + userRequest.getClientRegistration());
 //        System.out.println("userRequest.getAccessToken().getTokenValue() = " + userRequest.getAccessToken().getTokenValue());
@@ -61,11 +60,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .point(50L)
                     .build();
             memberRepository.save(member);
-            System.out.println("111111111111111111111");
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(member.getEmail(), "google");
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("2222222222222222222222");
 
         } else {
             // 예외 던져주기
@@ -76,18 +73,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             Authentication authentication = new UsernamePasswordAuthenticationToken(member.getEmail(), "google");
             SecurityContextHolder.getContext().setAuthentication(authentication);
 //            Authentication result = SecurityContextHolder.getContext().getAuthentication();
-//            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-//            System.out.println("result = " + result);
 
 
         }
 
-        //        System.out.println("================================customoauth2userService2=======================");
-//        System.out.println("oAuth2User = " + oAuth2User.getAttributes());
-//        System.out.println(principalDetails);
-//        System.out.println(" ============================================================================ ");
         PrincipalDetails principalDetails = new PrincipalDetails(member, oAuth2User.getAttributes());
-        System.out.println("3333333333333333333333333333333333");
         return principalDetails;
     }
 

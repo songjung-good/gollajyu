@@ -14,8 +14,6 @@ public class CommonController {
     public ResponseEntity home(Authentication authentication){
         Object principal = authentication.getPrincipal();
 
-        System.out.println("in common controller principal = " + principal);
-
         return ResponseEntity.ok("hello");
     }
 }

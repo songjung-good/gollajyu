@@ -24,7 +24,7 @@ public class Vote {
 
     // FK
     @JoinColumn(name = "member_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Member member;
 
     private String title;
@@ -33,7 +33,7 @@ public class Vote {
 
     private LocalDateTime createAt;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Many votes can belong to one category
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 

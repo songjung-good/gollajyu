@@ -65,16 +65,12 @@ public class MemberController {
     @Operation(summary = "Login method", description = "returns LoginResDto")
     public ResponseEntity<ResponseMessage<LoginResDto>> login(@RequestBody(required = false) LoginReqDto loginReqDto, HttpSession session,
                                                               @AuthenticationPrincipal Object info, HttpServletResponse response) {
-        System.out.println("###############################################");
-//        System.out.println("info = " + info);
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("email:::::::::::authentication.getPrincipal() = " + authentication.getPrincipal());
 
         ServiceResult<LoginResDto> result = memberService.login(loginReqDto, session);
         if (!result.isResult()) {
             return ResponseEntity.ok().body(new ResponseMessage<LoginResDto>().fail(result.getMessage()));
         }
-        System.out.println("controller - session.getAttribute(\"memberInfo\") = " + session.getAttribute("memberInfo"));
 
         Cookie cookie = new Cookie("login-cookie", loginReqDto.getEmail() );
         cookie.setMaxAge(3600); // 쿠키의 만료 시간 설정 (초 단위)
@@ -95,7 +91,6 @@ public class MemberController {
     @Operation(summary = " 추가정보 입력 폼", description = "returns AddInfoResDto : 소셜로그인으로 받아온 정보를 입력해서 넣어주고(AddInfoResDto) 추가 정보를 입력받는 폼을 반환합니다.")
     public ResponseEntity<ResponseMessage<AddInfoResDto>> addInfo(HttpServletRequest request, Authentication authentication) {
         // 쿠키에서 string을 쪼개서 providerId를 가져옴
-        System.out.println("4444444444444444444444444444444");
         Cookie[] cookieList = request.getCookies();
         String providerId = "";
         for (Cookie cookie : cookieList) {
@@ -137,7 +132,6 @@ public class MemberController {
     @Operation(summary = "logout", description = "로그아웃에 성공하면 로그아웃 성공이라는 문자열을 반환합니다")
     public ResponseEntity<ResponseMessage<String>> logout(HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("authentication = " + authentication);
         return ResponseEntity.ok().body(new ResponseMessage<String>().success("로그아웃 성공"));
     }
 
@@ -230,7 +224,6 @@ public class MemberController {
             if (i > 3) {
                 break;
             }
-            System.out.println("category = " + category);
             List<CategoryTagDto> categoryInfoList = memberService.makeCategoryInfoMypage(memberId, category.getId());
 
             // <category.getName(), categoryInfoResDtoList>
@@ -268,7 +261,6 @@ public class MemberController {
         String categoryNameAndTag = ((!Objects.equals(secondLargestDto.getCategory(), "전자제품")) ?
                 (secondLargestDto.getTag() + " " +secondLargestDto.getCategory()) : "삼성 가전");
 
-        System.out.println(categoryNameAndTag);
         List<Map<String, String>> crawlingResult = memberService.crawlNaverSearchResults(categoryNameAndTag);
 
 

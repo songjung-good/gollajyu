@@ -26,7 +26,7 @@ public class LiveVoteItem {
     @Column(name = "live_vote_item_count")
     private Long count;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "live_id")
     private Live live;
 }
