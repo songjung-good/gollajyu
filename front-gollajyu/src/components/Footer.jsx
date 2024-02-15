@@ -55,21 +55,30 @@ const Footer = () => {
     fontSize: "36px",
     color: "#FFD257", // 로고 글자 색: 노란색
   }
- 
+
+  // ----------- 정보 컨테이너 스타일 -----------
+  const infoContainerStyle = {
+    // 컨텐츠 정렬
+    display: "flex",
+    flexDirection: "column",
+  }
+
   // ----------- 팀 컨테이너 스타일 -----------
   const teamContainerStyle = {
     // 컨텐츠 정렬
     display: "flex",
+    alignItems: "flex-end",
     justifyContent: "flex-end",
+    flexDirection: isMedium || isSmall ? "column" : "row",
   }
 
   // ----------- 팀명 스타일 -----------
   const teamStyle = {
     // 디자인
-    marginTop: "10px",
+    marginTop: "14px",
 
     // 글자
-    fontSize: "24px",
+    fontSize: "20px",
   }
 
   // ----------- 이름 스타일 -----------
@@ -91,16 +100,31 @@ const Footer = () => {
         <div style={footerContainerStyle}>
           <div style={contentStyle}>
             <p style={logoStyle}>골라쥬</p>
-            <p style={teamStyle}>E107 재첩국</p>
+            <p style={teamStyle}>E107 재첩국 팀</p>
           </div>
-          <div style={teamContainerStyle}>
-            <p style={nameStyle}>김하영</p>
-            <p style={nameStyle}>배영환</p>
-            <p style={nameStyle}>송승준</p>
-            <p style={nameStyle}>이상훈</p>
-            <p style={nameStyle}>이시은</p>
-            <p style={nameStyle}>황호철</p>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={infoContainerStyle}>
+              <p style={{ fontSize: "16px", whiteSpace: "nowrap"}}>
+                SSAFY 10기 공통프로젝트
+              </p>
+              <p style={{ fontSize: "14px", whiteSpace: "nowrap"}}>
+                2024.01.08 - 2024.02.16
+              </p>
+            </div>
+            <div style={teamContainerStyle}>
+              <div style={{ display: "flex" }}>
+                <p style={nameStyle}>김하영</p>
+                <p style={nameStyle}>배영환</p>
+                <p style={nameStyle}>송승준</p>
+              </div>
+              <div style={{ display: "flex" }}>
+                <p style={nameStyle}>이상훈</p>
+                <p style={nameStyle}>이시은</p>
+                <p style={nameStyle}>황호철</p>
+              </div>
+            </div>
           </div>
+
         </div>
       </footer>
     </>
