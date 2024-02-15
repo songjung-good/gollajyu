@@ -345,32 +345,30 @@ const VoteButton = () => {
 
   return (
     <>
-      {!isSmall && ( // 모바일 화면에서 투표 생성 버튼 렌더링 하지 않음
-        <div
-          style={voteButtonContainerStyle}
-          onMouseEnter={buttonHover}
-          onClick={buttonClick} // 클릭 시 세부 버튼 닫기
-          ref={buttonRef}
-        >
-          {/* ------------- 투표 버튼 ------------- */}
-          <button style={voteButtonStyle}>
-            {buttonHovered ? (
-              <p style={xButtonStyle} className="fontsize-md">
-                &#10006;
-              </p>
-            ) : (
-              <p className="fontsize-sm">
-                투표
-                <br />
-                생성
-              </p>
-            )}
+      <div
+        style={voteButtonContainerStyle}
+        onMouseEnter={buttonHover}
+        onClick={buttonClick} // 클릭 시 세부 버튼 닫기
+        ref={buttonRef}
+      >
+        {/* ------------- 투표 버튼 ------------- */}
+        <button style={voteButtonStyle}>
+          {buttonHovered ? (
+            <p style={xButtonStyle} className="fontsize-md">
+              &#10006;
+            </p>
+          ) : (
+            <p className="fontsize-sm">
+              투표
+              <br />
+              생성
+            </p>
+          )}
 
-            {/* ------------- 버튼 렌더링 함수 호출 ------------- */}
-            {renderButtons()}
-          </button>
-        </div>
-      )}
+          {/* ------------- 버튼 렌더링 함수 호출 ------------- */}
+          {renderButtons()}
+        </button>
+      </div>
     </>
   );
 };

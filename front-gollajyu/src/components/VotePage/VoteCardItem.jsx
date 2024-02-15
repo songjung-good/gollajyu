@@ -81,7 +81,7 @@ const VoteCardItem = (props) => {
 
   return (
     <>
-      <div className="flex flex-col h-[319px]">
+      <div className="flex flex-col">
         <div
           style={{
             marginLeft: "15px",
@@ -98,7 +98,7 @@ const VoteCardItem = (props) => {
             width:
               voteItemLength === 2
                 ? isXLarge
-                  ? "300px"
+                  ? "280px"
                   : isLarge
                   ? "220px"
                   : isMedium
@@ -106,19 +106,19 @@ const VoteCardItem = (props) => {
                   : "110px"
                 : voteItemLength === 3
                 ? isXLarge
-                  ? "270px"
+                  ? "220px"
                   : isLarge
-                  ? "200px"
+                  ? "160px"
                   : isMedium
-                  ? "113px"
-                  : "100px"
+                  ? "100px"
+                  : "90px"
                 : isXLarge
-                ? "220px"
+                ? "160px"
                 : isLarge
-                ? "165px"
+                ? "130px"
                 : isMedium
-                ? "100px"
-                : "80px",
+                ? "90px"
+                : "70px",
             height: "289px",
             border: "5px solid",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
@@ -169,7 +169,7 @@ const VoteCardItem = (props) => {
 
             {/* 투표 이미지 */}
             <img
-              className="w-2/3 object-cover"
+              className="mx-auto w-2/3 object-cover"
               alt="Vote Image"
               src={item.voteItemImgUrl}
             />
@@ -183,7 +183,7 @@ const VoteCardItem = (props) => {
               ).toFixed(2)}%`}</p>
             ) : (
               <p className="pb-2 fontsize-sm text-center invisible">
-                투표 참여 시 <br /> 선택 비율이 공개됩니다.
+                투표 참여 시, 선택 비율이 공개됩니다.
               </p>
             )}
             <h2 className="fontsize-sm font-bold">
@@ -193,7 +193,9 @@ const VoteCardItem = (props) => {
               className="fontsize-xs pt-2"
               style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
             >
-              {item.voteItemDesc}
+              {item.voteItemDesc.length > 20
+                ? item.voteItemDesc.slice(0, 20) + "..."
+                : item.voteItemDesc}
             </p>
           </div>
         </div>
