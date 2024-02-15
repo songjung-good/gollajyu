@@ -63,7 +63,7 @@ const VoteCard = (props) => {
   // 모달창 여는 함수
   const openModal = () => {
     // Call the function to open the modal window
-    setVoteDetailModalOpen(voteId);
+    setVoteDetailModalOpen(voteId, handleClick);
   };
 
   // 좋아요 관리 함수

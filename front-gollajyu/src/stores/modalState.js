@@ -42,7 +42,7 @@ const store = (set) => ({
     })),
 
   // 투표 상세페이지 모달 열립니다
-  setVoteDetailModalOpen: (voteId) =>
+  setVoteDetailModalOpen: (voteId, handleClick) =>
     set(() => ({
       isLoginModalOpened: false,
       isSignupModalOpened: false,
@@ -50,6 +50,7 @@ const store = (set) => ({
       isVoteSimpleCreateModalOpened: false,
       isVoteProductCreateModalOpened: false,
       detailVoteId: voteId, // voteId를 설정
+      detailVoteHandle: handleClick,
     })),
 
   // 투표 상세페이지 모달 닫힙니다
@@ -91,7 +92,9 @@ const store = (set) => ({
     })),
 
   // 상세페이지 모달을 열기 위한 voteId를 설정합니다
-  setDetailVoteId: (voteId) => set(() => ({ detailVoteId: voteId })),
+  setDetailVoteId: (voteId) => set(() => ({ 
+    detailVoteId: voteId
+  })),
 });
 
 const useModalStore = create(
