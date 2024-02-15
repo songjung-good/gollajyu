@@ -1,4 +1,3 @@
-@ -1,245 +0,0 @@
 # { 여기는 로고 및 배너를 넣을 공간 입니다. }
 
 
@@ -29,10 +28,10 @@
 
 | 김하영                                  | 배영환                                        | 송승준                                |
 | --------------------------------------- | --------------------------------------------- | ------------------------------------- |
-| ![IMG_3377](./README_img/IMG_3377.jpg)             | ![배영환950829(176)](./README_img/배영환950829(176).jpg) | ![증명사진](./README_img/증명사진.jpg)           |
+| ![IMG_3377](.\IMG_3377.jpg)             | ![배영환950829(176)](.\배영환950829(176).jpg) | ![증명사진](.\증명사진.jpg)           |
 | { 여기는 개인페이지 링크 와 자기 소개 } |                                               |                                       |
 | **이상훈**                              | **이시은**                                    | **황호철**                            |
-| ![제목_없음](./README_img/제목_없음.jpg)           | ![1000011197](./README_img/1000011197.jpg)               | ![1703166478384](./README_img/1703166478384.jpg) |
+| ![제목_없음](.\제목_없음.jpg)           | ![1000011197](.\1000011197.jpg)               | ![1703166478384](.\1703166478384.jpg) |
 |                                         |                                               |                                       |
 
 
@@ -66,18 +65,23 @@
     <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
     <img src="https://img.shields.io/badge/jquery-0769AD?style=for-the-badge&logo=jquery&logoColor=white">
     <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">    
+    <img src="https://img.shields.io/badge/express-000000?style=for-the-badge&logo=express&logoColor=white">   
     <br>      
     <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">    
     <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">    
     <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">    
     <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black">
+    <img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">
     <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=Vite&logoColor=white">  
     <br>      
     <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">    
-    <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">  
+    <img src="https://img.shields.io/badge/mariaDB-003545?style=for-the-badge&logo=mariaDB&logoColor=white">    
+    <img src="https://img.shields.io/badge/mongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white">   
+    <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">   
     <img src="https://img.shields.io/badge/linux-FCC624?style=for-the-badge&logo=linux&logoColor=black">    
     <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white">    
     <img src="https://img.shields.io/badge/apache tomcat-F8DC75?style=for-the-badge&logo=apachetomcat&logoColor=white">
+    <img src="https://img.shields.io/badge/socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white">
     <br>      
     <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">   
     <img src="https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white">
@@ -86,11 +90,11 @@
 
 #### 기술스택 {수정 필요}
 
-🖱 Frontend
-
-- Visual Studio Code
+- window10
 
 - JavaScript es6++
+
+- JAVA 17
 
 - Node.js 20.11.0
 
@@ -100,35 +104,7 @@
 
 - tailwindcss 3.4.1
 
-🖱 Backend
-
-- IntelliJ
-
-- JAVA 17
-
-- spring-boot : 3.2.2
-
-- spring-boot-jpa
-
-- Spring Security
-
-- mysql
-
-- redis
-
-🖱 Web RTC
-
-- openvidu 2.19.0
-
-🖱 CI/CD
-
-- aws ec2
-
-- docker
-
-- nginx
-
-- jenkins
+  
 
 #### 협업 툴👊
 
@@ -142,7 +118,7 @@
 
 ## ERD 🌐
 
-![CAeW9oyC4sENKYCRm](./README_img/ERD.png)
+![CAeW9oyC4sENKYCRm](.\CAeW9oyC4sENKYCRm.png)
 
 #### <특이사항>
 
@@ -152,15 +128,17 @@
 
 ## 아키텍쳐♟️
 
-![아키텍쳐](./README_img/시스템%20아키텍쳐.png)
+![아키텍쳐](.doc구조아키텍쳐_찐찐막.png)
+
+
 
 ## 웹페이지 🕸️
 
 ### 0. 구조
 
-![웹페이지 구조](./README_img/웹페이지%20구조.PNG)
+![웹페이지 구조](C:\Users\SSAFY\Desktop\docs\웹페이지 구조.PNG)
 
-![와이어프레임](./README_img/와이어프레임.PNG)
+![와이어프레임](C:\Users\SSAFY\Desktop\docs\와이어프레임.PNG)
 
 
 
@@ -243,3 +221,4 @@
 ​	✔️ 
 
 ​	✔️ 
+
