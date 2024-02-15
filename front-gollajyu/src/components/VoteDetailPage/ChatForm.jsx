@@ -1,14 +1,19 @@
 // ChatForm.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import API_URL from "/src/stores/apiURL";
 
 const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [chatList, setChatList] = useState([]);
 
-  const handleChange = e => {
-    setValue(e.target.value);
+  const handleChange = (e) => {
+    if (e.target.value.length > 50) {
+      window.alert("글자수가 50자를 넘었습니다");
+      setValue(e.target.value.slice(0, 50));
+    } else {
+      setValue(e.target.value);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -23,19 +28,22 @@ const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
     try {
       await axios.post(`${API_URL}/votes/details/comments`, body);
       onSubmit(value, userid, choiced);
-      setValue('');
+      setValue("");
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    setChatList([...chatList, { content: value, userId: userid, voteItemId: choiced }]);
+    setChatList([
+      ...chatList,
+      { content: value, userId: userid, voteItemId: choiced },
+    ]);
   }, [value, userid, choiced]);
 
   // enter키로도 입력 가능
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSubmit(e);
     }
   };
@@ -46,9 +54,9 @@ const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
         <input
           type="text"
           className="flex-1 border rounded-sm px-4 py-2 h-12 focus:outline-none"
-          placeholder="댓글을 입력해 주세요."
+          placeholder="댓글을 입력해 주세요(50자 이내)"
           onChange={handleChange}
-          value={value}
+          value={value.slice(0, 50)}
           onKeyPress={handleKeyPress}
         />
         <button
