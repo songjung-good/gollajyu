@@ -50,7 +50,7 @@ const RecommendModal = ({ topCategory, closeModal }) => {
 
   // ----------- text가 일정 길이 이상이면 ...으로 대체하는 함수 -----------
   const truncateText = (text) => {
-    const maxLabelLength = 8;  // 최대 길이
+    const maxLabelLength = 8; // 최대 길이
     return text.length > maxLabelLength
       ? `${text.substring(0, maxLabelLength)}...`
       : text;
@@ -105,10 +105,12 @@ const RecommendModal = ({ topCategory, closeModal }) => {
                   alt="사이트 이미지"
                   className="rounded-3xl w-full mb-2 min-h-[105px]"
                   onError={(e) => {
-                    e.target.src= Favicon; // 대체 이미지 URL로 변경
+                    e.target.src = Favicon; // 대체 이미지 URL로 변경
                   }}
                 />
-                <p className="fontsize-sm break-keep">{truncateText(item.text)}</p>
+                <p className="fontsize-sm break-keep">
+                  {truncateText(item.text)}
+                </p>
               </div>
             ))}
           </div>
@@ -370,8 +372,8 @@ const MyStatistics = () => {
     margin: "0 5px",
     width: "16px",
     height: "16px",
-  }
-  
+  };
+
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 디자인
@@ -382,7 +384,7 @@ const MyStatistics = () => {
     // 글자
     fontSize: "13px",
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
@@ -730,10 +732,12 @@ const MyStatistics = () => {
             <div style={infoContainerStyle} key={index}>
               <div style={itemLeftStyle}>
                 <div className="fontsize-md">{item.category}</div>
-                <div style={{
-                  ...flexContainerStyle,
-                  width: isXLarge || isMedium ? "300px" : "195px",
-                }}>
+                <div
+                  style={{
+                    ...flexContainerStyle,
+                    width: isXLarge || isMedium ? "300px" : "195px",
+                  }}
+                >
                   {top3Left.map((tag, index) => (
                     <div
                       style={{
@@ -756,10 +760,12 @@ const MyStatistics = () => {
                   <div className="fontsize-md">
                     {tagRatio[index + 1].category}
                   </div>
-                  <div style={{
-                    ...flexContainerStyle,
-                    width: isXLarge || isMedium ? "300px" : "195px",
-                  }}>
+                  <div
+                    style={{
+                      ...flexContainerStyle,
+                      width: isXLarge || isMedium ? "300px" : "195px",
+                    }}
+                  >
                     {top3Right.map((tag, i) => (
                       <div
                         style={{
@@ -804,12 +810,20 @@ const MyStatistics = () => {
             onMouseOut={() => setShowCategoryDescription(false)}
           />
           <div className="relative h-full">
-            <p style={{
-              ...descriptionStyle,
-              visibility: showCategoryDescription ? "visible" : "hidden",
-              position: "absolute",
-              top: isXLarge ? "12px" : isLarge ? "8px" : isMedium ? "7px" : "6px",
-            }} >
+            <p
+              style={{
+                ...descriptionStyle,
+                visibility: showCategoryDescription ? "visible" : "hidden",
+                position: "absolute",
+                top: isXLarge
+                  ? "12px"
+                  : isLarge
+                  ? "8px"
+                  : isMedium
+                  ? "7px"
+                  : "6px",
+              }}
+            >
               투표에 많이 참여한 카테고리
             </p>
           </div>
@@ -823,89 +837,100 @@ const MyStatistics = () => {
         <div style={tagContentsContainerStyle}>
           {/* ------------- 관심있는 카테고리 ------------- */}
           <div style={subTitleContainerStyle}>
-            <div style={subTitleStyle} className="fontsize-lg">
-              가장 관심있는 카테고리 :
-            </div>
-            <div style={categoryTextStyle} className="fontsize-xl">
-              " {topCategory.key} "
-            </div>
-          </div>
-          <div style={descriptionContainerStyle}>
-            <div style={responsiveDescriptionContainerStyle}>
-              <div style={responsiveDescriptionSubContainerStyle}>
-                <div className="fontsize-sm">참여한 투표의</div>
-                <div style={descriptionDataStyle} className="fontsize-sm">
-                  {topCategory && topCategory.value.toFixed(0)}%
+            {topCategory.key ? (
+              <>
+                <div style={subTitleStyle} className="fontsize-lg">
+                  가장 관심있는 카테고리 :
                 </div>
-                <div className="fontsize-sm">가</div>
-              </div>
-            </div>
-            <div style={responsiveDescriptionSubContainerStyle}>
-              <div style={descriptionDataStyle} className="fontsize-sm">
-                {topCategory.key}
-              </div>
-              <div className="fontsize-sm">카테고리에 속해있어요!</div>
-            </div>
-          </div>
-
-          <div style={barStyle}></div>
-
-          {/* ------------- 랜덤 선호도 비교 ------------- */}
-          <div style={randomContainerStyle}>
-            <div style={quotesStyle} className="fontsize-xl">
-              “
-            </div>
-            <div style={mentContainerStyle}>
-              <div style={flexContainerStyle}>
-                <div style={mentDataStyle} className="fontsize-md">
-                  {user.nickname}
-                </div>
-                <div className="fontsize-md">님과 같은</div>
-                <div style={mentDataStyle} className="fontsize-md">
-                  {ageId * 10}대
-                </div>
-                <div style={mentDataStyle} className="fontsize-md">
-                  {user.gender == "MALE" ? "남성" : "여성"}
-                </div>
-                <div className="fontsize-md">의</div>
-                <div style={mentDataStyle} className="fontsize-md">
-                  {othersTopTag && othersTopTag.value.toFixed(0)}%
-                </div>
-                <div className="fontsize-md">는</div>
-              </div>
-              <div style={flexContainerStyle}>
-                <div style={mentDataStyle} className="fontsize-md">
+                <div style={categoryTextStyle} className="fontsize-xl">
                   " {topCategory.key} "
                 </div>
-                <div className="fontsize-md">
-                  {["의류", "가구"].includes(topCategory.key) ? "를" : "을"}{" "}
-                  고를 때
+                <div style={descriptionContainerStyle}>
+                  <div style={responsiveDescriptionContainerStyle}>
+                    <div style={responsiveDescriptionSubContainerStyle}>
+                      <div className="fontsize-sm">참여한 투표의</div>
+                      <div style={descriptionDataStyle} className="fontsize-sm">
+                        {topCategory && topCategory.value.toFixed(0)}%
+                      </div>
+                      <div className="fontsize-sm">가</div>
+                    </div>
+                  </div>
+                  <div style={responsiveDescriptionSubContainerStyle}>
+                    <div style={descriptionDataStyle} className="fontsize-sm">
+                      {topCategory.key}
+                    </div>
+                    <div className="fontsize-sm">카테고리에 속해있어요!</div>
+                  </div>
                 </div>
-                <div
-                  style={{
-                    ...mentDataStyle,
-                    color: "black",
-                    backgroundColor:
-                      othersTopTag &&
-                      tagColorData.find((item) => item.name == othersTopTag.key)
-                        .color,
-                  }}
-                  className="fontsize-md"
-                >
-                  {othersTopTag.key}
+              </>
+            ) : (
+              <p className="fontsize-md font-[#4A4A4A]">
+                투표 참여 기록이 없어요
+              </p>
+            )}
+          </div>
+
+          {topCategory.key && <div style={barStyle}></div>}
+
+          {/* ------------- 랜덤 선호도 비교 ------------- */}
+          {topCategory.key && (
+            <div style={randomContainerStyle}>
+              <div style={quotesStyle} className="fontsize-xl">
+                “
+              </div>
+              <div style={mentContainerStyle}>
+                <div style={flexContainerStyle}>
+                  <div style={mentDataStyle} className="fontsize-md">
+                    {user.nickname}
+                  </div>
+                  <div className="fontsize-md">님과 같은</div>
+                  <div style={mentDataStyle} className="fontsize-md">
+                    {ageId * 10}대
+                  </div>
+                  <div style={mentDataStyle} className="fontsize-md">
+                    {user.gender == "MALE" ? "남성" : "여성"}
+                  </div>
+                  <div className="fontsize-md">의</div>
+                  <div style={mentDataStyle} className="fontsize-md">
+                    {othersTopTag && othersTopTag.value.toFixed(0)}%
+                  </div>
+                  <div className="fontsize-md">는</div>
                 </div>
-                <div className="fontsize-md">
-                  {["가성비", "브랜드", "소재"].includes(othersTopTag.key)
-                    ? "를"
-                    : "을"}{" "}
-                  눈여겨봐요!
+                <div style={flexContainerStyle}>
+                  <div style={mentDataStyle} className="fontsize-md">
+                    " {topCategory.key} "
+                  </div>
+                  <div className="fontsize-md">
+                    {["의류", "가구"].includes(topCategory.key) ? "를" : "을"}{" "}
+                    고를 때
+                  </div>
+                  <div
+                    style={{
+                      ...mentDataStyle,
+                      color: "black",
+                      backgroundColor:
+                        othersTopTag &&
+                        tagColorData.find(
+                          (item) => item.name == othersTopTag.key
+                        ).color,
+                    }}
+                    className="fontsize-md"
+                  >
+                    {othersTopTag.key}
+                  </div>
+                  <div className="fontsize-md">
+                    {["가성비", "브랜드", "소재"].includes(othersTopTag.key)
+                      ? "를"
+                      : "을"}{" "}
+                    눈여겨봐요!
+                  </div>
                 </div>
               </div>
+              <div style={quotesStyle} className="fontsize-xl">
+                ”
+              </div>
             </div>
-            <div style={quotesStyle} className="fontsize-xl">
-              ”
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
@@ -924,10 +949,12 @@ const MyStatistics = () => {
             onMouseOver={() => setShowTagDescription(true)}
             onMouseOut={() => setShowTagDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showTagDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showTagDescription ? "visible" : "hidden",
+            }}
+          >
             내가 선택한 태그 통계
           </p>
         </div>

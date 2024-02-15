@@ -588,6 +588,11 @@ public class VoteService {
                 .commentList(commentDtoList)
                 .build();
 
+        Optional<Likes> optionalLikes = likeRepository.findByMemberIdAndVoteId(voteDetailReqDto.getMemberId(), voteDetailReqDto.getVoteId());
+        if(optionalLikes.isPresent()){
+            voteInfoDto.updateIsLiked();
+        }
+
         return  new ServiceResult<VoteDetailResDto>().success(voteDetailResDto);
     }
 

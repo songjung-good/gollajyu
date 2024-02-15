@@ -25,9 +25,10 @@ import questionMarkImg from "/assets/images/question_mark_img.png";
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
+// Footer
+import Footer from "../components/Footer";
 
 const StatisticPage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -62,20 +63,22 @@ const StatisticPage = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        (dropdownButtonRef.current && !dropdownButtonRef.current.contains(event.target)) &&
-        (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target))
+        dropdownButtonRef.current &&
+        !dropdownButtonRef.current.contains(event.target) &&
+        dropdownMenuRef.current &&
+        !dropdownMenuRef.current.contains(event.target)
       ) {
         // 클릭이 메뉴 버튼 및 메뉴 외부에 있으면 메뉴를 닫습니다.
         setIsOpen(false);
       }
     };
-  
+
     // 페이지에 클릭 이벤트를 추가합니다.
-    document.addEventListener('mousedown', handleClickOutside);
-  
+    document.addEventListener("mousedown", handleClickOutside);
+
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setIsOpen]);
 
@@ -140,7 +143,6 @@ const StatisticPage = () => {
     }
   };
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- body 스타일 -----------
@@ -148,14 +150,26 @@ const StatisticPage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "30px 0", // 상하단 여백: 50px
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     whiteSpace: "nowrap", // 줄바꿈 방지
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "375px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "375px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -188,8 +202,8 @@ const StatisticPage = () => {
     margin: "0 5px",
     width: "16px",
     height: "16px",
-  }
-  
+  };
+
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 디자인
@@ -200,13 +214,19 @@ const StatisticPage = () => {
     // 글자
     fontSize: "13px",
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
@@ -230,13 +250,24 @@ const StatisticPage = () => {
     position: "relative",
 
     // 디자인
-    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
   };
 
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
     // 디자인
-    padding: isXLarge || isLarge ? "0px 10px 0px 14px" : isMedium ? "0px 10px 0px 12px" : "0 10px",
+    padding:
+      isXLarge || isLarge
+        ? "0px 10px 0px 14px"
+        : isMedium
+        ? "0px 10px 0px 12px"
+        : "0 10px",
     border: "1px solid #ccc",
     borderRadius: "4px",
     width: isXLarge || isLarge ? "110px" : isMedium ? "105px" : "100px",
@@ -260,14 +291,14 @@ const StatisticPage = () => {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 화살표 스타일 -----------
   const arrowStyle = {
     // 글자
     fontFamily: "GmarketSansBold",
     fontWeight: "bold",
-  }
+  };
 
   // ----------- 드롭다운 메뉴 스타일 -----------
   const dropdownMenuStyle = {
@@ -288,10 +319,16 @@ const StatisticPage = () => {
   // ----------- 드롭다운 아이템 스타일 -----------
   const dropdownItemStyle = {
     // 디자인
-    margin: isXLarge ? "8px 0" : isLarge ? "7px 0" : isMedium ? "6px 0" : "5px 0",
+    margin: isXLarge
+      ? "8px 0"
+      : isLarge
+      ? "7px 0"
+      : isMedium
+      ? "6px 0"
+      : "5px 0",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     cursor: "pointer",
-  
+
     // 글자
     fontSize: isXLarge || isLarge ? "16px" : isMedium ? "14px" : "12px",
   };
@@ -305,7 +342,13 @@ const StatisticPage = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "25px 0"
+      : isMedium
+      ? "20px 0"
+      : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -350,7 +393,6 @@ const StatisticPage = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-
   // ------------- 투표 생성 버튼 모달과 관련된 함수 -----------
   const isVoteSimpleCreateModalOpened = useModalStore(
     (state) => state.isVoteSimpleCreateModalOpened
@@ -384,15 +426,16 @@ const StatisticPage = () => {
               onMouseOver={() => setShowDescription(true)}
               onMouseOut={() => setShowDescription(false)}
             />
-            <p style={{
-              ...descriptionStyle,
-              visibility: showDescription ? "visible" : "hidden"
-            }}>
+            <p
+              style={{
+                ...descriptionStyle,
+                visibility: showDescription ? "visible" : "hidden",
+              }}
+            >
               사용자 유형별 태그 선호도 비교
             </p>
           </div>
           <div style={contentsContainerStyle}>
-
             {/* ------------- 드롭다운 버튼 ------------- */}
             <div style={dropdownContainerStyle}>
               <div style={flexContainerStyle}>
@@ -410,8 +453,7 @@ const StatisticPage = () => {
                         ? categoryData.find(
                             (c) => c.id === parseInt(selectedCategoryId)
                           )?.name
-                        : categoryData[1].name
-                      }
+                        : categoryData[1].name}
                       {isOpen ? (
                         <span style={arrowStyle}>∧</span>
                       ) : (
@@ -449,7 +491,10 @@ const StatisticPage = () => {
                   )}
                 </div>
                 <div style={subTitleStyle} className="fontsize-md">
-                  {selectedCategoryId === 1 || selectedCategoryId === 2 ? "를" : "을"} 구매 할 때
+                  {selectedCategoryId === 1 || selectedCategoryId === 2
+                    ? "를"
+                    : "을"}{" "}
+                  구매 할 때
                 </div>
                 <div style={restStyle} className="fontsize-md">
                   ,
@@ -509,10 +554,10 @@ const StatisticPage = () => {
                 )}
               </div>
             </div>
-
           </div>
         </div>
       </div>
+      <Footer />
       {isVoteSimpleCreateModalOpened && <VoteSimple></VoteSimple>}
       {isVoteProductCreateModalOpened && <VoteProduct></VoteProduct>}
     </>

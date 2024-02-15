@@ -23,9 +23,7 @@ import TestResultHeader from "../TestResultHeader";
 // 이미지 가져오기
 import questionMarkImg from "/assets/images/question_mark_img.png";
 
-
 const MyProfile = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -76,11 +74,16 @@ const MyProfile = () => {
 
   // --------------------------------- css 시작 ---------------------------------
 
-
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -113,8 +116,8 @@ const MyProfile = () => {
     margin: "0 5px",
     width: "16px",
     height: "16px",
-  }
-  
+  };
+
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 디자인
@@ -125,13 +128,19 @@ const MyProfile = () => {
     // 글자
     fontSize: "13px",
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
@@ -153,7 +162,13 @@ const MyProfile = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "25px 0"
+      : isMedium
+      ? "20px 0"
+      : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -175,7 +190,13 @@ const MyProfile = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding: isXLarge ? "10px 20px" : isLarge ? "8px 18px" : isMedium ? "6px 16px" : "4px 14px",
+    padding: isXLarge
+      ? "10px 20px"
+      : isLarge
+      ? "8px 18px"
+      : isMedium
+      ? "6px 16px"
+      : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
     height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
@@ -223,7 +244,6 @@ const MyProfile = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-  
   return (
     <>
       {/* ------------- 기본정보 ------------- */}
@@ -241,10 +261,12 @@ const MyProfile = () => {
             onMouseOver={() => setShowInfoDescription(true)}
             onMouseOut={() => setShowInfoDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showInfoDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showInfoDescription ? "visible" : "hidden",
+            }}
+          >
             회원가입 시 입력한 정보
           </p>
         </div>
@@ -261,7 +283,7 @@ const MyProfile = () => {
               style={profileImageStyle}
             />
             <div>
-              {isEditMode ? (
+              {/* {isEditMode ? (
                 <div className="flex">
                   <input
                     type="text"
@@ -301,7 +323,7 @@ const MyProfile = () => {
                     닉네임 수정하기
                   </button>
                 </div>
-              )}
+              )} */}
 
               <div style={profileTextStyle} className="fontsize-md">
                 {user.email}
@@ -344,10 +366,12 @@ const MyProfile = () => {
             onMouseOver={() => setTestShowDescription(true)}
             onMouseOut={() => setTestShowDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showTestDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showTestDescription ? "visible" : "hidden",
+            }}
+          >
             소비성향 테스트 결과
           </p>
         </div>

@@ -1,5 +1,6 @@
 // 리액트 및 훅/라이브러리
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -14,9 +15,7 @@ import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 import useModalStore from "/src/stores/modalState";
 import useAuthStore from "/src/stores/userState";
 
-
 const VoteSimple = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -35,6 +34,7 @@ const VoteSimple = () => {
   );
 
   const createVote = useAuthStore((state) => state.createVote);
+  const navigate = useNavigate();
 
   const addVoteItem = () => {
     if (voteItems.length > 3) {
@@ -110,12 +110,12 @@ const VoteSimple = () => {
       // console.log(response.data);
       createVote(); // 투표 만들면 10포인트 차감
       setVoteSimpleModalClose();
+      navigate("/VotePage");
     } catch (error) {
       console.error(error);
       alert("Failed to create poll.");
     }
   };
-
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -124,7 +124,13 @@ const VoteSimple = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    width: isXLarge ? "800px" : isLarge ? "640px" : isMedium ? "450px" : "360px",
+    width: isXLarge
+      ? "800px"
+      : isLarge
+      ? "640px"
+      : isMedium
+      ? "450px"
+      : "360px",
     maxHeight: "800px",
     borderRadius: "10px",
     background: "#FFFFFF",
@@ -139,28 +145,39 @@ const VoteSimple = () => {
   // ----------- 이미지 컨테이너 스타일 -----------
   const imgContainerStyle = {
     // 디자인
-    margin: isXLarge ? "30px 0" : isLarge ? "27px 0" : isMedium ? "24px 0" : "21px 0",
-    
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "27px 0"
+      : isMedium
+      ? "24px 0"
+      : "21px 0",
+
     // 컨텐츠 정렬
     display: "flex",
     justifyContent: "space-between",
     gap: isXLarge ? "16px" : isLarge ? "14px" : isMedium ? "12px" : "10px",
-  }
+  };
 
   // ----------- 이미지 아이템 스타일 -----------
   const imgItemStyle = {
     // 디자인
     width: isXLarge ? "120px" : isLarge ? "90px" : isMedium ? "57.5px" : "44px",
-    height: isXLarge ? "180px" : isLarge ? "140px" : isMedium ? "100px" : "80px",
+    height: isXLarge
+      ? "180px"
+      : isLarge
+      ? "140px"
+      : isMedium
+      ? "100px"
+      : "80px",
     borderRadius: "5px",
-    
+
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   return (
     <>
@@ -174,18 +191,17 @@ const VoteSimple = () => {
         }}
       >
         <div style={bodyStyle}>
-          <form
-            onSubmit={handleSubmit}
-            encType="multipart/form-data"
-          >
-
+          <form onSubmit={handleSubmit} encType="multipart/form-data">
             {/* ------------- 제목 입력 ------------- */}
             <div>
               <label
                 htmlFor="title"
                 className="my-10 block text-center fontsize-xl"
               >
-                <span style={{ color: "#8AC926" }} className="fontsize-xl">간단 </span>골라쥬
+                <span style={{ color: "#8AC926" }} className="fontsize-xl">
+                  간단{" "}
+                </span>
+                골라쥬
               </label>
               <input
                 type="text"
@@ -201,12 +217,23 @@ const VoteSimple = () => {
 
             {/* ------------- 사진 첨부 ------------- */}
             <div style={imgContainerStyle}>
-              <div style={{ gap: isXLarge ? "16px" : isLarge ? "14px" : isMedium ? "12px" : "10px" }} className="flex">
+              <div
+                style={{
+                  gap: isXLarge
+                    ? "16px"
+                    : isLarge
+                    ? "14px"
+                    : isMedium
+                    ? "12px"
+                    : "10px",
+                }}
+                className="flex"
+              >
                 {voteItems.map((voteItem, index) => (
                   <div
                     style={{
                       ...imgItemStyle,
-                      overflow: 'hidden',
+                      overflow: "hidden",
                     }}
                     className="p-2 bg-gray-100 hover:bg-gray-200"
                     key={index}
@@ -237,7 +264,7 @@ const VoteSimple = () => {
                         style={{ fontSize: "20px", paddingBottom: "20px" }}
                         className="relative flex items-center h-full justify-center text-center cursor-pointer"
                       >
-                        사진 {index+1}
+                        아이템 {index + 1}
                       </label>
                     )}
                   </div>
@@ -245,12 +272,35 @@ const VoteSimple = () => {
               </div>
 
               {/* ------------- 항목 추가, 제거 버튼------------- */}
-              <div style={{ gap: isXLarge ? "16px" : isLarge ? "14px" : isMedium ? "12px" : "10px" }} className="flex">
+              <div
+                style={{
+                  gap: isXLarge
+                    ? "16px"
+                    : isLarge
+                    ? "14px"
+                    : isMedium
+                    ? "12px"
+                    : "10px",
+                }}
+                className="flex"
+              >
                 <button
                   style={{
                     ...imgItemStyle,
-                    width: isXLarge ? "80px" : isLarge ? "70px" : isMedium ? "50px" : "40px",
-                    fontSize: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+                    width: isXLarge
+                      ? "80px"
+                      : isLarge
+                      ? "70px"
+                      : isMedium
+                      ? "50px"
+                      : "40px",
+                    fontSize: isXLarge
+                      ? "50px"
+                      : isLarge
+                      ? "40px"
+                      : isMedium
+                      ? "30px"
+                      : "20px",
                     fontFamily: "GmarketSansLight",
                     cursor: voteItems.length > 3 ? "not-allowed" : "pointer",
                   }}
@@ -264,8 +314,20 @@ const VoteSimple = () => {
                 <button
                   style={{
                     ...imgItemStyle,
-                    width: isXLarge ? "80px" : isLarge ? "70px" : isMedium ? "50px" : "40px",
-                    fontSize: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+                    width: isXLarge
+                      ? "80px"
+                      : isLarge
+                      ? "70px"
+                      : isMedium
+                      ? "50px"
+                      : "40px",
+                    fontSize: isXLarge
+                      ? "50px"
+                      : isLarge
+                      ? "40px"
+                      : isMedium
+                      ? "30px"
+                      : "20px",
                     fontFamily: "GmarketSansLight",
                     cursor: voteItems.length < 3 ? "not-allowed" : "pointer",
                   }}
@@ -280,7 +342,10 @@ const VoteSimple = () => {
             </div>
 
             {/* ------------- 취소하기, 투표 올리기 버튼 ------------- */}
-            <div style={{ marginBottom: "40px" }} className="flex justify-between">
+            <div
+              style={{ marginBottom: "40px" }}
+              className="flex justify-between"
+            >
               <button
                 onClick={setVoteSimpleModalClose}
                 className="w-1/2 mx-2 p-3 rounded-full bg-white hover:bg-gray-200 text-center fontsize-sm border-4 border-gray-300"
@@ -293,7 +358,6 @@ const VoteSimple = () => {
               >
                 투표 올리기
               </button>
-
             </div>
           </form>
         </div>
