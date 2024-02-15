@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import tmpProfileImg from "/assets/images/tmp_profile.png";
 import AddVoteItemModal from "./AddVoteItemModal";
 import useAuthStore from "/src/stores/userState";
 import { v4 as uuidv4 } from "uuid";
@@ -34,7 +33,6 @@ const CreateVideoRoom = () => {
   const videoRef = useRef(null);
   const memberId = user.memberId;
   const nickName = user.nickname;
-  // const [liveId, setLiveId] = useState(null);
   const [title, setTitle] = useState("");
   const [voteItem, setVoteItem] = useState([]);
   const [previewVoteItem, setPreviewVoteItem] = useState([]);
@@ -124,7 +122,7 @@ const CreateVideoRoom = () => {
       );
       // console.log(liveId);
       if (liveId !== false) {
-        console.log("방송 생성 성공");
+        // console.log("방송 생성 성공");
         createVote();
         navigate("/EnterVideoRoom", {
           state: {

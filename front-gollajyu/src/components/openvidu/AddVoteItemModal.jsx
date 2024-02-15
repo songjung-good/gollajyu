@@ -41,12 +41,6 @@ const AddVoteItemModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center text-center">
       <div className="bg-neutral-300 p-6 rounded-md w-[450px] h-[350px] relative">
-        {/* <span
-          className="absolute top-2 right-2 text-2xl cursor-pointer"
-          onClick={onClose}
-        >
-          &times;
-        </span> */}
         <h2 className="text-2xl mb-4">투표 선택지 추가하기</h2>
         <div className="flex flex-col items-center space-y-3">
           {imgFile && (

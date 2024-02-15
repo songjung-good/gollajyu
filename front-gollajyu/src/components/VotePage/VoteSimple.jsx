@@ -76,7 +76,6 @@ const VoteSimple = () => {
     setPreviewImages(updatedPreviewImages);
   };
 
-
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -108,7 +107,7 @@ const VoteSimple = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       createVote(); // 투표 만들면 10포인트 차감
       setVoteSimpleModalClose();
     } catch (error) {

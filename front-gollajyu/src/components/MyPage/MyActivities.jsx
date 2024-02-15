@@ -1,6 +1,7 @@
 // 리액트 및 훅/라이브러리
 import React, { useState, useEffect } from "react";
 import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
+import { Tooltip } from "@mui/material";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -51,9 +52,7 @@ const MenuItem = ({ to, style, activeStyle, hoverState, children }) => (
   </NavLink>
 );
 
-
 const MyActivities = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -79,11 +78,8 @@ const MyActivities = () => {
     ParticipatedPageMouseLeave,
   ] = useHoverState();
 
-  const [
-    LikedPageHovered,
-    LikedPageMouseEnter,
-    LikedPageMouseLeave
-  ] = useHoverState();
+  const [LikedPageHovered, LikedPageMouseEnter, LikedPageMouseLeave] =
+    useHoverState();
 
   const [
     CommentedPageHovered,
@@ -107,10 +103,6 @@ const MyActivities = () => {
   const setVoteDetailModalOpen = useModalStore(
     (state) => state.setVoteDetailModalOpen
   );
-  // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
-  const transferVoteId = (voteId) => {
-    setVoteDetailModalOpen(voteId);
-  };
 
   useEffect(() => {
     window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
@@ -119,40 +111,40 @@ const MyActivities = () => {
       .get(API_URL + "/members/" + user.memberId + "/votes")
       .then((res) => {
         setCreatedVote(res.data);
-        console.log("작성한 투표:", res.data);
+        // console.log("작성한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 좋아요한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes/likes")
       .then((res) => {
         setLikedVote(res.data);
-        console.log("좋아요한 투표:", res.data);
+        // console.log("좋아요한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 참여한 투표
     axios
       .get(API_URL + "/members/" + user.memberId + "/votes/participation")
       .then((res) => {
         setParticipatedVote(res.data);
-        console.log("참여한 투표:", res.data);
+        // console.log("참여한 투표:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
     // 작성한 댓글
     axios
       .get(API_URL + "/members/" + user.memberId + "/comments")
       .then((res) => {
         setCreatedComment(res.data);
-        console.log("작성한 댓글:", res.data);
+        // console.log("작성한 댓글:", res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }, []);
 
@@ -201,13 +193,18 @@ const MyActivities = () => {
     },
   ];
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -240,8 +237,8 @@ const MyActivities = () => {
     margin: "0 5px",
     width: "16px",
     height: "16px",
-  }
-  
+  };
+
   // ----------- 설명 스타일 -----------
   const descriptionStyle = {
     // 디자인
@@ -252,20 +249,32 @@ const MyActivities = () => {
     // 글자
     fontSize: "13px",
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const contentsContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
   // ----------- 포인트 이미지 스타일 -----------
   const pointImageStyle = {
     // 디자인
-    marginRight: isXLarge ? "20px" : isLarge ? "17px" : isMedium ? "14px" : "11px",
+    marginRight: isXLarge
+      ? "20px"
+      : isLarge
+      ? "17px"
+      : isMedium
+      ? "14px"
+      : "11px",
     width: isXLarge ? "45px" : isLarge ? "39px" : isMedium ? "33px" : "27px",
     height: isXLarge ? "45px" : isLarge ? "39px" : isMedium ? "33px" : "27px",
     borderRadius: "50%",
@@ -290,7 +299,13 @@ const MyActivities = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "25px 0"
+      : isMedium
+      ? "20px 0"
+      : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -315,7 +330,13 @@ const MyActivities = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding: isXLarge ? "10px 20px" : isLarge ? "8px 18px" : isMedium ? "6px 16px" : "4px 14px",
+    padding: isXLarge
+      ? "10px 20px"
+      : isLarge
+      ? "8px 18px"
+      : isMedium
+      ? "6px 16px"
+      : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
     height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
@@ -368,8 +389,10 @@ const MyActivities = () => {
     paddingTop: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     width: isXLarge || isLarge ? "20%" : isMedium ? "22%" : "25%",
     height: isXLarge ? "60px" : isLarge ? "50px" : "40px",
-    borderTopLeftRadius: isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
-    borderTopRightRadius: isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
+    borderTopLeftRadius:
+      isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
+    borderTopRightRadius:
+      isXLarge || isLarge ? "20px" : isMedium ? "15px" : "10px",
     background: "#D9D9D9",
 
     // 글자
@@ -405,16 +428,33 @@ const MyActivities = () => {
   const historyContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    minHeight: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
-    borderBottomLeftRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
-    borderBottomRightRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    minHeight: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
+    borderBottomLeftRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
+    borderBottomRightRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     borderTopLeftRadius: "0",
     borderTopRightRadius: !isSmall ? "50px" : "0",
     background: "#FFFFFF",
   };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   // ----------- 활동정보 렌더링 함수 -----------
   const renderInfoItems = infoItems.map((item, index) => {
@@ -460,10 +500,12 @@ const MyActivities = () => {
             onMouseOver={() => setShowInfoDescription(true)}
             onMouseOut={() => setShowInfoDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showInfoDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showInfoDescription ? "visible" : "hidden",
+            }}
+          >
             내 포인트 및 누적 활동정보
           </p>
         </div>
@@ -473,9 +515,28 @@ const MyActivities = () => {
             <div style={pointTextStyle} className="fontsize-lg">
               내 포인트
             </div>
-            <div style={pointNumberStyle} className="fontsize-xl">
+            <div style={pointNumberStyle} className="fontsize-xl mx-2">
               {user.point}
             </div>
+            <Tooltip
+              title={
+                <div className="fontsize-xs">
+                  포인트 획득 - 출석, 투표하기
+                  <br />
+                  포인트 차감 - 골라쥬 생성, 닉네임 수정
+                </div>
+              }
+              placement="right-start"
+              size="md"
+              variant="outlined"
+            >
+              <img
+                src={questionMarkImg}
+                style={questionMarkStyle}
+                alt="물음표"
+                className="cursor-pointer rounded-full"
+              />
+            </Tooltip>
           </div>
           <div style={barStyle}></div>
           {renderInfoItems}
@@ -497,10 +558,12 @@ const MyActivities = () => {
             onMouseOver={() => setShowRecordDescription(true)}
             onMouseOut={() => setShowRecordDescription(false)}
           />
-          <p style={{
-            ...descriptionStyle,
-            visibility: showRecordDescription ? "visible" : "hidden"
-          }}>
+          <p
+            style={{
+              ...descriptionStyle,
+              visibility: showRecordDescription ? "visible" : "hidden",
+            }}
+          >
             참여 투표 목록 및 바로가기
           </p>
         </div>
@@ -535,11 +598,7 @@ const MyActivities = () => {
           <Routes>
             <Route
               path="/"
-              element={
-              <MyActivitiesCreated 
-                props={createdVote} 
-                transferVoteId={transferVoteId} 
-              />}
+              element={<MyActivitiesCreated props={createdVote} />}
             />
             <Route
               path="/0"

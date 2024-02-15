@@ -25,18 +25,18 @@ const LoginModal = () => {
 
   // handleSubmit의 인자가 되는 Submit 함수
   const submitForm = async (data) => {
-    console.log(data);
+    // console.log(data);
     // 전역 상태로 관리되는 isLoggedIn을 true로 변경해줌 + 유저 정보를 담음
 
     const response = await axios.post(API_URL + "/members/login", data, {
       withCredentials: true,
     });
     if (!response.data.header.result) {
-      console.log(response.data.header.message);
+      // console.log(response.data.header.message);
       window.alert("이메일 또는 비밀번호가 틀렸습니다");
     } else {
-      console.log("로그인 완료");
-      console.log(response);
+      // console.log("로그인 완료");
+      // console.log(response);
       setLoggedIn(response.data.body);
       setLoginModalClose();
       window.location.reload(); // 로그인 후, 메인페이지 새로고침
@@ -44,20 +44,20 @@ const LoginModal = () => {
     reset();
   };
 
-  // TODO: 소셜로그인 핸들링 함수
+  // 소셜로그인 핸들링 함수
   const handleKakaoLogin = () => {
-    console.log("카카오로그인 -> 사실 안됨");
+    // console.log("카카오로그인 -> 사실 안됨");
   };
   const handleNaverLogin = () => {
-    console.log("네이버로그인 시도 -> 사실 안됨");
+    // console.log("네이버로그인 시도 -> 사실 안됨");
   };
 
   const handleGoogleLogin = () => {
-    console.log("구글로그인 시도");
+    // console.log("구글로그인 시도");
   };
 
   const handleSignup = () => {
-    console.log("회원가입으로 갑니다");
+    // console.log("회원가입으로 갑니다");
     setLoginModalClose();
     setSignupModalOpen();
   };

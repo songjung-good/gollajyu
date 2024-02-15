@@ -16,7 +16,7 @@ import VoteDetailReselt from './VoteDetailReselt';
 import VoteDetailChat from './VoteDetailChat';
 import useAuthStore from "/src/stores/userState";
 import useModalStore from "/src/stores/modalState";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 
 // 투표 상세페이지의 투표 정보 보내는 내용(서버 to item)
@@ -39,15 +39,15 @@ const VoteDetail = () => {
   const year = user.birthday.year;
   const month = user.birthday.month;
   const day = user.birthday.day;
-  
+
   const now = new Date(); // 현재 날짜
   const currentYear = now.getFullYear(); // 현재 연도
   const currentMonth = now.getMonth() + 1; // 현재 월
   const currentDay = now.getDate(); // 현재 일
-  
+
   let age = currentYear - year; // 만 나이 계산
 
-    // 생일이 아직 지나지 않았다면 만 나이에서 1을 빼야 합니다.
+  // 생일이 아직 지나지 않았다면 만 나이에서 1을 빼야 합니다.
   if (currentMonth < month || (currentMonth === month && currentDay < day)) {
     age--;
   }
@@ -65,22 +65,23 @@ const VoteDetail = () => {
   } else {
     ageGroup = 5;
   }
-  
+
   useEffect(() => {
     const params = new URLSearchParams();
 
     params.append("memberId", user.memberId);
     params.append("voteId", detailVoteId);
     params.append("filter.age", -1);
-    params.append("filter.gender", 'A');
+    params.append("filter.gender", "A");
     params.append("filter.typeId", -1);
     const fetchData = async () => {
       try {
         const { data } = await axios.get(`${API_URL}/votes/detail`, {
-          params
+          params,
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
+        setSelectedVoteItem(data.body.chosenItem);
       } catch (error) {
         // 요청 실패 시 오류 처리를 수행합니다.
         console.error(error);
@@ -89,16 +90,14 @@ const VoteDetail = () => {
     fetchData();
   }, [detailVoteId]);
 
-
   // 모달창 닫는 로직
   const setVoteDetailModalClose = useModalStore(
     (state) => state.setVoteDetailModalClose
-    );
+  );
   const handleClose = () => {
     setVoteDetailModalClose();
   };
 
-  
   ///////////// 상훈 추가 /////////////
   ///////////////////////////////////
   /////////////////////////////////////
@@ -108,32 +107,31 @@ const VoteDetail = () => {
     // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
     setCountList(prevCountList => 
-      prevCountList.map((count, i) => voteItemList[i].voteItemId === itemId ? count + 1 : count));
+      prevCountList.map((count, i) => voteDetail.voteItemList[i].voteItemId === itemId ? count + 1 : count));
 
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
     setSelectedVoteItem(itemId);
-    console.log(selectedVoteItem);
+    // console.log(selectedVoteItem);
   };
 
   // axios 요청 후 처리를 위한 로직
   useEffect(() => {
     let newTotalCount = 0;
     if (voteDetail) {
-    voteDetail.voteItemList.forEach((item) => {
-      newTotalCount += item.count;
-    })
-    setTotalCount(newTotalCount);
-    setCountList(prevCountList => voteDetail.voteItemList.map(item => item.count))
-   }
+      voteDetail.voteItemList.forEach((item) => {
+        newTotalCount += item.count;
+      });
+      setTotalCount(newTotalCount);
+      setCountList((prevCountList) =>
+        voteDetail.voteItemList.map((item) => item.count)
+      );
+    }
   }, [voteDetail]);
-  
-  useEffect(() => {
-    (voteDetail) ? setSelectedVoteItem(voteDetail.chosenItem)
-    : null;
 
-    }, [voteDetail])
-  
+  useEffect(() => {
+    voteDetail ? setSelectedVoteItem(voteDetail.chosenItem) : null;
+  }, [voteDetail]);
 
   // --------------------------------- css 시작 ---------------------------------
 
@@ -191,21 +189,20 @@ const VoteDetail = () => {
             <div className="py-4 flex justify-around items-center h-full gap-2">
               {/* 투표한 안한 사람( voteDetail.chosenItem = null )은 투표가 가능하게  */}
               {voteDetail.voteItemList.map((item, itemIndex) => (
-                <VoteCardItem 
-                key={item.voteItemId}
-                item={item}
-                categoryId={voteDetail.voteInfo.categoryId}
-                voteId={voteDetail.voteInfo.voteId}
-                totalCount={totalCount}
-                count={item.count}
-                selectedVoteItem={selectedVoteItem}
-                path="/VotePage"
-                onClicked={(voteItemId) => handleClick(voteItemId)
-              }
+              <VoteCardItem 
+              key={item.voteItemId}
+              item={item}
+              categoryId={voteDetail.voteInfo.categoryId}
+              voteId={voteDetail.voteInfo.voteId}
+              totalCount={totalCount}
+              count={countList[itemIndex]}
+              selectedVoteItem={selectedVoteItem}
+              path="/VotePage"
+              onClicked={(voteItemId) => handleClick(voteItemId)}
             />
               ))}
             </div>
-            {voteDetail.chosenItem && (
+            {selectedVoteItem && (
               <>
                 <VoteDetailReselt
                   voteResults={voteDetail.voteItemList}
@@ -214,7 +211,7 @@ const VoteDetail = () => {
                 <p className="pt-12 pb-4 fontsize-sm">💬 댓글</p>
                 <VoteDetailChat
                   commentList={voteDetail.commentList}
-                  chosenItem={voteDetail.chosenItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
+                  chosenItem={selectedVoteItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                   userId={user.memberId}
                   voteId={detailVoteId}
                 />

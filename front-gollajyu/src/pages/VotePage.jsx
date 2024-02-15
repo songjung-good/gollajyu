@@ -22,14 +22,12 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteButton from "../components/VoteButton";
 
 // 투표 모달 컴포넌트
-import TmpModal from "../components/TmpModal";
+import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // react-helmet-async 라이브러리에서 Helmet을 import
 import { Helmet } from "react-helmet-async";
 
-
 const VotePage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -37,7 +35,7 @@ const VotePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [voteListData, setVoteListData] = useState(null);
   const [prevVoteList, setPrevVoteList] = useState();
-  const [sortType, setSortType] = useState('latest'); // 추가된 부분
+  const [sortType, setSortType] = useState("latest"); // 추가된 부분
 
   // 정렬 함수
   const handleSort = (type) => {
@@ -64,12 +62,13 @@ const VotePage = () => {
   const [searchTerm, setSearchTerm] = useState(null);
   // 검색 함수
   const handleSearch = async () => {
+    setIsLoading(true);
     try {
       const searchData = await fetchData(searchCategory, searchTerm);
       await setVoteListData(searchData.body.voteList);
       await setPrevVoteList(searchData.body.voteList);
       setIsLoading(false);
-      console.log(searchCategory, searchTerm);
+      // console.log(searchCategory, searchTerm);
     } catch (error) {
       // 오류 처리
       console.error("데이터 가져오기 실패:", error);
@@ -77,9 +76,10 @@ const VotePage = () => {
     }
   };
   useEffect(() => {
+    window.scrollTo({ top: 0 }); // 페이지 로드되면 최상단으로 가기
     // Fetch data when the page is turned on
     handleSearch();
-    console.log("렌더링");
+    // console.log("렌더링");
   }, []);
 
   // searchCategory와 searchTerm을 매개변수로 받는 함수
@@ -93,7 +93,7 @@ const VotePage = () => {
         },
       });
       // 성공적으로 받은 데이터 처리
-      console.log("데이터 가져오기 성공:", response.data);
+      // console.log("데이터 가져오기 성공:", response.data);
       return response.data; // 요청한 데이터 반환
     } catch (error) {
       // 오류 처리
@@ -113,7 +113,6 @@ const VotePage = () => {
     (state) => state.isVoteProductCreateModalOpened
   );
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 해더 스타일 -----------
@@ -127,7 +126,7 @@ const VotePage = () => {
     // 컨텐츠 정렬
     display: "flex",
     justifyContent: "center",
-  }
+  };
 
   // ----------- 해더 컨테이너 스타일 -----------
   const headerContainerStyle = {
@@ -140,7 +139,7 @@ const VotePage = () => {
     flexDirection: "column",
     alignItems: isXLarge || isLarge ? "flex-start" : "center",
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 해더 제목 스타일 -----------
   const headerTitleStyle = {
@@ -160,7 +159,7 @@ const VotePage = () => {
   const headerLinkContainerStyle = {
     // 디자인
     height: "28.5px",
-  }
+  };
 
   // ----------- 해더 링크 스타일 -----------
   const headerLinkStyle = {
@@ -172,7 +171,7 @@ const VotePage = () => {
     color: "#4A4A4A",
     fontSize: isXLarge || isLarge ? "19px" : "16px",
     whiteSpace: "nowrap",
-  }
+  };
 
   // ----------- 활성화 된 해더 링크 스타일 -----------
   const activeheaderLinkStyle = {
@@ -181,7 +180,7 @@ const VotePage = () => {
 
     // 글자
     color: "#FFFFFF",
-  }
+  };
 
   // ----------- body 스타일 -----------
   const bodyStyle = {
@@ -194,16 +193,15 @@ const VotePage = () => {
 
   // --------------------------------- css 끝 ---------------------------------
 
-
   return (
     <>
       <Helmet>
         <title>투표모아쥬</title>
       </Helmet>
-      
+
       {/* ------------- 투표 버튼 ------------- */}
       <VoteButton />
-        
+
       {/* ------------- Header ------------- */}
       <div style={headerStyle} className="bg-gradient-to-tl from-stone-200 to-gray-400">
         <div style={headerContainerStyle}>
@@ -215,17 +213,24 @@ const VotePage = () => {
           <div>
             <p style={headerTitleStyle} className="fontsize-lg sm:text-center md:text-center">투표모아쥬</p>
             <div style={headerLinkContainerStyle}>
-
               {/* ------------- 최신순 인기순 버튼 ------------- */}
-              <button 
-                style={sortType === 'latest' ? activeheaderLinkStyle : headerLinkStyle} // 수정된 부분
-                onClick={() => handleSort('latest')} 
+              <button
+                style={
+                  sortType === "latest"
+                    ? activeheaderLinkStyle
+                    : headerLinkStyle
+                } // 수정된 부분
+                onClick={() => handleSort("latest")}
               >
                 최신순
               </button>
               <button
-                style={sortType === 'popular' ? activeheaderLinkStyle : headerLinkStyle} // 수정된 부분
-                onClick={() => handleSort('popular')}
+                style={
+                  sortType === "popular"
+                    ? activeheaderLinkStyle
+                    : headerLinkStyle
+                } // 수정된 부분
+                onClick={() => handleSort("popular")}
               >
                 인기순
               </button>
@@ -236,7 +241,6 @@ const VotePage = () => {
 
       {/* ------------- Body ------------- */}
       <div style={bodyStyle}>
-        
         {" "}
         {/* 정렬 함수를 props로 전달 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -252,7 +256,7 @@ const VotePage = () => {
       </div>
 
       {/* ------------- 투표 생성 모달 ------------- */}
-      {isVoteDetailModalOpened && <TmpModal />}
+      {isVoteDetailModalOpened && <VoteDetail />}
       {isVoteSimpleCreateModalOpened && <VoteSimple />}
       {isVoteProductCreateModalOpened && <VoteProduct />}
     </>

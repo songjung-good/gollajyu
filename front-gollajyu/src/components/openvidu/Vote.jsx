@@ -10,7 +10,7 @@ const Vote = ({ liveId }) => {
 
   // 서버에서 투표 아이템별 표 수에 대한 정보를 받아오기 -> 투표 아이템별 표 수 상태 업데이트
   const getVoteResult = async () => {
-    // TODO 일정 시간마다 동작하도록 작성(setInterval 사용)
+    // 일정 시간마다 동작하도록 작성(setInterval 사용)
     axios
       .get(API_URL + `/lives/${liveId}`)
       .then((res) => {
@@ -18,11 +18,11 @@ const Vote = ({ liveId }) => {
         res.data.body.liveVoteItemDtoResList.forEach((item) => {
           tmpVoteItemCount.push(item.count ? item.count : 0);
         });
-        console.log("새로 가져옴:", tmpVoteItemCount);
+        // console.log("새로 가져옴:", tmpVoteItemCount);
         setVoteItemCount(tmpVoteItemCount);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -47,7 +47,7 @@ const Vote = ({ liveId }) => {
         setVoteItemCount(tmpVoteItemCount);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
 
     const intervalGet = setInterval(() => {
@@ -75,7 +75,7 @@ const Vote = ({ liveId }) => {
       arr[index] = true;
       return [...arr];
     });
-    console.log(item.id, item.item);
+    // console.log(item.id, item.item);
     // api/lives/vote 로 post 요청 보내기 {memberId: number, liveId: number, liveVoteItemId: number} data 보내야함
     axios
       .post(API_URL + "/lives/vote", {
@@ -84,12 +84,12 @@ const Vote = ({ liveId }) => {
         liveVoteItemId: item.id,
       })
       .then((res) => {
-        console.log("투표성공", res);
+        // console.log("투표성공", res);
         // 투표 성공 후, 투표 표 수 데이터 다시 받아서 렌더링
         getVoteResult();
       })
       .catch((err) => {
-        console.log("투표실패", err);
+        // console.log("투표실패", err);
       });
   };
 

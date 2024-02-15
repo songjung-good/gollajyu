@@ -20,7 +20,7 @@ const SwipeVote = (props) => {
 
   // 부모 컴포넌트로부터 투표 목록 전달 받음
   const { voteList, isLastPage, increasePageNo } = props;
-  console.log("마지막 페이지니?", isLastPage);
+  // console.log("마지막 페이지니?", isLastPage);
 
   // 슬라이드 관련 상태 -> 안씀
   const [activeSlide, setActiveSlide] = useState(0);
@@ -29,9 +29,9 @@ const SwipeVote = (props) => {
   useEffect(() => {
     const swiperInstance = document.querySelector(".mySwiper").swiper;
     swiperInstance.on("slideChange", () => {
-      console.log("지금:", swiperInstance.activeIndex, "/", voteList.length);
+      // console.log("지금:", swiperInstance.activeIndex, "/", voteList.length);
       if (swiperInstance.activeIndex > voteList.length - 3 && !isLastPage) {
-        console.log("얼마 안남음");
+        // console.log("얼마 안남음");
         increasePageNo();
       } else if (
         isLastPage &&
@@ -107,7 +107,6 @@ const SwipeVote = (props) => {
             <div style={voteCardStyle}>
               <VoteCard
                 key={`${vote.voteId}-card`}
-                vote={vote}
                 liked={vote.liked}
                 likesCnt={vote.likesCnt}
                 chosenItemId={vote.chosenItemId}

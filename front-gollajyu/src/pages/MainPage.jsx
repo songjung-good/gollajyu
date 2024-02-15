@@ -30,7 +30,6 @@ import VoteProduct from "../components/VotePage/VoteProduct";
 import VoteDetail from "../components/VoteDetailPage/VoteDetail";
 
 // 모달 컴포넌트
-import TmpModal from "../components/TmpModal"; // 임시 모달
 import LoginModal from "../components/LoginForm";
 import SignupModal from "../components/SignupForm";
 
@@ -68,10 +67,6 @@ const MainPage = () => {
   const setVoteDetailModalOpen = useModalStore(
     (state) => state.setVoteDetailModalOpen
   );
-  const transferVoteId = (voteId) => {
-    // voteId 값을 MainVoteList로부터 전달받아 모달창 띄우기
-    setVoteDetailModalOpen(voteId);
-  };
   // 모달 창 열기 함수
   const setLoginModalOpen = useModalStore((state) => state.setLoginModalOpen);
   const setSignupModalOpen = useModalStore((state) => state.setSignupModalOpen);
@@ -112,7 +107,7 @@ const MainPage = () => {
       .then((response) => {
         setLoggedIn(response.data.body);
         window.location.reload(); // 로그인 후, 메인페이지 새로고침
-        console.log("로그인 완료", response);
+        // console.log("로그인 완료", response);
       })
       .catch((err) => {
         console.error("로그인 오류", err);
@@ -135,7 +130,7 @@ const MainPage = () => {
   // pageNo 올리는 함수
   const increasePageNo = () => {
     setPageNo((prev) => {
-      console.log("lastPageNo:", lastPageNo);
+      // console.log("lastPageNo:", lastPageNo);
       if (prev === lastPageNo) {
         return prev;
       } else {
@@ -156,8 +151,8 @@ const MainPage = () => {
       });
 
       const data = response.data.body.voteInfoList;
-      console.log("pageNo:", pageNo);
-      console.log(response.data);
+      // console.log("pageNo:", pageNo);
+      // console.log(response.data);
       setLastPageNo(response.data.body.lastPageNo);
       setVoteListData((prevData) => {
         return [...prevData, ...data];
@@ -266,8 +261,16 @@ const MainPage = () => {
             </div>
 
             {/* 메인 투표 리스트 컴포넌트 */}
-            <div style={mainVoteListContainerStyle}>
-              <MainVoteList transferVoteId={transferVoteId} />
+            <div
+              style={mainVoteListContainerStyle}
+              onClick={(event) => {
+                event.stopPropagation();
+                if (!isLoggedIn) {
+                  setLoginModalOpen();
+                }
+              }}
+            >
+              <MainVoteList />
             </div>
           </>
         )}

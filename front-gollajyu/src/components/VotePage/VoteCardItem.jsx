@@ -1,5 +1,5 @@
 // 리액트 및 훅/라이브러리
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 // HTTP 요청을 위한 Axios 라이브러리
 import axios from "axios";
@@ -25,13 +25,21 @@ const VoteCardItem = (props) => {
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // Props에서 필요한 값 추출
-  const { item, categoryId, voteId, onClicked, totalCount, count, selectedVoteItem } = props;
+  const {
+    item,
+    categoryId,
+    voteId,
+    onClicked,
+    totalCount,
+    count,
+    selectedVoteItem,
+  } = props;
 
   // 로그인한 사용자 정보 가져오기
   const user = useAuthStore((state) => state.user);
   const [selectedItem, setselectedItem] = useState(selectedVoteItem);
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
-  
+
   // 선택된 카테고리의 태그 가져오기
   const selection = categoryData[categoryId].tags;
 
@@ -43,7 +51,7 @@ const VoteCardItem = (props) => {
   const doVote = useAuthStore((state) => state.doVote);
   useEffect(() => {
     setselectedItem(selectedVoteItem);
-  }, [selectedVoteItem])
+  }, [selectedVoteItem]);
   // console.log(categoryData[categoryId].tags) 호버하면 얘네가 왜 출력될까??
 
   // 투표하기 기능
@@ -61,7 +69,7 @@ const VoteCardItem = (props) => {
       .post(API_URL + "/votes/choices", dto)
       .then((response) => {
         // Handle success
-        console.log("Axios request successful:", response.data);
+        // console.log("Axios request successful:", response.data);
         doVote(); // 투표하면 2포인트 증가
       })
       .catch((error) => {
@@ -69,8 +77,6 @@ const VoteCardItem = (props) => {
         console.error("Axios request failed:", error);
       });
   };
-
-  // TODO: 비로그인 상태에서 로그인 창 띄우기
 
   return (
     <>
@@ -144,9 +150,9 @@ const VoteCardItem = (props) => {
           </Container>
           {/* 버튼을 누르면 생기는 상세페이지 */}
           <div className="h-1/3 w-full flex flex-col justify-center items-center">
-            {selectedItem !== 0 && (
-              <p className="fontsize-md">{`${(count / totalCount * 100).toFixed(2)}%`}</p>
-            )}
+            {(selectedItem !== 0 && selectedItem ) ? (
+              <p>{`${(count / totalCount * 100).toFixed(2)}%`}</p>
+            ) : <p>투표를 하면 퍼센트가 나옴</p>}
             <h2 className="fontsize-sm font-bold mb-2">
               {item.price ? `${item.price.toLocaleString()}원` : ""}
             </h2>

@@ -27,7 +27,6 @@ import Favicon from "/assets/images/favicon.png";
 // Material-UI의 CircularProgress 컴포넌트
 import { CircularProgress } from "@mui/material";
 
-
 const filteredCategoryData = categoryData.filter((category) => {
   return category.name !== "전체" && category.name !== "간단";
 });
@@ -126,9 +125,7 @@ const RecommendModal = ({ topCategory, closeModal }) => {
   );
 };
 
-
 const MyStatistics = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
@@ -167,20 +164,22 @@ const MyStatistics = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        (dropdownButtonRef.current && !dropdownButtonRef.current.contains(event.target)) &&
-        (dropdownMenuRef.current && !dropdownMenuRef.current.contains(event.target))
+        dropdownButtonRef.current &&
+        !dropdownButtonRef.current.contains(event.target) &&
+        dropdownMenuRef.current &&
+        !dropdownMenuRef.current.contains(event.target)
       ) {
         // 클릭이 메뉴 버튼 및 메뉴 외부에 있으면 메뉴를 닫습니다.
         setIsOpen(false);
       }
     };
-  
+
     // 페이지에 클릭 이벤트를 추가합니다.
-    document.addEventListener('mousedown', handleClickOutside);
-  
+    document.addEventListener("mousedown", handleClickOutside);
+
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setIsOpen]);
 
@@ -220,7 +219,7 @@ const MyStatistics = () => {
     for (const category of categoryNames) {
       if (data.hasOwnProperty(category)) {
         const categoryObj = data[category];
-        console.log(category, categoryObj);
+        // console.log(category, categoryObj);
         const categoryTotal = categoryObj.find(
           (item) => item.tagId === 0
         ).count;
@@ -252,7 +251,7 @@ const MyStatistics = () => {
     axios
       .post(API_URL + "/statistics", axiosData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         const allValue = res.data.find((item) => item.tagId === 0).count;
         const othersTagRatio = {};
         res.data.forEach((item) => {
@@ -272,7 +271,7 @@ const MyStatistics = () => {
         );
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   };
 
@@ -281,7 +280,7 @@ const MyStatistics = () => {
     axios
       .get(API_URL + `/members/${user.memberId}/votes/statistics`)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         // 간단을 제외하고, 참여한 모든 투표 수를 더함
         let totalCount = 0;
         for (const category in res.data) {
@@ -305,12 +304,12 @@ const MyStatistics = () => {
         setCategoryRatio(tmpCategoryRatio);
         setTagRatio(tmpTagRatio);
         setTopCategory(tmpTopCategory);
-        console.log(tmpCategoryRatio);
-        console.log(tmpTagRatio);
+        // console.log(tmpCategoryRatio);
+        // console.log(tmpTagRatio);
         getUserStatistics(tmpTopCategory);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
   }, []);
 
@@ -318,7 +317,7 @@ const MyStatistics = () => {
   const [showModal, setShowModal] = useState(false);
 
   const handleRecommend = () => {
-    // TODO 작은 모달 띄우고, 크롤링한 쇼핑몰을 모달에 랜더링
+    // 작은 모달 띄우고, 크롤링한 쇼핑몰을 모달에 랜더링
     setShowModal(true);
     axios.get(API_URL + `/members/${user.memberId}/recommends`);
   };
@@ -327,13 +326,18 @@ const MyStatistics = () => {
     setShowModal(false);
   };
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    marginBottom: isXLarge ? "50px" : isLarge ? "45px" : isMedium ? "40px" : "35px",
+    marginBottom: isXLarge
+      ? "50px"
+      : isLarge
+      ? "45px"
+      : isMedium
+      ? "40px"
+      : "35px",
   };
 
   // ----------- flex 컨테이너 스타일 -----------
@@ -384,7 +388,13 @@ const MyStatistics = () => {
   const contentsContainerStyle = {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
-    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
@@ -438,7 +448,13 @@ const MyStatistics = () => {
   // ----------- 설명 데이터 글자 스타일 -----------
   const descriptionDataStyle = {
     // 디자인
-    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
 
     // 글자
     color: "#FF595E",
@@ -453,7 +469,13 @@ const MyStatistics = () => {
   // ----------- 구분선 스타일 -----------
   const barStyle = {
     // 디자인
-    margin: isXLarge ? "30px 0" : isLarge ? "25px 0" : isMedium ? "20px 0" : "15px 0",
+    margin: isXLarge
+      ? "30px 0"
+      : isLarge
+      ? "25px 0"
+      : isMedium
+      ? "20px 0"
+      : "15px 0",
     width: "100%",
     height: "3px",
     backgroundColor: "#F0F0F0",
@@ -479,7 +501,13 @@ const MyStatistics = () => {
   // ----------- 멘트 데이터 스타일 -----------
   const mentDataStyle = {
     // 디자인
-    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
 
     // 글자
     color: "#FF595E",
@@ -518,13 +546,24 @@ const MyStatistics = () => {
     position: "relative",
 
     // 디자인
-    margin: isXLarge ? "0 10px" : isLarge ? "0 8px" : isMedium ? "0 6px" : "0 4px",
+    margin: isXLarge
+      ? "0 10px"
+      : isLarge
+      ? "0 8px"
+      : isMedium
+      ? "0 6px"
+      : "0 4px",
   };
 
   // ----------- 드롭다운 버튼 스타일 -----------
   const dropdownButtonStyle = {
     // 디자인
-    padding: isXLarge || isLarge ? "0px 10px 0px 14px" : isMedium ? "0px 10px 0px 12px" : "0 10px",
+    padding:
+      isXLarge || isLarge
+        ? "0px 10px 0px 14px"
+        : isMedium
+        ? "0px 10px 0px 12px"
+        : "0 10px",
     border: "1px solid #ccc",
     borderRadius: "4px",
     width: isXLarge || isLarge ? "110px" : isMedium ? "105px" : "100px",
@@ -548,14 +587,14 @@ const MyStatistics = () => {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 화살표 스타일 -----------
   const arrowStyle = {
     // 글자
     fontFamily: "GmarketSansBold",
     fontWeight: "bold",
-  }
+  };
 
   // ----------- 드롭다운 메뉴 스타일 -----------
   const dropdownMenuStyle = {
@@ -576,7 +615,13 @@ const MyStatistics = () => {
   // ----------- 드롭다운 아이템 스타일 -----------
   const dropdownItemStyle = {
     // 디자인
-    margin: isXLarge ? "8px 0" : isLarge ? "7px 0" : isMedium ? "6px 0" : "5px 0",
+    margin: isXLarge
+      ? "8px 0"
+      : isLarge
+      ? "7px 0"
+      : isMedium
+      ? "6px 0"
+      : "5px 0",
     padding: isXLarge ? "8px" : isLarge ? "7px" : isMedium ? "6px" : "5px",
     cursor: "pointer",
 
@@ -615,7 +660,13 @@ const MyStatistics = () => {
 
     // 디자인
     margin: isXLarge || isLarge ? "10px 0" : "5px 0",
-    padding: isXLarge ? "10px 20px" : isLarge ? "8px 18px" : isMedium ? "6px 16px" : "4px 14px",
+    padding: isXLarge
+      ? "10px 20px"
+      : isLarge
+      ? "8px 18px"
+      : isMedium
+      ? "6px 16px"
+      : "4px 14px",
     width: isXLarge || isLarge ? "50%" : "100%", // (반응형) 큰 화면에서 아이템이 한 줄에 두 개씩 나타나게 함
     height: isXLarge ? "60px" : isLarge ? "52px" : isMedium ? "44px" : "36px",
     backgroundColor: "#F0F0F0",
@@ -656,7 +707,6 @@ const MyStatistics = () => {
   };
 
   // --------------------------------- css 끝 ---------------------------------
-
 
   // ----------- 배열에서 가장 높은 세 Tag를 찾는 함수 -----------
   const findTop3Tags = (obj) => {
@@ -765,7 +815,6 @@ const MyStatistics = () => {
           </button>
         </div>
         <div style={tagContentsContainerStyle}>
-
           {/* ------------- 관심있는 카테고리 ------------- */}
           <div style={subTitleContainerStyle}>
             <div style={subTitleStyle} className="fontsize-lg">
@@ -797,7 +846,9 @@ const MyStatistics = () => {
 
           {/* ------------- 랜덤 선호도 비교 ------------- */}
           <div style={randomContainerStyle}>
-            <div style={quotesStyle} className="fontsize-xl">“</div>
+            <div style={quotesStyle} className="fontsize-xl">
+              “
+            </div>
             <div style={mentContainerStyle}>
               <div style={flexContainerStyle}>
                 <div style={mentDataStyle} className="fontsize-md">
@@ -821,7 +872,8 @@ const MyStatistics = () => {
                   " {topCategory.key} "
                 </div>
                 <div className="fontsize-md">
-                  {['의류', '가구'].includes(topCategory.key) ? '를' : '을'} 고를 때
+                  {["의류", "가구"].includes(topCategory.key) ? "를" : "을"}{" "}
+                  고를 때
                 </div>
                 <div
                   style={{
@@ -837,13 +889,17 @@ const MyStatistics = () => {
                   {othersTopTag.key}
                 </div>
                 <div className="fontsize-md">
-                  {['가성비', '브랜드', '소재'].includes(othersTopTag.key) ? '를' : '을'} 눈여겨봐요!
+                  {["가성비", "브랜드", "소재"].includes(othersTopTag.key)
+                    ? "를"
+                    : "을"}{" "}
+                  눈여겨봐요!
                 </div>
               </div>
             </div>
-            <div style={quotesStyle} className="fontsize-xl">”</div>
+            <div style={quotesStyle} className="fontsize-xl">
+              ”
+            </div>
           </div>
-
         </div>
       </div>
 
@@ -870,7 +926,6 @@ const MyStatistics = () => {
           </p>
         </div>
         <div style={tagContentsContainerStyle}>
-
           {/* ------------- 드롭다운 버튼 ------------- */}
           <div style={dropdownContainerStyle}>
             <div style={flexContainerStyle}>
@@ -888,8 +943,7 @@ const MyStatistics = () => {
                       ? filteredCategoryData.find(
                           (c) => c.id === parseInt(selectedCategory)
                         )?.name
-                      : "카테고리 선택"
-                    }
+                      : "카테고리 선택"}
                     {isOpen ? (
                       <span style={arrowStyle}>∧</span>
                     ) : (
@@ -922,7 +976,8 @@ const MyStatistics = () => {
                 )}
               </div>
               <div style={subTitleStyle} className="fontsize-md">
-                {selectedCategory === 1 || selectedCategory === 2 ? "를" : "을"} 구매 할 때
+                {selectedCategory === 1 || selectedCategory === 2 ? "를" : "을"}{" "}
+                구매 할 때
               </div>
               <div style={restStyle} className="fontsize-md">
                 ,
@@ -950,7 +1005,6 @@ const MyStatistics = () => {
             카테고리별 선호 태그 TOP 3
           </div>
           {tagRatio.length > 0 && renderTop3Categories}
-
         </div>
       </div>
       {showModal && (

@@ -10,14 +10,21 @@ import API_URL from "/src/stores/apiURL";
 // 반응형 웹 디자인을 위한 유틸리티 함수
 import { useResponsiveQueries } from "/src/stores/responsiveUtils";
 
-const MainVoteList = ({ transferVoteId }) => {
+// 모달창 상태
+import useModalStore from "/src/stores/modalState";
+
+const MainVoteList = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
   const [listsData, setListsData] = useState([]);
 
-  // 메인페이지로 값 전송
+  // 상세페이지
+  const setVoteDetailModalOpen = useModalStore(
+    (state) => state.setVoteDetailModalOpen
+  );
+
   const openVoteDetailModal = (voteId) => {
-    transferVoteId(voteId);
+    setVoteDetailModalOpen(voteId);
   };
 
   useEffect(() => {
