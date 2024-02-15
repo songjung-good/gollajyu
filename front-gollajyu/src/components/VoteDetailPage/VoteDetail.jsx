@@ -149,14 +149,14 @@ const VoteDetail = () => {
           />
             ))}
           </div>
-          {voteDetail.chosenItem && (
+          {selectedVoteItem && (
             <>
               <VoteDetailReselt
                 voteResults={voteDetail.voteItemList}
               />
               <VoteDetailChat
                 commentList={voteDetail.commentList}
-                chosenItem={voteDetail.chosenItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
+                chosenItem={selectedVoteItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                 userId={user.memberId}
                 voteId={detailVoteId}
               />
