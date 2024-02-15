@@ -67,6 +67,7 @@ const VoteDetail = () => {
         });
         // 요청 성공 시 응답 데이터를 상태에 저장합니다.
         setVoteDetail(data.body);
+        setSelectedVoteItem(data.body.chosenItem);
       } catch (error) {
         // 요청 실패 시 오류 처리를 수행합니다.
         console.error(error);
@@ -91,11 +92,8 @@ const VoteDetail = () => {
   const handleClick = (itemId, selection) => {
     // console.log(itemId)
     // console.log(`선택지 ${itemId + 1}: ${selection}`);
-    setCountList((prevCountList) =>
-      prevCountList.map((count, i) =>
-        voteItemList[i].voteItemId === itemId ? count + 1 : count
-      )
-    );
+    setCountList(prevCountList => 
+      prevCountList.map((count, i) => voteDetail.voteItemList[i].voteItemId === itemId ? count + 1 : count));
 
     let plusCount = totalCount + 1;
     setTotalCount(plusCount);
@@ -141,25 +139,25 @@ const VoteDetail = () => {
           <div className="p-2 flex justify-around items-center h-full">
             {/* 투표한 안한 사람( voteDetail.chosenItem = null )은 투표가 가능하게  */}
             {voteDetail.voteItemList.map((item, itemIndex) => (
-              <VoteCardItem
-                key={item.voteItemId}
-                item={item}
-                categoryId={voteDetail.voteInfo.categoryId}
-                voteId={voteDetail.voteInfo.voteId}
-                totalCount={totalCount}
-                count={item.count}
-                selectedVoteItem={selectedVoteItem}
-                path="/VotePage"
-                onClicked={(voteItemId) => handleClick(voteItemId)}
-              />
+            <VoteCardItem 
+            key={item.voteItemId}
+            item={item}
+            categoryId={voteDetail.voteInfo.categoryId}
+            voteId={voteDetail.voteInfo.voteId}
+            totalCount={totalCount}
+            count={countList[itemIndex]}
+            selectedVoteItem={selectedVoteItem}
+            path="/VotePage"
+            onClicked={(voteItemId) => handleClick(voteItemId)}
+          />
             ))}
           </div>
-          {voteDetail.chosenItem && (
+          {selectedVoteItem && (
             <>
               <VoteDetailResult voteResults={voteDetail.voteItemList} />
               <VoteDetailChat
                 commentList={voteDetail.commentList}
-                chosenItem={voteDetail.chosenItem} //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
+                chosenItem={selectedVoteItem}  //선택한 아이템이 투표에 몇번째 인지 보내줘야한다...
                 userId={user.memberId}
                 voteId={detailVoteId}
               />
