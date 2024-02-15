@@ -227,12 +227,12 @@ const VoteDetail = () => {
                 />
               </>
             )}
-            {selectedVoteItem ? (
+            {!selectedVoteItem && (
               <div className="mt-20 text-center">
-                <span className="fontsize-sm">투표에 참여하면 댓글을 확인할 수 있어요!</span>
+                <span className="fontsize-sm">
+                  투표에 참여하면 댓글을 확인할 수 있어요!
+                </span>
               </div>
-            ) : (
-              <></>
             )}
           </div>
         )}
