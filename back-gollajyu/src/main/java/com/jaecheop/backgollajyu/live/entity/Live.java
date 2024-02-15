@@ -21,7 +21,7 @@
         private String sessionId;
 
         @JoinColumn(name = "member_id")
-        @ManyToOne(fetch = FetchType.LAZY)
+        @ManyToOne
         private Member member;
 
         @Column(name = "live_title")

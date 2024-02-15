@@ -22,7 +22,7 @@ public class Member implements Serializable {
     @Column(name = "member_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "type_id")
     private Type type;
 

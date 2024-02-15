@@ -21,7 +21,7 @@ public class VoteItem {
     private Long id;
 
     //FK
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "vote_id")
     private Vote vote;
 
