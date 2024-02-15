@@ -118,7 +118,7 @@ const VoteCardItem = (props) => {
             {/* 투표하는 기능 내부 */}
             {((selectedItem === 0 || !selectedItem ) && hover) ? (
               <div
-                className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
+                className={`absolute inset-0 w-full bg-orange-200 opacity-50 flex flex-col justify-between`}
                 onMouseLeave={() => {}}
               >
                 {/* 선택지의 묶음 */}

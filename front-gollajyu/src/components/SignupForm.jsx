@@ -85,9 +85,9 @@ const SignupModal = () => {
     >
       <div
         id="inner"
-        className="container mx-auto bg-white xl:w-[500px] xl:h-[740px] lg:w-[430px] lg:h-[645px] md:w-[370px] md:h-[555px] sm:w-[300px] sm:h-[465px] min-w-[300px] flex flex-col items-center rounded-3xl shadow-md"
+        className="container mx-auto bg-white xl:w-[500px] xl:h-[800px] lg:w-[430px] lg:h-[700px] md:w-[370px] md:h-[600px] sm:w-[300px] sm:h-[500px] min-w-[300px] flex flex-col items-center rounded-3xl shadow-md"
       >
-        <h1 className="text-4xl font-bold text-gray-700 mt-12 mb-16">
+        <h1 className="fontsize-lg font-bold text-gray-700 mt-12 mb-16">
           회원가입해쥬
         </h1>
         <form
@@ -263,7 +263,7 @@ const SignupModal = () => {
           </label>
           <button
             type="submit"
-            className="rounded-full bg-amber-300 hover:bg-amber-400 p-3 my-1"
+            className="rounded-full bg-amber-300 hover:bg-amber-400 p-3 my-1 mt-8"
           >
             골라쥬 동료 되기
           </button>

@@ -309,7 +309,7 @@ const TestPage = () => {
   
   return (
     <>
-      <div style={bodyStyle} className="h-screen">
+      <div style={bodyStyle}>
         <div style={contentContainerStyle}>
           <div>
             {questionNumber === -1 ? (
