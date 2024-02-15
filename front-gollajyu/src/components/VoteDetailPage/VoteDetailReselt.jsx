@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 const VoteDetailResult = ({voteResults, totalChoiceCnt}) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const colorMap = [
-    'bg-green-300',
-    'bg-yellow-300',
-    'bg-blue-300',
-    'bg-orange-300'
+    'bg-[#FF595E]',
+    'bg-[#FFCA3A]',
+    'bg-[#8AC926]',
+    'bg-[#1982C4]'
   ];
   const handleClick = (index) => {
     const newSelectedOptions = [...selectedOptions];
@@ -16,16 +16,16 @@ const VoteDetailResult = ({voteResults, totalChoiceCnt}) => {
   };
   
   return (
-    <div className='mx-auto p-2 flex justify-around items-center' style={{display: "flex"}}>
+    <div className='mx-auto py-4 flex justify-around items-center gap-2' style={{display: "flex"}}>
       {voteResults.map((result, index) => (
         <button onClick={() => handleClick(index)}>
-        <div className={`${colorMap[result.voteItemId%4]} rounded-lg w-auto m-auto p-2`} key={index} style={{border: "1px solid black"}}>
+        <div className={`${colorMap[result.voteItemId%4]} rounded-lg w-auto m-auto p-4 min-w-[200px]`} key={index}>
           {/* <h2>선택비율 : {Math.round((result.count / totalChoiceCnt) * 100)}%</h2> */}
-          <h2>자세한 정보를 알고 싶다면...!</h2>
+          <p className="fontsize-sm">태그 통계</p>
           {selectedOptions[index] && (
-            <div>
+            <div className="pt-4">
               {result.tagCountList.map((tag) => (
-                <p key={tag.tagName}>
+                <p className="fontsize-xs" key={tag.tagName}>
                   {tag.tagName}: {Math.round((tag.count /  result.count) * 100)}%
                 </p>
               ))}

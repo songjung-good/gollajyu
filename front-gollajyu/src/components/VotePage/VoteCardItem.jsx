@@ -74,69 +74,84 @@ const VoteCardItem = (props) => {
 
   return (
     <>
-      <div
-        style={{ maxWidth: "280px" }}
-        className="flex flex-col w-full h-full"
-      >
-        {" "}
-        {/* 높이를 조정했습니다. */}
-        {/* 이미지를 띄워지는 배경 */}
-        <Container
-          className="h-4/5 w-full p-2 relative rounded-xl"
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          style={{ maxWidth: "100%" }}
+      <div className='flex flex-col'>
+        <div
+          style={{
+            marginLeft: "15px",
+            color: "#FF6D6D",
+            visibility: selectedItem === voteItemId ? "visible" : "hidden",
+          }}
+          className="fontsize-sm"
         >
-          {/* TODO 선택된 아이템이 있다면 로직 여기임 호철아 여기임 */}
-          {(selectedItem === voteItemId) ?
-          (<div>
-            당신이 선택한 아이템
-          </div>):null}
+          My Pick
+        </div>
+        <div
+          style={{
+            maxWidth: "280px",
+            border: "5px solid",
+            padding: "4px",
+            borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
+          }}
+          className="flex flex-col w-full h-full"
+        >
+          {" "}
+          {/* 높이를 조정했습니다. */}
+          {/* 이미지를 띄워지는 배경 */}
 
-          {/* 투표하는 기능 내부 */}
-          {((selectedItem === 0 || !selectedItem ) && hover) ? (
-            <div
-              className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
-              onMouseLeave={() => {}}
-            >
-              {/* 선택지의 묶음 */}
-              {selection.map((tag, index) => (
-                <button
-                  key={index}
-                  className={`h-1/5 w-full flex items-center justify-center cursor-pointer "text-black"
-                  } border-t-2 border-white text-max-xl`}
-                  onClick={() => {
-                    if (clicked === 0 && user.memberId != null) {
-                      setClicked(index + 1);
-                      onTagClick(index);
-                      onClicked(voteItemId);
-                    } else {
-                    }
-                  }}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          ) : null
-          }
+          <Container
+            className="h-4/5 w-full p-2 relative rounded-xl"
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            style={{ maxWidth: "100%" }}
+          >
+            {/* TODO 선택된 아이템이 있다면 로직 여기임 호철아 여기임 */}
 
-          {/* 투표 이미지 */}
-          <img
-            className="h-full w-full object-cover"
-            alt="Vote Image"
-            src={item.voteItemImgUrl}
-          />
-        </Container>
-        {/* 버튼을 누르면 생기는 상세페이지 */}
-        <div className="h-1/3 w-full flex flex-col justify-center items-center">
-          {selectedItem !== 0 && (
-            <p>{`${(count / totalCount * 100).toFixed(2)}%`}</p>
-          )}
-          <h2 className="text-lg font-bold mb-2">
-            {item.price ? `${item.price.toLocaleString()}원` : ""}
-          </h2>
-          <p>{item.voteItemDesc}</p>
+
+            {/* 투표하는 기능 내부 */}
+            {((selectedItem === 0 || !selectedItem ) && hover) ? (
+              <div
+                className={`absolute inset-0 w-full bg-orange-200 opacity-50 rounded-xl flex flex-col justify-between`}
+                onMouseLeave={() => {}}
+              >
+                {/* 선택지의 묶음 */}
+                {selection.map((tag, index) => (
+                  <button
+                    key={index}
+                    className={`h-1/5 w-full flex items-center justify-center cursor-pointer "text-black"
+                    } border-t-2 border-white text-max-xl`}
+                    onClick={() => {
+                      if (clicked === 0 && user.memberId != null) {
+                        setClicked(index + 1);
+                        onTagClick(index);
+                        onClicked(voteItemId);
+                      } else {
+                      }
+                    }}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            ) : null
+            }
+
+            {/* 투표 이미지 */}
+            <img
+              className="h-full w-full object-cover"
+              alt="Vote Image"
+              src={item.voteItemImgUrl}
+            />
+          </Container>
+          {/* 버튼을 누르면 생기는 상세페이지 */}
+          <div className="h-1/3 w-full flex flex-col justify-center items-center">
+            {selectedItem !== 0 && (
+              <p className="fontsize-md">{`${(count / totalCount * 100).toFixed(2)}%`}</p>
+            )}
+            <h2 className="fontsize-sm font-bold mb-2">
+              {item.price ? `${item.price.toLocaleString()}원` : ""}
+            </h2>
+            <p className="fontsize-xs" style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}>{item.voteItemDesc}</p>
+          </div>
         </div>
       </div>
     </>

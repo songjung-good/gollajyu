@@ -84,25 +84,27 @@ const VoteDetailChat = ({commentList, chosenItem, userId, voteId}) => {
   };
 
   return (
-    <div className=''>
-      {/* 기존 댓글과 나의 선택을 전달 */}
-      {/* list: 채팅 내역 / choiced: 내가 선택한 item / onLike: 좋아요 선택한 것 */}
-      <ChatList 
-        choiced2={choiced} 
-        onLike={handleLike}
-        list={list} 
-      />
-      {/* 새 댓글을 채팅 입력창과 */}
-      <ChatForm 
-        onSubmit={addList} 
-        userid={userid}
-        choiced={choiced}
-        voteId={voteId}
-        list={list}
-      />
-      {/* 페이지네이션 UI 추가 */}
-      {/* <Pagination currentPage={currentPage} totalPage={totalPage} onChangePage={setCurrentPage} /> */}
-    </div>
+    <>  
+      <div className=''>
+        {/* 기존 댓글과 나의 선택을 전달 */}
+        {/* list: 채팅 내역 / choiced: 내가 선택한 item / onLike: 좋아요 선택한 것 */}
+        <ChatList 
+          choiced2={choiced} 
+          onLike={handleLike}
+          list={list} 
+        />
+        {/* 새 댓글을 채팅 입력창과 */}
+        <ChatForm 
+          onSubmit={addList} 
+          userid={userid}
+          choiced={choiced}
+          voteId={voteId}
+          list={list}
+        />
+        {/* 페이지네이션 UI 추가 */}
+        {/* <Pagination currentPage={currentPage} totalPage={totalPage} onChangePage={setCurrentPage} /> */}
+      </div>
+    </>
   );
 }
 

@@ -41,23 +41,25 @@ const ChatForm = ({ onSubmit, userid, choiced, voteId }) => {
   };
 
   return (
-    <div className="bg-white p-4 flex items-center">
-      <input
-        type="text"
-        className="flex-1 border rounded-full px-4 py-2 focus:outline-none"
-        placeholder="댓글을 입력해 주세요."
-        onChange={handleChange}
-        value={value}
-        onKeyPress={handleKeyPress}
-      />
-      <button
-        type="submit"
-        className="bg-blue-500 text-white rounded-full p-2 ml-2 hover:bg-blue-600 focus:outline-none"
-        onClick={handleSubmit}
-      >
-        전송
-      </button>
-    </div>
+    <>
+      <div className="bg-white py-4 flex items-center">
+        <input
+          type="text"
+          className="flex-1 border rounded-sm px-4 py-2 h-12 focus:outline-none"
+          placeholder="댓글을 입력해 주세요."
+          onChange={handleChange}
+          value={value}
+          onKeyPress={handleKeyPress}
+        />
+        <button
+          type="submit"
+          className="bg-amber-300 rounded-sm p-2 ml-2 h-12 w-20 hover:bg-amber-400 focus:outline-none"
+          onClick={handleSubmit}
+        >
+          전송
+        </button>
+      </div>
+    </>
   );
 };
 
