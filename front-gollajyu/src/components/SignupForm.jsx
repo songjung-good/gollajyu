@@ -79,6 +79,11 @@ const SignupModal = () => {
       className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center"
       onClick={(e) => {
         if (e.target.id == "outer-layer") {
+          if (isSocialLogin) {
+            // 소셜 로그인 신규가입자가 회원가입 안하고 창 닫으면 쿠키 삭제
+            document.cookie =
+              "gollajyu-cookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+          }
           setSignupModalClose();
         }
       }}

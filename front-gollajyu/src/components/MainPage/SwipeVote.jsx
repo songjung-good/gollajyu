@@ -70,7 +70,7 @@ const SwipeVote = (props) => {
 
   const getDynamicHeight = () => {
     if (isXLarge) {
-      return "30.5rem";
+      return "31rem";
     } else if (isLarge) {
       return "35rem";
     } else if (isMedium) {

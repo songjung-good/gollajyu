@@ -18,13 +18,21 @@ import useModalStore from "/src/stores/modalState";
 import VoteCardItem from "./VoteCardItem";
 import { selectClasses } from "@mui/base";
 
-
 const VoteCard = (props) => {
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
 
   // 부모 컴포넌트로부터 투표 정보 전달 받음
-  const { liked, likesCnt, chosenItemId, voteItemList, voteId, voteTitle, categoryName, categoryId } = props;
+  const {
+    liked,
+    likesCnt,
+    chosenItemId,
+    voteItemList,
+    voteId,
+    voteTitle,
+    categoryName,
+    categoryId,
+  } = props;
 
   // 선택 상태 변수 선언
   const [totalCount, setTotalCount] = useState(0);
@@ -91,7 +99,7 @@ const VoteCard = (props) => {
       newTotalCount += item.count;
     });
     setTotalCount(newTotalCount);
-    setCountList(prevCountList => voteItemList.map(item => item.count));
+    setCountList((prevCountList) => voteItemList.map((item) => item.count));
   }, []);
 
   // --------------------------------- css 시작 ---------------------------------
@@ -104,6 +112,19 @@ const VoteCard = (props) => {
   };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
+
+  const getDynamicHeight = () => {
+    if (isXLarge) {
+      return "500px";
+    } else if (isLarge) {
+      return "35rem";
+    } else if (isMedium) {
+      return "41rem";
+    } else {
+      return "48rem";
+    }
+  };
+
   const contentContainerStyle = {
     // 디자인
     marginBottom: "20px",
@@ -116,7 +137,8 @@ const VoteCard = (props) => {
       : "8px 12px",
     maxWidth: "1160px",
     minWidth: "240px",
-    height: "484px",
+    // height: "484px",
+    height: getDynamicHeight(),
     borderRadius: "30px",
     background: "#FFFFFF",
 
@@ -196,11 +218,13 @@ const VoteCard = (props) => {
         }}
       >
         {/* ------------------ 투표 제목 및 카테고리 ------------------ */}
-        <div style={{
-          ...flexContainerStyle,
-          height: "50px",
-          marginBottom: "10px",
-        }}>
+        <div
+          style={{
+            ...flexContainerStyle,
+            height: "50px",
+            marginBottom: "10px",
+          }}
+        >
           <div className="fontsize-lg">{voteTitle}</div>
           <p style={categoryNameStyle} className="fontsize-md">
             {categoryName}
@@ -229,11 +253,13 @@ const VoteCard = (props) => {
         </div>
 
         {/* ------------------ 좋아요, 상세보기 버튼 ------------------ */}
-        <div style={{
-          ...buttonContainerStyle,
-          height: "55px",
-          marginTop: "10px",
-        }}>
+        <div
+          style={{
+            ...buttonContainerStyle,
+            height: "55px",
+            marginTop: "10px",
+          }}
+        >
           <button
             style={likeButtonStyle}
             className={`fontsize-sm ${
