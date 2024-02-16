@@ -51,17 +51,41 @@ const SwipeVote = (props) => {
   // ----------- Swiper 스타일 -----------
   const swiperStyle = {
     // 디자인
-    paddingTop: "60px",
-    paddingBottom: "60px",
+    paddingTop: "4rem",
+    paddingBottom: "4rem",
   };
 
   // ----------- Swiper Slide 스타일 -----------
+  const getDynamicMaxWidth = () => {
+    if (isXLarge) {
+      return "70rem";
+    } else if (isLarge) {
+      return "60rem";
+    } else if (isMedium) {
+      return "50rem";
+    } else {
+      return "40rem";
+    }
+  };
+
+  const getDynamicHeight = () => {
+    if (isXLarge) {
+      return "500px";
+    } else if (isLarge) {
+      return "400px";
+    } else if (isMedium) {
+      return "290px";
+    } else {
+      return "290px";
+    }
+  };
+
   const swiperSlideStyle = {
     // 디자인
-    maxWidth: "1200px",
     padding: "0 20px",
-    minWidth: "240px",
-    height: "484px",
+    maxWidth: getDynamicMaxWidth(),
+    minWidth: "5rem",
+    height: getDynamicHeight(),
 
     // 컨텐츠 정렬
     display: "flex",
@@ -70,7 +94,7 @@ const SwipeVote = (props) => {
 
   // ----------- vote Card  스타일 -----------
   const voteCardStyle = {
-    width: "100%",
+    width: "92.5%",
   };
 
   // --------------------------------- css 끝 ---------------------------------

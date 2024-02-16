@@ -231,6 +231,7 @@ const CreateVideoRoom = () => {
 
   const handleExit = () => {
     navigate("/BroadcastPage");
+    window.location.reload();
   };
 
   // ----------------- 화면 사이즈가 충분한지 체크 --------------
@@ -251,7 +252,7 @@ const CreateVideoRoom = () => {
 
   return (
     <>
-      <div id="logo" className="m-2 text-center">
+      <div id="logo" className="m-5 text-center">
         <p style={logoStyle}>골라쥬</p>
       </div>
       {isEnoughSize ? (
@@ -275,7 +276,7 @@ const CreateVideoRoom = () => {
               </button>
             </div>
           </div>
-          <div id="body" className="flex flex-row justify-between gap-7">
+          <div id="body" className="flex flex-row justify-between gap-7 pb-20">
             <div id="video+detail" className="basis-2/3 flex flex-col gap-y-5">
               <div className="basis-3/5">
                 <video

@@ -25,7 +25,6 @@ import { Helmet } from "react-helmet-async";
 
 // 이미지 가져오기
 import questionMarkImg from "/assets/images/question_mark_img.png";
-import tmpThumbnailImg from "/assets/images/nowGollajyu.png";
 
 const BroadcastPage = () => {
   // ------------------ 반응형 웹페이지 구현 ------------------

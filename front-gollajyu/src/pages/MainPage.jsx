@@ -96,7 +96,7 @@ const MainPage = () => {
         }
       });
     }
-  });
+  }, []);
 
   // 로그인 함수
   const logIn = (data) => {
@@ -246,13 +246,13 @@ const MainPage = () => {
         ) : (
           <>
             {/* 로딩 완료 시 */}
-            <div className="bg-gradient-to-tl from-blue-400 to-red-400">
+            <div className="bg-gradient-to-tl from-blue-400 to-red-400 w-full">
               {/* 스와이프 투표 컴포넌트 */}
               <SwipeVote
                 voteList={voteListData}
                 isLastPage={isLastPage}
                 increasePageNo={increasePageNo}
-              /> 
+              />
             </div>
 
             {/* 무작위 그룹의 선호도를 문구 컴포넌트 */}
@@ -275,7 +275,6 @@ const MainPage = () => {
           </>
         )}
       </div>
-
       {/* ----------- 로그인, 회원가입, 투표 관련 모달 ----------- */}
       {isLoginModalOpened && <LoginModal></LoginModal>}
       {isSignupModalOpened && <SignupModal></SignupModal>}

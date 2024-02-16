@@ -32,6 +32,7 @@ const Navbar = () => {
       <div className="body min-h-screen">
         <Outlet />
       </div>
+      <Footer />
     </>
   );
 };
@@ -57,7 +58,6 @@ const App = () => {
           <Route path="/TestPage" element={<TestPage />} />
         </Route>
       </Routes>
-      <Footer />
     </Router>
   );
 };

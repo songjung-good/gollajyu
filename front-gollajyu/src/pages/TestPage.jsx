@@ -27,13 +27,10 @@ import LinearProgress, {
 } from "@mui/material/LinearProgress";
 import { styled } from "@mui/material/styles";
 
-
-
 const TestPage = () => {
-
   // ------------------ 반응형 웹페이지 구현 ------------------
   const { isXLarge, isLarge, isMedium, isSmall } = useResponsiveQueries();
-  
+
   const navigate = useNavigate();
   const location = useLocation();
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
@@ -261,7 +258,6 @@ const TestPage = () => {
     },
   }));
 
-
   // --------------------------------- css 시작 ---------------------------------
 
   // ----------- body 스타일 -----------
@@ -269,7 +265,13 @@ const TestPage = () => {
     // 디자인
     margin: "0 auto", // 가로 중앙 정렬
     padding: "30px 0", // 상하단 여백: 50px
-    width: isXLarge ? "1000px" : isLarge ? "740px" : isMedium ? "460px" : "375px",
+    width: isXLarge
+      ? "1000px"
+      : isLarge
+      ? "740px"
+      : isMedium
+      ? "460px"
+      : "375px",
     // whiteSpace: "nowrap", // 줄바꿈 방지
 
     // 컨텐츠 정렬
@@ -282,31 +284,48 @@ const TestPage = () => {
     // 디자인
     padding: isXLarge ? "40px" : isLarge ? "35px" : isMedium ? "30px" : "25px",
     width: isXLarge ? "50%" : isLarge ? "60%" : "80%",
-    height: isXLarge ? "750px" : isLarge ? "675px" : isMedium ? "600px" : "525px",
-    borderRadius: isXLarge ? "50px" : isLarge ? "40px" : isMedium ? "30px" : "20px",
+    height: isXLarge
+      ? "750px"
+      : isLarge
+      ? "675px"
+      : isMedium
+      ? "600px"
+      : "525px",
+    borderRadius: isXLarge
+      ? "50px"
+      : isLarge
+      ? "40px"
+      : isMedium
+      ? "30px"
+      : "20px",
     background: "#FFFFFF",
   };
 
   // ----------- 컨테이너 스타일 -----------
   const containerStyle = {
     // 디자인
-    height: isXLarge ? "670px" : isLarge ? "605px" : isMedium ? "540px" : "475px",
-    
+    height: isXLarge
+      ? "670px"
+      : isLarge
+      ? "605px"
+      : isMedium
+      ? "540px"
+      : "475px",
+
     // 컨텐츠 정렬
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-between",
-  }
+  };
 
   // ----------- 컨텐츠 컨테이너 스타일 -----------
   const imgStyle = {
     padding: "0 40px",
-  }
+  };
 
   // --------------------------------- css 끝 ---------------------------------
 
-  
   return (
     <>
       <div style={bodyStyle}>
@@ -318,7 +337,9 @@ const TestPage = () => {
                   <span className="text-sky-600 fontsize-lg">선택</span>
                   으로 알아보는
                   <br />
-                  <span className="text-lime-500 fontsize-lg">소비성향</span>{" "}
+                  <span className="text-lime-500 fontsize-lg">
+                    소비성향
+                  </span>{" "}
                   테스트
                 </h1>
                 <img style={imgStyle} src={mainImg} alt="" />
@@ -360,7 +381,10 @@ const TestPage = () => {
               </>
             ) : null}
             {questionNumber === 12 ? (
-              <div style={containerStyle} className="flex flex-col items-center space-y-10 sm:space-y-16">
+              <div
+                style={containerStyle}
+                className="flex flex-col items-center space-y-10 sm:space-y-16"
+              >
                 <p className="text-center fontsize-lg">
                   <span className="text-rose-500 fontsize-lg">두근두근</span>
                   <br />

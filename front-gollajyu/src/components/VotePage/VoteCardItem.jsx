@@ -79,9 +79,20 @@ const VoteCardItem = (props) => {
       });
   };
 
+  const getDynamicHeight = () => {
+    if (isXLarge) {
+      return "289px";
+    } else if (isLarge) {
+      return "220px";
+    } else if (isMedium) {
+      return "140px";
+    } else {
+      return "130px";
+    }
+  };
   return (
     <>
-      <div className='flex flex-col h-[319px]'>
+      <div className="flex flex-col">
         <div
           style={{
             marginLeft: "15px",
@@ -96,10 +107,31 @@ const VoteCardItem = (props) => {
         <div
           style={{
             width:
-              voteItemLength === 2 ? (isXLarge ? "300px" : isLarge ? "220px" : isMedium ? "120px" : "110px") :
-              voteItemLength === 3 ? (isXLarge ? "270px" : isLarge ? "200px" : isMedium ? "113px" : "100px") :
-              (isXLarge ? "220px" : isLarge ? "165px" : isMedium ? "100px" : "80px"),
-            height: "289px",
+              voteItemLength === 2
+                ? isXLarge
+                  ? "280px"
+                  : isLarge
+                  ? "220px"
+                  : isMedium
+                  ? "120px"
+                  : "110px"
+                : voteItemLength === 3
+                ? isXLarge
+                  ? "220px"
+                  : isLarge
+                  ? "160px"
+                  : isMedium
+                  ? "100px"
+                  : "90px"
+                : isXLarge
+                ? "160px"
+                : isLarge
+                ? "130px"
+                : isMedium
+                ? "90px"
+                : "70px",
+            // height: "289px",
+            height: getDynamicHeight(),
             border: "5px solid",
             borderColor: selectedItem === voteItemId ? "#FF6D6D" : "white",
           }}
@@ -108,15 +140,15 @@ const VoteCardItem = (props) => {
           {" "}
           {/* 높이를 조정했습니다. */}
           {/* 이미지를 띄워지는 배경 */}
-
           <Container
-            className="w-full p-2 relative rounded-xl"
+            className="w-full p-0 relative rounded-xl"
             onMouseEnter={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             style={{ maxWidth: "100%" }}
           >
             {/* 투표하는 기능 내부 */}
-            {((selectedItem === 0 || !selectedItem || clicked !== 0 ) && (hover || clicked !== 0)) ? (
+            {(selectedItem === 0 || !selectedItem || clicked !== 0) &&
+            (hover || clicked !== 0) ? (
               <div
                 className={`absolute inset-0 w-full bg-orange-200 opacity-50 flex flex-col justify-between`}
                 onMouseLeave={() => {}}
@@ -126,9 +158,11 @@ const VoteCardItem = (props) => {
                   <button
                     key={index}
                     className={`h-1/5 w-full flex items-center justify-center cursor-pointer "text-black"
-                    ${clicked - 1 === index
+                    ${
+                      clicked - 1 === index
                         ? "text-white bg-blue-500"
-                        : "text-black"}
+                        : "text-black"
+                    }
                         border-t-2 border-white text-max-xl`}
                     onClick={() => {
                       if (clicked === 0 && user.memberId != null) {
@@ -139,29 +173,42 @@ const VoteCardItem = (props) => {
                       }
                     }}
                   >
-                  {tag}
+                    {tag}
                   </button>
                 ))}
               </div>
-            ) : null
-            }
+            ) : null}
 
             {/* 투표 이미지 */}
             <img
-              className="h-full w-full object-cover"
+              className="mx-auto w-2/3 h-full object-cover"
               alt="Vote Image"
               src={item.voteItemImgUrl}
+              // 로컬에서 임시로 이미지를 확인하기 위한 부분
+              // src="/assets/images/tmp_profile.png"
             />
           </Container>
           {/* 버튼을 누르면 생기는 상세페이지 */}
           <div className="w-full flex flex-col justify-center items-center">
-            {(selectedItem !== 0 && selectedItem ) ? (
-              <p className="fontsize-md pb-2">{`${(count / totalCount * 100).toFixed(2)}%`}</p>
-            ) : <p className="pb-2 fontsize-sm text-center">투표 참여 시 <br/> 선택 비율이 공개됩니다.</p>}
+            {selectedItem !== 0 && selectedItem ? (
+              <p className="fontsize-md pb-2">{`${(
+                (count / totalCount) *
+                100
+              ).toFixed(2)}%`}</p>
+            ) : (
+              <p className="pb-2 fontsize-sm text-center invisible">
+                투표 비율
+              </p>
+            )}
             <h2 className="fontsize-sm font-bold">
               {item.price ? `${item.price.toLocaleString()}원` : ""}
             </h2>
-            <p className="fontsize-xs pt-2" style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}>{item.voteItemDesc}</p>
+            <p
+              className="fontsize-xs pt-2"
+              style={{ fontFamily: "GmarketSansLight", fontWeight: "bold" }}
+            >
+              {item.voteItemDesc}
+            </p>
           </div>
         </div>
       </div>
