@@ -71,7 +71,7 @@ public class SecurityConfig {
                                         oauth2LoginSuccessHandler()
                                 )
                                 .failureHandler((request, response, exception) -> {
-                                    System.out.println("fail");
+
                                 })
                                 .userInfoEndpoint(userInfoEndpoint ->
                                         userInfoEndpoint

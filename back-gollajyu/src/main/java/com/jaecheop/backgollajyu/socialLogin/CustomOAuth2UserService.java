@@ -1,10 +1,7 @@
 package com.jaecheop.backgollajyu.socialLogin;
 
-import com.jaecheop.backgollajyu.cookieUtils.CookieUtils;
 import com.jaecheop.backgollajyu.member.entity.Member;
 import com.jaecheop.backgollajyu.member.repostory.MemberRepository;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -65,8 +62,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } else {
-            // 예외 던져주기
-            System.out.println("구글 회원가입을 한 사용자 입니다");
             // 바로 로그인이 됨!
             // TODO:: 로그인 시켜주기!!!!
             member = optionalMember.get();
