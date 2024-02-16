@@ -110,7 +110,7 @@
 
 - Docker
 
-![기술스택](./readmeImage/기술스택.png)
+![기술스택](./readmeImage/기술스택.PNG)
 
 #### 협업 툴👊
 
@@ -130,7 +130,7 @@
 
 ## 아키텍쳐♟️
 
-![아키텍쳐](./readmeImage/시스템구성도.png)
+![아키텍쳐](./readmeImage/시스템구성도.PNG)
 
 
 
