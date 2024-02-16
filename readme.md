@@ -22,7 +22,7 @@
 
 
 ## UCC
-[![Video Label](./readmeImage/썸네일.PNG)](https://youtu.be/9emAHwqLmOo)
+[![Video Label](./readmeImage/썸네일.png)](https://youtu.be/9emAHwqLmOo)
 
 
 ## 팀 재첩국🍵
