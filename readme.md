@@ -110,7 +110,7 @@
 
 - Docker
 
-![기술스택](.\readmeImage\기술스택.png)
+![기술스택](./readmeImage/기술스택.png)
 
 #### 협업 툴👊
 
@@ -124,13 +124,13 @@
 
 ## ERD 🌐
 
-![CAeW9oyC4sENKYCRm](.\readmeImage\CAeW9oyC4sENKYCRm.png)
+![CAeW9oyC4sENKYCRm](./readmeImage/CAeW9oyC4sENKYCRm.png)
 
 
 
 ## 아키텍쳐♟️
 
-![아키텍쳐](.\readmeImage\시스템구성도.png)
+![아키텍쳐](./readmeImage/시스템구성도.png)
 
 
 
@@ -138,9 +138,9 @@
 
 ### 0. 구조
 
-![웹페이지구조](.\readmeImage\웹페이지구조.PNG)
+![웹페이지구조](./readmeImage/웹페이지구조.PNG)
 
-![와이어프레임](.\readmeImage\와이어프레임.PNG)
+![와이어프레임](./readmeImage/와이어프레임.PNG)
 
 
 
@@ -154,8 +154,8 @@
 
 ​	✔️ top5 투표 목록 구성
 
-![메인페이지](.\readmeImage\메인페이지투표.gif)
-![메인페이지2](.\readmeImage\메인페이지아래보기.gif)
+![메인페이지](./readmeImage/메인페이지투표.gif)
+![메인페이지2](./readmeImage/메인페이지아래보기.gif)
 
 
 
@@ -165,8 +165,8 @@
 
 ​	✔️ 소셜회원가입 기능
 
-![회원가입](.\readmeImage\회원가입.gif)
-![소셜가입](.\readmeImage\소셜가입.gif)
+![회원가입](./readmeImage/회원가입.gif)
+![소셜가입](./readmeImage/소셜가입.gif)
 
 
 ### 3. 투표생성
@@ -177,7 +177,7 @@
 
 ​	✔️ 지금골라쥬: 화면을 통한 투표 및 채팅
 
-![내정보수정](.\readmeImage\지금골라쥬.gif)
+![내정보수정](./readmeImage/지금골라쥬.gif)
 
 
 
@@ -189,7 +189,7 @@
 
 ​	✔️ 인기순 혹은 최신순 필터
 
-![투표모아쥬](.\readmeImage\투표모아쥬보기.gif)	
+![투표모아쥬](./readmeImage/투표모아쥬보기.gif)	
 
 
 
@@ -199,7 +199,7 @@
 
 ​	✔️ 나이, 성별, 소비성향으로 필터링한 데이터 그래프화
 
-![통계보여쥬](.\readmeImage\통계보여쥬.gif)
+![통계보여쥬](./readmeImage/통계보여쥬.gif)
 
 
 
@@ -211,7 +211,7 @@
 
 ​	✔️ 라이브 채팅 및 투표를 지원
 
-![지금골라쥬](.\readmeImage\지금골라쥬.gif)
+![지금골라쥬](./readmeImage/지금골라쥬.gif)
 
 
 
@@ -221,7 +221,7 @@
 
 ​	✔️ 다양한 소비성향에 대한 재미난 분석
 
-![소비성향알려쥬](.\readmeImage\소비성향알려쥬.gif)
+![소비성향알려쥬](./readmeImage/소비성향알려쥬.gif)
 
 
 
@@ -231,4 +231,4 @@
 
 ​	✔️ 작성, 참여, 좋아요, 댓글 단 투표 데이터 제공
 
-![마이페이지](.\readmeImage\마이페이지전부.gif)
+![마이페이지](./readmeImage/마이페이지전부.gif)
