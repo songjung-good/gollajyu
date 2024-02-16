@@ -19,8 +19,10 @@
 - 수많은 정보는 선택의 다양성을 넓혔다
 - 하루에도 수 천 가지의 선택을 해야하는 우리를 위한 웹 어플리케이션
 - 내 선택을 골라쥬~
-- [UCC 자료](https://youtu.be/9emAHwqLmOo)
 
+
+## UCC
+[![Video Label](./readmeImage/썸네일.PNG)](https://youtu.be/9emAHwqLmOo)
 
 
 ## 팀 재첩국🍵
